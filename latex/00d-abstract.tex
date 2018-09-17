@@ -1,0 +1,42 @@
+%---------------------------  摘要 --------------------------- 
+\chapter*{\markboth{摘要}{摘要}{摘\quad 要}}
+\pagenumbering{Roman} 
+\medskip
+在空间广义线性混合效应模型（简称SGLMM模型）下，估计所需的高效计算方法一直是研究的重要方向。论文创新点有三个方面，其一是在 R 语言编程环境下实现了估计SGLMM模型参数的三类算法，分别是低秩近似、蒙特卡罗最大似然和贝叶斯马尔科夫链蒙特卡罗（简称贝叶斯 MCMC ）算法；其二是在数值模拟结果上比较了三类算法的优劣；其三是在软件 Stan 上实现了贝叶斯 MCMC 算法（简称STAN-MCMC），并将其应用到喀麦隆地区患眼线虫病和朗格拉普岛上核残留的数据分析上，STAN-MCMC 取得了和贝叶斯 MCMC 算法几乎一样的效果，由于软件 Stan 本身具有的高可扩展性和适应性，STAN-MCMC 算法同样具有这些优点。
+
+
+% 数值模拟的结论
+% ：低秩近似算法精度比较低，增加样本量可以提高精度，但是计算效率就会明显降低；近似贝叶斯与蒙特卡罗最大似然算法在准确度一致的情况下，前者计算效率更高。在同样的准确度下，基于新的计算框架 Stan 实现的贝叶斯马尔科夫链蒙特卡罗算法比基于R语言实现的效率高，同时也比前两类算法效率高，但是比第三类算法效率稍低。
+
+% 然后，探索了基于 Stan 实现的贝叶斯马尔科夫链蒙特卡罗算法，并与现有算法进行性能比较
+%，还在 Stan 框架下实现了基于贝叶斯推断的算法。
+%，Stan 框架因其本身优化程度极高的计算库、并行特点和编译带来的再次优化大大加速了模拟的过程。
+\medskip
+\par
+{\heiti 关键词 ：} 低秩近似，蒙特卡罗最大似然，马尔科夫链蒙特卡罗
+
+\par
+\vspace{1cm}
+\noindent\begin{tabular}{l}
+\toprule[1pt]\hline
+\hspace*{14.5cm}
+\end{tabular}
+
+\begin{center}
+{\bf \Large Abstract}\\
+\vskip 0.6cm
+\end{center}
+\par
+Effective and efficient algorithms of spatial generalized linear mixed effects models are always pursued by reseachers. The innovation of the thesis has three parts. One is to realize three kinds of parameter estimation methods of spatial generalized linear mixed effects model under the R language programming environment. They are low rank approximation, Monte Carlo Maximum Likelihood and Bayesian Markov Chain Monte Carlo (shorted by Bayes MCMC) algorithms, respectively. The second is the numerical simulation for comparing the advantages and disadvantages of above algorithms. The third is to implement Bayesian MCMC algorithm based on Stan software (referred to as STAN-MCMC) , which also applied to analyze malaria data in the Gambia and loa loa data in Cameroon. In conclusion, STAN-MCMC has achieved performance of Bayesian MCMC algorithm almost. Furthermore, due to the high scalability and adaptability of Stan software, the STAN-MCMC algorithm also has these advantages.
+% In large-scale sparse settings, effective and efficient algorithms are always pursued by reseachers. Low-rank, likelihood-based and bayesian framework approaches are simultaneously carried out. By comparison, the low-rank approximation method has obvious efficiency advantages, but with less accurate. Under the same accuracy, The MCMC algorithm is implemented by Stan, a new computational framework whose computational efficiency is significantly better than the traditional BUGS.
+
+\medskip
+\par
+
+{\bf Key words：} low-rank，monte carlo maximum likelihood, markov chain monte carlo
+
+% 空白页
+\newpage 
+\mbox{} 
+
+\addtocontents{toc}{\protect\markboth{目录}{目录}} % 设置页眉处目录

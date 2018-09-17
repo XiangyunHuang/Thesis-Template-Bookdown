@@ -1,0 +1,27 @@
+bookdown::gitbook:
+  css: style.css
+  config:
+    toc:
+      collapse: none
+      before: |
+        <li><a href="./">空间广义线性混合效应模型及其应用</a></li>
+      after: |
+        <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+    download: ["pdf", "epub", "mobi"]
+bookdown::pdf_book:
+  includes:
+    in_header: latex/preamble.tex
+    before_body: latex/before_body.tex
+    after_body: latex/after_body.tex
+  latex_engine: xelatex
+  citation_package: natbib
+  keep_tex: yes
+  pandoc_args: ["--top-level-division=chapter", "--lua-filter=latex/sidebar.lua"]
+  template: latex/default.latex
+  toc_depth: 3
+  toc_unnumbered: yes
+  toc_appendix: no
+  toc_bib: yes
+  highlight: NULL
+#bookdown::epub_book:
+#  dev: svglite

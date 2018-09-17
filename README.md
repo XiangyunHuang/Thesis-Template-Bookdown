@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/XiangyunHuang/Thesis-Template-Bookdown.svg?branch=master)](https://travis-ci.org/XiangyunHuang/Thesis-Template-Bookdown)
+[![Build Status](https://travis-ci.com/XiangyunHuang/Thesis-Template-Bookdown.svg?branch=master)](https://travis-ci.com/XiangyunHuang/Thesis-Template-Bookdown)
 ---
 
 ## 中国矿业大学（北京）论文模板

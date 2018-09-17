@@ -1,0 +1,51 @@
+\usepackage[UTF8, heading]{ctex}
+\usepackage{amssymb,amsmath,amsfonts,mathrsfs}
+\setCJKmainfont[ItalicFont={KaiTi_GB2312}, BoldFont={SimHei}]{SimSun}
+\setCJKsansfont{SimHei}
+\setCJKmonofont{FangSong_GB2312}
+\usepackage{color}
+\ctexset{
+  chapter/name = {,},
+  chapter/number = \arabic{chapter},
+  chapter/numberformat = \sf,
+  chapter/beforeskip = 12pt,
+  chapter/afterskip = 18pt,
+  chapter/fixskip = true,
+  chapter/format += \sf\zihao{3},
+  section/numberformat = \rm,
+  section/format += \sf\zihao{4}\raggedright,
+  section/beforeskip = 16pt,
+  section/afterskip = 16pt,
+  section/fixskip = true,
+  subsection/numberformat = \rm,
+  subsection/format += \sf\zihao{-4}\raggedright,
+  subsection/fixskip = true,
+  subsection/beforeskip = 16pt,
+  subsection/afterskip = 16pt,
+  subsubsection/numberformat = \rm,
+  subsubsection/format += \sf\zihao{-4}\raggedright,
+  contentsname = {目\quad 录},
+}
+
+\usepackage[titles]{tocloft}
+\renewcommand{\cftdot}{$\ldotp$}
+\renewcommand{\cftdotsep}{0}
+\renewcommand{\cftchapleader}{\cftdotfill{\cftchapdotsep}}
+\renewcommand{\cftchapdotsep}{\cftdotsep}
+
+\usepackage[lotdepth=2,lofdepth=2]{subfig}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrule}{\hrule height1pt width\headwidth \vspace{3.0pt}\hrule width\headwidth}
+\fancyhead[EC]{\kaishu \zihao{5}中国矿业大学（北京）硕士学位论文}
+\fancyhead[OC]{\kaishu \zihao{5}\leftmark}
+\fancyfoot[C]{\thepage}
+
+\fancypagestyle{plain}{ \fancyhf{}
+\fancyhead[EC]{\kaishu\zihao{5} 中国矿业大学（北京）硕士学位论文}
+\fancyhead[OC]{\kaishu\zihao{5} \leftmark}
+\fancyfoot[C]{\thepage}}
+
+\frontmatter

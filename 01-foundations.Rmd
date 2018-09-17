@@ -1,0 +1,266 @@
+# 基础知识 {#prepare}
+
+蒙特卡罗积分、拉普拉斯近似、非信息先验分布、STAN 计算框架作为预备知识
+
+解释指数族 b(x) 函数 c(x) 函数 散射参数 psi
+
+
+贝叶斯基础知识介绍
+
+关于 GLMM 和 LMM 的材料 notesdown repo 下的 issues
+
+
+
+
+## 修正的第三类贝塞尔函数 {#Modified-Bessel-functions}
+
+空间过程的协方差函数是梅隆族时，需要用到修正的第三类贝塞尔函数，它 $\mathcal{K}_{\kappa}(u)$ 是修正的贝塞尔方程的解 [@Abramowitz1972]，函数形式如下
+
+\begin{equation}
+\begin{aligned}
+I_{-\kappa}(u) & =  \sum_{m=0}^{\infty} \frac{1}{m!\Gamma(m + \kappa + 1)} \big(\frac{u}{2}\big)^{2m + \kappa} \\
+\mathcal{K}_{\kappa}(u) & = \frac{\pi}{2} \frac{I_{-\kappa}(u) - I_{\kappa}(u)}{\sin (\kappa \pi)}
+\end{aligned} (\#eq:besselK-function)
+\end{equation}
+
+其中 $u \geq 0$，$\kappa \in \mathbb{R}$，如果 $\kappa \in \mathbb{Z}$，则取该点的极限值，实际上 R 内置的函数 `besselK` 可以计算 $\mathcal{K}_{\kappa}(u)$ [@Campbell1980]
+
+```{r Bessel-function,fig.cap="贝塞尔函数图像"}
+knitr::include_graphics(path = "figures/bessel.png")
+```
+
+
+## 拉普拉斯近似 {#Laplace-approximation}
+
+先回顾一下基本的泰勒展开，一个函数可以在点 $a$ 处展开成和的形式，有时候是无穷多项，可以使用其中的有限项最为近似，通常会使用前三项，即到达二阶导的位置。
+
+\[
+f(x) = f(a) + \frac{f'(a)}{1!}(x-a) + \frac{f''(a)}{2!}(x-a)^2 + \frac{f'''(a)}{3!}(x-a)^3 + \ldots
+\]
+
+以基本的抛物线为例， $f(x) = x^2$，在 $a = 2$ 处展开
+
+\[
+f(x) = x^2 \quad f'(x) = 2x \quad f''(x) = 2 \quad f'''(x) = 0
+\]
+
+因此，
+
+\[
+f(x) = x^2 = 2^2 + 2(2)(x-2) + \frac{2}{2}(x-2)^2
+\]
+
+拉普拉斯近似用正态分布来估计任意分布，它使用泰勒展开的前三项近似 $\log g(x)$，展开的位置是 $\hat{x}$，则 
+
+\[
+\log g(x) \approx \log g(\hat{x}) + \frac{\partial \log g(\hat{x})}{\partial x} (x - \hat{x}) + \frac{\partial^2 \log g(\hat{x})}{2\partial x^2} (x - \hat{x})^2
+\]
+
+在函数 $g(x)$ 的极值点 $\hat{x}$ 展开， $x = \hat{x}$ 一阶导是 0，用曲率去估计方差是 $\hat{\sigma}^2 = -1/\frac{\partial^2 \log g(\hat{x})}{2\partial x^2}$，再重写上述近似
+
+\[
+\log g(x) \approx \log g(\hat{x}) - \frac{1}{2\hat{\sigma}^2} (x - \hat{x})^2
+\]
+
+现在，用这个结果做正态近似，将上式两端取指数和积分，移去常数项
+
+\[
+\int g(x) \mathrm{d}x = \int \exp[\log g(x)] \mathrm{d}x \approx \mathrm{constant} \int \exp[- \frac{(x - \hat{x})^2}{2\hat{\sigma}^2}] \mathrm{d}x
+\]
+
+拉普拉斯方法用正态分布近似分布 $f(x)$， 其均值 $\hat(x)$，可以通过求解 $f'(x) = 0$ 获得，方差 $\hat{\sigma}^2 = -1/f''(\hat{x})$  
+
+以卡方分布 $\chi^2$ 为例，
+
+\begin{align*}
+    f(x; k) & = \frac{ x^{k/2-1} \mathrm{e}^{-x/2} }{ 2^{k/2}\Gamma(k/2) }, x \geq 0 \\
+  \log f(x) & = (k/2 - 1) \log x - x/2 \\
+ \log f'(x) & = (k/2-1)/x - 1/2 = 0 \\
+\log f''(x) & = -(k/2-1)/x^2
+\end{align*}
+
+所以
+
+\[
+\chi_{k}^2 \overset{LA}{\sim}  N(\hat{x} = k-2, \hat{\sigma}^2 = 2(k-2))
+\]
+
+自由度越大，近似效果越好，对于多元分布的情况不难推广，使用多元泰勒展开和黑塞矩阵即可表示。并且参数集 $\theta$ 有唯一的极大值点 $\hat{\theta}$ [@Tierney1986]
+
+
+## 贝叶斯方法
+
+[贝叶斯方法]{.todo}
+
+以标准线性模型为例介绍贝叶斯分析及其基本概念 [@Rasmussen2006]
+
+[贝叶斯定理]{.todo}
+
+贝叶斯定理 \@ref(fig:bayes-theorem)  贝叶斯定理 \@ref(eq:bayes-theorem)
+
+```{r bayes-theorem,fig.cap="贝叶斯定理",echo=FALSE}
+knitr::include_graphics(path = 'figures/bayes-theorem.png')
+```
+
+作为铺垫，先结合 SGLMM 模型介绍一下贝叶斯定理，其中，$\boldsymbol{\theta}$ 代表 SGLMM 模型中的参数，$\mathbf{Y}$ 是响应变量对应的观察值。
+
+\begin{align}
+\begin{array}{rcll}
+p(\boldsymbol{\theta}|\mathbf{Y})  & =  & \displaystyle \frac{p(\boldsymbol{\theta},\mathbf{Y})}{p(\mathbf{Y})}
+& \mbox{ [条件概率定义]}
+\\[16pt]
+& = & \displaystyle \frac{p(\mathbf{Y}|\boldsymbol{\theta}) p(\boldsymbol{\theta})}{p(\mathbf{Y})}
+& \mbox{ [链式法则]}
+\\[16pt]
+& = & \displaystyle \frac{p(\mathbf{Y}|\boldsymbol{\theta})p(\boldsymbol{\theta})}{\int_{\Theta}p(\mathbf{Y},\boldsymbol{\theta})d\boldsymbol{\theta}}
+& \mbox{ [全概率公式]}
+\\[16pt]
+& = & \displaystyle \frac{p(\mathbf{Y}|\boldsymbol{\theta})p(\boldsymbol{\theta})}{\int_{\Theta}p(\mathbf{Y}|\boldsymbol{\theta})p(\boldsymbol{\theta})d\boldsymbol{\theta}}
+& \mbox{ [链式法则]}
+\\[16pt]
+& \propto & \displaystyle p(\mathbf{Y}|\boldsymbol{\theta})p(\boldsymbol{\theta})
+& \mbox{ [$\mathbf{Y}$ 已知]}
+\end{array} (\#eq:bayes-theorem)
+\end{align}
+
+[非信息先验分布]{.todo}
+
+扁平先验、杰弗里斯先验
+
+### 贝叶斯数据分析
+
+以一个广义线性模型为例说明贝叶斯数据分析的过程。模拟数据集 logit 来自 R包 **mcmc**，它包含5个变量，一个响应变量 y 和四个预测变量 x1，x2，x3，x4。频率派的分析可以用这样几行 R 代码实现
+
+```{r frequentist-analysis,echo=TRUE}
+library(mcmc)
+data(logit)
+fit <- glm(y ~ x1 + x2 + x3 + x4, data = logit, 
+           family = binomial(), x = TRUE)
+summary(fit)
+```
+
+现在，我们想用贝叶斯的方法来分析同一份数据，假定5个参数（回归系数）的先验分布是独立同正态分布，且均值为 0，标准差为 2。
+
+该广义线性模型的对数后验密度（对数似然加上对数先验）可以通过下面的 R 命令给出
+
+```{r echo=TRUE}
+x <- fit$x
+y <- fit$y
+lupost <- function(beta, x, y) {
+  eta <- as.numeric(x %*% beta)
+  logp <- ifelse(eta < 0, eta - log1p(exp(eta)), -log1p(exp(-eta)))
+  logq <- ifelse(eta < 0, -log1p(exp(eta)), -eta - log1p(exp(-eta)))
+  logl <- sum(logp[ y == 1]) + sum(logq[y == 0])
+  return(logl - sum(beta^2) / 8)
+}
+```
+
+为了防止溢出 (overflow) 和巨量消失 (catastrophic cancellation)，计算 $\log(p)$ 和 $\log(q)$ 使用了如下技巧
+
+\begin{align*}
+p &= \frac{\exp(\eta)}{1 + \exp(\eta)} = \frac{1}{1 + \exp(- \eta)} \\
+q &= \frac{1}{1 + \exp(\eta)} = \frac{\exp(- \eta)}{1 + \exp(- \eta)}
+\end{align*}
+
+然后对上式取对数
+
+\begin{align*}
+\log(p) &= \eta - \log(1 + \exp(\eta)) = - \log(1 + \exp(- \eta)) \\
+\log(q) &= - \log(1 + exp(\eta)) = - \eta - \log(1 + \exp(-\eta))
+\end{align*}
+
+为防止溢出，我们总是让 exp 的参数取负数，也防止在 $|\eta|$ 很大时巨量消失。比如，当 $\eta$ 为很大的正数时，
+
+\begin{align*}
+p & \approx  1  \\
+q & \approx  0 \\
+\log(p) & \approx  - \exp(-\eta) \\
+\log(q) & \approx  - \eta - \exp(-\eta)
+\end{align*}
+
+当 $\eta$ 为很小的数时，使用 R 内置的函数 log1p 计算，当 $\eta$ 为大的负数时，情况类似^[更加精确的计算 $\log(1-\exp(-|a|)), |a| \ll 1$ 可以借助 **Rmpfr** 包 <https://r-forge.r-project.org/projects/rmpfr/>]。
+
+有了上面这些准备，现在可以运行随机游走 Metropolis 算法模拟后验分布
+
+```{r echo=TRUE}
+set.seed(2018)
+beta.init <- as.numeric(coefficients(fit))
+fit.bayes <- metrop(obj = lupost, initial = beta.init, 
+                    nbatch = 1e3, blen = 1, nspac = 1, x = x, y = y)
+names(fit.bayes)
+fit.bayes$accept
+```
+
+这里使用的 metrop 函数的参数说明如下：
+
+- 自编的 R 函数 lupost 计算未归一化的 Markov 链的平稳分布（后验分布）的对数密度；
+- beta.init 表示 Markov 链的初始状态；
+- Markov 链的 batches；
+- x,y 是提供给目标函数 lupost 的额外参数
+
+
+
+## 极大似然估计
+
+书本定义和性质，在后续章节介绍限制极大似然 Restricted Maximum likelihood, 简称 REML
+
+惩罚拟似然 Penalized Quasi-Likelihood, 简称 PQL 和边际拟似然 Marginal Quasi-Likelihood, 简称 MQL
+
+Profile Maximal Likelihood, 简称 PML
+
+Penalized maximum likelihood estimates are calculated using optimization methods such as the limited memory Broyden-Fletcher-Goldfarb-Shanno algorithm.
+
+BFGS 拟牛顿法和采样器 https://bookdown.org/rdpeng/advstatcomp
+
+## 维数灾难与蒙特卡罗积分
+
+一般地，混合效应模型的统计推断总是不可避免的要面对高维积分，处理高维积分的方法一个是寻找近似方法避免求积分，一个是寻找有效的随机模拟方法直接求积分。这里，介绍蒙特卡罗方法求积分，以计算 $N$ 维超立方体的内切球的体积为例说明。
+
+假设我们有一个 $N$ 维超立方体，其中心在坐标 $\mathbf{0} = (0,\ldots,0)$。超立方体在点 $(\pm 1/2,\ldots,\pm 1/2)$，有 $2^{N}$ 个角落，超立方体边长是1，$1^{N}=1$，所以它的体积是1。
+
+如果 $N=1$，超立方体是一条从 $-\frac{1}{2}$ 到 $\frac{1}{2}$ 的单位长度的线，如果 $N=2$，超立方体是一个单位正方形，对角是 $\left( -\frac{1}{2}, -\frac{1}{2} \right)$ 和 $\left( \frac{1}{2}, \frac{1}{2} \right)$，如果 $N=3$，超立方体就是单位体积的立方体，对角是 $\left( -\frac{1}{2}, -\frac{1}{2}, -\frac{1}{2} \right)$ 和 $\left( \frac{1}{2}, \frac{1}{2}, \frac{1}{2} \right)$，依此类推，$N$ 维超立方体体积是1，对角是 $\left( -\frac{1}{2}, \ldots, -\frac{1}{2} \right)$ 和 $\left( \frac{1}{2}, \ldots, \frac{1}{2} \right)$
+
+现在，考虑 $N$ 维超立方体的内切球，我们把它称为 $N$ 维超球，它的中心在原点，半径是 $\frac{1}{2}$。我们说点 $y$ 在超球内，意味着它到原点的距离小于半径，即 $\| y \| < \frac{1}{2}$。
+
+一维情形下，超球是从的线，包含了整个超立方体。二维情形下，超球是中心在原点，半径为 $\frac{1}{2}$ 的圆。三维情形下，超球是立方体的内切球。
+
+我们知道单位超立方体的体积是1，但是其内的内切球的体积是多少呢？我们已经学过如何去定义一个积分计算半径为 $r$ 的二维球（即圆）的体积（即面积）是 $\pi r^2$，三维情形下，内切球是 $\frac{4}{3}\pi r^3$。但是更高维的欧式空间里，内切球的体积是多少呢？
+
+我们当然可以去计算越来越复杂的多重积分，但是这里我们介绍采样的方法去计算积分，即所谓的蒙特卡罗方法，由乌拉姆 (S. Ulam)、冯$\cdot$诺依曼(J. von Neumann) 和梅特罗波利斯 (N. Metropolis) 等 在美国核武器研究实验室创立，当时正值二战期间，为了研制原子弹，出于保密的需要，与随机模拟相关的技术就代号蒙特卡罗。现在，蒙特卡罗方法占据现代统计计算的核心地位，特别是与贝叶斯相关的领域。
+
+用蒙特卡罗方法去计算单位超立方体内的超球，首先我们需要在单位超立方体内产生随机点，然后计算落在超球内点的比例，即超球的体积。随着点的数目增加，估计的体积会收敛到真实的体积。因为这些点都独立同均匀分布，根据中心极限定理，误差下降的比率是 $\mathcal{O}\left( 1 / \sqrt{n} \right)$，这也意味着每增加一个小数点的准确度，样本量要增加 100 倍。
+
+表 \@ref(tab:calculate-volume-of-hyperball) 列出了前10维超球的体积，随着维数的增加，超球的体积迅速变小，超立方体内随机点的个数是 100000。这里有一个反直观的现象，内切球的体积竟然随着维数的增加变小，并且在10维的情形下，内切球的体积已不到超立方体的 0.3\%。
+
+Table: (\#tab:calculate-volume-of-hyperball) 前10维单位超立方体内切球的体积（已经四舍五入保留小数点后三位）
+
+| 维数 |   1     |   2     |    3     |    4     |   5     |   6     |    7     |    8     |    9    |    10   |
+| :--- | :-----: | :-----: | :------: | :------: | :-----: | :-----: | :------: | :------: | :-----: | :-----: |
+| 体积 | 1.000   | 0.784   | 0.525    | 0.307    | 0.166   | 0.081   |  0.037   |  0.016   | 0.006   | 0.0027  |
+
+
+A theory of statistical models for Monte Carlo integration 蒙特卡罗积分 [@Kong2003]
+蒙特卡罗积分的统计模型理论
+
+蒙特卡罗最大似然积分的收敛性 [@Geyer1994On] 
+
+随机模拟的基础是有高质量的伪随机数，如何生成和检验伪随机数的质量参见黄湘云的文章 [@Huang2017COS]
+
+## 采样器
+
+汉密尔顿蒙特卡罗 (Hamiltonian Monte Carlo，简称 HMC) [@hoffman2014]
+
+以单因素方差分析为例，介绍 Gibbs， M-H 和 NUTS 采样器以及 R 语言实现 [@Gelman2013] 关于 STAN 的 HMC 实现细节
+
+JAGS 和 STAN 对比
+
+adnuts 包
+rstan 包
+
+- STAN 框架
+
+https://github.com/ourcodingclub/CC-Stan-intro
+https://github.com/ourcodingclub/CC-Stan-2
+
+高斯过程 协方差矩阵的 QR 分解 [@Bates1988]
+

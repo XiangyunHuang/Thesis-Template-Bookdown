@@ -1,0 +1,198 @@
+# 数值模拟 {#simulations}
+
+空间广义线性混合效应模型（以下简称 SGLMM 模型）在广义线性混合效应模型（以下简称 GLMM 模型）基础上添加了与空间位置相关的随机效应，这种随机效应在文中称为空间效应 [@Diggle1998]。 它与采样点的位置、数量有关，采样点的位置决定空间过程的协方差结构， 而采样点的数量决定空间效应的维度，从而导致 SGLMM 模型比一般的 GLMM 模型复杂。作为过渡，我们在第 \@ref(sim-gp) 节模拟了平稳高斯过程。 第 \@ref(sim-sglmm) 节模拟 SGLMM 模型， 分两个小节展开叙述，第 \@ref(binomal-sglmm) 小节模拟响应变量服从二项分布的情形，  第 \@ref(possion-sglmm) 小节模拟响应变量服从泊松分布的情形， 在这两个小节里， 比较了蒙特卡罗极大似然算法（Monte Carlo Maximum Likelihood，简称 MCML）， 低秩近似算法（以下简称 Low-Rank 算法）， 贝叶斯马尔科夫链蒙特卡罗算法（以下简称贝叶斯 MCMC 算法）和 贝叶斯 STAN-MCMC 算法的性能差异。
+
+后面每个模型及参数设置都要详细说明，包括模拟过程要对应到前面的算法步骤，分不同的样本量n=50,70,90和参数设置$\phi,\sigma^2,\tau^2$取不同的值做模拟，
+
+|$\hat\beta_0(std,rmse)$| 一个位置有三个值，估计值、对应的标准差和均方误差，好好思考下大表格要怎么放，markdown语法下的表格怎么做，|$\hat\phi(std,rmse)$,$\hat\sigma^2(std,rmse)$|
+
+模拟空间广义线性混合效应模型 \@ref(eq:sim-sglmm) 分三节进行，第一节模拟空间高斯过程 $S(x)$，第二节模拟响应变量 $Y$ 服从二项分布 ，第三节模拟响应变量 $Y$ 服从正态分布。空间高斯过程在模型 \@ref(eq:sim-sglmm) 中作为随机效应存在，不同于一般随机效应的地方在于它与样本的空间位置有关，一般地，假定 $S(x)$ 服从 $N$ 元高斯分布 $N(\mu_{S},G)$，$x = (d_1,d_2) \in \mathbb{R}^2$， $\mu_{S} = \mathbf{0}_{N\times1}$， $G_{(ij)} = \mathrm{Cov}(S(x_i),S(x_j))=\sigma^2*\rho(u_{ij})$， $S(x)$ 的相关函数 $\rho(u_{ij}) = \exp(-u_{ij}/\phi), u_{ij} \equiv \|x_{i}-x_{j}\|_2$，其中 $\phi$ 和 $\sigma^2$ 都是未知待估参数。可见
+采样点的位置 $(d_1,d_2)$ 和相关函数 $\rho(u)$ 一起决定空间高斯过程的形式，并且 $S(x)$ 的维度就是采样点的数目 $N$。这样通常导致空间效应的维度比协变量的数目大很多，模型 \@ref(eq:sim-sglmm) 的估计问题也比一般的广义线性混合效应模型困难。
+
+\begin{equation}
+g(\mu_i) = d(x_i)'\beta + S(x_i) + Z_i (\#eq:sim-sglmm)
+\end{equation}
+
+## 一维空间高斯过程
+
+一维
+
+
+
+## 平稳空间高斯过程 {#sim-gp}
+
+这里，我们在规则平面上模拟平稳高斯过程 $\mathcal{S} = S(x), x \in \mathbb{R}^2$， 其均值为0， 自协方差函数为
+
+\begin{equation}
+\mathrm{Cov}(S(x_i),S(x_j)) = \sigma^2\exp\big\{-\big( \frac{ \| x_{i} - x_{j} \|_{2}}{\sqrt{2}\phi}\big)^{\kappa}\big\}  (\#eq:exp-quad)
+\end{equation}
+
+\noindent 设置参数 $\kappa = 2,\phi=1,\sigma^2=1$，单位平面区域为 $[0,1]\times[0,1]$， 将此区域划分为 $7\times 7$ 的小网格，设置每个格点为采样的位置。由自协方差函数 \@ref(eq:exp-quad) 可以获得 $\mathcal{S}$ 的协方差矩阵，然后使用 R包 **MASS** 提供的 `mvrnorm` 函数产生多元正态分布随机数。 模拟数据生成的图像见图 \@ref(fig:gp)， 格点上的值即为平稳空间高斯过程在该点的取值 （为方便显示，已四舍五入保留两位小数）。
+
+```{r gp,fig.cap="平稳空间高斯过程：自相关函数为幂指数族", small.mar = TRUE, pdfcrop = TRUE}
+set.seed(2018)
+N <- 49
+lscale <- 1
+sdgp <- 1
+## 单位区域上采样
+d <- expand.grid(
+  d1 = seq(0, 1, l = sqrt(N)),
+  d2 = seq(0, 1, l = sqrt(N))
+)
+D <- as.matrix(dist(d)) # 计算采样点之间的欧氏距离
+phi <- 2 * lscale^2
+m <- sdgp^2 * exp(-D^2 / phi) # 多元高斯分布的协方差矩阵  二次幂指数核函数
+# powered.exponential (or stable)
+# rho(h) = exp[-(h/phi)^kappa] if 0 < kappa <= 2 此处 kappa 固定为 2
+S <- MASS::mvrnorm(1, rep(0, N), m) # 产生服从多元高斯分布的随机数
+plot(d1 ~ d2, data = d, type = "n")
+text(y = d$d1, x = d$d2, labels = round(S, digits = 2))
+```
+
+紧接上文，模拟模型当中的空间效应 $S(x)$ ， 其相关函数可以为指数族或者梅隆族，函数形式如公式 \@ref(eq:exp-matern) 所示，为描述简单起见，以指数族说明。
+
+\begin{equation}
+\rho(u) =
+\begin{cases}
+\exp(-(u/\phi)^{\kappa}) & \text{指数族}\\
+\{2^{\kappa -1}\Gamma(\kappa)\}^{-1}(u/\phi)^{\kappa}\mathcal{K}_{\kappa}(u/\phi) & \text{梅隆族}
+\end{cases} (\#eq:exp-matern)
+\end{equation}
+
+\noindent 固定样本量 $n=1600$ ，其它参数为 $\sigma^2=1,\phi=25,\kappa=1$ ，在区域 $[-0.2,1.2]\times [-0.2,1.2]$ 上，分别模拟规则网格上的采样和 随机采样，图中 $S(x)$ 的值越大，颜色越红，反之，颜色越蓝。使用R函数 `dist` 计算样本点之间的距离，用 `MASS::mvrnorm` 函数生成服从多元高斯分布的随机数。
+
+<!-- ```{r reg-gp,fig.cap="模拟高斯过程：相关函数分别为指数族（左图），梅隆族（右图）"} -->
+<!-- knitr::include_graphics(path = "figures/reg-gp.pdf") -->
+<!-- ``` -->
+<!-- ```{r irreg-gp,fig.cap="模拟高斯过程：相关函数分别为指数族（左图），梅隆族（右图）"} -->
+<!-- knitr::include_graphics(path = "figures/irreg-gp.pdf") -->
+<!-- ``` -->
+
+## 空间广义线性混合效应模型 {#sim-sglmm}
+
+模拟的空间广义线性混合效应模型是
+
+\begin{equation}
+g(\mu_i) = \beta_{0} + \beta_{1} * X_{1} + \beta_{2} * X_{2} + S(x) (\#eq:sim-SGLMM)
+\end{equation}
+
+\noindent 其中，$\beta_0$ 是截距，$\beta_{1},\beta_{2}$ 是固定效应 $X_{1}$ 和 $X_{2}$ 的系数，$S(x)$ 是平稳空间高斯过程，其均值为0，自协方差函数为 $\mathrm{Cov}(S(x_i),S(x_j)) = \sigma^2 \big\{2^{\kappa-1}\Gamma(\kappa)\big\}^{-1}(u/\phi)^{\kappa}K_{\kappa}(u/\phi)$，在后续的模拟中 $\kappa = 2$，$g$ 是联系函数，由响应变量 $Y$ 服从的分布决定，在第 \@ref(binomal-sglmm) 小节中，$g(\mu_i) = \log\{\frac{p(x_i)}{1-p(x_i)}\}$，$Y_{i} \sim \mathrm{Binomal}(m_{i},p(x_{i}))$，在位置 $x_i$ 处，以概率 $p(x_i)$ 重复抽取了 $m_i$ 个样本，总样本数 $M=\sum_{i=1}^{N}m_i$，$N$ 是采样点的个数，在第 \@ref(possion-sglmm) 小节中，$Y_i \sim \mathrm{Possion}(\lambda(x_{i}))$，类似地，$g(\mu_i) = \log\{\lambda(x_{i})\}$。
+
+### 响应变量服从二项分布 {#binomal-sglmm}
+
+响应变量服从二项分布，模型为 \@ref(eq:sim-SGLMM)， 固定效应参数 $\beta = (\beta_0,\beta_1,\beta_2)$， 空间效应参数 $\boldsymbol{\theta} = (\sigma^2,\phi)$。 参数设置为 $\beta = c(-1,1,0.5), \boldsymbol{\theta} = (1,1)$，采样点数目为 $N=49$， 每个采样点抽取的样本数 $m_i = 100,i = 1,2,\ldots,N$，在这组参数下，重复产生 100 个数据集。 分别使用低秩近似算法(LR)， 蒙特卡罗最大似然算法 (MCML)， 贝叶斯 MCMC 算法 (MCMC) 和贝叶斯 STAN-MCMC 算法 (STAN-MCMC) 估计模型的参数， LR 与 MCML 的结果见表 \@ref(tab:binomal-LRvsMCML)， 两个基于贝叶斯的算法见表 \@ref(tab:binomal-MCMCvsSTAN)。
+
+
+Table: (\#tab:simulation-norm) 正态分布情形下的数值模拟比较
+
+|    参数       | 真值 |  估计  |    | | CPU (s) |
+| :----------------: | :----------------: | :----------------: | :----------------: | :-----------: | :---------------: | :-------------: | :----------------: |
+| $\beta_{0}$   | 1.977 | 1.016 | 0.803 | 21.937 | 0.857 | 0.960 | 298.250 |
+| $\beta_{1}$   | 1.966 | 1.007 | 0.796 | 28.172 | 1.365 | 0.516 | 464.420 |
+| $\beta_{2}$   | 1.958 | 1.007 | 0.796 | 38.114 | 1.159 | 0.970 | 634.720 |
+| $\sigma^2$    | 1.935 | 1.008 | 0.796 | 44.317 | 3.916 | 0.264 | 326.780 |
+| $\phi$        | 1.00  | 1.05  | 0.80  | 0.14   |  1.68 | 0.94  | 238.05  |
+
+\begin{table}[!h]
+\begin{center}
+\caption{ 100个数据集的模拟结果：估计，标准差和估计的均方误差 \label{tab:binomal-LRvsMCML}}
+\setlength{\tabcolsep}{2pt}
+\vspace{0.1in}
+
+\begin{tabular}{lcccccccccc}
+ \hline
+  参数 &  真值 & \multicolumn{3}{c}{LR8$^*$} & \multicolumn{3}{c}{LR16$^*$} & 
+ \multicolumn{3}{c}{MCML} \\
+  \cmidrule(r){3-5}  \cmidrule(r){6-8} \cmidrule(r){9-11}
+ \noalign{\smallskip} 
+                &      & 估计   & 标准差 & 均方误差 & 估计   & 标准差 & 均方误差   & 估计  & 标准差 & 均方误差 \\ 
+   \hline
+   $\beta_{0}$  & -1.0 & -1.837 & 0.118  &  0.592   & -1.259 & 0.126  & 0.110      & -1.086 & 0.294   &  0.103 \\ 
+   $\beta_{1}$  & 1.0  & 1.143  & 0.071  &  0.133   & 1.291  & 0.073  & 0.063      & 0.989  & 0.072   &  0.049 \\ 
+   $\beta_{2}$  & 0.5  & 0.413  & 0.025  &  0.073   & 0.241  & 0.026  & 0.014      & 0.339  & 0.012   &  0.012 \\ 
+   $\sigma^2$   & 1.0  & 0.528  & 0.177  &  4.060   & 0.499  & 0.090  & 0.060      & 0.268  & 0.405   &  0.013 \\ 
+   $\phi$       & 1.0  & 0.478  & 0.052  &  0.131   & 0.110  & 0.041  & 0.007      & 0.073  & 0.167   &  0.007 \\ 
+   \hline
+ \end{tabular}
+\end{center}
+\vspace{0.05in}
+
+* LR8/LR16：低秩近似算法分别使用 $8\times 8$ 和 $16\times 16$ 个采样点，
+
+\end{table}
+
+
+\begin{table}
+\begin{center}
+\caption{ 100 个数据集的模拟结果：估计，标准差和估计的均方误差 \label{tab:binomal-MCMCvsSTAN}}
+\setlength{\tabcolsep}{2pt}
+\vspace{0.1in}
+
+\begin{tabular}{lccccccc}
+ \hline
+  参数 &  真值 & \multicolumn{3}{c}{贝叶斯MCMC} & \multicolumn{3}{c}{贝叶斯STAN-MCMC}  \\
+  \cmidrule(r){3-5}  \cmidrule(r){6-8} 
+ \noalign{\smallskip} 
+                &     & 估计  & 标准差 & 均方误差 & 估计  & 标准差 & 均方误差 \\ 
+   \hline
+   $\beta_{0}$  & -1.0 & -1.239 & 0.848 &  0.777   & -1.225 & 0.248  & 0.112      \\ 
+   $\beta_{1}$  & 1.0  & 0.985 & 0.052  &  2.941e-03   & 1.026  & 0.054  & 3.607e-03      \\ 
+   $\beta_{2}$  & 0.5  & 0.519 & 0.019  &  7.422e-04   & 0.503  & 0.016  & 2.649e-04      \\ 
+   $\sigma^2$   & 1.0  & 0.803 & 0.521  &  0.310   & 0.322  & 0.283  & 0.540      \\ 
+   $\phi$       & 1.0  & 0.182 & 0.069  &  0.673   & 0.514  & 0.322  & 0.341      \\ 
+   \hline
+ \end{tabular}
+\end{center}
+\end{table}
+
+### 响应变量服从泊松分布 {#possion-sglmm}
+
+响应变量服从泊松分布，模型为 \@ref(eq:sim-SGLMM)，固定效应参数 $\beta = (\beta_0, \beta_1, \beta_2)$， 空间效应参数 $\boldsymbol{\theta} = (\sigma^2,\phi)$。 参数设置为 $\beta = c(-1,1,0.5), \boldsymbol{\theta} = (1,1)$， 采样点数目为 $N=49$， 每个采样点抽取的样本数 $m_i = 100,i = 1,2,\ldots,N$，在这组参数下，重复产生 100 个数据集。
+
+\begin{table}
+\begin{center}
+\caption{ 100个数据集的模拟结果：估计，标准差和估计的均方误差 \label{tab:possion-LRvsMCML}}
+\setlength{\tabcolsep}{2pt}
+\vspace{0.1in}
+
+\begin{tabular}{lcccccccccc}
+ \hline
+  参数 &  真值 & \multicolumn{3}{c}{LR8} & \multicolumn{3}{c}{LR16} & 
+ \multicolumn{3}{c}{MCML} \\
+  \cmidrule(r){3-5}  \cmidrule(r){6-8} \cmidrule(r){9-11}
+ \noalign{\smallskip} 
+                &     & 估计  & 标准差 & 均方误差 & 估计  & 标准差 & 均方误差 & 估计  & 标准差 & 均方误差 \\ 
+   \hline
+   $\beta_{0}$  & -1.0 & -1.837 & 0.118  &  0.592   & -1.259 & 0.126  & 0.110      & -1.086 & 0.294   &  0.103 \\ 
+   $\beta_{1}$  & 1.0  & 1.143  & 0.071  &  0.133   & 1.291  & 0.073  & 0.063      & 0.989  & 0.072   &  0.049 \\ 
+   $\beta_{2}$  & 0.5  & 0.413  & 0.025  &  0.073   & 0.241  & 0.026  & 0.014      & 0.339  & 0.012   &  0.012 \\ 
+   $\sigma^2$   & 1.0  & 0.528  & 0.177  &  4.060   & 0.499  & 0.090  & 0.060      & 0.268  & 0.405   &  0.013 \\ 
+   $\phi$       & 1.0  & 0.478  & 0.052  &  0.131   & 0.110  & 0.041  & 0.007      & 0.073  & 0.167   &  0.007 \\ 
+   \hline
+ \end{tabular}
+\end{center}
+\end{table}
+
+
+\begin{table}
+\begin{center}
+\caption{ 100个数据集的模拟结果：估计，标准差和估计的均方误差 \label{tab:possion-MCMCvsSTAN}}
+\setlength{\tabcolsep}{2pt}
+\vspace{0.1in}
+
+\begin{tabular}{lccccccc}
+ \hline
+  参数 &  真值 & \multicolumn{3}{c}{贝叶斯MCMC} & \multicolumn{3}{c}{贝叶斯STAN-MCMC}  \\
+  \cmidrule(r){3-5}  \cmidrule(r){6-8} 
+ \noalign{\smallskip} 
+                &     & 估计  & 标准差 & 均方误差 & 估计  & 标准差 & 均方误差 \\ 
+   \hline
+   $\beta_{0}$  & -1.0 & -5.430 & 0.562  &  1.994   & -2.060 & 0.825  & 1.805    \\ 
+   $\beta_{1}$  & 1.0  & 0.942 & 0.082  &  0.110   & 1.113  & 0.311  & 0.109    \\ 
+   $\beta_{2}$  & 0.5  & 0.591 & 0.039  &  0.992   & 0.563  & 0.066  & 8.463e-03     \\ 
+   $\sigma^2$   & 1.0  & 0.415 & 0.264  &  0.412   & 0.830  & 0.497  & 0.276    \\ 
+   $\phi$       & 1.0  & 0.514 & 0.492  &  0.478   & 0.392  & 0.223  & 0.418    \\ 
+   \hline
+ \end{tabular}
+\end{center}
+\end{table}
