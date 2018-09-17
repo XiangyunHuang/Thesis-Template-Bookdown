@@ -8,23 +8,3 @@
 ---
 
 感谢 [Pandoc](https://github.com/jgm/pandoc)、[TinyTeX](https://github.com/yihui/tinytex)、[bookdown](https://github.com/rstudio/bookdown) 的开发者们，特别是 [John MacFarlane](https://johnmacfarlane.net/) 和 [Yihui Xie](https://yihui.name/)
-
-
-## 注意
-
-在安装完 TinyTeX 后，需要安装的 LaTeX 包
-
-```{r}
-readLines('latex/TeXLive.pkgs')
-```
-
-```
- [1] "colortbl"    "ctex"        "dvipng"      "dvips"       "dvisvgm"     "environ"    
- [7] "fancyhdr"    "fandol"      "jknapltx"    "listings"    "mathdesign"  "metalogo"   
-[13] "microtype"   "ms"          "parskip"     "pdfcrop"     "pgf"         "placeins"   
-[19] "preview"     "psnfss"      "realscripts" "relsize"     "rsfs"        "setspace"   
-[25] "soul"        "standalone"  "subfig"      "symbol"      "tex"         "tex4ht"     
-[31] "titlesec"    "tocloft"     "translator"  "trimspaces"  "ttfutils"    "type1cm"    
-[37] "ucs"         "ulem"        "xcolor"      "xecjk"       "xltxtra"     "zhnumber"  
-```
-
