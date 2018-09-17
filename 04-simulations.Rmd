@@ -61,13 +61,6 @@ text(y = d$d1, x = d$d2, labels = round(S, digits = 2))
 
 \noindent 固定样本量 $n=1600$ ，其它参数为 $\sigma^2=1,\phi=25,\kappa=1$ ，在区域 $[-0.2,1.2]\times [-0.2,1.2]$ 上，分别模拟规则网格上的采样和 随机采样，图中 $S(x)$ 的值越大，颜色越红，反之，颜色越蓝。使用R函数 `dist` 计算样本点之间的距离，用 `MASS::mvrnorm` 函数生成服从多元高斯分布的随机数。
 
-<!-- ```{r reg-gp,fig.cap="模拟高斯过程：相关函数分别为指数族（左图），梅隆族（右图）"} -->
-<!-- knitr::include_graphics(path = "figures/reg-gp.pdf") -->
-<!-- ``` -->
-<!-- ```{r irreg-gp,fig.cap="模拟高斯过程：相关函数分别为指数族（左图），梅隆族（右图）"} -->
-<!-- knitr::include_graphics(path = "figures/irreg-gp.pdf") -->
-<!-- ``` -->
-
 ## 空间广义线性混合效应模型 {#sim-sglmm}
 
 模拟的空间广义线性混合效应模型是
@@ -80,7 +73,7 @@ g(\mu_i) = \beta_{0} + \beta_{1} * X_{1} + \beta_{2} * X_{2} + S(x) (\#eq:sim-SG
 
 ### 响应变量服从二项分布 {#binomal-sglmm}
 
-响应变量服从二项分布，模型为 \@ref(eq:sim-SGLMM)， 固定效应参数 $\beta = (\beta_0,\beta_1,\beta_2)$， 空间效应参数 $\boldsymbol{\theta} = (\sigma^2,\phi)$。 参数设置为 $\beta = c(-1,1,0.5), \boldsymbol{\theta} = (1,1)$，采样点数目为 $N=49$， 每个采样点抽取的样本数 $m_i = 100,i = 1,2,\ldots,N$，在这组参数下，重复产生 100 个数据集。 分别使用低秩近似算法(LR)， 蒙特卡罗最大似然算法 (MCML)， 贝叶斯 MCMC 算法 (MCMC) 和贝叶斯 STAN-MCMC 算法 (STAN-MCMC) 估计模型的参数， LR 与 MCML 的结果见表 \@ref(tab:binomal-LRvsMCML)， 两个基于贝叶斯的算法见表 \@ref(tab:binomal-MCMCvsSTAN)。
+响应变量服从二项分布，模型为 \@ref(eq:sim-SGLMM)， 固定效应参数 $\beta = (\beta_0,\beta_1,\beta_2)$， 空间效应参数 $\boldsymbol{\theta} = (\sigma^2,\phi)$。 参数设置为 $\beta = c(-1,1,0.5), \boldsymbol{\theta} = (1,1)$，采样点数目为 $N=49$， 每个采样点抽取的样本数 $m_i = 100,i = 1,2,\ldots,N$，在这组参数下，重复产生 100 个数据集。 分别使用低秩近似算法(LR)， 蒙特卡罗最大似然算法 (MCML)， 贝叶斯 MCMC 算法 (MCMC) 和贝叶斯 STAN-MCMC 算法 (STAN-MCMC) 估计模型的参数。
 
 
 Table: (\#tab:simulation-norm) 正态分布情形下的数值模拟比较
