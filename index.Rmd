@@ -85,3 +85,6 @@ lapply(c(
 4. 转置 $A^{\top}$ 和多元函数求二阶导 $Q''(\mathbf{s})$
 6. 在贝叶斯环境下，术语混合效应模型用贝叶斯分层模型替换
 
+```{bash,eval=is_on_travis,echo=is_on_travis}
+cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c
+```

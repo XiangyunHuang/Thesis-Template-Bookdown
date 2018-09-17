@@ -55,4 +55,3 @@ script:
 after_success:
   - make pdf
   - netlify deploy -t $NETLIFY_PAT
-  - cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c
