@@ -8,11 +8,12 @@ Imports:
   colorspace (>= 1.4-0),
   rmarkdown,
   bookdown,
+  formatR,
+  gridExtra,
   sf,
   ggplot2,
   mcmc
 Suggests: 
-  magick,
   svglite
 Remotes: 
   rstudio/rmarkdown,
