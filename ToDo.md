@@ -13,6 +13,8 @@ knitr::include_graphics(path = c(
 另一种表示方式是平面的 image 图像
 
 
+迭代加权最小二乘估计
+
 修正的第三类贝塞尔函数
 
 ```r
@@ -131,20 +133,6 @@ M-H/Gibbs
 高斯马尔科夫随机场 (Gaussian Markov Random Fields，简称 GMRF) 是一个随机向量服从多元正态分布，并且随机向量具有马尔科夫性，即 $x_i \perp x_j | \mathbf{x}_{-ij},i\neq j$，其中记号 $-ij$ 表示除了 $i$ 和 $j$ 以外的其它所有元素。
 
 分析，模拟和预测空间过程 [@RandomFields2015]
-
-Warning messages:
-1: The label(s) related-algrithms not found
-2: The label(s) tab:binomal-LRvsMCML, tab:binomal-MCMCvsSTAN not found
-3: The label(s) fig:matern-3d not found
-4: The label(s) related-algrithms not found
-5: The label(s) eq:likelihood-approx not found
-6: The label(s) eq:likelihood-approx not found
-7: The label(s) eq:sim-sglmm, eq:sim-sglmm not found
-8: The label(s) eq:sim-sglmm not found
-9: The label(s) eq:exp-matern not found
-10: The label(s) fig:reg-gp, fig:irreg-gp not found
-11: The label(s) tab:binomal-LRvsMCML, tab:binomal-MCMCvsSTAN not found
-12: The label(s) tab:loaloa-estimation1 not found
 
 
 平面 r^2  
