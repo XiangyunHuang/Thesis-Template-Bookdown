@@ -30,11 +30,11 @@ description: "Generalized linear mixed models, MCMC algorithms, Spatial generali
 
 \mainmatter
 
-```{r,include=FALSE}
+```{r,include=FALSE,eval=!is_on_travis}
 lapply(c(
-  "formatR", "ISLR", "svglite",
-  "ggplot2", "gridExtra", "PrevMap",
-  "geoRglm"
+  "formatR", "sp", "svglite", "sf",
+  "ggplot2", "gridExtra", "PrevMap", "geoR",
+  "geoRglm", "rstan", "rstanarm", "brms"
 ), function(pkg) {
   if (system.file(package = pkg) == "") install.packages(pkg)
 })
