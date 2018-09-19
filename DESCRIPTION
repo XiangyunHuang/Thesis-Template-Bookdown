@@ -13,7 +13,10 @@ Imports:
   sf,
   ggplot2,
   mcmc,
-  rstan
+  rstan,
+  rstanarm,
+  rstansim,
+  brms
 Suggests: 
   svglite
 Remotes: 

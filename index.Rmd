@@ -89,5 +89,6 @@ lapply(c(
 cat(system("cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c",intern = TRUE),sep = "\n")
 parallel::detectCores()
 ceiling(parallel::detectCores()/2)
+# 32  Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz
 # options(mc.cores = ceiling(parallel::detectCores()/2))
 ```
