@@ -9,9 +9,6 @@
 
 关于 GLMM 和 LMM 的材料 notesdown repo 下的 issues
 
-
-
-
 ## 修正的第三类贝塞尔函数 {#Modified-Bessel-functions}
 
 空间过程的协方差函数是梅隆族时，需要用到修正的第三类贝塞尔函数，它 $\mathcal{K}_{\kappa}(u)$ 是修正的贝塞尔方程的解 [@Abramowitz1972]，函数形式如下
@@ -88,13 +85,17 @@ f(x) = x^2 = 2^2 + 2(2)(x-2) + \frac{2}{2}(x-2)^2
 自由度越大，近似效果越好，对于多元分布的情况不难推广，使用多元泰勒展开和黑塞矩阵即可表示。并且参数集 $\theta$ 有唯一的极大值点 $\hat{\theta}$ [@Tierney1986]
 
 
-## 贝叶斯方法
+## 贝叶斯方法 {#bayes-methods}
 
 [贝叶斯方法]{.todo}
 
 以标准线性模型为例介绍贝叶斯分析及其基本概念 [@Rasmussen2006]
 
 [贝叶斯定理]{.todo}
+
+[非信息先验分布]{.todo}
+
+为什么不用 RMSE 均方误差，WAIC pDIC 模型选择 loo K-CV  
 
 贝叶斯定理 \@ref(fig:bayes-theorem)  贝叶斯定理 \@ref(eq:bayes-theorem)
 
@@ -127,7 +128,7 @@ p(\boldsymbol{\theta}|\mathbf{Y})  & =  & \displaystyle \frac{p(\boldsymbol{\the
 
 扁平先验、杰弗里斯先验
 
-### 贝叶斯数据分析
+### 贝叶斯数据分析 {#bayesian-data-analysis}
 
 以一个广义线性模型为例说明贝叶斯数据分析的过程。模拟数据集 logit 来自 R包 **mcmc**，它包含5个变量，一个响应变量 y 和四个预测变量 x1，x2，x3，x4。频率派的分析可以用这样几行 R 代码实现
 
@@ -200,7 +201,7 @@ fit.bayes$accept
 
 
 
-## 极大似然估计
+## 极大似然估计 {#Maximum-likelihood-Estimates}
 
 书本定义和性质，在后续章节介绍限制极大似然 Restricted Maximum likelihood, 简称 REML
 
@@ -212,7 +213,7 @@ Penalized maximum likelihood estimates are calculated using optimization methods
 
 BFGS 拟牛顿法和采样器 https://bookdown.org/rdpeng/advstatcomp
 
-## 维数灾难与蒙特卡罗积分
+## 维数灾难与蒙特卡罗积分 {#Curse-of-Dimensionality}
 
 一般地，混合效应模型的统计推断总是不可避免的要面对高维积分，处理高维积分的方法一个是寻找近似方法避免求积分，一个是寻找有效的随机模拟方法直接求积分。这里，介绍蒙特卡罗方法求积分，以计算 $N$ 维超立方体的内切球的体积为例说明。
 
@@ -246,7 +247,7 @@ A theory of statistical models for Monte Carlo integration 蒙特卡罗积分 [@
 
 随机模拟的基础是有高质量的伪随机数，如何生成和检验伪随机数的质量参见黄湘云的文章 [@Huang2017COS]
 
-## 采样器
+## 采样器 {#Samplers}
 
 汉密尔顿蒙特卡罗 (Hamiltonian Monte Carlo，简称 HMC) [@hoffman2014]
 
