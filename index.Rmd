@@ -85,10 +85,9 @@ lapply(c(
 4. 转置 $A^{\top}$ 和多元函数求二阶导 $Q''(\mathbf{s})$
 6. 在贝叶斯环境下，术语混合效应模型用贝叶斯分层模型替换
 
-```{r,eval=is_on_travis,echo=is_on_travis}
+```{r,eval=is_on_travis,echo=is_on_travis,message=FALSE,warning=FALSE}
 cat(system("cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c", intern = TRUE), sep = "\n")
 parallel::detectCores()
-ceiling(parallel::detectCores() / 2)
 # 32  Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz
 # options(mc.cores = ceiling(parallel::detectCores()/2))
 library(rstan)
@@ -124,8 +123,10 @@ fit <- stan(
         target += normal_lpdf(y | theta, sigma);
       }",
     data = schools_dat,
-    iter = 1000, chains = 4
+    iter = 10000, chains = 4,
+    seed = 2018
   )
 gc()
 print(fit, digits = 3)
+devtools::session_info()
 ```
