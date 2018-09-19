@@ -74,6 +74,8 @@ lapply(c(
 重要说明：凡是论文中公式、图表与文字之间的距离明显变大，就是该在附近添加一两行话填充一下
 公式中加粗表示向量，如 $\mathbf{u},\boldsymbol{\beta}$
 
+参考 <https://stefvanbuuren.name/fimd/symbol-description.html>
+
 1. 数学公式：随机过程 $\mathcal{S}$ 大写字母 `\mathcal` 花体，
 2. 随机向量 $\boldsymbol{\theta,\beta},\mathbf{x,y}$ 用加粗方式分别表示未知参数，
 1. 模型回归参数向量 `\boldsymbol`，数据向量 `\mathbf`，
