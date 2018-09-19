@@ -128,5 +128,6 @@ fit <- stan(
   )
 gc()
 print(fit, digits = 3)
+plot(fit)
 devtools::session_info()
 ```
