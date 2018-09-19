@@ -12,7 +12,8 @@ Imports:
   gridExtra,
   sf,
   ggplot2,
-  mcmc
+  mcmc,
+  rstan
 Suggests: 
   svglite
 Remotes: 

@@ -9,7 +9,7 @@
 
 rongelap <- read.table("code/rongelap/rongelap.txt", header = TRUE)
 
-
+# 数据来源作者 Paulo Justiniano Ribeiro Junior
 # rongelap_coastline <- read.table(url(
 #   paste("http://www.leg.ufpr.br/lib/exe/fetch.php/",
 #     "pessoais:paulojus:mbgbook:datasets:rongelap-coastline.txt",
