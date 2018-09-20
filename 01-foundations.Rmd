@@ -26,6 +26,31 @@ I_{-\kappa}(u) & =  \sum_{m=0}^{\infty} \frac{1}{m!\Gamma(m + \kappa + 1)} \big(
 knitr::include_graphics(path = "figures/bessel.png")
 ```
 
+## 指数族 {#Exponential-family}
+
+指数族 [@McCullagh1989]
+
+\begin{equation}
+f_{Y}(y;\theta,\phi) = \exp\{ \big(y\theta - b(\theta) \big)/a(\phi) + c(y,\phi) \}
+(\#eq:common-exponential-family)
+\end{equation}
+
+$a(\cdot),b(\cdot),c(\cdot)$ 是指数族具体形式决定的特定函数
+
+Table: (\#tab:common-characteristics) 指数族内常见的一元分布的共同特征及符号表示^[(ref:footnote-tab-common-characteristics)]
+
+|                   |      正态分布      |      泊松分布      |      二项分布      |
+| :---------------- | :----------------: | :----------------: | :----------------: | 
+|  记号             | $N(\mu,\sigma^2)$  |       $P(\mu)$     |     $B(m,\pi)/m$   |
+|  $y$ 取值范围     | $(-\infty,\infty)$ |     $0(1)\infty$   |  $\frac{0(1)m}{m}$ |
+|  发散参数：$\phi$ | $\phi = \sigma^2$  |         $1$        |        $1/m$       |
+|  $b(\theta)$      | $\theta^2/2$       |    $\exp(\theta)$  |$\log(1+e^{\theta})$|
+| $c(y;\theta)$     | $-\frac{1}{2}\big( \frac{y^2}{\phi} + \log(2\pi\phi) \big)$ |  $-\log(y!)$    | $\log\binom{m}{my}$ |   
+| $\mu(\theta) = \mathsf{E}(Y;\theta)$  |  $\theta$   | $\exp(\theta)$ |  $e^{\theta}/(1+e^{\theta})$ |
+| 典则联系：$\theta(\mu)$   |  identity |    log      |     logit      |
+| 方差函数：$V(\mu)$        |   1       |   $\mu$     |  $\mu(1-\mu)$  |
+
+(ref:footnote-tab-common-characteristics) 均值参数用 $\mu$ 表示，二项分布里用 $\pi$ 表示；典则参数用 $\theta$ 表示，定义见 \@ref(eq:common-exponential-family) 式，$\mu$ 和 $\theta$ 的关系在表 \@ref(tab:common-characteristics) 的第 6 和第 7 行给出。 
 
 ## 拉普拉斯近似 {#Laplace-approximation}
 
