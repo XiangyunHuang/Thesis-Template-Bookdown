@@ -160,3 +160,8 @@ tinytex::tlmgr_install(c("ctex", "fandol", "psnfss", "sourcecodepro"))
 ```{r}
 xfun::session_info(c("rmarkdown","bookdown","tinytex"))
 ```
+
+将所有代码块的代码都合在一处
+
+```{r ref.label=knitr::all_labels(), echo = T, eval = F}
+```

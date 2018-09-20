@@ -48,7 +48,7 @@ knitr::include_graphics(path = "figures/bessel.png")
 
 ## 指数族 {#sec:exponential-family}
 
-一般地，我们说样本 $\mathbf{Y}$ 的分布服从指数族，是指分布可以写成 [@McCullagh1989]
+一般地，样本 $\mathbf{Y}$ 的分布服从指数族，即形如
 
 \begin{equation}
 f_{Y}(y;\theta,\phi) = \exp\big\{ \big(y\theta - b(\theta) \big)/a(\phi) + c(y,\phi) \big\}
@@ -64,7 +64,7 @@ f_{Y}(y;\theta,\phi) & = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\{-\frac{(y - \mu)^2}
 \end{aligned} (\#eq:normal-distribution)
 \end{equation}
 
-通过与 \@ref(eq:common-exponential-family) 式对比，可知 $\theta = \mu$，$\phi = \sigma^2$，
+通过与 \@ref(eq:common-exponential-family) 式对比，可知 $\theta = \mu$，$\phi = \sigma^2$，并且有
 
 \[
 a(\phi) = \phi, \quad b(\theta) = \theta^2/2, \quad c(y,\phi) = - \frac{1}{2}\{ y^2/\sigma^2 + \log(2\pi\sigma^2) \} 
@@ -107,23 +107,29 @@ l(\theta,\phi;y) = {y\theta - b(\theta)}/a(\phi) + c(y,\phi)
 
 所以
 
-\[
-\mathsf{E}(Y) = \mu = b'(\theta)
-\]
+\[ \mathsf{E}(Y) = \mu = b'(\theta) \]
 
 根据 \@ref(eq:variance-log-lik) 式和 \@ref(eq:partial-log-lik) 式，可得
 
-\[
-0 = - \frac{b''(\theta)}{a(\phi)} + \frac{\mathsf{Var}(Y)}{a^2(\phi)}
-\]
+\[ 0 = - \frac{b''(\theta)}{a(\phi)} + \frac{\mathsf{Var}(Y)}{a^2(\phi)} \]
 
 所以
 
-\[
-\mathsf{Var}(Y) = b''(\theta)a(\phi)
-\]
+\[ \mathsf{Var}(Y) = b''(\theta)a(\phi) \]
 
-可见，$Y$ 的方差是两个函数的乘积，一个是 $b''(\theta)$， 它仅仅依赖典则参数，被叫做方差函数，另一个是 $a(\phi)$，它独立于 $\theta$，仅仅依赖 $\phi$，方差函数可以看作是 $\mu$ 的函数，记作 $V(\mu)$。根据 \@ref(eq:common-exponential-family)式，正态、泊松和二项分布的特征见表 \@ref(tab:common-characteristics)，其它常见分布见 Peter McCullagh 等 （1989年） [@McCullagh1989]。
+可见，$Y$ 的方差是两个函数的乘积，一个是 $b''(\theta)$， 它仅仅依赖典则参数，被叫做方差函数，另一个是 $a(\phi)$，它独立于 $\theta$，仅仅依赖 $\phi$，方差函数可以看作是 $\mu$ 的函数，记作 $V(\mu)$。
+
+函数 $a(\phi)$ 通常形如
+
+\[ a(\phi) = \phi/w \]
+
+其中 $\phi$ 可由 $\sigma^2$ 表示，故而也叫做发散参数 (dispersion parameter)，是一个与样本观察值相关的常数，$w$ 是已知的权重，随样本观察值变化。对正态分布模型而言，$w$ 的分量是 $m$ 个相互独立的样本观察值的均值，我们有
+
+\[ a(\phi) = \sigma^2/m\]
+
+所以，$w = m$。
+
+根据 \@ref(eq:common-exponential-family)式，正态、泊松和二项分布的特征见表 \@ref(tab:common-characteristics)，其它常见分布见 Peter McCullagh 等 (1989年) [@McCullagh1989]。
 
 Table: (\#tab:common-characteristics) 指数族内常见的一元分布的共同特征及符号表示^[(ref:footnote-tab-common-characteristics)] 
 
@@ -131,11 +137,11 @@ Table: (\#tab:common-characteristics) 指数族内常见的一元分布的共同
 | :---------------- | :----------------: | :----------------: | :----------------: | 
 |  记号             | $N(\mu,\sigma^2)$  |       $P(\mu)$     |     $B(m,\pi)/m$   |
 |  $y$ 取值范围     | $(-\infty,\infty)$ |     $0(1)\infty$   |  $\frac{0(1)m}{m}$ |
-|  发散参数：$\phi$ | $\phi = \sigma^2$  |         $1$        |        $1/m$       |
+|  $\phi$ | $\phi = \sigma^2$  |         $1$        |        $1/m$       |
 |  $b(\theta)$      | $\theta^2/2$       |    $\exp(\theta)$  |$\log(1+e^{\theta})$|
 | $c(y;\theta)$     | $-\frac{1}{2}\big( \frac{y^2}{\phi} + \log(2\pi\phi) \big)$ |  $-\log(y!)$    | $\log\binom{m}{my}$ |   
 | $\mu(\theta) = \mathsf{E}(Y;\theta)$  |  $\theta$   | $\exp(\theta)$ |  $e^{\theta}/(1+e^{\theta})$ |
-| 典则联系：$\theta(\mu)$   |  identity |    log      |     logit      |
+| 联系函数：$\theta(\mu)$   |  identity |    log      |     logit      |
 | 方差函数：$V(\mu)$        |   1       |   $\mu$     |  $\mu(1-\mu)$  |
 
 (ref:footnote-tab-common-characteristics) 均值参数用 $\mu$ 表示，二项分布里用 $\pi$ 表示；典则参数用 $\theta$ 表示，定义见 \@ref(eq:common-exponential-family) 式，$\mu$ 和 $\theta$ 的关系在表 \@ref(tab:common-characteristics) 的第 6 和第 7 行给出。 
@@ -150,15 +156,11 @@ f(x) = f(a) + \frac{f'(a)}{1!}(x-a) + \frac{f''(a)}{2!}(x-a)^2 + \frac{f'''(a)}{
 
 以基本的抛物线为例， $f(x) = x^2$，在 $a = 2$ 处展开
 
-\[
-f(x) = x^2 \quad f'(x) = 2x \quad f''(x) = 2 \quad f'''(x) = 0
-\]
+\[ f(x) = x^2, \quad f'(x) = 2x, \quad f''(x) = 2, \quad f'''(x) = 0 \]
 
 因此，
 
-\[
-f(x) = x^2 = 2^2 + 2(2)(x-2) + \frac{2}{2}(x-2)^2
-\]
+\[ f(x) = x^2 = 2^2 + 2(2)(x-2) + \frac{2}{2}(x-2)^2 \]
 
 拉普拉斯近似用正态分布来估计任意分布，它使用泰勒展开的前三项近似 $\log g(x)$，展开的位置是 $\hat{x}$，则 
 
@@ -168,9 +170,7 @@ f(x) = x^2 = 2^2 + 2(2)(x-2) + \frac{2}{2}(x-2)^2
 
 在函数 $g(x)$ 的极值点 $\hat{x}$ 展开， $x = \hat{x}$ 一阶导是 0，用曲率去估计方差是 $\hat{\sigma}^2 = -1/\frac{\partial^2 \log g(\hat{x})}{2\partial x^2}$，再重写上述近似
 
-\[
-\log g(x) \approx \log g(\hat{x}) - \frac{1}{2\hat{\sigma}^2} (x - \hat{x})^2
-\]
+\[ \log g(x) \approx \log g(\hat{x}) - \frac{1}{2\hat{\sigma}^2} (x - \hat{x})^2 \]
 
 现在，用这个结果做正态近似，将上式两端取指数和积分，移去常数项
 
@@ -191,9 +191,7 @@ f(x) = x^2 = 2^2 + 2(2)(x-2) + \frac{2}{2}(x-2)^2
 
 所以
 
-\[
-\chi_{k}^2 \overset{LA}{\sim}  N(\hat{x} = k-2, \hat{\sigma}^2 = 2(k-2))
-\]
+\[ \chi_{k}^2 \overset{LA}{\sim}  N(\hat{x} = k-2, \hat{\sigma}^2 = 2(k-2)) \]
 
 自由度越大，近似效果越好，对于多元分布的情况不难推广，使用多元泰勒展开和黑塞矩阵即可表示。并且参数集 $\theta$ 有唯一的极大值点 $\hat{\theta}$ [@Tierney1986]
 

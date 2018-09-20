@@ -2,14 +2,14 @@
 
 \chaptermark{附录}
 
-## 软件信息  {#session .unnumbered}
+## 软件信息  {#sessioninfo .unnumbered}
 
 ```{r,echo=TRUE}
 xfun::session_info(packages = c("rmarkdown", "bookdown"), dependencies = FALSE)
 ```
 
 
-## 生成随机数 {-}
+## 随机数生成 {#random-number-generation .unnumbered}
 
 基于空间广义线性混合效应模型生成随机数的函数：
 `generate_sim_data` 函数可生成响应变量服从泊松分布或二项分布，平稳高斯过程的自相关函数为二次幂指数族或梅隆族的随机数
@@ -61,7 +61,7 @@ generate_sim_data <- function(N = 49, intercept = -1.0,
 }
 ```
 
-## STAN-MCMC 算法 {-}
+## 算法比较 {#algrithms .unnumbered}
 
 ```{r,echo=TRUE,eval=FALSE}
 # 加载程序包
@@ -107,4 +107,50 @@ STAN 代码模拟高斯过程，自协方差函数见方程 \ref{eq:exp-quad}
 cat(readLines("code/gp.stan"),sep = "\n")
 ```
 
+```{r,eval=is_on_travis,echo=is_on_travis,message=FALSE,warning=FALSE}
+cat(system("cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c", intern = TRUE), sep = "\n")
+parallel::detectCores()
+# 32  Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz
+# options(mc.cores = ceiling(parallel::detectCores()/2))
+library(rstan)
+options(mc.cores = ceiling(parallel::detectCores() / 2))
+rstan_options(auto_write = TRUE)
+
+schools_dat <- list(
+  J = 8,
+  y = c(28, 8, -3, 7, -1, 1, 18, 12),
+  sigma = c(15, 10, 16, 11, 9, 11, 10, 18)
+)
+fit <- stan(
+    model_name = "8schools",
+    model_code = "
+      // saved as 8schools.stan
+      data {
+        int<lower=0> J; // number of schools 
+        real y[J]; // estimated treatment effects
+        real<lower=0> sigma[J]; // s.e. of effect estimates 
+      }
+      parameters {
+        real mu; 
+        real<lower=0> tau;
+        real eta[J];
+      }
+      transformed parameters {
+        real theta[J];
+        for (j in 1:J)
+          theta[j] = mu + tau * eta[j];
+      }
+      model {
+        target += normal_lpdf(eta | 0, 1);
+        target += normal_lpdf(y | theta, sigma);
+      }",
+    data = schools_dat,
+    iter = 10000, chains = 4,
+    seed = 2018
+  )
+gc()
+print(fit, digits = 3)
+plot(fit)
+devtools::session_info()
+```
 
