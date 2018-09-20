@@ -8,3 +8,8 @@
 ---
 
 感谢 [Pandoc](https://github.com/jgm/pandoc)、[TinyTeX](https://github.com/yihui/tinytex)、[bookdown](https://github.com/rstudio/bookdown) 的开发者们，特别是 [John MacFarlane](https://johnmacfarlane.net/) 和 [Yihui Xie](https://yihui.name/)
+
+- TinyTeX: latest
+- Pandoc: 2.2.3.2 
+- rmarkdown: 1.10.12
+- bookdown: 0.7.18

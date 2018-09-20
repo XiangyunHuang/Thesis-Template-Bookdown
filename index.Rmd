@@ -84,8 +84,26 @@ lapply(c(
 1. 期望方差 $\mathsf{E,Var}$ 用 `\mathsf` 表示
 2. 正文： R 包和 LaTeX 包名加粗 **nlme**
 3. 代码： 等宽字体，输出 `#>` ，代码注释 `#`
-4. 转置 $A^{\top}$ 和多元函数求二阶导 $Q''(\mathbf{s})$
+4. 转置 $A^{\top}$ 和多元函数求二阶导 $Q''(\mathbf{s})$ 
 6. 在贝叶斯环境下，术语混合效应模型用贝叶斯分层模型替换
+7. 章引用 `#chp:自定义名称` 节引用 `#sec:自定义名称` 小节引用 `#subsec:` 即都加上前缀 
+
+论文当中出现的符号和相应的描述，及在论文中首次出现的位置，见表 \@ref(tab:math-symbols)
+
+Table: (\#tab:math-symbols) 论文中出现的数学符号及说明
+
+|符号    | 描述                                                  | 章.节     |
+|:-------|:------------------------------------------------------|:----------|
+| $\mathbf{y}$          | 向量用小写字母加粗表示，如响应变量观测向量，回归系数，                 | \@ref(sec:exponential-family) |
+| $\mathbf{X}$          | 矩阵用大写字母加粗表示，如协变量数据矩阵                               | \@ref(sec:exponential-family) |
+| $\boldsymbol{\beta}$  | 模型回归系数向量，如 $\boldsymbol{\beta} = (\beta_0,\beta_1,\beta_2)$  | \@ref(sec:exponential-family) |
+| $\boldsymbol{\theta}$ | 模型其它参数集，如 $\boldsymbol{\theta} = (\phi,\tau^2,\sigma^2)$      | \@ref(sec:exponential-family) |
+| $\top$                | 向量或矩阵转置，如 $\mathbf{y}^{\top},\mathbf{X}^\top$                 | \@ref(sec:exponential-family) |
+| $'$                   | 一元函数求一阶导，二阶导用两个上撇号表示，如 $b'(\theta),b''(\theta)$  | \@ref(sec:exponential-family) |
+| $\mathbb{R}^n$        | 大写空心体字母表示 $n$ 维实数域                                        |   |
+| $\mathcal{S}$         | 大写花体字母表示随机过程                                               |   |
+| $\mathsf{E,Var,Cov}$  | 无衬线字体表示期望，方差，协方差                                       |   |
+
 
 ```{r,eval=is_on_travis,echo=is_on_travis,message=FALSE,warning=FALSE}
 cat(system("cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c", intern = TRUE), sep = "\n")

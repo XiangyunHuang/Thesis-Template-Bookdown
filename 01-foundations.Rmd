@@ -50,18 +50,63 @@ I_{-\kappa}(u) & =  \sum_{m=0}^{\infty} \frac{1}{m!\Gamma(m + \kappa + 1)} \big(
 knitr::include_graphics(path = "figures/bessel.png")
 ```
 
-## 指数族 {#Exponential-family}
+## 指数族 {#sec:exponential-family}
 
-指数族 [@McCullagh1989]
+一般地，我们说样本 $\mathbf{Y}$ 的分布服从指数族，是指分布可以写成 [@McCullagh1989]
 
 \begin{equation}
 f_{Y}(y;\theta,\phi) = \exp\{ \big(y\theta - b(\theta) \big)/a(\phi) + c(y,\phi) \}
 (\#eq:common-exponential-family)
 \end{equation}
 
-$a(\cdot),b(\cdot),c(\cdot)$ 是指数族具体形式决定的特定函数
+其中，$a(\cdot),b(\cdot),c(\cdot)$ 是某些特定的函数。如果 $\phi$ 已知，这是一个含有典则参数 $\theta$ 的指数族模型，如果 $\phi$ 未知，它可能是含有两个参数的指数族。对于正态分布
 
-Table: (\#tab:common-characteristics) 指数族内常见的一元分布的共同特征及符号表示^[(ref:footnote-tab-common-characteristics)]
+\begin{equation}
+\begin{aligned}
+f_{Y}(y;\theta,\phi) & = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\{-\frac{(y - \mu)^2}{2\sigma^2}  \}  \\
+ & = \exp \{ (y\mu - \mu^2/2)/\sigma^2 - \frac{1}{2}\big(y^2/\sigma^2 + \log(2\pi\sigma^2)\big)\}
+\end{aligned} (\#eq:normal-distribution)
+\end{equation}
+
+通过与 \@ref(eq:common-exponential-family) 式对比，可知 $\theta = \mu$，$\phi = \sigma^2$，
+
+\[
+a(\phi) = \phi, \quad b(\theta) = \theta^2/2, \quad c(y,\phi) = - \frac{1}{2}\{ y^2/\sigma^2 + \log(2\pi\sigma^2) \} 
+\]
+
+记 $l(\theta,\phi;y) = \log f_{Y}(y;\theta,\phi)$ 为给定样本点 $y$ 的情况下，关于 $\theta$ 和 $\phi$ 的对数似然函数。样本分布 $Y$ 的均值和方差具有如下关系
+
+\begin{equation}
+\mathsf{E}\big( \frac{\partial l}{\partial \theta} \big) = 0
+(\#eq:mean-log-lik)
+\end{equation}
+
+和
+
+\begin{equation}
+\mathsf{E}\big( \frac{\partial^2 l}{\partial \theta^2} \big) + \mathsf{E}(\frac{\partial l}{\partial \theta})^2  = 0
+(\#eq:variance-log-lik)
+\end{equation}
+
+从 \@ref(eq:common-exponential-family) 式知
+
+\[
+l(\theta;y) = {y\theta - b(\theta)}/a(\phi) + c(y,\phi)
+\]
+
+因此，
+
+\begin{equation}
+\begin{aligned}
+\frac{\partial l}{\partial \theta} & = {y - b'(\theta)}/a(\phi)  \\
+\frac{\partial^2 l}{\partial \theta^2}  & = - b''(\theta)/a(\phi)
+\end{aligned} (\#eq:partial-log-lik)
+\end{equation}
+
+
+
+
+Table: (\#tab:common-characteristics) 指数族内常见的一元分布的共同特征及符号表示^[(ref:footnote-tab-common-characteristics)] 
 
 |                   |      正态分布      |      泊松分布      |      二项分布      |
 | :---------------- | :----------------: | :----------------: | :----------------: | 
