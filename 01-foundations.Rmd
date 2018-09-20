@@ -2,15 +2,11 @@
 
 蒙特卡罗积分、拉普拉斯近似、非信息先验分布、STAN 计算框架作为预备知识
 
-解释指数族 b(x) 函数 c(x) 函数 散射参数 psi
-
-
 贝叶斯基础知识介绍
 
 关于 GLMM 和 LMM 的材料 notesdown repo 下的 issues
 
-小麦产量实验
-Yields from a randomized complete block design
+小麦产量实验 Yields from a randomized complete block design
 
 空间半变异方差，变差 [@Pinheiro2000]
 
@@ -35,7 +31,7 @@ m2
 
 ## 修正的第三类贝塞尔函数 {#Modified-Bessel-functions}
 
-空间过程的协方差函数是梅隆族时，需要用到修正的第三类贝塞尔函数，它 $\mathcal{K}_{\kappa}(u)$ 是修正的贝塞尔方程的解 [@Abramowitz1972]，函数形式如下
+空间过程的协方差函数是梅隆族时，需要用到修正的第三类贝塞尔函数 $\mathcal{K}_{\kappa}(u)$，它是修正的贝塞尔方程的解 [@Abramowitz1972]，函数形式如下
 
 \begin{equation}
 \begin{aligned}
@@ -55,7 +51,7 @@ knitr::include_graphics(path = "figures/bessel.png")
 一般地，我们说样本 $\mathbf{Y}$ 的分布服从指数族，是指分布可以写成 [@McCullagh1989]
 
 \begin{equation}
-f_{Y}(y;\theta,\phi) = \exp\{ \big(y\theta - b(\theta) \big)/a(\phi) + c(y,\phi) \}
+f_{Y}(y;\theta,\phi) = \exp\big\{ \big(y\theta - b(\theta) \big)/a(\phi) + c(y,\phi) \big\}
 (\#eq:common-exponential-family)
 \end{equation}
 
@@ -64,7 +60,7 @@ f_{Y}(y;\theta,\phi) = \exp\{ \big(y\theta - b(\theta) \big)/a(\phi) + c(y,\phi)
 \begin{equation}
 \begin{aligned}
 f_{Y}(y;\theta,\phi) & = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\{-\frac{(y - \mu)^2}{2\sigma^2}  \}  \\
- & = \exp \{ (y\mu - \mu^2/2)/\sigma^2 - \frac{1}{2}\big(y^2/\sigma^2 + \log(2\pi\sigma^2)\big)\}
+ & = \exp\big \{ (y\mu - \mu^2/2)/\sigma^2 - \frac{1}{2}\big(y^2/\sigma^2 + \log(2\pi\sigma^2)\big) \big\}
 \end{aligned} (\#eq:normal-distribution)
 \end{equation}
 
@@ -103,8 +99,31 @@ l(\theta,\phi;y) = {y\theta - b(\theta)}/a(\phi) + c(y,\phi)
 \end{aligned} (\#eq:partial-log-lik)
 \end{equation}
 
+从 \@ref(eq:mean-log-lik) 式和 \@ref(eq:partial-log-lik)，可以得出
 
+\[ 
+0 = \mathsf{E}\big( \frac{\partial l}{\partial \theta} \big) = \big\{ \mu - b'(\theta) \big\}/a(\phi)
+\]
 
+所以
+
+\[
+\mathsf{E}(Y) = \mu = b'(\theta)
+\]
+
+根据 \@ref(eq:variance-log-lik) 式和 \@ref(eq:partial-log-lik) 式，可得
+
+\[
+0 = - \frac{b''(\theta)}{a(\phi)} + \frac{\mathsf{Var}(Y)}{a^2(\phi)}
+\]
+
+所以
+
+\[
+\mathsf{Var}(Y) = b''(\theta)a(\phi)
+\]
+
+可见，$Y$ 的方差是两个函数的乘积，一个是 $b''(\theta)$， 它仅仅依赖典则参数，被叫做方差函数，另一个是 $a(\phi)$，它独立于 $\theta$，仅仅依赖 $\phi$，方差函数可以看作是 $\mu$ 的函数，记作 $V(\mu)$。根据 \@ref(eq:common-exponential-family)式，正态、泊松和二项分布的特征见表 \@ref(tab:common-characteristics)，其它常见分布见 Peter McCullagh 等 （1989年） [@McCullagh1989]。
 
 Table: (\#tab:common-characteristics) 指数族内常见的一元分布的共同特征及符号表示^[(ref:footnote-tab-common-characteristics)] 
 

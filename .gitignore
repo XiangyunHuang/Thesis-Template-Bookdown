@@ -53,5 +53,6 @@ SGLMMwR.rds
 *.tar.gz
 
 code/rongelap/*.RData
-
+00d-abstract-zh.Rmd
+00e-abstract-en.Rmd
 
