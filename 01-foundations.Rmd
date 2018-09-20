@@ -137,9 +137,9 @@ Table: (\#tab:common-characteristics) 指数族内常见的一元分布的共同
 | :---------------- | :----------------: | :----------------: | :----------------: | 
 |  记号             | $N(\mu,\sigma^2)$  |       $P(\mu)$     |     $B(m,\pi)/m$   |
 |  $y$ 取值范围     | $(-\infty,\infty)$ |     $0(1)\infty$   |  $\frac{0(1)m}{m}$ |
-|  $\phi$ | $\phi = \sigma^2$  |         $1$        |        $1/m$       |
-|  $b(\theta)$      | $\theta^2/2$       |    $\exp(\theta)$  |$\log(1+e^{\theta})$|
-| $c(y;\theta)$     | $-\frac{1}{2}\big( \frac{y^2}{\phi} + \log(2\pi\phi) \big)$ |  $-\log(y!)$    | $\log\binom{m}{my}$ |   
+|  $\phi$           | $\phi = \sigma^2$  |         $1$        |        $1/m$       |
+|  $b(\theta)$      | $\theta^2/2$       |  $\exp(\theta)$    |$\log(1+e^{\theta})$|
+| $c(y;\theta)$     | $-\frac{1}{2}\big( \frac{y^2}{\phi} + \log(2\pi\phi) \big)$  |   $-\log(y!)$    | $\log\binom{m}{my}$ |   
 | $\mu(\theta) = \mathsf{E}(Y;\theta)$  |  $\theta$   | $\exp(\theta)$ |  $e^{\theta}/(1+e^{\theta})$ |
 | 联系函数：$\theta(\mu)$   |  identity |    log      |     logit      |
 | 方差函数：$V(\mu)$        |   1       |   $\mu$     |  $\mu(1-\mu)$  |

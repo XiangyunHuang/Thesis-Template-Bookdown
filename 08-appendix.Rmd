@@ -61,7 +61,7 @@ generate_sim_data <- function(N = 49, intercept = -1.0,
 }
 ```
 
-## 算法比较 {#algrithms .unnumbered}
+## 算法比较 {#compare-algrithms .unnumbered}
 
 ```{r,echo=TRUE,eval=FALSE}
 # 加载程序包

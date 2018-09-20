@@ -164,4 +164,5 @@ xfun::session_info(c("rmarkdown","bookdown","tinytex"))
 将所有代码块的代码都合在一处
 
 ```{r ref.label=knitr::all_labels(), echo = T, eval = F}
+# https://yihui.name/en/2018/09/code-appendix/
 ```
