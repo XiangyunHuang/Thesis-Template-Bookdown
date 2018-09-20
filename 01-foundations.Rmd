@@ -9,6 +9,30 @@
 
 关于 GLMM 和 LMM 的材料 notesdown repo 下的 issues
 
+小麦产量实验
+Yields from a randomized complete block design
+
+空间半变异方差，变差 [@Pinheiro2000]
+
+
+```{r,eval=FALSE}
+library(nlme)
+data(Wheat2) # Wheat Yield Trials
+head(Wheat2)
+m1 <- gls(yield ~ variety - 1, data = Wheat2)
+
+Wheat2$res <- as.numeric(residuals(m1))
+library(ggplot2)
+ggplot(Wheat2, aes(longitude, latitude, colour = res)) + 
+  geom_point(size = 5) + scale_color_gradient2()
+
+plot(Variogram(m1, form = ~ latitude + longitude, data = Wheat2))
+
+m2 <- update(m1, 
+  corr = corSpher(c(30, 0.2), form = ~ latitude + longitude, nugget = TRUE))
+m2
+```
+
 ## 修正的第三类贝塞尔函数 {#Modified-Bessel-functions}
 
 空间过程的协方差函数是梅隆族时，需要用到修正的第三类贝塞尔函数，它 $\mathcal{K}_{\kappa}(u)$ 是修正的贝塞尔方程的解 [@Abramowitz1972]，函数形式如下

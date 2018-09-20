@@ -1,7 +1,7 @@
 Package: SGLMMwR
 Type: Book
 Title: Thesis Template based on bookdown.
-Version: 0.0.1
+Version: 0.0.0.9000
 Depends: 
     R (>= 3.5.0)
 Imports: 
