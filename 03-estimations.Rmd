@@ -128,6 +128,18 @@ L_{p}(\alpha) = L(\alpha,\hat{\psi}(\alpha)) = \max_{\psi} (L(\alpha,\psi))
 
 Testing environmental and genetic effects in the presence of spatial autocorrelation [@spaMM2014]
 
+## 极大似然估计 {#maximum-likelihood-estimates}
+
+书本定义和性质，在后续章节介绍限制极大似然 Restricted Maximum likelihood, 简称 REML
+
+惩罚拟似然 Penalized Quasi-Likelihood, 简称 PQL 和边际拟似然 Marginal Quasi-Likelihood, 简称 MQL
+
+Profile Maximal Likelihood, 简称 PML
+
+Penalized maximum likelihood estimates are calculated using optimization methods such as the limited memory Broyden-Fletcher-Goldfarb-Shanno algorithm.
+
+BFGS 拟牛顿法和采样器 https://bookdown.org/rdpeng/advstatcomp
+
 
 ## 参数估计的算法 {#algrithms}
 
