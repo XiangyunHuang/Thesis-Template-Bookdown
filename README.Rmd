@@ -1,5 +1,15 @@
 # 准备 {#Prerequisites}
 
+重现论文需要的主要 **R** 包
+
+- rstan: 2.18.1
+- brms: 2.5.0
+- geoR: 1.7.5.2.1
+- geoRglm: 0.9.11
+- PrevMap: 1.4.2
+- spaMM: 2.4.35
+
+
 ## 英文字体
 
 Windows 系统自带新罗马字体和 Arial 字体，在 Ubuntu 系统上需要安装 Windows 下的两款字体 Times New Roman 和 Arial

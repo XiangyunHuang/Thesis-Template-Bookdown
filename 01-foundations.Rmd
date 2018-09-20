@@ -84,14 +84,14 @@ a(\phi) = \phi, \quad b(\theta) = \theta^2/2, \quad c(y,\phi) = - \frac{1}{2}\{ 
 和
 
 \begin{equation}
-\mathsf{E}\big( \frac{\partial^2 l}{\partial \theta^2} \big) + \mathsf{E}(\frac{\partial l}{\partial \theta})^2  = 0
+\mathsf{E}\big( \frac{\partial^2 l}{\partial \theta^2} \big) + \mathsf{E}\big(\frac{\partial l}{\partial \theta}\big)^2  = 0
 (\#eq:variance-log-lik)
 \end{equation}
 
 从 \@ref(eq:common-exponential-family) 式知
 
 \[
-l(\theta;y) = {y\theta - b(\theta)}/a(\phi) + c(y,\phi)
+l(\theta,\phi;y) = {y\theta - b(\theta)}/a(\phi) + c(y,\phi)
 \]
 
 因此，
