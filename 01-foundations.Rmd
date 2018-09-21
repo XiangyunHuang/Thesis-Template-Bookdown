@@ -6,50 +6,6 @@
 
 关于 GLMM 和 LMM 的材料 notesdown repo 下的 issues
 
-## 空间随机效应 {#sptial-random-effects}
-
-Stroup 和 Baenziger (1994年) [@Stroup1994] 采用完全随机的区组设计研究小麦产量与品种等因素的关系，在 4 块肥力不同的地里都随机种植了 56 种不同的小麦， 实验记录了小麦产量、品种、位置以及土地肥力等数据， Jose Pinheiro 和 Douglas Bates (2000年) [@Pinheiro2000] 将该数据集命名为 Wheat2 ，整理后放在 **nlme** 包里。 我们利用该真实的农业生产数据构建带空间效应的线性混合效应模型，展示诊断和添加空间效应的过程。
-
-图 \@ref(fig:yields-block) 按土壤肥力不同分块展示每种小麦的产量，图中暗示数据中有 block 效应，块之间也呈现异方差性，为了更好的表达这种依赖效应，可以基于经纬度信息添加与空间相关的结构 (spatial correlation structures)，相应的线性模型
-
-\begin{equation}
-y_{ij} = \tau_i + \epsilon_{ij}, \quad \boldsymbol{\epsilon} \sim \mathcal{N}(\mathbf{0},\sigma^2 \boldsymbol{\Lambda}) (\#eq:extended-linear-model)
-\end{equation}
-
-其中，$y_{ij}$ 表示第 $i$ 种小麦在第 $j$ 块试验田里的产量，$i = 1,\ldots,56$，$j = 1,\ldots,4$。 $\tau_i$ 表示第 $i$ 种小麦的平均产量，$\epsilon_{ij}$ 是随机误差，假定服从均值为 0，协差阵为 $\sigma^2 \boldsymbol{\Lambda}$ 的正态分布
-
-```{r yields-block,fig.cap="小麦产量与土壤肥力的关系，图中纵轴表示试验田的4种类型，且土壤肥力强弱顺序是 1 > 2 > 3 > 4，横轴表示小麦产量，每块试验田都种植了 56 种小麦，图中分别以不同的颜色标识，图上方是小麦类型的编号",fig.asp=1,out.width="90%"}
-knitr::include_graphics(path = "figures/Yields-Block.png")
-```
-
-探索 $\boldsymbol{\Lambda}$ 的结构，先假定模型 \@ref(eq:extended-linear-model) 的随机误差是独立且方差齐性的，即 $\boldsymbol{\Lambda} = \boldsymbol{I}$ 。用如下一行命令拟合模型
-
-```{r,eval=FALSE,echo=TRUE}
-m1 <- gls(yield ~ variety - 1, Wheat2)
-```
-
-拟合残差的样本变差是探索误差中的空间相关性的主要工具，`Variogram` 方法可以获得 gls 类中的样本变差，即
-
-```{r,eval=FALSE,echo=TRUE}
-Variogram(m1, form = ~latitude + longitude)
-```
-
-图 \@ref(fig:yields-variogram) 显示样本变差随空间距离有明显的增长趋势，可见空间相关的结构明显，且块金效应大约是 0.2，样本变差为 1 对应的空间距离是 31 左右。  
-
-```{r yields-variogram,fig.cap="空间变差"}
-knitr::include_graphics(path = "figures/Yields-Variogram.png")
-```
-
-我们使用球形结构拟合这组数据中的空间结构，位置参数 $\phi$ 和块金效应的初始值可以从图 \@ref(fig:yields-variogram) 获取，其中 $\phi$ 是样本变差等于 1 时对应的空间距离。所以拟合模型 \@ref(eq:extended-linear-model)
-
-```{r,eval=FALSE,echo=TRUE}
-m2 <- update(m1, corr = corSpher(c(31, 0.2), form = ~latitude + longitude, nugget = TRUE))
-m2
-```
-
-对初始值很敏感，去掉样本变差中距离比较远的位置点
-
-
 
 ## 修正的第三类贝塞尔函数 {#Modified-Bessel-functions}
 

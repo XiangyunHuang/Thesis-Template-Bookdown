@@ -5,6 +5,67 @@
 
 loaloa 和 rongelap 两个真实数据集分别来自 R 包 **PrevMap** 和 **geoRglm**， 分别被 Diggle 和 Christensen 分析过 [@Christensen2004;@Diggle2007ATMP]，第 \@ref(loaloa) 节和第 \@ref(rongelap) 节给出分析这两个数据集的模型和结果。其中，响应变量服从二项分布的空间广义线性混合效应模型（简称 Binomial-SGLMM 模型）拟合数据集 loaloa， 而响应变量服从泊松分布的空间广义线性混合效应模型（简称 Poisson-SGLMM 模型）拟合数据集 rongelap。
 
+## 空间线性混合效应模型 {#sptial-random-effects}
+
+Stroup 和 Baenziger (1994年) [@Stroup1994] 采用完全随机的区组设计研究小麦产量与品种等因素的关系，在 4 块肥力不同的地里都随机种植了 56 种不同的小麦， 实验记录了小麦产量、品种、位置以及土地肥力等数据， Jose Pinheiro 和 Douglas Bates (2000年) [@Pinheiro2000] 将该数据集命名为 Wheat2 ，整理后放在 **nlme** 包里。 我们利用该真实的农业生产数据构建带空间效应的线性混合效应模型，展示诊断和添加空间效应的过程。
+
+图 \@ref(fig:yields-block) 按土壤肥力不同分块展示每种小麦的产量，图中暗示数据中有 block 效应，块之间也呈现异方差性，为了更好的表达这种依赖效应，可以基于经纬度信息添加与空间相关的结构 (spatial correlation structures)，相应的线性模型
+
+\begin{equation}
+y_{ij} = \tau_i + \epsilon_{ij}, \quad \boldsymbol{\epsilon} \sim \mathcal{N}(\mathbf{0},\sigma^2 \boldsymbol{\Lambda}) (\#eq:extended-linear-model)
+\end{equation}
+
+其中，$y_{ij}$ 表示第 $i$ 种小麦在第 $j$ 块试验田里的产量，$i = 1,\ldots,56$，$j = 1,\ldots,4$。 $\tau_i$ 表示第 $i$ 种小麦的平均产量，$\epsilon_{ij}$ 是随机误差，假定服从均值为 0，协差阵为 $\sigma^2 \boldsymbol{\Lambda}$ 的正态分布
+
+```{r yields-block,fig.cap="小麦产量与土壤肥力的关系，图中纵轴表示试验田的4种类型，且土壤肥力强弱顺序是 1 > 2 > 3 > 4，横轴表示小麦产量，每块试验田都种植了 56 种小麦，图中分别以不同的颜色标识，图上方是小麦类型的编号",fig.asp=1,out.width="90%"}
+knitr::include_graphics(path = "figures/Yields-Block.png")
+```
+
+探索 $\boldsymbol{\Lambda}$ 的结构，先假定模型 \@ref(eq:extended-linear-model) 的随机误差是独立且方差齐性的，即 $\boldsymbol{\Lambda} = \boldsymbol{I}$ 。用如下一行命令拟合模型
+
+```{r,eval=FALSE,echo=TRUE}
+m1 <- gls(yield ~ variety - 1, Wheat2)
+```
+
+拟合残差的样本变差是探索误差中的空间相关性的主要工具，`Variogram` 方法可以获得 gls 类中的样本变差，即
+
+```{r,eval=FALSE,echo=TRUE}
+Variogram(m1, form = ~latitude + longitude)
+```
+
+图 \@ref(fig:yields-variogram) 显示样本变差随空间距离有明显的增长趋势，可见空间相关的结构明显，且块金效应大约是 0.2，样本变差为 1 对应的空间距离是 31 左右。  
+
+```{r yields-variogram,fig.cap="空间变差"}
+knitr::include_graphics(path = "figures/Yields-Variogram.png")
+```
+
+我们使用球形结构拟合这组数据中的空间结构，位置参数 $\phi$ 和块金效应的初始值可以从图 \@ref(fig:yields-variogram) 获取，其中 $\phi$ 是样本变差等于 1 时对应的空间距离。拟合模型 \@ref(eq:extended-linear-model)
+
+```{r,eval=FALSE,echo=TRUE}
+m2 <- update(m1, corr = corSpher(c(31, 0.2), form = ~latitude + longitude, nugget = TRUE))
+m2
+```
+
+用限制极大似然法做广义最小二乘拟合，空间自相关函数采用球族。二次有理族。似然函数对初始值很敏感，去掉样本变差中距离比较远的
+
+Table: (\#tab:yields-model-compare) 小麦模型比较
+
+|           | 自相关函数 |   $\phi(\phi_0)$         |  $\tau^2(\tau^2_{0})$      | $\sigma^2(\sigma^2_{0})$ |   log-REML  |
+|:----------| ----------:| -----------------------: | --------------------------:| ------------------------:| :----------:|
+| 模型 I    |       球族 | $1.515\times 10^{5}(31)$ | $5.471\times 10^{-5}(0.2)$ |    466.785               |  -533.418   |
+| 模型 II   | 二次有理族 |             $13.461(13)$ |               $0.193(0.2)$ |      8.847               |  -532.639   |
+| 模型 III  |       球族 |             $27.457(28)$ |               $0.209(0.2)$ |      7.410               |  -533.931   |
+
+说明两件事，其一选择合适的自相关函数可以取得好的拟合效果，其二算法对初值很敏感，选择合适的初值很重要。
+
+标准化残差拟合图
+
+```{r model-check,fig.subcap=c("检查异方差性","检查正态性"),fig.cap="模型诊断",out.width="40%"}
+knitr::include_graphics(path = c("figures/heteroscedasticity.png","figures/normality.png"))
+```
+
+
+
 ## 喀麦隆及周边地区盘尾丝虫病的空间分布 {#loaloa}
 
 盘尾丝虫病是由一种可致盲的热带疾病，非洲盘尾丝虫病控制项目 APOC (African Programme for Onchocerciasis Control) 搜集了 $N=168$ 个村庄的 $M = 21938$ 个血液样本，每个村庄抽取的样本量为 $m_i=\mathrm{NO\_EXAM}$， 其中感染了的 NO_INF 人， 在该村庄 （坐标 $x_i$）观察到的感染比例 $p(x_i) = \mathrm{NO\_INF/NO\_EXAM}$ ， 在村庄 1 公里的范围内添加了周围环境的指标， 有从美国地质调查局获得的海拔信息 ELEVATION (<https://www.usgs.gov/>) 和卫星在 1999 年至 2001 年间测得的植被绿色度数据 NDVI (<http://free.vgt.vito.be>)， NDVI 分四个指标， 分别是所有 NDVI 的平均值 MEAN9901，最大值 MAX9901，最小值 MIN9901，标准差 STDEV9901。 样本采集的区域如图 \@ref(fig:loaloa-map) 所示
