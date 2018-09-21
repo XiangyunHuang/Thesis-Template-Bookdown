@@ -23,3 +23,4 @@
 - Ubuntu 14.04.5 (64位)
 - Ubuntu 18.04.1 (64位)
 - Windows 8.1 (64位)
+- CentOS 7 (64位) 与 Pandoc 2.3

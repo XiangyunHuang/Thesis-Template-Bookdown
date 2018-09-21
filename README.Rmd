@@ -166,3 +166,42 @@ xfun::session_info(c("rmarkdown","bookdown","tinytex"))
 ```{r ref.label=knitr::all_labels(), echo = T, eval = F}
 # https://yihui.name/en/2018/09/code-appendix/
 ```
+
+
+## 安装 Pandoc
+
+- 安装 stack 1.7.1 
+
+```bash
+curl -sSL https://s3.amazonaws.com/download.fpcomplete.com/centos/7/fpco.repo | sudo tee /etc/yum.repos.d/fpco.repo
+sudo yum -y install stack zlib-devel
+```
+
+- 下载 pandoc 源文件 也可以克隆 pandoc's repo
+
+```bash
+wget https://github.com/jgm/pandoc/releases/download/2.3/pandoc-2.3-linux.tar.gz
+```
+
+- 解压
+
+```bash
+tar -xzf pandoc-2.3-linux.tar.gz
+```
+
+- 安装依赖和 pandoc
+
+```bash
+cd pandoc-2.3
+stack setup # 安装 ghc 8.4.3 等依赖
+stack install
+```
+
+- 配置路径
+
+```bash
+sudo vi /etc/profile
+export PATH=/home/xiangyun/pandoc/.stack-work/install/x86_64-linux/lts-12.6/7.10.3/bin:$PATH
+sudo source /etc/profile
+```
+
