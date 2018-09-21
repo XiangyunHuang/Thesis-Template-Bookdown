@@ -77,7 +77,7 @@ lapply(c(
 参考 <https://stefvanbuuren.name/fimd/symbol-description.html>
 
 1. 数学公式：随机过程 $\mathcal{S}$ 大写字母 `\mathcal` 花体，
-2. 随机向量 $\boldsymbol{\theta,\beta},\mathbf{x,y}$ 用加粗方式分别表示未知参数，
+2. 随机向量 $\boldsymbol{\theta,\beta},\mathbf{x,y}$ 向量，矩阵都大写加粗，将向量看作一维的矩阵， 用加粗方式分别表示未知参数，
 1. 模型回归参数向量 `\boldsymbol`，数据向量 `\mathbf`，
 1. 矩阵 $\mathbf{X}$ 用大写字母加粗表示；
 1. $n$ 维实（复）数域 $\mathbb{R}^n, \mathbb{C}^2$ 大写字母空心体；
