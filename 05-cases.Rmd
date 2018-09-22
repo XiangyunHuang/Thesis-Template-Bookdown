@@ -35,7 +35,7 @@ Variogram(m1, form = ~latitude + longitude)
 
 图 \@ref(fig:yields-variogram) 显示样本变差随空间距离有明显的增长趋势，可见空间相关的结构明显，且块金效应大约是 0.2，样本变差为 1 对应的空间距离是 31 左右。  
 
-```{r yields-variogram,fig.cap="空间变差"}
+```{r yields-variogram,fig.cap="观测的空间变差及趋势，用局部多项式回归方法拟合散点，获得平滑曲线"}
 knitr::include_graphics(path = "figures/Yields-Variogram.png")
 ```
 
