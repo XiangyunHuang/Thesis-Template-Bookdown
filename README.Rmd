@@ -195,13 +195,15 @@ tar -xzf pandoc-2.3-linux.tar.gz
 cd pandoc-2.3
 stack setup # 安装 ghc 8.4.3 等依赖
 stack install
+stack install pandoc-citeproc
 ```
 
 - 配置路径
 
 ```bash
 sudo vi /etc/profile
-export PATH=/home/xiangyun/pandoc/.stack-work/install/x86_64-linux/lts-12.6/7.10.3/bin:$PATH
-sudo source /etc/profile
+export PATH=$HOME/.local/bin:$PATH
+source /etc/profile
 ```
 
+再将这行放在 `.zshrc` 里
