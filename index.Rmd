@@ -92,8 +92,8 @@ lapply(c(
 
 Table: (\#tab:math-symbols) 论文中出现的数学符号及说明
 
-|符号    | 描述                                                  | 章.节     |
-|:-------|:------------------------------------------------------|:----------|
+|符号    | 描述                                                  | 章.节      |
+|:-------|:------------------------------------------------------|:----------:|
 | $\mathbf{y}$          | 向量用小写字母加粗表示，如响应变量观测向量，回归系数，                 | \@ref(sec:exponential-family) |
 | $\mathbf{X}$          | 矩阵用大写字母加粗表示，如协变量数据矩阵                               | \@ref(sec:exponential-family) |
 | $\boldsymbol{\beta}$  | 模型回归系数向量，如 $\boldsymbol{\beta} = (\beta_0,\beta_1,\beta_2)$  | \@ref(sec:exponential-family) |
