@@ -19,6 +19,9 @@ repos:
   CRAN: https://cloud.r-project.org
   RForge: https://r-forge.r-project.org
 
+r_github_packages:
+  - jimhester/covr
+  
 addons:
   apt:
     sources:
@@ -55,3 +58,5 @@ script:
 after_success:
   - make pdf
   - netlify deploy -t $NETLIFY_PAT
+  - travis_wait 30 Rscript -e 'covr::codecov()'
+ 
