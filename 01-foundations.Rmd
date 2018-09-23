@@ -26,6 +26,24 @@ knitr::include_graphics(path = "figures/bessel.png")
 
 ## 指数族 {#sec:exponential-family}
 
+Exponential family: 
+
+$$
+f(y;\theta,\phi) = \exp[(a(y) b(\theta) + c(\theta))/f(\phi) + d(y,\phi)]
+$$
+
+Poisson (with $\lambda \to \theta$, $x \to y$) ($\phi=1$):
+
+\begin{equation*}
+\begin{split}
+f(y,\theta) & = \exp(-\theta) \theta^y/(y!) \\
+            & = \exp\left( \underbrace{y}_{a(y)} 
+                           \underbrace{\log \theta}_{b(\theta)} + 
+                           \underbrace{(-\theta)}_{c(\theta)} + 
+                           \underbrace{(- \log(y!))}_{d(y)} \right)
+\end{split} (\#eq:another-exp-fam)
+\end{equation*}
+
 一般地，样本 $\mathbf{Y}$ 的分布服从指数族，即形如
 
 \begin{equation}

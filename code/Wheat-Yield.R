@@ -26,6 +26,10 @@ plot(Variogram(m1,
 ), xlim = c(0, 32), ylim = c(0.1,1.05),sigma = 1)
 dev.off()
 
+# gls {nlme}  再考虑极大似然方法
+
+# method: a character string. If "REML" the model is fit by maximizing the restricted log-likelihood. If "ML" the log-likelihood is maximized. Defaults to "REML".
+
 m2 <- update(m1,
   corr = corSpher(c(31, 0.2),
     form = ~latitude + longitude,
