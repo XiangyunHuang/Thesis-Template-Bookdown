@@ -42,7 +42,8 @@ before_install:
   - curl -fLo /tmp/tinytex.tar.gz https://travis-bin.yihui.name/tinytex.tar.gz
   - tar xzf /tmp/tinytex.tar.gz -C /$HOME
   - export PATH=/$HOME/.TinyTeX/bin/x86_64-linux:$PATH
-  - tlmgr install $(cat latex/TeXLive.pkgs | tr '\n' ' ') || true
+  - Rscript -e 'tinytex::tlmgr_install(readLines("latex/TeXLive.pkgs"))'
+#  - tlmgr install $(cat latex/TeXLive.pkgs | tr '\n' ' ') || true
   - mkdir -p /$HOME/.fonts
   - cp -r fonts/* /$HOME/.fonts/
   - fc-cache -fsv
