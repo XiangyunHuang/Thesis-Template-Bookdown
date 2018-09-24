@@ -1,18 +1,8 @@
 # 基础知识 {#prepare}
 
-蒙特卡罗积分、拉普拉斯近似、非信息先验分布、STAN 计算框架作为预备知识
+蒙特卡罗积分、非信息先验分布、STAN 计算框架作为预备知识、贝叶斯基础知识介绍、关于 GLMM 和 LMM 的材料 notesdown repo 下的 issues
 
-贝叶斯基础知识介绍
-
-关于 GLMM 和 LMM 的材料 notesdown repo 下的 issues
-
-重新安排逻辑顺序
-
-第三章 空间广义线性混合效应模型
-
-1. 模型结构
-
-
+重新安排逻辑顺序第三章 空间广义线性混合效应模型 1. 模型结构
 
 ## 极大似然估计 {#def-mle}
 
@@ -41,20 +31,27 @@
 \noindent 的解。$p(\mathbf{x};\boldsymbol{\theta})$ 属于指数族时，似然方程组 \@ref(eq:likelihood-equations) 的解唯一。
 
 ```{theorem, label="consistency", name="相合性", echo=TRUE}
-设 $x_{1}, \ldots, x_{n}$ 是来自概率密度分布 $p(x;\theta)$ 的一个样本，叙述简单起见，考虑单参数情形，参数空间 $\boldsymbol{\Theta}$ 是一个开区间，$l(\theta;x) = \sum_{i=1}^{n}\ln p(x_{i};\theta)$。
+设 $x_{1}, \ldots, x_{n}$ 是来自概率密度函数 $p(x;\theta)$ 的一个样本，叙述简单起见，考虑单参数情形，参数空间 $\boldsymbol{\Theta}$ 是一个开区间，$l(\theta;x) = \sum_{i=1}^{n}\ln p(x_{i};\theta)$。
 
 若 $\ln (p;\theta)$ 在 $\boldsymbol{\Theta}$ 上可微，且 $p(x;\theta)$ 是可识别的（即 $\forall \theta_1 \neq \theta_2, \{x: p(x;\theta_1) \neq p(x; \theta_2)\}$ 不是零测集），则似然方程 \@ref(eq:likelihood-equations) 在 $n \to \infty$ 时，以概率 1 有解，且此解关于 $\theta$ 是相合的。
 ```
 
+```{theorem, label="asymptotic-normality", name="渐近正态性", echo=TRUE}
+假设 $\boldsymbol{\Theta}$ 为开区间，概率密度函数 $p(x;\theta), \theta \in \boldsymbol{\Theta}$ 满足
 
+1. 在参数真值 $\theta_{0}$ 的邻域内，$\partial \ln p/\partial \theta, \partial^2 \ln p/\partial \theta^2, \partial^3 \ln p/\partial \theta^3$ 对所有的 $x$ 都存在；
+2. 在参数真值 $\theta_{0}$ 的邻域内，$| \partial^3 \ln p/\partial \theta^3 | \leq H(x)$，且 $\mathsf{E}H(x) < \infty$；
+3. 在参数真值 $\theta_{0}$ 处，
 
-```{theorem, label="asymptotic-normality", name="渐进正态性", echo=TRUE}
+\begin{equation} 
+\mathsf{E}_{\theta_{0}} \big[ \frac{ p'(x,\theta_{0}) }{ p(x,\theta_{0}) } \big] = 0, \quad
+\mathsf{E}_{\theta_{0}} \big[ \frac{ p''(x,\theta_{0}) }{ p(x,\theta_{0}) } \big] = 0, \quad
+I(\theta_{0}) = \mathsf{E}_{\theta_{0}} \big[ \frac{ p'(x,\theta_{0}) }{ p(x,\theta_{0}) } \big]^{2} > 0
+\end{equation}
 
-```
+\noindent 其中撇号表示对 $\theta$ 的微分。记 $\hat{\theta}_{n}$ 为 $n \to \infty$ 时，似然方程组的相合解，则
 
-
-```{theorem, label="asymptotic-effectiveness", name="渐进有效性", echo=TRUE}
-
+\[ \sqrt{n}(\hat{\theta}_{n} - \theta_{0}) \longrightarrow  \mathcal{N}(\mathbf{0},I^{-1}(\theta))\]
 ```
 
 
