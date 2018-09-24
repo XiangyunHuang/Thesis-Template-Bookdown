@@ -16,8 +16,6 @@
 
 ## 极大似然估计 {#def-mle}
 
-定义 极大似然估计 \@ref(def:maximum-likelihood-estimate)
-
 ```{definition, label="maximum-likelihood-estimate", name="极大似然估计", echo=TRUE}
 设 $p(\mathbf{x};\boldsymbol{\theta}),\boldsymbol{\theta} \in \boldsymbol{\Theta}$ 是 $(\mathbb{R}^n,\mathscr{P}_{\mathbb{R}^n})$ 上的一族联合密度函数，对给定的 $\mathbf{x}$，称
 
@@ -32,23 +30,32 @@
 
 概率密度函数很多可以写成具有指数函数的形式，如指数族，采用似然函数的对数通常更为简便。称
 
-\[ l(\boldsymbol{\theta},\mathbf{x}) = \ln L(\boldsymbol{\theta},\mathbf{x})\]
+\[ l(\boldsymbol{\theta},\mathbf{x}) = \ln L(\boldsymbol{\theta},\mathbf{x}) \]
 
-\noindent 为 $\boldsymbol{\theta}$ 的对数似然函数
+\noindent 为 $\boldsymbol{\theta}$ 的对数似然函数。对数变换是严格单调的，所以 $l(\boldsymbol{\theta},\mathbf{x})$ 与 $L(\boldsymbol{\theta},\mathbf{x})$ 的极大值是等价的。当 MLE 存在时，寻找 MLE 的常用方法是求导数。如果 $\hat{\boldsymbol{\theta}}(\mathbf{x})$ 是 $\boldsymbol{\Theta}$ 的内点，则 $\hat{\boldsymbol{\theta}}(\mathbf{x})$ 是下列似然方程组
 
-定理 \@ref(thm:consistency)
+\begin{equation}
+\partial l(\boldsymbol{\theta},\mathbf{x})/ \partial \boldsymbol{\theta}_{i} = 0, \quad i = 1,\ldots, m (\#eq:likelihood-equations)
+\end{equation}
+
+\noindent 的解。$p(\mathbf{x};\boldsymbol{\theta})$ 属于指数族时，似然方程组 \@ref(eq:likelihood-equations) 的解唯一。
 
 ```{theorem, label="consistency", name="相合性", echo=TRUE}
-For a right triangle, if $c$ denotes the length of the hypotenuse
-and $a$ and $b$ denote the lengths of the other two sides, we have
+设 $x_{1}, \ldots, x_{n}$ 是来自概率密度分布 $p(x;\theta)$ 的一个样本，叙述简单起见，考虑单参数情形，参数空间 $\boldsymbol{\Theta}$ 是一个开区间，$l(\theta;x) = \sum_{i=1}^{n}\ln p(x_{i};\theta)$。
 
-$$a^2 + b^2 = c^2$$
+若 $\ln (p;\theta)$ 在 $\boldsymbol{\Theta}$ 上可微，且 $p(x;\theta)$ 是可识别的（即 $\forall \theta_1 \neq \theta_2, \{x: p(x;\theta_1) \neq p(x; \theta_2)\}$ 不是零测集），则似然方程 \@ref(eq:likelihood-equations) 在 $n \to \infty$ 时，以概率 1 有解，且此解关于 $\theta$ 是相合的。
 ```
 
-定理 渐进正态性
 
 
-定理 渐进有效性
+```{theorem, label="asymptotic-normality", name="渐进正态性", echo=TRUE}
+
+```
+
+
+```{theorem, label="asymptotic-effectiveness", name="渐进有效性", echo=TRUE}
+
+```
 
 
 ## 修正的第三类贝塞尔函数 {#Modified-Bessel-functions}
