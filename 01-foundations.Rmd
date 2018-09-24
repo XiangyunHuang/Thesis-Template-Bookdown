@@ -6,6 +6,50 @@
 
 关于 GLMM 和 LMM 的材料 notesdown repo 下的 issues
 
+重新安排逻辑顺序
+
+第三章 空间广义线性混合效应模型
+
+1. 模型结构
+
+
+
+## 极大似然估计 {#mle}
+
+定义 极大似然估计 \@ref(def:maximum-likelihood-estimate)
+
+```{definition, label="maximum-likelihood-estimate", name="极大似然估计"}
+设 $p(\mathbf{x};\boldsymbol{\theta}),\boldsymbol{\theta} \in \boldsymbol{\Theta}$ 是 $(\mathbb{R}^n,\mathscr{P}_{\mathbb{R}^n})$ 上的一族联合密度函数，对给定的 $\mathbf{x}$，称
+
+\[ L(\boldsymbol{\theta};\mathbf{x}) = kp(\mathbf{x};\boldsymbol{\theta}) \]
+
+为 $\boldsymbol{\theta}$ 的似然函数，其中 $k > 0$ 是不依赖于 $\boldsymbol{\theta}$ 的量，常取 $k=1$。进一步，若存在 $(\mathbb{R}^n,\mathscr{P}_{\mathbb{R}^n})$ 到 $(\boldsymbol{\Theta},\mathscr{P}_{\boldsymbol{\Theta}})$ 的统计量 $\hat{\boldsymbol{\theta}}(\mathbf{x})$ 使
+
+\[ L(\hat{\boldsymbol{\theta}}(\mathbf{x});\mathbf{x}) = \sup_{\boldsymbol{\theta}} L(\boldsymbol{\theta};\mathbf{x}) \]
+
+则 $\hat{\boldsymbol{\theta}}(\mathbf{x})$ 称为 $\boldsymbol{\theta})$ 的一个极大似然估计(Maximum Likelihood Eestimate，简称 MLE)。
+```
+
+概率密度函数很多可以写成具有指数函数的形式，如指数族，采用似然函数的对数通常更为简便。称
+
+\[ l(\boldsymbol{\theta},\mathbf{x}) = \ln L(\boldsymbol{\theta},\mathbf{x})\]
+
+为 $\boldsymbol{\theta}$ 的对数似然函数
+
+定理 \@ref(thm:consistency)
+
+```{theorem, label="consistency", name="相合性"}
+For a right triangle, if $c$ denotes the length of the hypotenuse
+and $a$ and $b$ denote the lengths of the other two sides, we have
+
+$$a^2 + b^2 = c^2$$
+```
+
+定理 渐进正态性
+
+
+定理 渐进有效性
+
 
 ## 修正的第三类贝塞尔函数 {#Modified-Bessel-functions}
 
