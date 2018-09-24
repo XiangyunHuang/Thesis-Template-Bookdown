@@ -14,31 +14,31 @@
 
 
 
-## 极大似然估计 {#mle}
+## 极大似然估计 {#def-mle}
 
 定义 极大似然估计 \@ref(def:maximum-likelihood-estimate)
 
-```{definition, label="maximum-likelihood-estimate", name="极大似然估计"}
+```{definition, label="maximum-likelihood-estimate", name="极大似然估计", echo=TRUE}
 设 $p(\mathbf{x};\boldsymbol{\theta}),\boldsymbol{\theta} \in \boldsymbol{\Theta}$ 是 $(\mathbb{R}^n,\mathscr{P}_{\mathbb{R}^n})$ 上的一族联合密度函数，对给定的 $\mathbf{x}$，称
 
 \[ L(\boldsymbol{\theta};\mathbf{x}) = kp(\mathbf{x};\boldsymbol{\theta}) \]
 
-为 $\boldsymbol{\theta}$ 的似然函数，其中 $k > 0$ 是不依赖于 $\boldsymbol{\theta}$ 的量，常取 $k=1$。进一步，若存在 $(\mathbb{R}^n,\mathscr{P}_{\mathbb{R}^n})$ 到 $(\boldsymbol{\Theta},\mathscr{P}_{\boldsymbol{\Theta}})$ 的统计量 $\hat{\boldsymbol{\theta}}(\mathbf{x})$ 使
+\noindent 为 $\boldsymbol{\theta}$ 的似然函数，其中 $k > 0$ 是不依赖于 $\boldsymbol{\theta}$ 的量，常取 $k=1$。进一步，若存在 $(\mathbb{R}^n,\mathscr{P}_{\mathbb{R}^n})$ 到 $(\boldsymbol{\Theta},\mathscr{P}_{\boldsymbol{\Theta}})$ 的统计量 $\hat{\boldsymbol{\theta}}(\mathbf{x})$ 使
 
 \[ L(\hat{\boldsymbol{\theta}}(\mathbf{x});\mathbf{x}) = \sup_{\boldsymbol{\theta}} L(\boldsymbol{\theta};\mathbf{x}) \]
 
-则 $\hat{\boldsymbol{\theta}}(\mathbf{x})$ 称为 $\boldsymbol{\theta})$ 的一个极大似然估计(Maximum Likelihood Eestimate，简称 MLE)。
+\noindent 则 $\hat{\boldsymbol{\theta}}(\mathbf{x})$ 称为 $\boldsymbol{\theta}$ 的一个极大似然估计(Maximum Likelihood Eestimate，简称 MLE)。
 ```
 
 概率密度函数很多可以写成具有指数函数的形式，如指数族，采用似然函数的对数通常更为简便。称
 
 \[ l(\boldsymbol{\theta},\mathbf{x}) = \ln L(\boldsymbol{\theta},\mathbf{x})\]
 
-为 $\boldsymbol{\theta}$ 的对数似然函数
+\noindent 为 $\boldsymbol{\theta}$ 的对数似然函数
 
 定理 \@ref(thm:consistency)
 
-```{theorem, label="consistency", name="相合性"}
+```{theorem, label="consistency", name="相合性", echo=TRUE}
 For a right triangle, if $c$ denotes the length of the hypotenuse
 and $a$ and $b$ denote the lengths of the other two sides, we have
 
