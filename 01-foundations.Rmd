@@ -120,6 +120,40 @@ Table: (\#tab:common-characteristics) 指数族内常见的一元分布的共同
 
 (ref:footnote-tab-common-characteristics) 均值参数用 $\mu$ 表示，二项分布里用 $\pi$ 表示；典则参数用 $\theta$ 表示，定义见 \@ref(eq:common-exponential-family) 式，$\mu$ 和 $\theta$ 的关系在表 \@ref(tab:common-characteristics) 的第 6 和第 7 行给出。 
 
+## 最小二乘估计 {#lse}
+
+考虑如下线性模型的最小二乘估计
+
+\begin{equation}
+\mathsf{E}\mathbf{Y} = \mathbf{X}\boldsymbol{\beta}; \mathsf{Var}(\mathbf{Y}) = \sigma^2 \mathbf{I}_{n} (\#eq:linear-models)
+\end{equation}
+
+其中， $\mathbf{Y}$ 为 $n \times 1$ 维观测向量， $\mathbf{X}$ 为已知的 $n \times p (p \leq n)$ 阶设计矩阵，$\boldsymbol{\beta}$ 为 $p \times 1$ 维未知参数，$\sigma^2$ 未知，$\mathbf{I}_{n}$ 为 $n$ 阶单位阵。
+
+```{definition, label="least-squares-estimate", name="最小二乘估计", echo=TRUE}
+在模型 \@ref(eq:linear-models) 中，如果
+
+\begin{equation}
+(\mathbf{Y} - \mathbf{X}\hat{\boldsymbol{\beta}})^{\top}(\mathbf{Y} - \mathbf{X}\hat{\boldsymbol{\beta}}) = \min_{\beta}(\mathbf{Y} - \mathbf{X}\boldsymbol{\beta})^{\top}(\mathbf{Y} - \mathbf{X}\boldsymbol{\beta}) (\#eq:least-squares)
+\end{equation}
+
+则称 $\hat{\boldsymbol{\beta}}$ 为 $\boldsymbol{\beta}$ 的最小二乘估计 (Least Squares Estimate，简称 LSE)。
+```
+
+```{theorem, label="unbiased", name="最小二乘估计", echo=TRUE}
+若模型  \@ref(eq:linear-models) 中的 $\mathbf{X}$ 是列满秩的矩阵，则 $\boldsymbol{\beta}$ 的最小二乘估计
+
+\[ \hat{\boldsymbol{\beta}}_{LS} = ( \mathbf{X}^{\top}\mathbf{X} )^{-1}\mathbf{X}^{\top} \mathbf{Y}, \quad  \mathsf{Var}(\hat{\boldsymbol{\beta}}_{LS}) = \sigma^2 (\mathbf{X}^{\top}\mathbf{X})^{-1}  \]
+
+若将模型  \@ref(eq:linear-models) 的条件 $\mathsf{Var}(\mathbf{Y}) = \sigma^2 \mathbf{I}_{n}$ 改为 $\mathsf{Var}(\mathbf{Y}) = \sigma^2 \mathbf{G}$， $G(>0)$ 为已知正定阵，则相应的最小二乘估计为
+
+\[
+  \tilde{\boldsymbol{\beta}}_{LS} = ( \mathbf{X}^{\top} G^{-1} \mathbf{X})^{-1} \mathbf{X}^{\top} G^{-1} \mathbf{Y} 
+\]
+
+称 $\tilde{\boldsymbol{\beta}}_{LS}$ 为加权最小二乘估计 (Weighted Least Squares Estimate，简称 WLSE)
+```
+
 
 ## 极大似然估计 {#def-mle}
 
