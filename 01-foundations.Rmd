@@ -159,7 +159,7 @@ $\sigma^2$ 的最小二乘估计为
 \tilde{\boldsymbol{\beta}}_{LS} = ( \mathbf{X}^{\top} G^{-1} \mathbf{X})^{-1} \mathbf{X}^{\top} G^{-1} \mathbf{Y} 
 \]
 
-称 $\tilde{\boldsymbol{\beta}}_{LS}$ 为加权最小二乘估计 (Weighted Least Squares Estimate，简称 WLSE)
+称 $\tilde{\boldsymbol{\beta}}_{LS}$ 为广义最小二乘估计 (Generalized Least Squares Estimate，简称 GLSE)，特别地，当 $G = \mathrm{diag}(\sigma^2_{1},\ldots,\sigma^2_{n})$，$\sigma^2_{i},i = 1,\ldots,n$ 已知时，称 $\tilde{\boldsymbol{\beta}}_{LS}$ 为加权最小二乘估计 (Weighted Least Squares Estimate，简称 WLSE)
 ```
 
 
@@ -323,6 +323,17 @@ f(x) = f(a) + \frac{f'(a)}{1!}(x-a) + \frac{f''(a)}{2!}(x-a)^2 + \frac{f'''(a)}{
 ## 先验分布 {#prior-distribution}
 
 非信息先验分布
+
+### Jeffreys 先验分布 {#Jeffreys-prior}
+
+设 $\mathbf{x} = (x_1,\ldots,x_n)$ 是来自密度函数 $p(x|\theta)$ 的一个样本，其中 $\boldsymbol{\theta} = (\theta_1,\ldots,\theta_p)$ 是 $p$ 维参数向量。在对 $\boldsymbol{\theta}$ 无任何先验信息可用时， Jeffreys (1961年)利用变换群和 Harr 测度导出 $\boldsymbol{\theta}$ 的无信息先验分布可用 Fisher 信息阵的行列式的平方根表示。这种无信息先验分布常称为 Jeffreys 先验分布。其求取步骤如下：
+
+1. 写出样本的对数似然函数 $l(\boldsymbol{\theta}|x) = \sum_{i=1}^{n}\ln p(x_i | \theta)$； 
+2. 算出参数 $\boldsymbol{\theta}$ 的 Fisher 信息阵 
+   $$\mathbf{I}(\boldsymbol{\theta}) = \mathsf{E}_{x|\theta} \big( - \frac{\partial^2 l}{\partial \theta_i \partial \theta_j} \big)_{i,j=1,\ldots,p}$$
+   在单参数场合， $\mathbf{I}(\theta) = \mathsf{E}_{x|\theta} \big( - \frac{\partial^2 l}{\partial \theta^2} \big)$；
+3. $\boldsymbol{\theta}$ 的无信息先验密度函数为 $\pi(\boldsymbol{\theta}) = [\det \mathbf{I}(\theta) ]^{1/2}$，在单参数场合， $\pi(\theta) = [\mathbf{I}(\theta) ]^{1/2}$
+
 
 
 ## 贝叶斯方法 {#bayes-methods}
