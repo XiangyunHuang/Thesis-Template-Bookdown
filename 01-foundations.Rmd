@@ -1,76 +1,8 @@
 # 基础知识 {#prepare}
 
-蒙特卡罗积分、非信息先验分布、STAN 计算框架作为预备知识、贝叶斯基础知识介绍、关于 GLMM 和 LMM 的材料 notesdown repo 下的 issues
+STAN 计算框架作为预备知识、贝叶斯基础知识介绍、关于 GLMM 和 LMM 的材料 notesdown repo 下的 issues
 
 重新安排逻辑顺序第三章 空间广义线性混合效应模型 1. 模型结构
-
-## 极大似然估计 {#def-mle}
-
-```{definition, label="maximum-likelihood-estimate", name="极大似然估计", echo=TRUE}
-设 $p(\mathbf{x};\boldsymbol{\theta}),\boldsymbol{\theta} \in \boldsymbol{\Theta}$ 是 $(\mathbb{R}^n,\mathscr{P}_{\mathbb{R}^n})$ 上的一族联合密度函数，对给定的 $\mathbf{x}$，称
-
-\[ L(\boldsymbol{\theta};\mathbf{x}) = kp(\mathbf{x};\boldsymbol{\theta}) \]
-
-\noindent 为 $\boldsymbol{\theta}$ 的似然函数，其中 $k > 0$ 是不依赖于 $\boldsymbol{\theta}$ 的量，常取 $k=1$。进一步，若存在 $(\mathbb{R}^n,\mathscr{P}_{\mathbb{R}^n})$ 到 $(\boldsymbol{\Theta},\mathscr{P}_{\boldsymbol{\Theta}})$ 的统计量 $\hat{\boldsymbol{\theta}}(\mathbf{x})$ 使
-
-\[ L(\hat{\boldsymbol{\theta}}(\mathbf{x});\mathbf{x}) = \sup_{\boldsymbol{\theta}} L(\boldsymbol{\theta};\mathbf{x}) \]
-
-\noindent 则 $\hat{\boldsymbol{\theta}}(\mathbf{x})$ 称为 $\boldsymbol{\theta}$ 的一个极大似然估计(Maximum Likelihood Eestimate，简称 MLE)。
-```
-
-概率密度函数很多可以写成具有指数函数的形式，如指数族，采用似然函数的对数通常更为简便。称
-
-\[ l(\boldsymbol{\theta},\mathbf{x}) = \ln L(\boldsymbol{\theta},\mathbf{x}) \]
-
-\noindent 为 $\boldsymbol{\theta}$ 的对数似然函数。对数变换是严格单调的，所以 $l(\boldsymbol{\theta},\mathbf{x})$ 与 $L(\boldsymbol{\theta},\mathbf{x})$ 的极大值是等价的。当 MLE 存在时，寻找 MLE 的常用方法是求导数。如果 $\hat{\boldsymbol{\theta}}(\mathbf{x})$ 是 $\boldsymbol{\Theta}$ 的内点，则 $\hat{\boldsymbol{\theta}}(\mathbf{x})$ 是下列似然方程组
-
-\begin{equation}
-\partial l(\boldsymbol{\theta},\mathbf{x})/ \partial \boldsymbol{\theta}_{i} = 0, \quad i = 1,\ldots, m (\#eq:likelihood-equations)
-\end{equation}
-
-\noindent 的解。$p(\mathbf{x};\boldsymbol{\theta})$ 属于指数族时，似然方程组 \@ref(eq:likelihood-equations) 的解唯一。
-
-```{theorem, label="consistency", name="相合性", echo=TRUE}
-设 $x_{1}, \ldots, x_{n}$ 是来自概率密度函数 $p(x;\theta)$ 的一个样本，叙述简单起见，考虑单参数情形，参数空间 $\boldsymbol{\Theta}$ 是一个开区间，$l(\theta;x) = \sum_{i=1}^{n}\ln p(x_{i};\theta)$。
-
-若 $\ln (p;\theta)$ 在 $\boldsymbol{\Theta}$ 上可微，且 $p(x;\theta)$ 是可识别的（即 $\forall \theta_1 \neq \theta_2, \{x: p(x;\theta_1) \neq p(x; \theta_2)\}$ 不是零测集），则似然方程 \@ref(eq:likelihood-equations) 在 $n \to \infty$ 时，以概率 1 有解，且此解关于 $\theta$ 是相合的。
-```
-
-```{theorem, label="asymptotic-normality", name="渐近正态性", echo=TRUE}
-假设 $\boldsymbol{\Theta}$ 为开区间，概率密度函数 $p(x;\theta), \theta \in \boldsymbol{\Theta}$ 满足
-
-1. 在参数真值 $\theta_{0}$ 的邻域内，$\partial \ln p/\partial \theta, \partial^2 \ln p/\partial \theta^2, \partial^3 \ln p/\partial \theta^3$ 对所有的 $x$ 都存在；
-2. 在参数真值 $\theta_{0}$ 的邻域内，$| \partial^3 \ln p/\partial \theta^3 | \leq H(x)$，且 $\mathsf{E}H(x) < \infty$；
-3. 在参数真值 $\theta_{0}$ 处，
-
-\begin{equation} 
-\mathsf{E}_{\theta_{0}} \big[ \frac{ p'(x,\theta_{0}) }{ p(x,\theta_{0}) } \big] = 0, \quad
-\mathsf{E}_{\theta_{0}} \big[ \frac{ p''(x,\theta_{0}) }{ p(x,\theta_{0}) } \big] = 0, \quad
-I(\theta_{0}) = \mathsf{E}_{\theta_{0}} \big[ \frac{ p'(x,\theta_{0}) }{ p(x,\theta_{0}) } \big]^{2} > 0
-\end{equation}
-
-\noindent 其中撇号表示对 $\theta$ 的微分。记 $\hat{\theta}_{n}$ 为 $n \to \infty$ 时，似然方程组的相合解，则
-
-\[ \sqrt{n}(\hat{\theta}_{n} - \theta_{0}) \longrightarrow  \mathcal{N}(\mathbf{0},I^{-1}(\theta))\]
-```
-
-
-## 修正的第三类贝塞尔函数 {#Modified-Bessel-functions}
-
-空间过程的协方差函数是梅隆族时，需要用到修正的第三类贝塞尔函数 $\mathcal{K}_{\kappa}(u)$，它是修正的贝塞尔方程的解 [@Abramowitz1972]，函数形式如下
-
-\begin{equation}
-\begin{aligned}
-I_{-\kappa}(u) & =  \sum_{m=0}^{\infty} \frac{1}{m!\Gamma(m + \kappa + 1)} \big(\frac{u}{2}\big)^{2m + \kappa} \\
-\mathcal{K}_{\kappa}(u) & = \frac{\pi}{2} \frac{I_{-\kappa}(u) - I_{\kappa}(u)}{\sin (\kappa \pi)}
-\end{aligned} (\#eq:besselK-function)
-\end{equation}
-
-其中 $u \geq 0$，$\kappa \in \mathbb{R}$，如果 $\kappa \in \mathbb{Z}$，则取该点的极限值，实际上 R 内置的函数 `besselK` 可以计算 $\mathcal{K}_{\kappa}(u)$ [@Campbell1980]
-
-```{r Bessel-function,fig.cap="贝塞尔函数图像"}
-knitr::include_graphics(path = "figures/bessel.png")
-```
 
 ## 指数族 {#sec:exponential-family}
 
@@ -188,6 +120,115 @@ Table: (\#tab:common-characteristics) 指数族内常见的一元分布的共同
 
 (ref:footnote-tab-common-characteristics) 均值参数用 $\mu$ 表示，二项分布里用 $\pi$ 表示；典则参数用 $\theta$ 表示，定义见 \@ref(eq:common-exponential-family) 式，$\mu$ 和 $\theta$ 的关系在表 \@ref(tab:common-characteristics) 的第 6 和第 7 行给出。 
 
+
+## 极大似然估计 {#def-mle}
+
+```{definition, label="maximum-likelihood-estimate", name="极大似然估计", echo=TRUE}
+设 $p(\mathbf{x};\boldsymbol{\theta}),\boldsymbol{\theta} \in \boldsymbol{\Theta}$ 是 $(\mathbb{R}^n,\mathscr{P}_{\mathbb{R}^n})$ 上的一族联合密度函数，对给定的 $\mathbf{x}$，称
+
+\[ L(\boldsymbol{\theta};\mathbf{x}) = kp(\mathbf{x};\boldsymbol{\theta}) \]
+
+\noindent 为 $\boldsymbol{\theta}$ 的似然函数，其中 $k > 0$ 是不依赖于 $\boldsymbol{\theta}$ 的量，常取 $k=1$。进一步，若存在 $(\mathbb{R}^n,\mathscr{P}_{\mathbb{R}^n})$ 到 $(\boldsymbol{\Theta},\mathscr{P}_{\boldsymbol{\Theta}})$ 的统计量 $\hat{\boldsymbol{\theta}}(\mathbf{x})$ 使
+
+\[ L(\hat{\boldsymbol{\theta}}(\mathbf{x});\mathbf{x}) = \sup_{\boldsymbol{\theta}} L(\boldsymbol{\theta};\mathbf{x}) \]
+
+\noindent 则 $\hat{\boldsymbol{\theta}}(\mathbf{x})$ 称为 $\boldsymbol{\theta}$ 的一个极大似然估计(Maximum Likelihood Eestimate，简称 MLE)。
+```
+
+概率密度函数很多可以写成具有指数函数的形式，如指数族，采用似然函数的对数通常更为简便。称
+
+\[ l(\boldsymbol{\theta},\mathbf{x}) = \ln L(\boldsymbol{\theta},\mathbf{x}) \]
+
+\noindent 为 $\boldsymbol{\theta}$ 的对数似然函数。对数变换是严格单调的，所以 $l(\boldsymbol{\theta},\mathbf{x})$ 与 $L(\boldsymbol{\theta},\mathbf{x})$ 的极大值是等价的。当 MLE 存在时，寻找 MLE 的常用方法是求导数。如果 $\hat{\boldsymbol{\theta}}(\mathbf{x})$ 是 $\boldsymbol{\Theta}$ 的内点，则 $\hat{\boldsymbol{\theta}}(\mathbf{x})$ 是下列似然方程组
+
+\begin{equation}
+\partial l(\boldsymbol{\theta},\mathbf{x})/ \partial \boldsymbol{\theta}_{i} = 0, \quad i = 1,\ldots, m (\#eq:likelihood-equations)
+\end{equation}
+
+\noindent 的解。$p(\mathbf{x};\boldsymbol{\theta})$ 属于指数族时，似然方程组 \@ref(eq:likelihood-equations) 的解唯一。
+
+```{theorem, label="consistency", name="相合性", echo=TRUE}
+设 $x_{1}, \ldots, x_{n}$ 是来自概率密度函数 $p(x;\theta)$ 的一个样本，叙述简单起见，考虑单参数情形，参数空间 $\boldsymbol{\Theta}$ 是一个开区间，$l(\theta;x) = \sum_{i=1}^{n}\ln p(x_{i};\theta)$。
+
+若 $\ln (p;\theta)$ 在 $\boldsymbol{\Theta}$ 上可微，且 $p(x;\theta)$ 是可识别的（即 $\forall \theta_1 \neq \theta_2, \{x: p(x;\theta_1) \neq p(x; \theta_2)\}$ 不是零测集），则似然方程 \@ref(eq:likelihood-equations) 在 $n \to \infty$ 时，以概率 1 有解，且此解关于 $\theta$ 是相合的。
+```
+
+```{theorem, label="asymptotic-normality", name="渐近正态性", echo=TRUE}
+假设 $\boldsymbol{\Theta}$ 为开区间，概率密度函数 $p(x;\theta), \theta \in \boldsymbol{\Theta}$ 满足
+
+1. 在参数真值 $\theta_{0}$ 的邻域内，$\partial \ln p/\partial \theta, \partial^2 \ln p/\partial \theta^2, \partial^3 \ln p/\partial \theta^3$ 对所有的 $x$ 都存在；
+2. 在参数真值 $\theta_{0}$ 的邻域内，$| \partial^3 \ln p/\partial \theta^3 | \leq H(x)$，且 $\mathsf{E}H(x) < \infty$；
+3. 在参数真值 $\theta_{0}$ 处，
+
+\begin{equation} 
+\mathsf{E}_{\theta_{0}} \big[ \frac{ p'(x,\theta_{0}) }{ p(x,\theta_{0}) } \big] = 0, \quad
+\mathsf{E}_{\theta_{0}} \big[ \frac{ p''(x,\theta_{0}) }{ p(x,\theta_{0}) } \big] = 0, \quad
+I(\theta_{0}) = \mathsf{E}_{\theta_{0}} \big[ \frac{ p'(x,\theta_{0}) }{ p(x,\theta_{0}) } \big]^{2} > 0
+\end{equation}
+
+\noindent 其中撇号表示对 $\theta$ 的微分。记 $\hat{\theta}_{n}$ 为 $n \to \infty$ 时，似然方程组的相合解，则
+
+\[ \sqrt{n}(\hat{\theta}_{n} - \theta_{0}) \longrightarrow  \mathcal{N}(\mathbf{0},I^{-1}(\theta))\]
+```
+
+## 随机过程的连续性和可微性
+
+为记号简便起见，考虑一维空间下，随机过程 $S(x)$ 的均方连续性和可微性。
+
+```{definition, label="continuous", name="连续性", echo=TRUE}
+随机过程 $S(x)$ 满足
+
+\[ \lim_{h \to 0} \mathsf{E}\big[ \{S(x + h) - S(x)\}^{2} \big] = 0 \] 
+
+则称 $S(x)$ 是均方连续(mean-square continuous)的。
+```
+
+```{definition, label="differentiable", name="可微性", echo=TRUE}
+随机过程 $S(x)$ 满足
+
+\[ \lim_{h \to 0} \mathsf{E} \big[ \{ \frac{S(x+h) - S(x)}{h} - S'(x) \}^2 \big] = 0 \]
+
+则称 $S(x)$ 是均方可微的，并且 $S'(x)$ 就是均方意义下的一阶导数。如果 $S'(x)$ 是均方可微的，则 $S(x)$ 是二次均方可微的，随机过程 $S(x)$ 的高阶均方可微性可类似定义。
+```
+
+Bartlett (1955 年) [@Bartlett1955] 得到如下结论
+
+```{theorem, label="stationary-mean-square-properties", name="平稳随机过程的可微性", echo=TRUE}
+自相关函数为 $\rho(u)$ 的平稳随机过程是 $k$ 次均方可微 (mean-square differentiable) 的，当且仅当 $\rho(u)$ 在 $u = 0$ 处是 $2k$ 次可微的。
+```
+
+## 平稳高斯过程 {#stationary-gaussian-process}
+
+一般地，空间高斯过程 $\mathcal{S} = \{S(x),x\in\mathbb{R}^2\}$ 必须满足条件：任意给定一组空间位置 $x_1,x_2,\ldots,x_n, \forall x_{i} \in \mathbb{R}^2$， 每个位置上对应的随机变量 $S(x_i), i = 1,2,\ldots,n$ 的联合分布 $\mathcal{S} = \{S(x_1), S(x_2),\ldots,S(x_n)\}$ 是多元高斯分布，其由均值 $\mu(x) = \mathrm{E}[S(x)]$ 和协方差 $G_{ij} = \gamma(x_i,x_j) = \mathrm{Cov}\{S(x_i),S(x_j)\}$ 完全确定，即 $\mathcal{S} \sim \mathrm{MVN}(\mu_{S},G)$
+
+平稳空间高斯过程需要空间高斯过程满足平稳性条件：其一， $\mu(x) = \mu, \forall x \in \mathbb{R}^2$， 其二，自协方差函数 $\gamma(x_i,x_j) = \gamma(u),u=\|x_{i} - x_{j}\|$。 可见均值 $\mu$ 是一个常数， 而自协方差函数 $\gamma(x_i,x_j)$ 只与空间距离有关。 注意到平稳高斯过程 $\mathcal{S}$ 的方差是一个常数，即 $\sigma^2 = \gamma(0)$， 然后可以定义自相关函数 $\rho(u) = \gamma(u)/\sigma^2$， 并且 $\rho(u)$ 满足对称性， $\rho(u) = \rho(-u)$， 因为对 $\forall u, \mathrm{Corr}\{S(x),S(x-u)\} = \mathrm{Corr}\{S(x-u), S(x)\} = \mathrm{Corr}\{S(x),S(x+u)\}$， 这里的第二个等式是根据平稳性得来的， 根据协方差的定义不难验证。 在本论文中如果不特别说明， 平稳就指上述协方差意义下的平稳， 这种平稳性条件广泛应用于空间统计数据建模。
+
+二阶平稳性
+
+协方差函数
+
+泊松过程
+
+
+
+## 修正的第三类贝塞尔函数 {#Modified-Bessel-functions}
+
+空间过程的协方差函数是梅隆族时，需要用到修正的第三类贝塞尔函数 $\mathcal{K}_{\kappa}(u)$，它是修正的贝塞尔方程的解 [@Abramowitz1972]，函数形式如下
+
+\begin{equation}
+\begin{aligned}
+I_{-\kappa}(u) & =  \sum_{m=0}^{\infty} \frac{1}{m!\Gamma(m + \kappa + 1)} \big(\frac{u}{2}\big)^{2m + \kappa} \\
+\mathcal{K}_{\kappa}(u) & = \frac{\pi}{2} \frac{I_{-\kappa}(u) - I_{\kappa}(u)}{\sin (\kappa \pi)}
+\end{aligned} (\#eq:besselK-function)
+\end{equation}
+
+其中 $u \geq 0$，$\kappa \in \mathbb{R}$，如果 $\kappa \in \mathbb{Z}$，则取该点的极限值，实际上 R 内置的函数 `besselK` 可以计算 $\mathcal{K}_{\kappa}(u)$ [@Campbell1980]
+
+```{r Bessel-function,fig.cap="贝塞尔函数图像"}
+knitr::include_graphics(path = "figures/bessel.png")
+```
+
+
 ## 拉普拉斯近似 {#Laplace-approximation}
 
 先回顾一下基本的泰勒展开，一个函数可以在点 $a$ 处展开成和的形式，有时候是无穷多项，可以使用其中的有限项最为近似，通常会使用前三项，即到达二阶导的位置。
@@ -236,6 +277,10 @@ f(x) = f(a) + \frac{f'(a)}{1!}(x-a) + \frac{f''(a)}{2!}(x-a)^2 + \frac{f'''(a)}{
 \[ \chi_{k}^2 \overset{LA}{\sim}  N(\hat{x} = k-2, \hat{\sigma}^2 = 2(k-2)) \]
 
 自由度越大，近似效果越好，对于多元分布的情况不难推广，使用多元泰勒展开和黑塞矩阵即可表示。并且参数集 $\theta$ 有唯一的极大值点 $\hat{\theta}$ [@Tierney1986]
+
+## 先验分布 {#prior-distribution}
+
+非信息先验分布
 
 
 ## 贝叶斯方法 {#bayes-methods}

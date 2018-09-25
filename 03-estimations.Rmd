@@ -356,7 +356,7 @@ MCEM 算法 [@Zhang2002On]  C++ 实现 [@nimble2017] <https://r-nimble.org/>
 
 #### 空间高斯过程的近似 {#low-rank-gp}
 
-如第\@ref(gp)小节所介绍的空间高斯过程 $\mathcal{S}$， $\mathcal{S} = \{S(x),x\in\mathbb{R}^2\}$，对任意给定一组空间位置 $x_1,x_2,\ldots,x_n, \forall x_{i} \in \mathbb{R}^2$，随机变量 $S(x_i),i = 1,2,\ldots,n$ 的联合分布 $\mathcal{S}=\{S(x_1),S(x_2),\ldots,S(x_n)\}$ 是多元高斯分布，其由均值 $\mu(x) = \mathrm{E}[S(x)]$ 和协方差 $G_{ij} =\gamma(x_i,x_j)= \mathrm{Cov}\{S(x_i),S(x_j)\}$ 完全确定，即 $\mathcal{S} \sim \mathrm{MVN}(\mu_{S},G)$。
+空间高斯过程 $\mathcal{S}$， $\mathcal{S} = \{S(x),x\in\mathbb{R}^2\}$，对任意给定一组空间位置 $x_1,x_2,\ldots,x_n, \forall x_{i} \in \mathbb{R}^2$，随机变量 $S(x_i),i = 1,2,\ldots,n$ 的联合分布 $\mathcal{S}=\{S(x_1),S(x_2),\ldots,S(x_n)\}$ 是多元高斯分布，其由均值 $\mu(x) = \mathrm{E}[S(x)]$ 和协方差 $G_{ij} =\gamma(x_i,x_j)= \mathrm{Cov}\{S(x_i),S(x_j)\}$ 完全确定，即 $\mathcal{S} \sim \mathrm{MVN}(\mu_{S},G)$。
 
 低秩近似算法使用奇异值分解协方差矩阵 $G$ [@Diggle2007]， 将协方差矩阵 $G$ 分解，也意味着将空间高斯过程 $\mathcal{S}$ 分解，分解过程如下
 
