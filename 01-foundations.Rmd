@@ -157,7 +157,7 @@ Table: (\#tab:common-characteristics) 指数族内常见的一元分布的共同
 \tilde{\boldsymbol{\beta}}_{LS} = ( \mathbf{X}^{\top} G^{-1} \mathbf{X})^{-1} \mathbf{X}^{\top} G^{-1} \mathbf{Y} 
 \]
 
-\noindent 称 $\tilde{\boldsymbol{\beta}}_{LS}$ 为广义最小二乘估计 (Generalized Least Squares Estimate，简称 GLSE)，特别地，当 $G = \mathrm{diag}(\sigma^2_{1},\ldots,\sigma^2_{n})$，$\sigma^2_{i},i = 1,\ldots,n$ 已知时，称 $\tilde{\boldsymbol{\beta}}_{LS}$ 为加权最小二乘估计 (Weighted Least Squares Estimate，简称 WLSE)
+\noindent 称 $\tilde{\boldsymbol{\beta}}_{LS}$ 为广义最小二乘估计 (Generalized Least Squares Estimate，简称 GLSE)，特别地，当 $G = \mathrm{diag}(\sigma^2_{1},\ldots,\sigma^2_{n})$，$\sigma^2_{i},i = 1,\ldots,n$ 已知时，称 $\tilde{\boldsymbol{\beta}}_{LS}$ 为加权最小二乘估计 (Weighted Least Squares Estimate，简称 WLSE)[@wang2006]
 ```
 
 
