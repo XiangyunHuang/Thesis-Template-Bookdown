@@ -12,9 +12,9 @@ branches:
 pandoc_version: 2.2.3.2
 
 git:
-  depth: 5
+  depth: false
   submodules: false
-  lfs_skip_smudge: true
+  lfs_skip_smudge: false
   
 repos:
   CRAN: https://cloud.r-project.org
@@ -45,8 +45,8 @@ before_install:
   - mkdir -p /$HOME/.fonts
   - cp -r fonts/* /$HOME/.fonts/
   - fc-cache -fsv
-#  - fc-list :lang=en-us | sort
-#  - fc-list :lang=zh-cn | sort
+  - fc-list :lang=en-us | sort
+  - fc-list :lang=zh-cn | sort
   - du -h -d 1
 
 before_script:
