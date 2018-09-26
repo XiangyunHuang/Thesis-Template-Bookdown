@@ -52,7 +52,7 @@ knitr::include_graphics(path = c(
 另一种表示方式是平面的 image 图像
 
 
-迭代加权最小二乘估计
+关于 GLMM 和 LMM 的材料 notesdown repo 下的 issues
 
 修正的第三类贝塞尔函数
 
