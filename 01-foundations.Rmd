@@ -483,4 +483,11 @@ Table: (\#tab:eight-high-schools) 8 schools 数据集
 cat(readLines("code/8schools.stan"),sep = "\n")
 ```
 
+上述代码块的第一段提供数据：学校的数目 $J$；估计值 $y_1,\ldots,y_{J}$；标准差 $\sigma_1,\ldots,\sigma_{J}$，数据类型可以是整数、实数，数据结构可以是向量，甚至更一般的数组，数据可以指定约束，如在这个模型中 $J$ 限制为非负， $\sigma_{J}$ 必须是正的。
+
+第二段代码介绍参数：模型中的待估参数，学校总体的效应 $\theta_j$，均值 $\mu$，标准差 $\tau$ 
+
+
+<https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started>
+
 
