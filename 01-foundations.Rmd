@@ -1,8 +1,6 @@
 # 基础知识 {#prepare}
 
-STAN 计算框架作为预备知识、贝叶斯基础知识介绍、关于 GLMM 和 LMM 的材料 notesdown repo 下的 issues
-
-重新安排逻辑顺序第三章 空间广义线性混合效应模型 1. 模型结构
+[本章概要]{.todo}
 
 ## 指数族 {#sec:exponential-family}
 
@@ -137,7 +135,7 @@ Table: (\#tab:common-characteristics) 指数族内常见的一元分布的共同
 (\mathbf{Y} - \mathbf{X}\hat{\boldsymbol{\beta}})^{\top}(\mathbf{Y} - \mathbf{X}\hat{\boldsymbol{\beta}}) = \min_{\beta}(\mathbf{Y} - \mathbf{X}\boldsymbol{\beta})^{\top}(\mathbf{Y} - \mathbf{X}\boldsymbol{\beta}) (\#eq:least-squares)
 \end{equation}
 
-则称 $\hat{\boldsymbol{\beta}}$ 为 $\boldsymbol{\beta}$ 的最小二乘估计 (Least Squares Estimate，简称 LSE)。
+\noindent 则称 $\hat{\boldsymbol{\beta}}$ 为 $\boldsymbol{\beta}$ 的最小二乘估计 (Least Squares Estimate，简称 LSE)。
 ```
 
 ```{theorem, label="unbiased", name="最小二乘估计", echo=TRUE}
@@ -147,7 +145,7 @@ Table: (\#tab:common-characteristics) 指数族内常见的一元分布的共同
 \hat{\boldsymbol{\beta}}_{LS} = ( \mathbf{X}^{\top}\mathbf{X} )^{-1}\mathbf{X}^{\top} \mathbf{Y}, \quad  \mathsf{Var}(\hat{\boldsymbol{\beta}}_{LS}) = \sigma^2 (\mathbf{X}^{\top}\mathbf{X})^{-1}  
 \]
 
-$\sigma^2$ 的最小二乘估计为
+\noindent $\sigma^2$ 的最小二乘估计为
 
 \[
 \hat{\sigma^2}_{LS} = (\mathbf{Y} - \mathbf{X}\hat{\boldsymbol{\beta}}_{LS})^{\top}(\mathbf{Y} - \mathbf{X}\hat{\boldsymbol{\beta}}_{LS})/(n - p)
@@ -159,7 +157,7 @@ $\sigma^2$ 的最小二乘估计为
 \tilde{\boldsymbol{\beta}}_{LS} = ( \mathbf{X}^{\top} G^{-1} \mathbf{X})^{-1} \mathbf{X}^{\top} G^{-1} \mathbf{Y} 
 \]
 
-称 $\tilde{\boldsymbol{\beta}}_{LS}$ 为广义最小二乘估计 (Generalized Least Squares Estimate，简称 GLSE)，特别地，当 $G = \mathrm{diag}(\sigma^2_{1},\ldots,\sigma^2_{n})$，$\sigma^2_{i},i = 1,\ldots,n$ 已知时，称 $\tilde{\boldsymbol{\beta}}_{LS}$ 为加权最小二乘估计 (Weighted Least Squares Estimate，简称 WLSE)
+\noindent 称 $\tilde{\boldsymbol{\beta}}_{LS}$ 为广义最小二乘估计 (Generalized Least Squares Estimate，简称 GLSE)，特别地，当 $G = \mathrm{diag}(\sigma^2_{1},\ldots,\sigma^2_{n})$，$\sigma^2_{i},i = 1,\ldots,n$ 已知时，称 $\tilde{\boldsymbol{\beta}}_{LS}$ 为加权最小二乘估计 (Weighted Least Squares Estimate，简称 WLSE)
 ```
 
 
@@ -245,13 +243,6 @@ Bartlett (1955 年) [@Bartlett1955] 得到如下结论
 
 平稳空间高斯过程需要空间高斯过程满足平稳性条件：其一， $\mu(x) = \mu, \forall x \in \mathbb{R}^2$， 其二，自协方差函数 $\gamma(x_i,x_j) = \gamma(u),u=\|x_{i} - x_{j}\|$。 可见均值 $\mu$ 是一个常数， 而自协方差函数 $\gamma(x_i,x_j)$ 只与空间距离有关。 注意到平稳高斯过程 $\mathcal{S}$ 的方差是一个常数，即 $\sigma^2 = \gamma(0)$， 然后可以定义自相关函数 $\rho(u) = \gamma(u)/\sigma^2$， 并且 $\rho(u)$ 满足对称性， $\rho(u) = \rho(-u)$， 因为对 $\forall u, \mathrm{Corr}\{S(x),S(x-u)\} = \mathrm{Corr}\{S(x-u), S(x)\} = \mathrm{Corr}\{S(x),S(x+u)\}$， 这里的第二个等式是根据平稳性得来的， 根据协方差的定义不难验证。 在本论文中如果不特别说明， 平稳就指上述协方差意义下的平稳， 这种平稳性条件广泛应用于空间统计数据建模。
 
-二阶平稳性
-
-协方差函数
-
-泊松过程
-
-
 
 ## 修正的第三类贝塞尔函数 {#Modified-Bessel-functions}
 
@@ -320,11 +311,7 @@ f(x) = f(a) + \frac{f'(a)}{1!}(x-a) + \frac{f''(a)}{2!}(x-a)^2 + \frac{f'''(a)}{
 
 自由度越大，近似效果越好，对于多元分布的情况不难推广，使用多元泰勒展开和黑塞矩阵即可表示。并且参数集 $\theta$ 有唯一的极大值点 $\hat{\theta}$ [@Tierney1986]
 
-## 先验分布 {#prior-distribution}
-
-非信息先验分布
-
-### Jeffreys 先验分布 {#Jeffreys-prior}
+## Jeffreys 先验分布 {#Jeffreys-prior}
 
 设 $\mathbf{x} = (x_1,\ldots,x_n)$ 是来自密度函数 $p(x|\theta)$ 的一个样本，其中 $\boldsymbol{\theta} = (\theta_1,\ldots,\theta_p)$ 是 $p$ 维参数向量。在对 $\boldsymbol{\theta}$ 无任何先验信息可用时， Jeffreys (1961年)利用变换群和 Harr 测度导出 $\boldsymbol{\theta}$ 的无信息先验分布可用 Fisher 信息阵的行列式的平方根表示。这种无信息先验分布常称为 Jeffreys 先验分布。其求取步骤如下：
 
@@ -336,9 +323,9 @@ f(x) = f(a) + \frac{f'(a)}{1!}(x-a) + \frac{f''(a)}{2!}(x-a)^2 + \frac{f'''(a)}{
 
 
 
-## 贝叶斯方法 {#bayes-methods}
+## 贝叶斯理论 {#bayes-methods}
 
-[贝叶斯方法，贝叶斯定理，非信息先验分布]{.todo}
+[贝叶斯方法，贝叶斯定理，非信息先验分布，扁平先验]{.todo}
 
 以标准线性模型为例介绍贝叶斯分析及其基本概念 [@Rasmussen2006]，为什么不用 RMSE 均方误差，WAIC pDIC 模型选择 loo K-CV  
 
@@ -369,11 +356,9 @@ p(\boldsymbol{\theta}|\mathbf{Y})  & =  & \displaystyle \frac{p(\boldsymbol{\the
 \end{array} (\#eq:bayes-theorem)
 \end{align}
 
-[非信息先验分布]{.todo}
 
-扁平先验、杰弗里斯先验
 
-### 贝叶斯数据分析 {#bayesian-data-analysis}
+## 贝叶斯数据分析 {#bayesian-data-analysis}
 
 以一个广义线性模型为例说明贝叶斯数据分析的过程。模拟数据集 logit 来自 R包 **mcmc**，它包含5个变量，一个响应变量 y 和四个预测变量 x1，x2，x3，x4。频率派的分析可以用这样几行 R 代码实现
 
@@ -481,7 +466,7 @@ A theory of statistical models for Monte Carlo integration 蒙特卡罗积分 [@
 
 随机模拟的基础是有高质量的伪随机数，如何生成和检验伪随机数的质量参见黄湘云的文章 [@Huang2017COS]
 
-## 采样器 {#Samplers}
+## 采样器与 Stan {#Samplers}
 
 汉密尔顿蒙特卡罗 (Hamiltonian Monte Carlo，简称 HMC) [@hoffman2014]
 

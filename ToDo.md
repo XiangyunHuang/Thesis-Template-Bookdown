@@ -4,6 +4,23 @@
 
 二项空间模型，经验变换后响应变量视为高斯分布 从而变成线性模型
 
+### MCEM 算法 {#MCEM}
+
+MCEM 算法 [@Zhang2002On]  C++ 实现 [@nimble2017] <https://r-nimble.org/>
+
+## 限制极大似然估计 {#REML}
+
+Testing environmental and genetic effects in the presence of spatial autocorrelation [@spaMM2014]
+
+## 先验分布 {#prior-distribution}
+
+非信息先验分布
+
+## 协方差函数
+
+协方差函数还是自相关函数还是核函数要统一一下
+
+泊松过程
 
 <!-- 2002 年 Venables, W. N. 和 Ripley, B. D. 实现惩罚拟似然估计
 检验环境和基因效应在空间相关性中的存在性 [@spaMM2014]， 流行现象的时空分析[@surveillance2017]。  -->

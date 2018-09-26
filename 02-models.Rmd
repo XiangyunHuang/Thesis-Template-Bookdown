@@ -1,5 +1,7 @@
 # 统计模型 {#models}
 
+[重新安排逻辑顺序第三章 空间广义线性混合效应模型 1. 模型结构]{.todo}
+
 第 \@ref(Linear-Models) 节，第 \@ref(Generalized-Linear-Models) 节和第 \@ref(Generalized-Linear-Mixed-Effects-Models) 节简略介绍了线性模型， 广义线性模型和广义线性混合效应模型及其数学表示， 并随同模型给出了模型求解的 R 包或函数， 为空间广义线性混合效应模型的介绍做铺垫。第 \@ref(Spatial-Generalized-linear-mixed-effects-models) 节重点介绍了空间广义线性混合效应模型（以下简称为 SGLMM 模型）， 并分三小节介绍模型中的重要成分， 第  小节介绍 SGLMM 模型中的空间效应， 即平稳空间高斯过程， 第 \@ref(covariance-function) 小节介绍影响空间效应结构的关键部分 --- 自协方差函数和平稳空间高斯过程的核函数或自相关函数， 第 \@ref(identify) 小节介绍非空间的随机效应，在地质统计中常称为块金效应，以及它带来的 SGLMM 模型可识别问题与相应处理方式。
 
 ## 线性模型 {#Linear-Models}
