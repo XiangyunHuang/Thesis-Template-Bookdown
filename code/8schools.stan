@@ -5,8 +5,8 @@ data {
   real<lower=0> sigma[J]; // s.e. of effect estimates 
 }
 parameters {
-  real mu; // 总体的均值
-  real<lower=0> tau; // 总体的标准差
+  real mu; // population mean
+  real<lower=0> tau; // population sd
   real eta[J]; // school-level errors
 }
 transformed parameters {
@@ -16,5 +16,5 @@ transformed parameters {
 }
 model {
   target += normal_lpdf(eta | 0, 1);
-  target += normal_lpdf(y | theta, sigma); // 目标分布
+  target += normal_lpdf(y | theta, sigma); // target distribution
 }

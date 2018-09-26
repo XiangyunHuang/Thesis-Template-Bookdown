@@ -174,6 +174,9 @@ M-H/Gibbs
 分析，模拟和预测空间过程 [@RandomFields2015]
 
 
+RgoogleMaps [@Loecher2015] 获取卫星图像
+
+
 平面 r^2  
 
 ----
