@@ -78,7 +78,7 @@ lapply(c(
 
 1. 数学公式：随机过程 $\mathcal{S}$ 大写字母 `\mathcal` 花体，
 2. 随机向量 $\boldsymbol{\theta,\beta},\mathbf{x,y}$ 向量，矩阵都大写加粗，将向量看作一维的矩阵， 用加粗方式分别表示未知参数，
-1. 模型回归参数向量 `\boldsymbol`，数据向量 `\mathbf`，
+1. 模型回归参数向量 `\boldsymbol`，数据向量/矩阵 `\mathbf`，
 1. 矩阵 $\mathbf{X}$ 用大写字母加粗表示；
 1. $n$ 维实（复）数域 $\mathbb{R}^n, \mathbb{C}^2$ 大写字母空心体；
 1. 期望方差 $\mathsf{E,Var}$ 用 `\mathsf` 表示
@@ -86,21 +86,23 @@ lapply(c(
 3. 代码： 等宽字体，输出 `#>` ，代码注释 `#`
 4. 转置 $A^{\top}$ 和多元函数求二阶导 $Q''(\mathbf{s})$ 
 6. 在贝叶斯环境下，术语混合效应模型用贝叶斯分层模型替换
-7. 章引用 `#chp:自定义名称` 节引用 `#sec:自定义名称` 小节引用 `#subsec:` 即都加上前缀 
+7. 章引用 `#chap:自定义名称` 节引用 `#sec:自定义名称` 小节引用 `#subsec:` 即都加上前缀 章节的自定义名称要尽可能短，可读性差关系不大，因为引用次数不多且集中
 
 论文当中出现的符号和相应的描述，及在论文中首次出现的位置，见表 \@ref(tab:math-symbols)
 
 Table: (\#tab:math-symbols) 论文中出现的数学符号及说明
 
-|符号    | 描述                                                  | 章.节      |
-|:-------|:------------------------------------------------------|:----------:|
-| $\mathbf{y}$          | 向量用小写字母加粗表示，如响应变量观测向量，回归系数，                 | \@ref(sec:exponential-family) |
-| $\mathbf{X}$          | 矩阵用大写字母加粗表示，如协变量数据矩阵                               | \@ref(sec:exponential-family) |
-| $\boldsymbol{\beta}$  | 模型回归系数向量，如 $\boldsymbol{\beta} = (\beta_0,\beta_1,\beta_2)$  | \@ref(sec:exponential-family) |
-| $\boldsymbol{\theta}$ | 模型其它参数集，如 $\boldsymbol{\theta} = (\phi,\tau^2,\sigma^2)$      | \@ref(sec:exponential-family) |
-| $\top$                | 向量或矩阵转置，如 $\mathbf{y}^{\top},\mathbf{X}^\top$                 | \@ref(sec:exponential-family) |
-| $'$                   | 一元函数求一阶导，二阶导用两个上撇号表示，如 $b'(\theta),b''(\theta)$  | \@ref(sec:exponential-family) |
-| $\mathbb{R}^n$        | 大写空心体字母表示 $n$ 维实数域                                        |   |
-| $\mathcal{S}$         | 大写花体字母表示随机过程                                               |   |
-| $\mathsf{E,Var,Cov}$  | 无衬线字体表示期望，方差，协方差                                       |   |
+|符号         | 描述                                                  | 章.节      |
+|:------------|:------------------------------------------------------|:----------:|
+| $\mathbf{y}$                           | 响应变量的观测向量                                                     | \@ref(sec:exp) |
+| $\mathbf{X}$                           | 协变量数据矩阵                                                         | \@ref(sec:exp) |
+| $\boldsymbol{\beta}$                   | 模型回归系数向量，如 $\boldsymbol{\beta} = (\beta_0,\beta_1,\beta_2)$  | \@ref(sec:exp) |
+| $\boldsymbol{\theta}$                  | 模型其它参数集，如 $\boldsymbol{\theta} = (\phi,\tau^2,\sigma^2)$      | \@ref(sec:exp) |
+| $\top$                                 | 向量或矩阵转置，如 $\mathbf{y}^{\top},\mathbf{X}^\top$                 | \@ref(sec:exp) |
+| $'$                                    | 撇号表示一元函数求导，如 $b'(\theta),b''(\theta)$                      | \@ref(sec:exp) |
+| $\mathbb{R}^n$                         | $n$ 维实数域                                                           |                |
+| $\mathcal{S}(x),x \in \mathbb{R}^2$    | 二维空间随机过程 $\mathcal{S}(x)$                                      |                |
+| $\mathsf{E}(\mathbf{Y})$               | 随机向量 $\mathbf{Y}$ 的期望                                           |                |
+| $\mathsf{Var}(\mathbf{Y})$             | 随机向量 $\mathbf{Y}$ 的方差                                           |                |
+| $\mathsf{Cov}(\mathbf{X},\mathbf{Y})$  | 随机向量 $\mathbf{X}$ 与 $\mathbf{Y}$ 的协方差                         |                |
 

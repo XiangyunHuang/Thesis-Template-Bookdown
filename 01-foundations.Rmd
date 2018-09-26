@@ -2,7 +2,7 @@
 
 [本章概要]{.todo}
 
-## 指数族 {#sec:exponential-family}
+## 指数族 {#sec:exp}
 
 Exponential family: 
 
