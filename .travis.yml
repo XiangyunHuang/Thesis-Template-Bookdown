@@ -56,5 +56,5 @@ script:
   - make gitbook
 
 after_success:
-  - make pdf
+  # - make pdf
   - netlify deploy -t $NETLIFY_PAT
