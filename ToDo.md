@@ -22,6 +22,27 @@ Testing environmental and genetic effects in the presence of spatial autocorrela
 
 泊松过程
 
+JAGS 和 STAN 对比
+
+adnuts 包
+rstan 包
+
+- STAN 框架
+
+https://github.com/ourcodingclub/CC-Stan-intro
+https://github.com/ourcodingclub/CC-Stan-2
+
+高斯过程 协方差矩阵的 QR 分解 [@Bates1988]
+
+A theory of statistical models for Monte Carlo integration 蒙特卡罗积分 [@Kong2003]
+蒙特卡罗积分的统计模型理论
+
+蒙特卡罗最大似然积分的收敛性 [@Geyer1994On] 
+
+介绍 Gibbs， M-H 和 NUTS 采样器以及 R 语言实现 [@Gelman2013]
+
+
+
 <!-- 2002 年 Venables, W. N. 和 Ripley, B. D. 实现惩罚拟似然估计
 检验环境和基因效应在空间相关性中的存在性 [@spaMM2014]， 流行现象的时空分析[@surveillance2017]。  -->
 

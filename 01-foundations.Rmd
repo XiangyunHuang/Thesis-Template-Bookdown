@@ -459,28 +459,28 @@ Table: (\#tab:calculate-volume-of-hyperball) 前10维单位超立方体内切球
 | 体积 | 1.000   | 0.784   | 0.525    | 0.307    | 0.166   | 0.081   |  0.037   |  0.016   | 0.006   | 0.0027  |
 
 
-A theory of statistical models for Monte Carlo integration 蒙特卡罗积分 [@Kong2003]
-蒙特卡罗积分的统计模型理论
-
-蒙特卡罗最大似然积分的收敛性 [@Geyer1994On] 
-
-随机模拟的基础是有高质量的伪随机数，如何生成和检验伪随机数的质量参见黄湘云的文章 [@Huang2017COS]
 
 ## 采样器与 Stan {#Samplers}
 
-汉密尔顿蒙特卡罗 (Hamiltonian Monte Carlo，简称 HMC) [@hoffman2014]
+随机模拟的基础是有高质量的伪随机数，如何生成和检验伪随机数的质量参见黄湘云的文章 [@Huang2017COS]。通过随机模拟的方式从总体中获取样本，需要一个抽样（也叫采样）的过程，不同的采样算法（也叫采样器）在适用范围和采样效率方面有不同。在贝叶斯计算中，常用的采样器有 Gibbs， Metropolis 和汉密尔顿蒙特卡罗 (Hamiltonian Monte Carlo，简称 HMC) 三类。 
 
-以单因素方差分析为例，介绍 Gibbs， M-H 和 NUTS 采样器以及 R 语言实现 [@Gelman2013] 关于 STAN 的 HMC 实现细节
+Matthew D. Hoffman 和 Andrew Gelman (2014年) [@hoffman2014] 提出的 No-U-Turn 采样器属于 HMC 衍生的采样器。
 
-JAGS 和 STAN 对比
+Stan 是一门基于 C++ 的高级编程语言，用户只需提供数据、模型和参数初值，目标后验分布的 Markov 链的模拟过程是自动实现的。除了可以完全在 Stan 脚本中写模型外，Stan 还提供其他编程语言的接口，如 R，Python 和 MATLAB 等，使得熟悉其他编程语言的用户也可以比较方便地调用。 
 
-adnuts 包
-rstan 包
+以分层正态模型为例，数据集 eight schools 来自 Andrew Gelman 和 John B. Carlin 等 (2003年) [@Gelman2003]，由 Educational Testing Service 调查搜集，用以分析不同的辅导项目对测验分数的影响。调查了8所高中，输出变量是一个分数，数据集见表 \@ref(tab:eight-high-schools)。
 
-- STAN 框架
+Table: (\#tab:eight-high-schools) 8 schools 数据集
 
-https://github.com/ourcodingclub/CC-Stan-intro
-https://github.com/ourcodingclub/CC-Stan-2
+|   School   |   A   |   B   |   C   |   D   |   E   |   F   |   G   |   H   |
+|:----------:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
+|   $y_i$    |  28   |   8   |   -3  |   7   |   -1  |   1   |   18  |   12  |
+| $\sigma_i$ |  15   |  10   |   16  |   11  |    9  |   11  |   10  |   18  |
 
-高斯过程 协方差矩阵的 QR 分解 [@Bates1988]
+分层模型可以在 Stan 中写成如下形式，在工作目录下把它保存为 `8schools.stan ` 
+
+```{r,comment=NA}
+cat(readLines("code/8schools.stan"),sep = "\n")
+```
+
 
