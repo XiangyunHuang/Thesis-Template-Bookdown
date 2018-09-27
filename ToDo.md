@@ -89,6 +89,7 @@ MCSE 蒙特卡罗标准误差 有效样本 Rhat 等量
 
 Hoffman, M. D. and Gelman, A. (2014). The No-U-Turn Sampler: adaptively setting path lengths in Hamiltonian Monte Carlo. Journal of Machine Learning Research. 15:1593–1623.
 
+adnuts  R语言版本 NUTS 算法
 
 ## 拉普拉斯近似
 
