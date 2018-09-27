@@ -464,7 +464,7 @@ Table: (\#tab:calculate-volume-of-hyperball) 前10维单位超立方体内切球
 
 随机模拟的基础是有高质量的伪随机数，如何生成和检验伪随机数的质量参见黄湘云的文章 [@Huang2017COS]。通过随机模拟的方式从总体中获取样本，需要一个抽样（也叫采样）的过程，不同的采样算法（也叫采样器）在适用范围和采样效率方面有不同。在贝叶斯计算中，常用的采样器有 Gibbs， Metropolis 和汉密尔顿蒙特卡罗 (Hamiltonian Monte Carlo，简称 HMC) 三类。 
 
-Matthew D. Hoffman 和 Andrew Gelman (2014年) [@hoffman2014] 提出的 No-U-Turn 采样器属于 HMC 衍生的采样器。
+Matthew D. Hoffman 和 Andrew Gelman (2014年) [@hoffman2014] 提出的 No-U-Turn 采样器属于 HMC 方法 衍生的采样器。
 
 Stan 是一门基于 C++ 的高级编程语言，用户只需提供数据、模型和参数初值，目标后验分布的 Markov 链的模拟过程是自动实现的。除了可以完全在 Stan 脚本中写模型外，Stan 还提供其他编程语言的接口，如 R，Python 和 MATLAB 等，使得熟悉其他编程语言的用户也可以比较方便地调用。 
 
@@ -539,10 +539,10 @@ print(fit)
 print(fit, "theta[1]", probs = c(0.025, 0.975))
 ```
 
-Table: (\#tab:eight-schools-output) 8 schools 分层正态模型参数的估计值
+Table: (\#tab:eight-schools-output) 8 schools 分层正态模型 \@ref(eq:hierarchical-normal-models) 参数的估计值
 
 |          |  mean  | se_mean |   sd  |  2.5% |   25% |   50% |   75% | 97.5% | n_eff | Rhat |
-|  :-----  |  ----: |   ----: | -----:| ----: | ----: | ----: | ----: | ----: | ----: | ----:|       
+|   :---   |  ----: |   ----: | -----:| ----: | ----: | ----: | ----: | ----: | ----: | ----:|       
 |$\mu$     |   7.99 |   0.05  |5.02   | -1.65 |  4.75 |  7.92 | 11.15 | 18.10 | 8455  |  1   |
 |$\tau$    |   6.47 |   0.06  |5.44   |  0.22 |  2.45 |  5.18 |  9.07 | 20.50 | 7375  |  1   |
 |$\eta_1$  |   0.40 |   0.01  |0.93   | -1.49 | -0.21 |  0.42 |  1.02 |  2.19 |16637  |  1   |
@@ -569,7 +569,7 @@ Table: (\#tab:eight-schools-output) 8 schools 分层正态模型参数的估计�
 
 ## 潜在尺度缩减因子
 
-为了评估链条之间和内部的混合效果，我们引入潜在尺度缩减因子 $\hat{R}$ [@Gelman2013R]，对每个待估的量 $\omega$，模拟产生 $m$ 条链，每条链有 $n$ 次迭代值 $\omega_{ij} (i = 1,\ldots,n;j=1,\ldots,m)$，用 $B$ 和 $W$ 表示链条之间（不妨叫组间方差）和内部的方差（组内方差）
+为了评估链条之间和内部的混合效果，我们引入潜在尺度缩减因子 $\hat{R}$，对每个待估的量 $\omega$，模拟产生 $m$ 条链，每条链有 $n$ 次迭代值 $\omega_{ij} (i = 1,\ldots,n;j=1,\ldots,m)$，用 $B$ 和 $W$ 分别表示链条之间（不妨看作组间方差）和内部的方差（组内方差）
 
 \begin{equation}
 \begin{aligned}
@@ -581,7 +581,7 @@ Table: (\#tab:eight-schools-output) 8 schools 分层正态模型参数的估计�
 $\omega$ 的边际后验方差 $\mathsf{\omega|Y}$ 是 $W$ 和 $B$ 的加权平均
 
 \begin{equation}
-\hat{\mathsf{Var}}^{+}(\omega|Y) = \frac{n-1}{n} W + \frac{1}{n} B 
+\widehat{\mathsf{Var}}^{+}(\omega|Y) = \frac{n-1}{n} W + \frac{1}{n} B 
 \end{equation}
 
 当初始分布发散 (overdispersed) 时，这个量会高估边际后验方差，但在链条平稳或 $n \to \infty$ 时，它是无偏的。同时，对任意有限的 $n$，组内方差 $W$ 应该会低估 $\mathsf{Var}(\omega|Y)$，因为单个链条没有时间覆盖目标分布；在 $n \to \infty$， $W$ 的期望会是 $\mathsf{Var}(\omega|Y)$。
@@ -589,7 +589,7 @@ $\omega$ 的边际后验方差 $\mathsf{\omega|Y}$ 是 $W$ 和 $B$ 的加权平�
 我们通过估计潜在尺度缩减因子 $\hat{R}$ 检测链条的收敛性
 
 \begin{equation}
-\hat{R} = \sqrt{\frac{\hat{\mathsf{Var}}^{+}(\omega|Y)}{W}}
+\hat{R} = \sqrt{\frac{\widehat{\mathsf{Var}}^{+}(\omega|Y)}{W}}
 \end{equation}
 
-随着 $n \to \infty$， $\hat{R}$ 下降到 1，如果 $\hat{R}$ 比较大，我们有理由认为需要增加模拟次数，改进待估参数 $\omega$ 的后验分布。
+随着 $n \to \infty$， $\hat{R}$ 下降到 1。如果 $\hat{R}$ 比较大，我们有理由认为需要增加模拟次数以改进待估参数 $\omega$ 的后验分布 [@Gelman2013R]。
