@@ -205,3 +205,16 @@ tools::dependsOnPkgs('rstan',installed = available.packages())
 [45] "walker"          "ESTER"           "pollimetry"      "psycho"         
 [49] "tidyposterior"   "walkr"           "tidymodels"     
 ```
+eight schools 数据集下载地址
+
+https://stat.columbia.edu/~gelman/arm/examples/schools/
+
+四种颜色
+
+darkorange
+
+dodgerblue
+
+grey
+
+Darkgrey

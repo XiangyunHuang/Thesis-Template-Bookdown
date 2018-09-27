@@ -55,4 +55,4 @@ SGLMMwR.rds
 code/rongelap/*.RData
 00d-abstract-zh.Rmd
 00e-abstract-en.Rmd
-
+data/eight_schools.RData
