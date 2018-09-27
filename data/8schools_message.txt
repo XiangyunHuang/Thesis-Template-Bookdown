@@ -1,0 +1,103 @@
+SAMPLING FOR MODEL '8schools' NOW (CHAIN 1).
+
+Gradient evaluation took 0 seconds
+1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+Adjust your expectations accordingly!
+
+
+Iteration:    1 / 10000 [  0%]  (Warmup)
+Iteration: 1000 / 10000 [ 10%]  (Warmup)
+Iteration: 2000 / 10000 [ 20%]  (Warmup)
+
+SAMPLING FOR MODEL '8schools' NOW (CHAIN 2).
+
+Gradient evaluation took 0 seconds
+1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+Adjust your expectations accordingly!
+
+
+Iteration:    1 / 10000 [  0%]  (Warmup)
+Iteration: 3000 / 10000 [ 30%]  (Warmup)
+Iteration: 1000 / 10000 [ 10%]  (Warmup)
+Iteration: 4000 / 10000 [ 40%]  (Warmup)
+Iteration: 2000 / 10000 [ 20%]  (Warmup)
+Iteration: 5000 / 10000 [ 50%]  (Warmup)
+Iteration: 5001 / 10000 [ 50%]  (Sampling)
+Iteration: 3000 / 10000 [ 30%]  (Warmup)
+Iteration: 6000 / 10000 [ 60%]  (Sampling)
+Iteration: 4000 / 10000 [ 40%]  (Warmup)
+Iteration: 7000 / 10000 [ 70%]  (Sampling)
+Iteration: 5000 / 10000 [ 50%]  (Warmup)
+Iteration: 5001 / 10000 [ 50%]  (Sampling)
+Iteration: 8000 / 10000 [ 80%]  (Sampling)
+Iteration: 6000 / 10000 [ 60%]  (Sampling)
+Iteration: 9000 / 10000 [ 90%]  (Sampling)
+Iteration: 7000 / 10000 [ 70%]  (Sampling)
+Iteration: 10000 / 10000 [100%]  (Sampling)
+
+ Elapsed Time: 0.84 seconds (Warm-up)
+               0.71 seconds (Sampling)
+               1.55 seconds (Total)
+
+Iteration: 8000 / 10000 [ 80%]  (Sampling)
+Iteration: 9000 / 10000 [ 90%]  (Sampling)
+Iteration: 10000 / 10000 [100%]  (Sampling)
+
+ Elapsed Time: 0.8 seconds (Warm-up)
+               0.55 seconds (Sampling)
+               1.35 seconds (Total)
+
+
+SAMPLING FOR MODEL '8schools' NOW (CHAIN 3).
+
+Gradient evaluation took 0 seconds
+1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+Adjust your expectations accordingly!
+
+
+Iteration:    1 / 10000 [  0%]  (Warmup)
+Iteration: 1000 / 10000 [ 10%]  (Warmup)
+Iteration: 2000 / 10000 [ 20%]  (Warmup)
+Iteration: 3000 / 10000 [ 30%]  (Warmup)
+
+SAMPLING FOR MODEL '8schools' NOW (CHAIN 4).
+
+Gradient evaluation took 0 seconds
+1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+Adjust your expectations accordingly!
+
+
+Iteration:    1 / 10000 [  0%]  (Warmup)
+Iteration: 4000 / 10000 [ 40%]  (Warmup)
+Iteration: 1000 / 10000 [ 10%]  (Warmup)
+Iteration: 5000 / 10000 [ 50%]  (Warmup)
+Iteration: 5001 / 10000 [ 50%]  (Sampling)
+Iteration: 2000 / 10000 [ 20%]  (Warmup)
+Iteration: 6000 / 10000 [ 60%]  (Sampling)
+Iteration: 3000 / 10000 [ 30%]  (Warmup)
+Iteration: 7000 / 10000 [ 70%]  (Sampling)
+Iteration: 4000 / 10000 [ 40%]  (Warmup)
+Iteration: 8000 / 10000 [ 80%]  (Sampling)
+Iteration: 5000 / 10000 [ 50%]  (Warmup)
+Iteration: 5001 / 10000 [ 50%]  (Sampling)
+Iteration: 9000 / 10000 [ 90%]  (Sampling)
+Iteration: 6000 / 10000 [ 60%]  (Sampling)
+Iteration: 10000 / 10000 [100%]  (Sampling)
+
+ Elapsed Time: 0.75 seconds (Warm-up)
+               0.84 seconds (Sampling)
+               1.59 seconds (Total)
+
+Iteration: 7000 / 10000 [ 70%]  (Sampling)
+Iteration: 8000 / 10000 [ 80%]  (Sampling)
+Iteration: 9000 / 10000 [ 90%]  (Sampling)
+Iteration: 10000 / 10000 [100%]  (Sampling)
+
+ Elapsed Time: 0.78 seconds (Warm-up)
+               0.75 seconds (Sampling)
+               1.53 seconds (Total)
+
+Warning messages:
+1: There were 17 divergent transitions after warmup. Increasing adapt_delta above 0.8 may help. See
+http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+2: Examine the pairs() plot to diagnose sampling problems
