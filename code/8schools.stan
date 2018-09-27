@@ -13,8 +13,10 @@ transformed parameters {
   real theta[J];  // schools effects
   for (j in 1:J)
     theta[j] = mu + tau * eta[j];
+  // theta = mu + tau*eta;
 }
 model {
   target += normal_lpdf(eta | 0, 1);
   target += normal_lpdf(y | theta, sigma); // target distribution
+  // y ~ normal(theta, sigma);
 }

@@ -468,7 +468,7 @@ Matthew D. Hoffman 和 Andrew Gelman (2014年) [@hoffman2014] 提出的 No-U-Tur
 
 Stan 是一门基于 C++ 的高级编程语言，用户只需提供数据、模型和参数初值，目标后验分布的 Markov 链的模拟过程是自动实现的。除了可以完全在 Stan 脚本中写模型外，Stan 还提供其他编程语言的接口，如 R，Python 和 MATLAB 等，使得熟悉其他编程语言的用户也可以比较方便地调用。 
 
-以分层正态模型为例，数据集 eight schools 来自 Andrew Gelman 和 John B. Carlin 等 (2003年) [@Gelman2003]，由 Educational Testing Service 调查搜集，用以分析不同的辅导项目对测验分数的影响。调查了8所高中，输出变量是一个分数，数据集见表 \@ref(tab:eight-high-schools)。
+以分层正态模型为例，数据集 8schools 来自 Andrew Gelman 和 John B. Carlin 等 (2003年) [@Gelman2003]，由美国教育考试服务调查搜集，用以分析不同的辅导项目对学生考试分数的影响，调查结果用来帮助高校招生。分别随机调查了 8 所高中，输出变量是一个分数，培训效应的估计 $y_j$，其样本方差 $\sigma^2_j$，数据集见表 \@ref(tab:eight-high-schools)。
 
 Table: (\#tab:eight-high-schools) 8 schools 数据集
 
@@ -479,13 +479,48 @@ Table: (\#tab:eight-high-schools) 8 schools 数据集
 
 分层模型可以在 Stan 中写成如下形式，在工作目录下把它保存为 `8schools.stan ` 
 
-```{r,comment=NA}
+```{r code-8schools,comment=NA}
 cat(readLines("code/8schools.stan"),sep = "\n")
 ```
 
-上述代码块的第一段提供数据：学校的数目 $J$；估计值 $y_1,\ldots,y_{J}$；标准差 $\sigma_1,\ldots,\sigma_{J}$，数据类型可以是整数、实数，数据结构可以是向量，甚至更一般的数组，数据可以指定约束，如在这个模型中 $J$ 限制为非负， $\sigma_{J}$ 必须是正的。
+上述代码块的第一段提供数据：学校的数目 $J$；估计值 $y_1,\ldots,y_{J}$；标准差 $\sigma_1,\ldots,\sigma_{J}$，数据类型可以是整数、实数，结构可以是向量，或更一般的数组，还可以带约束，如在这个模型中 $J$ 限制为非负， $\sigma_{J}$ 必须是正的，另外两个反斜杠 // 表示注释。
 
-第二段代码介绍参数：模型中的待估参数，学校总体的效应 $\theta_j$，均值 $\mu$，标准差 $\tau$ 
+第二段代码声明参数：模型中的待估参数，学校总体的效应 $\theta_j$，均值 $\mu$，标准差 $\tau$，学校水平上的误差 $\eta$ 和效应 $\theta$。在这个模型中，用 $\mu,\tau,\eta$ 表示 $\theta$ 而不是直接声明 $\theta$ 作一个参数，通过这种参数化，采样器的运行效率会提高，还应该尽量使用向量化操作代替 for 循环语句。
+
+最后一段是模型：稍微注意的是，正态分布的符号 $N(\cdot,\cdot)$ 中后一个位置是方差，而 Stan 代码中使用的是标准差。`target += normal_lpdf(y | theta, sigma);`  和 `y ~ normal(theta, sigma);`
+对模型的贡献是一样的，都使用正态分布的对数概率密度函数，只是后者扔掉了对数密度函数的常数项而已，这对于 Stan 的采样、近似或优化算法没有影响。
+
+算法运行的硬件环境是 16 核 32 线程主频 2.8 GHz 英特尔至强 E5-2680 处理器
+
+```{r run-8schools,echo=TRUE,eval=FALSE}
+# 安装依赖
+lapply(c(
+  "ggplot2", "StanHeaders", "rstan"
+), function(pkg) {
+  if (system.file(package = pkg) == "") install.packages(pkg)
+})
+# 加载依赖
+library(ggplot2)
+library(StanHeaders)
+library(rstan)
+# 设置环境
+options(mc.cores = ceiling(parallel::detectCores()/2))
+rstan_options(auto_write = TRUE)
+# 提供数据
+schools_dat <- list(
+  J = 8,
+  y = c(28, 8, -3, 7, -1, 1, 18, 12),
+  sigma = c(15, 10, 16, 11, 9, 11, 10, 18)
+)
+# 拟合模型
+fit <- stan(
+  model_name = "8schools",
+  model_code = readLines("code/8schools.stan"),
+  data = schools_dat,
+  iter = 10000, chains = 4,
+  seed = 2018
+)
+```
 
 
 <https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started>
