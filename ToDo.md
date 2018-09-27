@@ -209,6 +209,8 @@ eight schools 数据集下载地址
 
 https://stat.columbia.edu/~gelman/arm/examples/schools/
 
+<https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started>
+
 四种颜色
 
 darkorange
