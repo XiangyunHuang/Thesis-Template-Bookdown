@@ -569,7 +569,7 @@ Table: (\#tab:eight-schools-output) 对 Eight Schools 数据集建立分层正�
 这里我们对 $\tau$ 采用的非信息先验分布是均匀先验，参数 $\tau$ 的 95\% 的置信区间是 (0.22,20.5)， 数据支持 $\tau$ 的范围低于
 
 ```{r posterior-mu-tau,fig.cap="对 $\\mu,\\tau$ 给定均匀先验，后验均值 $\\mu$ 和标准差 $\\tau$ 的直方图"}
-knitr::include_graphics(path = "figures/posterior_mu_tau.pdf")
+knitr::include_graphics(path = "figures/posterior_mu_tau.png")
 ```
 
 ## 弱先验信息
