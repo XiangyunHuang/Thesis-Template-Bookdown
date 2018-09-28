@@ -466,9 +466,9 @@ Table: (\#tab:calculate-volume-of-hyperball) 前10维单位超立方体内切球
 
 Matthew D. Hoffman 和 Andrew Gelman (2014年) [@hoffman2014] 提出的 No-U-Turn 采样器属于 HMC 方法 衍生的采样器。
 
-Stan 是一门基于 C++ 的高级编程语言，用户只需提供数据、模型和参数初值，目标后验分布的 Markov 链的模拟过程是自动实现的。除了可以完全在 Stan 脚本中写模型外，Stan 还提供其他编程语言的接口，如 R，Python 和 MATLAB 等，使得熟悉其他编程语言的用户也可以比较方便地调用。 
+Stan 是一门基于 C++ 的高级编程语言，用户只需提供数据、模型和参数初值，目标后验分布的 Markov 链的模拟过程是自动实现的。除了可以完全在 Stan 脚本中写模型外，Stan 还提供其他编程语言的接口，如 R，Python 和 MATLAB 等，使得熟悉其他编程语言的用户也可以比较方便地调用。与 Python、R 这类解释型编程语言不同， Stan 代码需要先翻译成 C++ 代码，然后编译执行。
 
-Donald B. Rubin (1981年) [@Rubin1981] 分析了 Donald L. Alderman 和 Donald E. Powers [@Alderman1980] 收集的原始数据，得出表 \@ref(tab:eight-high-schools)， Andrew Gelman 和 John B. Carlin 等 (2003年) [@Gelman2003] 建立分层正态模型分析 Eight Schools 数据集，这里再次以该数据集和模型为例介绍 Stan 的使用和算法实现，分层正态模型模型结构如下
+Donald B. Rubin (1981年) [@Rubin1981] 分析了 Donald L. Alderman 和 Donald E. Powers [@Alderman1980] 收集的原始数据，得出表 \@ref(tab:eight-high-schools)， Andrew Gelman 和 John B. Carlin 等 (2003年) [@Gelman2003] 建立分层正态模型 \@ref(eq:hierarchical-normal-models) 分析 Eight Schools 数据集，这里再次以该数据集和模型为例介绍 Stan 的使用和算法实现。
 
 \begin{equation}
 \begin{aligned}
@@ -531,7 +531,7 @@ fit <- stan(
   model_name = "8schools",
   model_code = readLines("code/8schools.stan"),
   data = schools_dat,
-  iter = 10000, chains = 4,
+  iter = 10000, warmup = 5000, chains = 4,
   seed = 2018
 )
 # 模型结果
