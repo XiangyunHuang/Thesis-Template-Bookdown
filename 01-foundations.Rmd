@@ -504,7 +504,7 @@ cat(readLines("code/8schools.stan"),sep = "\n")
 
 算法运行的硬件环境是 16 核 32 线程主频 2.8 GHz 英特尔至强 E5-2680 处理器，系统环境 CentOS 7，R 软件版本 3.5.1，RStan 版本 2.17.3。
 
-模型参数主要设置了4条链，每条链迭代 10000 次，为复现模型结果随机数种子设为 2018
+HMC算法参数主要设置了4条链，每条链迭代 10000 次，为复现模型结果随机数种子设为 2018
 
 ```{r run-8schools,echo=TRUE,eval=FALSE}
 # 安装依赖
@@ -536,8 +536,8 @@ fit <- stan(
 )
 # 模型结果
 print(fit)
-# theta_1 的 95% 置信区间
-print(fit, "theta[1]", probs = c(0.025, 0.975))
+# tau 的 95% 置信区间
+print(fit, "tau", probs = c(0.025, 0.975))
 ```
 
 Table: (\#tab:eight-schools-output) 对 Eight Schools 数据集建立分层正态模型 \@ref(eq:hierarchical-normal-models)，采用 HMC 算法估计的参数值，  
@@ -565,6 +565,15 @@ Table: (\#tab:eight-schools-output) 对 Eight Schools 数据集建立分层正�
 |lp__      | -39.55 |   0.03  |2.64   |-45.41 |-41.15 |-39.31 |-37.67 |-35.12 | 6325  |  1   |
 
 表 \@ref(tab:eight-schools-output) 的列为后验量的估计值：依次是均值 $\mathsf{E}(\mu|Y)$、 标准误(standard error) $\mathsf{Var}(\mu|Y)$、标准差 (standard deviation) $\mathsf{E}(\sigma|Y)$ 、后验分布的 5 个分位点、有效样本数 $n_{eff}$ 和潜在尺度缩减因子 (potential scale reduction factor)，最后两个量 用来分析采样效率；最后一行表示每次迭代的未正则的对数后验密度 (unnormalized log-posterior density) $\hat{R}$，当链条都收敛到同一平稳分布的时候，$\hat{R}$ 接近 1。
+
+这里我们对 $\tau$ 采用的非信息先验分布是均匀先验，参数 $\tau$ 的 95\% 的置信区间是 (0.22,20.5)， 数据支持 $\tau$ 的范围低于
+
+```{r posterior-mu-tau,fig.cap="对 $\\mu,\\tau$ 给定均匀先验，后验均值 $\\mu$ 和标准差 $\\tau$ 的直方图"}
+knitr::include_graphics(path = "figures/posterior_mu_tau.pdf")
+```
+
+## 弱先验信息
+
 
 
 ## 潜在尺度缩减因子

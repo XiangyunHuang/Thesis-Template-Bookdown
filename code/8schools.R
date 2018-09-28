@@ -1,12 +1,17 @@
-
+library(ggplot2)
+library(StanHeaders)
+library(rstan)
+load(file = "data/eight_schools.RData")
 schools_sim <- extract(fit, permuted = TRUE)
 
-pdf(file = "mu_tau.pdf", width = 8, height = 4)
+pdf(file = "posterior_mu_tau.pdf", width = 8, height = 6)
 par(mfrow = c(1, 2), mar = c(4, 4, 2, 2))
-hist(schools_sim$mu, col = "lightblue", border = "white")
+hist(schools_sim$mu, col = "lightblue", border = "white",xlab = expression(mu),main = "")
 abline(v = mean(schools_sim$mu), col = "darkorange", lwd = 2)
-hist(schools_sim$tau, col = "lightblue", border = "white")
+hist(schools_sim$tau, col = "lightblue", border = "white",xlab = expression(tau),main = "")
 abline(v = mean(schools_sim$tau), col = "darkorange", lwd = 2)
+# hist(schools_sim$lp__, col = "lightblue", border = "white",xlab = "lp__",main = "")
+# abline(v = mean(schools_sim$lp__), col = "darkorange", lwd = 2)
 dev.off()
 
 pdf(file = "pairs_mu_tau_lp.pdf", width = 8, height = 6)
