@@ -50,7 +50,7 @@ running_mc_means_log_tau <- sapply(1:500, function(n) mean(log(params$tau)[1:(10
 pdf(file = "figures/mcmc_mean_tau_div.pdf", width = 8, height = 3)
 
 par(mfrow = c(1, 2),mar = c(4, 4, 0.5, 0.5))
-plot(10 * (1:500), running_mc_means_log_tau,
+plot(10 * (1:500)+5000, running_mc_means_log_tau,
   col = "darkorange", pch = 16, cex = 0.8, ylim = c(0, 2),
   xlab = "Iteration", ylab = "MCMC mean of log(tau)"
 )
@@ -71,7 +71,8 @@ nondiv_params_ncp <- params[params$divergent == 0,]
 # 图中发散的点用 蓝色标识
 # par(mar = c(4, 4, 0.5, 0.5))
 plot(nondiv_params_ncp$mu, log(nondiv_params_ncp$tau),
-  xlab = "mu", ylab = "log(tau)", xlim = c(-10, 25), ylim = c(-6, 4),
+  xlab = expression(mu), ylab = expression(log(tau)),
+  xlim = c(-10, 25), ylim = c(-6, 4),
   col = "Darkgrey", pch = 16, cex = 0.8
 )
 points(div_params_ncp$mu, log(div_params_ncp$tau),
