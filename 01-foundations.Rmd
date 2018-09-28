@@ -468,26 +468,27 @@ Matthew D. Hoffman 和 Andrew Gelman (2014年) [@hoffman2014] 提出的 No-U-Tur
 
 Stan 是一门基于 C++ 的高级编程语言，用户只需提供数据、模型和参数初值，目标后验分布的 Markov 链的模拟过程是自动实现的。除了可以完全在 Stan 脚本中写模型外，Stan 还提供其他编程语言的接口，如 R，Python 和 MATLAB 等，使得熟悉其他编程语言的用户也可以比较方便地调用。 
 
-Andrew Gelman 和 John B. Carlin 等 (2003年) [@Gelman2003] 建立分层正态模型分析数据集 8schools，这里再次以该数据集和模型为例介绍 Stan 的使用和算法实现，分层正态模型模型结构如下
+Donald B. Rubin (1981年) [@Rubin1981] 分析了 Donald L. Alderman 和 Donald E. Powers [@Alderman1980] 收集的原始数据，得出表 \@ref(tab:eight-high-schools)， Andrew Gelman 和 John B. Carlin 等 (2003年) [@Gelman2003] 建立分层正态模型分析 Eight Schools 数据集，这里再次以该数据集和模型为例介绍 Stan 的使用和算法实现，分层正态模型模型结构如下
 
 \begin{equation}
 \begin{aligned}
-\theta & = \mu + \tau*\eta \\
-y & \sim N(\theta,\sigma^2)\\
-\eta & \sim (0,1)
+     \mu & \sim \mathcal{N}(0,5) \\
+    \tau & \sim \text{Half-Cauchy}(0,5) \\
+  \eta_i & \sim \mathcal{N}(0,1) \\
+\theta_i &  =   \mu + \tau \cdot \eta_i \\
+y_i & \sim \mathcal{N}(\theta_i,\sigma^2_{i})
 \end{aligned}
 (\#eq:hierarchical-normal-models)
 \end{equation}
 
 由美国教育考试服务调查搜集，用以分析不同的辅导项目对学生考试分数的影响，调查结果用来帮助高校招生。分别随机调查了 8 所高中，输出变量是一个分数，培训效应的估计 $y_j$，其样本方差 $\sigma^2_j$，数据集见表 \@ref(tab:eight-high-schools)。
 
-Table: (\#tab:eight-high-schools) 8 schools 数据集
+Table: (\#tab:eight-high-schools) Eight Schools 数据集
 
 |   School   |   A   |   B   |   C   |   D   |   E   |   F   |   G   |   H   |
 |:----------:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
 |   $y_i$    |  28   |   8   |   -3  |   7   |   -1  |   1   |   18  |   12  |
 | $\sigma_i$ |  15   |  10   |   16  |   11  |    9  |   11  |   10  |   18  |
-
 
 分层正态模型可以在 Stan 中写成如下形式，在工作目录下把它保存为 `8schools.stan ` 
 
@@ -539,7 +540,7 @@ print(fit)
 print(fit, "theta[1]", probs = c(0.025, 0.975))
 ```
 
-Table: (\#tab:eight-schools-output) 8 schools 分层正态模型 \@ref(eq:hierarchical-normal-models) 参数的估计值
+Table: (\#tab:eight-schools-output) 对 Eight Schools 数据集建立分层正态模型 \@ref(eq:hierarchical-normal-models)，采用 HMC 算法估计的参数值，  
 
 |          |  mean  | se_mean |   sd  |  2.5% |   25% |   50% |   75% | 97.5% | n_eff | Rhat |
 |   :---   |  ----: |   ----: | -----:| ----: | ----: | ----: | ----: | ----: | ----: | ----:|       
@@ -563,8 +564,7 @@ Table: (\#tab:eight-schools-output) 8 schools 分层正态模型 \@ref(eq:hierar
 |$\theta_8$|   8.42 |   0.06  |7.86   | -7.24 |  3.91 |  8.26 | 12.60 | 25.24 |16598  |  1   |
 |lp__      | -39.55 |   0.03  |2.64   |-45.41 |-41.15 |-39.31 |-37.67 |-35.12 | 6325  |  1   |
 
-
-表 \@ref(tab:eight-schools-output) 的列为后验量的估计值：依次是均值 $\mathsf{E}(\mu|Y)$、 标准误(standard error) $\mathsf{Var}(\mu|Y)$、标准差 (standard deviation) $\mathsf{E}(\sigma|Y)$ 和后验分布的 5 个分位点，有效样本数 $n_{eff}$ 和潜在尺度缩减因子 (potential scale reduction factor) 用来分析采样及其效率；最后一行表示每次迭代的未正则的对数后验密度 (unnormalized log-posterior density) $\hat{R}$，当链条都收敛到同一平稳分布的时候，$\hat{R}$ 接近 1。
+表 \@ref(tab:eight-schools-output) 的列为后验量的估计值：依次是均值 $\mathsf{E}(\mu|Y)$、 标准误(standard error) $\mathsf{Var}(\mu|Y)$、标准差 (standard deviation) $\mathsf{E}(\sigma|Y)$ 、后验分布的 5 个分位点、有效样本数 $n_{eff}$ 和潜在尺度缩减因子 (potential scale reduction factor)，最后两个量 用来分析采样效率；最后一行表示每次迭代的未正则的对数后验密度 (unnormalized log-posterior density) $\hat{R}$，当链条都收敛到同一平稳分布的时候，$\hat{R}$ 接近 1。
 
 
 ## 潜在尺度缩减因子

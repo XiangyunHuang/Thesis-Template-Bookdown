@@ -224,4 +224,4 @@ Darkgrey
 
 同一本书，引用不同的地方，参考文献的条目需要重复添加吗，只是页码范围不同
 
-
+http://mc-stan.org/users/documentation/case-studies/divergences_and_bias.html
