@@ -225,3 +225,75 @@ Darkgrey
 同一本书，引用不同的地方，参考文献的条目需要重复添加吗，只是页码范围不同
 
 http://mc-stan.org/users/documentation/case-studies/divergences_and_bias.html
+
+
+## 贝叶斯数据分析 {#bayesian-data-analysis}
+
+以一个广义线性模型为例说明贝叶斯数据分析的过程。模拟数据集 logit 来自 R包 **mcmc**，它包含5个变量，一个响应变量 y 和四个预测变量 x1，x2，x3，x4。频率派的分析可以用这样几行 R 代码实现
+
+```{r frequentist-analysis,echo=TRUE}
+library(mcmc)
+data(logit)
+fit <- glm(y ~ x1 + x2 + x3 + x4, data = logit, 
+           family = binomial(), x = TRUE)
+summary(fit)
+```
+
+现在，我们想用贝叶斯的方法来分析同一份数据，假定5个参数（回归系数）的先验分布是独立同正态分布，且均值为 0，标准差为 2。
+
+该广义线性模型的对数后验密度（对数似然加上对数先验）可以通过下面的 R 命令给出
+
+```{r echo=TRUE}
+x <- fit$x
+y <- fit$y
+lupost <- function(beta, x, y) {
+  eta <- as.numeric(x %*% beta)
+  logp <- ifelse(eta < 0, eta - log1p(exp(eta)), -log1p(exp(-eta)))
+  logq <- ifelse(eta < 0, -log1p(exp(eta)), -eta - log1p(exp(-eta)))
+  logl <- sum(logp[ y == 1]) + sum(logq[y == 0])
+  return(logl - sum(beta^2) / 8)
+}
+```
+
+为了防止溢出 (overflow) 和巨量消失 (catastrophic cancellation)，计算 $\log(p)$ 和 $\log(q)$ 使用了如下技巧
+
+\begin{align*}
+p &= \frac{\exp(\eta)}{1 + \exp(\eta)} = \frac{1}{1 + \exp(- \eta)} \\
+q &= \frac{1}{1 + \exp(\eta)} = \frac{\exp(- \eta)}{1 + \exp(- \eta)}
+\end{align*}
+
+然后对上式取对数
+
+\begin{align*}
+\log(p) &= \eta - \log(1 + \exp(\eta)) = - \log(1 + \exp(- \eta)) \\
+\log(q) &= - \log(1 + exp(\eta)) = - \eta - \log(1 + \exp(-\eta))
+\end{align*}
+
+为防止溢出，我们总是让 exp 的参数取负数，也防止在 $|\eta|$ 很大时巨量消失。比如，当 $\eta$ 为很大的正数时，
+
+\begin{align*}
+p & \approx  1  \\
+q & \approx  0 \\
+\log(p) & \approx  - \exp(-\eta) \\
+\log(q) & \approx  - \eta - \exp(-\eta)
+\end{align*}
+
+当 $\eta$ 为很小的数时，使用 R 内置的函数 log1p 计算，当 $\eta$ 为大的负数时，情况类似^[更加精确的计算 $\log(1-\exp(-|a|)), |a| \ll 1$ 可以借助 **Rmpfr** 包 <https://r-forge.r-project.org/projects/rmpfr/>]。
+
+有了上面这些准备，现在可以运行随机游走 Metropolis 算法模拟后验分布
+
+```{r echo=TRUE}
+set.seed(2018)
+beta.init <- as.numeric(coefficients(fit))
+fit.bayes <- metrop(obj = lupost, initial = beta.init, 
+                    nbatch = 1e3, blen = 1, nspac = 1, x = x, y = y)
+names(fit.bayes)
+fit.bayes$accept
+```
+
+这里使用的 metrop 函数的参数说明如下：
+
+- 自编的 R 函数 lupost 计算未归一化的 Markov 链的平稳分布（后验分布）的对数密度；
+- beta.init 表示 Markov 链的初始状态；
+- Markov 链的 batches；
+- x,y 是提供给目标函数 lupost 的额外参数
