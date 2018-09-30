@@ -297,3 +297,8 @@ fit.bayes$accept
 - beta.init 表示 Markov 链的初始状态；
 - Markov 链的 batches；
 - x,y 是提供给目标函数 lupost 的额外参数
+
+
+贝叶斯因子 
+https://rpubs.com/lindeloev/bayes_factors 
+https://discourse.mc-stan.org/t/inf-bayes-factor-using-brms/5792
