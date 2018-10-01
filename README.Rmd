@@ -12,37 +12,6 @@
 
 ## 英文字体
 
-Windows 系统自带新罗马字体和 Arial 字体，在 Ubuntu 系统上需要安装 Windows 下的两款字体 Times New Roman 和 Arial
-
-```bash
-sudo apt install ttf-mscorefonts-installer
-```
-
-在安装的过程中会自动下载字体，如果下载失败，就从网站 <https://sourceforge.net/projects/corefonts/files/the%20fonts/final/> 手动下载字体，存放到 `winfonts/` 文件夹下，执行
-
-```bash
-sudo dpkg-reconfigure ttf-mscorefonts-installer
-```
-
-在弹出的窗口中填写字体所在路径 `/home/xiangyun/winfonts/`，安装完成后，刷新字体
-
-```bash
-sudo fc-cache -fsv
-```
-
-安装等宽字体 Inconsolata 显示代码
-
-```bash
-sudo apt install fonts-inconsolata
-```
-
-英文字体设置如下
-
-```yaml
-mainfont: Times New Roman
-sansfont: Arial
-monofont: Inconsolata
-```
 
 $$\mathcal{R},\mathbb{R},\mathbf{R},\mathscr{R},\mathcal{S},\mathbb{S},\mathbf{S},\mathscr{S},\mathsf{S},\mathrm{S},\mathtt{S}$$
 
@@ -56,30 +25,6 @@ sudo cp Thesis-Template-Bookdown/fonts/* /usr/share/fonts/truetype/win/
 sudo fc-cache -fsv
 ```
 
-## bookdown
-
-安装 R 的过程请看《R语言忍者秘笈》第二章的安装与配置 <https://bookdown.org/yihui/r-ninja/setup.html>
-
-- 从 CRAN 安装 bookdown 稳定版
-
-```r
-install.packages("bookdown")
-```
-
-- 从 Github 安装 bookdown 开发版
-
-```r
-devtools::install_github("rstudio/bookdown")
-```
-
-遇到问题先试升级
-
-```r
-# 一行命令升级所有安装的 R 包
-update.packages(ask = FALSE)
-```
-
-有关 bookdown 的详细介绍请看谢益辉发布在网上的在线书 《bookdown: Authoring Books and Technical Documents with R Markdown》 <https://bookdown.org/yihui/bookdown>
 
 ## Pandoc
 
@@ -91,58 +36,8 @@ rmarkdown::pandoc_version()
 
 如果你需要 Pandoc 的新特性，觉得自带的版本比较低，你可以从 Pandoc 官网 (<http://pandoc.org>)  手动安装一个新版本。 rmarkdown 会优先使用你安装的新版本。
 
-## LaTeX
-
-LaTeX 只有当你需要把书转化为 PDF 格式时才会用到，从 LaTeX 官网 (<https://www.latex-project.org/get/>) 你可以学习到很多东西，如安装 LaTeX。我们强烈推荐你安装一个轻量的跨平台 LaTeX 发行版 --- [TinyTeX](https://yihui.name/tinytex/)。它基于 TeX Live，可以通过 R 包 tinytex 愉快地安装，tinytex 在之前安装 bookdown 时已经安装，所以不用担心，安装 TinyTeX 你只需在 R 控制台下输入
-
-```{r,eval=FALSE}
-tinytex::install_tinytex()
-```
-
-拥有 TinyTeX， 你应该再也不会看到这样的错误消息：
-
-```latex
-! LaTeX Error: File `titling.sty' not found.
-
-Type X to quit or <RETURN> to proceed,
-or enter new name. (Default extension: sty)
-
-Enter file name: 
-! Emergency stop.
-<read *> 
-         
-l.107 ^^M
-
-pandoc: Error producing PDF
-Error: pandoc document conversion failed with error 43
-Execution halted
-```
-
-上面的消息日志告诉你，说系统中缺少宏文件 `titling.sty`。 LaTeX 宏包名称通常和宏文件 `*.sty`  的名字一样，所以你可以先尝试安装 `titling` 包。如果你和 TinyTeX 一起使用，缺失的 LaTeX 包会自动安装，所以你不用担心这类问题。 
-
-LaTeX 发行版和宏包随时间一直在更新，就像 R 软件和扩展包一样，当你遇到 LaTeX 问题的时候，可以先尝试升级 TinyTeX 发行版和 LaTeX 宏包，查看你所安装的 LaTeX 发行版
-
-```{r,eval=FALSE}
-system("pdflatex --version")
-```
-```{r,echo=FALSE}
-cat(system("pdflatex --version", intern = TRUE),sep = "\n")
-```
-
-更新 TinyTeX 安装的宏包
-
-```{r,eval=FALSE}
-tinytex::tlmgr_update()
-```
-
-TeX Live 每年都会更新，随着时间的过去，你可能需要升级 TinyTeX 发行版，否则你不能安装和升级任何 LaTeX 包。
-
-```r
-tinytex::reinstall_tinytex()
-```
 
 ## 本书配置
-
 
 Adobe 开源的等宽字体 sourcecodepro 显示代码， Adobe Times Roman 作为正文字体，provides maths support using glyphs from the Symbol, Chancery and Computer Modern fonts together with letters, etc., from Times Roman.
 
@@ -168,42 +63,3 @@ xfun::session_info(c("rmarkdown","bookdown","tinytex"))
 ```
 
 
-## 安装 Pandoc
-
-- 安装 stack 1.7.1 
-
-```bash
-curl -sSL https://s3.amazonaws.com/download.fpcomplete.com/centos/7/fpco.repo | sudo tee /etc/yum.repos.d/fpco.repo
-sudo yum -y install stack zlib-devel
-```
-
-- 下载 pandoc 源文件 也可以克隆 pandoc's repo
-
-```bash
-wget https://github.com/jgm/pandoc/releases/download/2.3/pandoc-2.3-linux.tar.gz
-```
-
-- 解压
-
-```bash
-tar -xzf pandoc-2.3-linux.tar.gz
-```
-
-- 安装依赖和 pandoc
-
-```bash
-cd pandoc-2.3
-stack setup # 安装 ghc 8.4.3 等依赖
-stack install
-stack install pandoc-citeproc
-```
-
-- 配置路径
-
-```bash
-sudo vi /etc/profile
-export PATH=$HOME/.local/bin:$PATH
-source /etc/profile
-```
-
-再将这行放在 `.zshrc` 里
