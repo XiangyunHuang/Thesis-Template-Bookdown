@@ -1,15 +1,15 @@
 [![Build Status](https://travis-ci.com/XiangyunHuang/Thesis-Template-Bookdown.svg?branch=master)](https://travis-ci.com/XiangyunHuang/Thesis-Template-Bookdown)
 ---
 
+## 中国矿业大学（北京）论文模板
+
 这个模版（非官方）是为中国矿业大学（北京）的研究生排版硕士学位论文服务的。
 
 The template is used for Master Thesis of China University of Mining and Technology, Beijing.
 
 ---
 
-## 中国矿业大学（北京）论文模板
-
-> 最好的模板就是一篇基于模板的完整论文， 其所包含的公式、图片、表格等不再是 demo， 只有把真实场景中的使用形式呈现给使用者看， 才能真的让使用者少淌些坑。
+> 最好的模板就是一篇基于模板的完整论文， 其所包含的公式、图片、表格等不再是 demo。 只有把真实场景中的使用形式呈现给使用者看， 才能真的让使用者少淌些坑。
 
 ---
 
@@ -33,7 +33,9 @@ The template is used for Master Thesis of China University of Mining and Technol
 
 ---
 
-### 中英文字体
+> 下面是模版在各个系统上可能遇到的问题及解决方案
+
+### 1. 中英文字体
 
 Windows 系统自带新罗马字体和 Arial 字体，在 Ubuntu 系统上需要安装 Windows 下的两款字体 Times New Roman 和 Arial
 
@@ -68,7 +70,7 @@ monofont: Inconsolata
 ```
 
 
-### 安装 Pandoc
+### 2. 安装 Pandoc
 
 Pandoc 在 Windows 和 Ubuntu 系统上提供了安装包，唯独 CentOS 系统上没有，需要用户自己编译（CentOS 系统包管理器带的 Pandoc 版本太低不能用）。Pandoc 源码可以从 Github 仓库中下载 <https://github.com/jgm/pandoc/releases/>，下面介绍安装最新版 Pandoc 的过程
 
@@ -111,7 +113,7 @@ source /etc/profile
 如果你安装了 zsh 和 [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh) ，再将这行 `export PATH=$HOME/.local/bin:$PATH` 放在 `.zshrc` 里。
 
 
-### bookdown
+### 3. bookdown
 
 安装 R 的过程请看《R语言忍者秘笈》第二章的安装与配置 <https://bookdown.org/yihui/r-ninja/setup.html>
 
@@ -136,7 +138,7 @@ update.packages(ask = FALSE)
 
 有关 bookdown 的详细介绍请看谢益辉发布在网上的在线书 《bookdown: Authoring Books and Technical Documents with R Markdown》 <https://bookdown.org/yihui/bookdown>
 
-### LaTeX
+### 4. LaTeX
 
 LaTeX 只有当你需要把书转化为 PDF 格式时才会用到，从 LaTeX 官网 (<https://www.latex-project.org/get/>) 你可以学习到很多东西，如安装 LaTeX。我们强烈推荐你安装一个轻量的跨平台 LaTeX 发行版 --- [TinyTeX](https://yihui.name/tinytex/)。它基于 TeX Live，可以通过 R 包 tinytex 愉快地安装，tinytex 在之前安装 bookdown 时已经安装，所以不用担心，安装 TinyTeX 你只需在 R 控制台下输入
 
