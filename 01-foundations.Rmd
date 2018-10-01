@@ -323,9 +323,9 @@ f(x) = f(a) + \frac{f'(a)}{1!}(x-a) + \frac{f''(a)}{2!}(x-a)^2 + \frac{f'''(a)}{
 
 
 
-## 贝叶斯理论 {#bayes-methods}
+## 贝叶斯定理与先验分布 {#bayes-methods}
 
-[贝叶斯方法，贝叶斯定理，非信息先验分布，扁平先验]{.todo}
+[非信息先验分布，扁平先验 flat prior，模糊先验]{.todo}
 
 以标准线性模型为例介绍贝叶斯分析及其基本概念 [@Rasmussen2006]，为什么不用 RMSE 均方误差，WAIC pDIC 模型选择 loo K-CV  
 

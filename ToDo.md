@@ -69,7 +69,10 @@ besselK(0.5,20,expon.scaled = T)
 
 - non-informative prior 无信息先验
 - Jeffreys' prior
-- vague/flat/diffuse priors 模糊/扁平
+- vague/flat/diffuse priors 模糊/扁平/漫射，扩散
+
+An uninformative prior or diffuse prior expresses vague or general information about a variable
+https://en.wikipedia.org/wiki/Prior_probability#Uninformative_priors
 
 《SAS 手册》贝叶斯先验分布章节
 
