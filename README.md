@@ -1,7 +1,11 @@
 [![Build Status](https://travis-ci.com/XiangyunHuang/Thesis-Template-Bookdown.svg?branch=master)](https://travis-ci.com/XiangyunHuang/Thesis-Template-Bookdown)
 ---
 
+这个模版（非官方）是为中国矿业大学（北京）的研究生排版硕士学位论文服务的。
 
+The template is used for Master Thesis of China University of Mining and Technology, Beijing.
+
+---
 
 ## 中国矿业大学（北京）论文模板
 
