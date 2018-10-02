@@ -404,9 +404,10 @@ Donald B. Rubin (1981年) [@Rubin1981] 分析了 Donald L. Alderman 和 Donald E
 \begin{aligned}
      \mu & \sim \mathcal{N}(0,5) \\
     \tau & \sim \text{Half-Cauchy}(0,5) \\
+p(\mu,\tau) & \propto 1 \\
   \eta_i & \sim \mathcal{N}(0,1) \\
 \theta_i &  =   \mu + \tau \cdot \eta_i \\
-y_i & \sim \mathcal{N}(\theta_i,\sigma^2_{i})
+     y_i & \sim \mathcal{N}(\theta_i,\sigma^2_{i})
 \end{aligned}
 (\#eq:hierarchical-normal-models)
 \end{equation}

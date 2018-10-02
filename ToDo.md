@@ -20,20 +20,36 @@ Testing environmental and genetic effects in the presence of spatial autocorrela
 
 JAGS 和 STAN 对比
 
+FastGP: Efficiently Using Gaussian Processes with Rcpp and RcppEigen
+
+Contains Rcpp and RcppEigen implementations of matrix operations useful for Gaussian process models, such as the inversion of a symmetric Toeplitz matrix, sampling from multivariate normal distributions, evaluation of the log-density of a multivariate normal vector, and Bayesian inference for latent variable Gaussian process models with elliptical slice sampling (Murray, Adams, and MacKay 2010).
+
+sgeostat: An Object-Oriented Framework for Geostatistical Modeling in S+
+
+An Object-oriented Framework for Geostatistical Modeling in S+ containing functions for variogram estimation, variogram fitting and kriging as well as some plot functions. Written entirely in S, therefore works only for small data sets in acceptable computing time.
+
+sparseLTSEigen: RcppEigen back end for sparse least trimmed squares regression
+
+Use RcppEigen to fit least trimmed squares regression models with an L1 penalty in order to obtain sparse models.
+
+
 adnuts 包 rstan 包
 
 STAN 框架
 
 - https://github.com/ourcodingclub/CC-Stan-intro
 - https://github.com/ourcodingclub/CC-Stan-2
+- http://mc-stan.org/users/documentation/tutorials.html
 
-http://mc-stan.org/users/documentation/case-studies/mbjoseph-CARStan.html
 
 Exact sparse CAR models in Stan
+http://mc-stan.org/users/documentation/case-studies/mbjoseph-CARStan.html
 
-https://m-clark.github.io/bayesian-basics/example.html
 先验、似然和后验
-http://mc-stan.org/users/documentation/tutorials.html
+https://m-clark.github.io/bayesian-basics/example.html
+
+Bayesian Statistics
+https://statswithr.github.io/book
 
 
 高斯过程 协方差矩阵的 QR 分解 [@Bates1988]
