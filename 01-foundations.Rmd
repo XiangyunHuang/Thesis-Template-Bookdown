@@ -294,7 +294,7 @@ f(x) = f(a) + \frac{f'(a)}{1!}(x-a) + \frac{f''(a)}{2!}(x-a)^2 + \frac{f'''(a)}{
 \int g(x) \mathrm{d}x = \int \exp[\log g(x)] \mathrm{d}x \approx \mathrm{constant} \int \exp[- \frac{(x - \hat{x})^2}{2\hat{\sigma}^2}] \mathrm{d}x
 \]
 
-拉普拉斯方法用正态分布近似分布 $f(x)$， 其均值 $\hat(x)$，可以通过求解 $f'(x) = 0$ 获得，方差 $\hat{\sigma}^2 = -1/f''(\hat{x})$  
+拉普拉斯方法用正态分布近似分布 $f(x)$， 其均值 $\hat{x}$，可以通过求解 $f'(x) = 0$ 获得，方差 $\hat{\sigma}^2 = -1/f''(\hat{x})$  
 
 以卡方分布 $\chi^2$ 为例，
 
