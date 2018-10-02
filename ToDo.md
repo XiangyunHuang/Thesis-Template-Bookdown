@@ -27,6 +27,15 @@ STAN 框架
 - https://github.com/ourcodingclub/CC-Stan-intro
 - https://github.com/ourcodingclub/CC-Stan-2
 
+http://mc-stan.org/users/documentation/case-studies/mbjoseph-CARStan.html
+
+Exact sparse CAR models in Stan
+
+https://m-clark.github.io/bayesian-basics/example.html
+先验、似然和后验
+http://mc-stan.org/users/documentation/tutorials.html
+
+
 高斯过程 协方差矩阵的 QR 分解 [@Bates1988]
 
 A theory of statistical models for Monte Carlo integration 蒙特卡罗积分 [@Kong2003]
@@ -216,14 +225,7 @@ https://stat.columbia.edu/~gelman/arm/examples/schools/
 
 四种颜色
 
-darkorange
-
-dodgerblue
-
-grey
-
-Darkgrey
-
+darkorange dodgerblue grey Darkgrey
 
 同一本书，引用不同的地方，参考文献的条目需要重复添加吗，只是页码范围不同
 
@@ -305,3 +307,5 @@ fit.bayes$accept
 贝叶斯因子 
 https://rpubs.com/lindeloev/bayes_factors 
 https://discourse.mc-stan.org/t/inf-bayes-factor-using-brms/5792
+
+
