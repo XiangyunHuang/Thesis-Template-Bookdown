@@ -8,7 +8,7 @@ mainfont: Times New Roman
 sansfont: Arial
 monofont: Inconsolata
 geometry: margin=1.18in
-bibliography: [book.bib, refer.bib]
+bibliography: ["latex/book.bib", "latex/refer.bib"]
 link-citations: yes
 graphics: yes
 tables: yes

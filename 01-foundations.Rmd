@@ -437,7 +437,7 @@ cat(readLines("code/8schools.stan"),sep = "\n")
 
 HMC算法参数主要设置了4条链，每条链迭代 10000 次，为复现模型结果随机数种子设为 2018
 
-```{r run-8schools,echo=TRUE,eval=FALSE}
+```{r run-8schools,eval=FALSE}
 # 安装依赖
 lapply(c(
   "ggplot2", "StanHeaders", "rstan"
