@@ -55,8 +55,7 @@ before_script:
   - Rscript -e 'update.packages(lib.loc = .libPaths()[1], ask = FALSE)'
 
 script:
-  - make gitbook
+  - Rscript -e 'bookdown::render_book("index.Rmd", config_file = "_bookdown_skeleton.yml")'
 
 after_success:
-  # - make pdf
   - netlify deploy -t $NETLIFY_PAT

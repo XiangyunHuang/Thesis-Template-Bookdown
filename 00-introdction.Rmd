@@ -1,0 +1,120 @@
+# 模版使用
+
+国内 Word 和 LaTeX 模版占据论文排版的十之八九，特别是我校主要是用 Word 排版，目前 LaTeX 模版 只出现在理学院数学系少数方向，且不强制使用，此外，该模版已历时近十年，早就有些跟不上时代，比如说其使用环境 CTeX， 是很多年前的版本，目前网上已经找不到该版本，除了靠一代代地拷贝传递别无他法。并且，在新的操作系统上 (如 Windows 10) 经常出现兼容性问题。
+
+排版数学公式是相当复杂的事情，
+
+RStudio 有公式预览功能，
+
+LaTeX 文档中有如此之多的反斜杠以致于不知什么时候一不小心的操作，在某个地方删除了，又要根据出错信息搜索整个文档定位问题。
+
+因在学院给很多同学调过 LaTeX 错误，他们也不敢动模版，从师兄师姐那传下来的论文模版，其实就是一篇完整的论文，然后小心翼翼地替换。事实上，他们大多不会花时间去学 LaTeX，甚至连 《一份不太简短的 LaTeX 介绍》 都没有看过，我也很能理解他们，虽然是学数学和统计，可是毕业了准备吃这碗饭的却凤毛麟角，不从事学术就不会接触 LaTeX。 
+
+闲话少叙，因此，我提供了一篇完整的论文作为模版，供使用者慢慢替换，特别是里面包含的各种各样的公式排版。
+
+
+项目根目录的文件列表
+
+```markdown
+Thesis-Template-Bookdown/
+├──  index.Rmd
+├──  01-foundations.Rmd
+├──  02-models.Rmd
+├──  03-estimations.Rmd
+├──  04-simulations.Rmd
+├──  05-cases.Rmd
+├──  06-summary.Rmd
+├──  07-ack-author.Rmd
+├──  08-appendix.Rmd
+├──  09-references.Rmd
+├──  _bookdown.yml
+├──  _output.yml
+├──  _common.R
+├──  _render.R
+├──  Makefile
+├──  GBT7714-2005.bst
+├──  book.bib
+├──  code/
+├──  latex/
+├──  figures/
+├──  preamble.tex
+├──  README.md
+└──  style.css
+```
+
+## 插图
+
+图片布局设置
+
+长方形图的尺寸设置
+
+```
+small.mar=TRUE
+```
+
+正方形图的尺寸设置
+
+```
+small.mar=TRUE,fig.asp=1,out.width="45%",fig.width=4.5
+```
+
+两行一列布局 2*1
+
+```
+small.mar=TRUE,fig.ncol=1,fig.sep="\\\\"
+```
+
+一行两列的两图并排 1*2
+
+```
+small.mar=TRUE,out.width="35%",fig.show='hold',fig.asp=1,fig.width=4.5
+```
+
+
+四个图 2*2 布局
+
+```
+small.mar=TRUE,out.width="35%",fig.asp=1,fig.width=4.5,fig.ncol=2,fig.sep = c("","\\\\","","")
+```
+
+```{r densCols,fig.cap="根据点的密度生成颜色",small.mar=TRUE,fig.asp=1,out.width="45%",fig.width=4.5}
+x1 <- matrix(rnorm(1e3), ncol = 2)
+x2 <- matrix(rnorm(1e3, mean = 3, sd = 1.5), ncol = 2)
+x <- rbind(x1, x2)
+
+dcols <- densCols(x)
+graphics::plot(x, col = dcols, pch = 20, panel.first = grid())
+# title(main = "n = 1000", xpd = TRUE)
+```
+
+
+```{r pressure,fig.cap="压力与温度的关系",small.mar=TRUE}
+plot(pressure)
+```
+
+```{r air-passengers,fig.cap="时间序列图",small.mar=TRUE}
+plot(AirPassengers)
+```
+
+
+```{r two-rows,fig.cap="2行1列布局",fig.subcap=c("压力与温度的关系","时间序列图"),small.mar=TRUE,fig.ncol=1,fig.sep="\\\\"}
+plot(pressure)
+plot(AirPassengers)
+```
+
+
+```{r two-cols,fig.cap="1行2列布局",fig.subcap=c("压力与温度的关系","时间序列图"),small.mar=TRUE,out.width="35%",fig.show='hold',fig.asp=1,fig.width=4.5}
+plot(pressure)
+plot(AirPassengers)
+```
+
+
+```{r two-rows-two-cols,fig.cap="2x2图布局",fig.subcap=rep("压力与温度的关系",4),small.mar=TRUE,out.width="35%",fig.asp=1,fig.width=4.5,fig.ncol=2,fig.sep = c("","\\\\","","")}
+plot(pressure)
+plot(AirPassengers)
+plot(pressure)
+plot(AirPassengers)
+```
+
+## 插表
+

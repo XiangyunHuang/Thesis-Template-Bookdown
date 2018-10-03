@@ -1,0 +1,38 @@
+book_filename: "Thesis-Template-Bookdown"
+delete_merged_file: true
+language:
+  label:
+    fig: "图 "
+    tab: "表 "
+    thm: "定理 "
+    lem: "引理 "
+    cor: "推论 "
+    prp: "命题 "
+    def: "定义 "
+    exm: "例 "
+    exr: "练习 "
+  ui:
+    edit: "编辑"
+    chapter_name: ["第 ", " 章"]
+
+clean: ["packages.bib", "Thesis-Template-Bookdown.rds"]
+output_dir: _book
+new_session: yes    
+before_chapter_script: ["_common.R"]
+
+rmd_files: [
+  "index.Rmd",
+  "00-introdction.Rmd",
+  #"01-foundations.Rmd",
+  #"02-models.Rmd",
+  #"03-estimations.Rmd",
+  #"04-simulations.Rmd",
+  #"05-cases.Rmd",
+  #"06-summary.Rmd",
+
+  #"07-ack-author.Rmd",
+  #"08-appendix.Rmd",
+  "09-references.Rmd",
+]
+
+edit: https://github.com/XiangyunHuang/Thesis-Template-Bookdown/edit/master/%s
