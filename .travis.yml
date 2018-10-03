@@ -26,7 +26,8 @@ addons:
   apt:
     sources:
       - sourceline: ppa:opencpu/imagemagick
-     # - ubuntu-toolchain-r-test
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise-3.9
     packages:
       - ghostscript
       - imagemagick
@@ -37,10 +38,12 @@ addons:
       - libgdal-dev 
       - libgeos-dev 
       - libproj-dev
+      - clang-format-3.9
      # - gcc-8 
      # - g++-8
 
 before_install:
+  - travis/check_format.sh
   - mkdir ~/.R
   - cp Makevars ~/.R
   - npm install netlify-cli -g
