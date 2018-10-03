@@ -116,7 +116,7 @@ parallel::detectCores()
 # gc()
 # print(fit, digits = 3)
 # plot(fit)
-devtools::session_info()
+devtools::session_info(.packages(T))
 sessionInfo()
 ```
 
