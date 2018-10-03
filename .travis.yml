@@ -43,6 +43,7 @@ addons:
      # - g++-8
 
 before_install:
+  - chmod +x travis/check_format.sh
   - travis/check_format.sh
   - mkdir ~/.R
   - cp Makevars ~/.R
