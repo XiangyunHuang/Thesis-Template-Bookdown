@@ -29,7 +29,7 @@ g(\mu_i) = d(x_i)'\beta + S(x_i) + Z_i (\#eq:sim-sglmm)
 
 \noindent 设置参数 $\kappa = 2,\phi=1,\sigma^2=1$，单位平面区域为 $[0,1]\times[0,1]$， 将此区域划分为 $7\times 7$ 的小网格，设置每个格点为采样的位置。由自协方差函数 \@ref(eq:exp-quad) 可以获得 $\mathcal{S}$ 的协方差矩阵，然后使用 R包 **MASS** 提供的 `mvrnorm` 函数产生多元正态分布随机数。 模拟数据生成的图像见图 \@ref(fig:gp)， 格点上的值即为平稳空间高斯过程在该点的取值 （为方便显示，已四舍五入保留两位小数）。
 
-```{r gp,fig.cap="平稳空间高斯过程：自相关函数为幂指数族", small.mar = TRUE, pdfcrop = TRUE}
+```{r gp,fig.cap="平稳空间高斯过程：自相关函数为幂指数族", small.mar=TRUE, pdfcrop=TRUE,fig.asp=1,out.width="45%",fig.width=4.5}
 set.seed(2018)
 N <- 49
 lscale <- 1
@@ -46,7 +46,7 @@ m <- sdgp^2 * exp(-D^2 / phi) # 多元高斯分布的协方差矩阵  二次幂�
 # rho(h) = exp[-(h/phi)^kappa] if 0 < kappa <= 2 此处 kappa 固定为 2
 S <- MASS::mvrnorm(1, rep(0, N), m) # 产生服从多元高斯分布的随机数
 plot(d1 ~ d2, data = d, type = "n")
-text(y = d$d1, x = d$d2, labels = round(S, digits = 2))
+text(y = d$d1, x = d$d2, labels = round(S, digits = 1),xpd=T)
 ```
 
 紧接上文，模拟模型当中的空间效应 $S(x)$ ， 其相关函数可以为指数族或者梅隆族，函数形式如公式 \@ref(eq:exp-matern) 所示，为描述简单起见，以指数族说明。
@@ -189,3 +189,50 @@ Table: (\#tab:simulation-norm) 正态分布情形下的数值模拟比较
 <!--  \end{tabular} -->
 <!-- \end{center} -->
 <!-- \end{table} -->
+
+模拟结果如表 \@ref(tab:kable) 所示
+
+```{r kable}
+library(purrr)
+library(kableExtra)
+db <- mtcars[, 1:7]
+db2 <- cbind(rownames(db), db)
+colnames(db2) <- c("Methods", rep(c("Bias", "RMSE"), 3), "")
+if (knitr::is_latex_output()) {
+  kable(db2,
+    format = "latex", booktabs = TRUE, escape = T, row.names = F,
+    longtable = FALSE, caption = "第1种类型的统计表格样式",
+    linesep = c("", "", "", "", "", "\\midrule")
+  ) %>%
+    kable_styling(
+      latex_options = c("hold_position", "repeat_header"),
+      full_width = F, position = "center", repeat_header_method = "replace",
+      repeat_header_text = "续表@ref(tab:kable)"
+    ) %>%
+    add_header_above(c(" ",
+      "$\\\\sigma^2$" = 2, "$\\\\phi$" = 2,
+      "$\\\\tau^2$" = 2, "$r=\\\\delta/\\\\phi$" = 1
+    ), escape = F) %>%
+    footnote(
+      general_title = "注：", title_format = "italic", threeparttable = T,
+      general = "* 星号表示的内容很长"
+    )
+} else {
+  kable(db2,
+    format = "html", booktabs = TRUE, escape = T, row.names = F,
+    caption = "第1种类型的统计表格样式"
+  ) %>%
+    kable_styling(
+      bootstrap_options = c("basic"),
+      full_width = F, position = "center"
+    ) %>%
+    add_header_above(c("",
+      "$\\sigma^2$" = 2, "$\\phi$" = 2,
+      "$\\tau^2$" = 2, "$r=\\delta/\\phi$" = 1
+    ), escape = F) %>%
+    footnote(
+      general_title = "注：", title_format = "italic", threeparttable = T,
+      general = "* 星号表示的内容很长"
+    )
+}
+```

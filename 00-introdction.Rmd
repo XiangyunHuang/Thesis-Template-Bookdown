@@ -118,3 +118,71 @@ plot(AirPassengers)
 
 ## 插表
 
+
+
+----------- ------- --------------- -------------------------
+   First    row                12.0 Example of a row that
+                                    spans multiple lines.
+
+  Second    row                 5.0 Here's another one. Note
+                                    the blank line between
+                                    rows.
+----------- ------- --------------- -------------------------
+
+: 没有编号的可以跨行的表格.
+
+```{r kable}
+library(dplyr)
+library(kableExtra)
+db <- mtcars[, 1:7]
+db2 <- cbind(rownames(db), db)
+colnames(db2) <- c("Methods", rep(c("Bias", "RMSE"), 3), "")
+if (knitr::is_latex_output()) {
+  kable(db2,
+    format = "latex", booktabs = TRUE, escape = T, row.names = F,
+    longtable = T, caption = "第1种类型的统计表格样式",
+    linesep = c("", "", "", "", "", "\\midrule")
+  ) %>%
+    kable_styling(
+      latex_options = c("hold_position", "repeat_header"),
+      full_width = F, position = "center", repeat_header_method = "replace",
+      repeat_header_text = "续表@ref(tab:kable)"
+    ) %>%
+    add_header_above(c(" ",
+      "$\\\\sigma^2$" = 2, "$\\\\phi$" = 2,
+      "$\\\\tau^2$" = 2, "$r=\\\\delta/\\\\phi$" = 1
+    ), escape = F) %>%
+    footnote(
+      general_title = "注：", title_format = "italic", threeparttable = T,
+      general = "* 星号表示的内容很长"
+    )
+} else {
+  kable(db2,
+    format = "html", booktabs = TRUE, escape = T, row.names = F,
+    caption = "第1种类型的统计表格样式"
+  ) %>%
+    kable_styling(
+      bootstrap_options = c("basic"),
+      full_width = F, position = "center"
+    ) %>%
+    add_header_above(c("",
+      "$\\sigma^2$" = 2, "$\\phi$" = 2,
+      "$\\tau^2$" = 2, "$r=\\delta/\\phi$" = 1
+    ), escape = F) %>%
+    footnote(
+      general_title = "注：", title_format = "italic", threeparttable = T,
+      general = "* 星号表示的内容很长"
+    )
+}
+```
+
+- `striped` 默认使用浅灰色，`stripe_color` 可以用来指定颜色 `stripe_color="white"`，它只在 LaTeX 下工作，HTML 下更改颜色需要设置 CSS，可以不使用 `striped` 改变默认的白底设置  
+- `threeparttable = TRUE` 处理超长的注解标记，
+- `add_header_above` 函数内的 `escape = F` 用来处理数学公式，
+- `longtable = T` 表格很长时需要分页，因此使用续表，
+- `hold_position` 使用了 `[!h]` 控制浮动
+- 对于数学符号前要四个反斜杠这一点，作者今后会改变，只需要两个反斜杠，与 HTML 格式表格保持一致 <https://github.com/haozhu233/kableExtra/issues/120> 
+
+对某些数据用不同颜色高亮
+Selecting and colouring single table cells with **kableExtra** in R markdown `cell_spec` <https://stackoverflow.com/questions/50118394>
+
