@@ -38,16 +38,16 @@ addons:
       - libgdal-dev 
       - libgeos-dev 
       - libproj-dev
-      - clang-format-3.9
+     # - clang-format-3.9
      # - gcc-8 
      # - g++-8
 
 before_install:
-  - chmod +x travis/check_format.sh
-  - ls -l travis/  
-  - travis/check_format.sh
-  - mkdir ~/.R
-  - cp Makevars ~/.R
+#  - chmod +x travis/check_format.sh
+#  - ls -l travis/  
+#  - travis/check_format.sh
+#  - mkdir ~/.R
+#  - cp Makevars ~/.R
   - npm install netlify-cli -g
 #  - curl -fLo /tmp/tinytex.tar.gz https://travis-bin.yihui.name/tinytex.tar.gz
 #  - tar xzf /tmp/tinytex.tar.gz -C /$HOME
