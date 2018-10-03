@@ -469,6 +469,8 @@ fit <- stan(
 print(fit)
 # tau 的 95% 置信区间
 print(fit, "tau", probs = c(0.025, 0.975))
+# 获取 medians
+medians <- summary(fit)$summary[ , "50%"]
 ```
 
 Table: (\#tab:eight-schools-output) 对 Eight Schools 数据集建立分层正态模型 \@ref(eq:hierarchical-normal-models)，采用 HMC 算法估计的参数值，  
