@@ -69,12 +69,19 @@ sansfont: Arial
 monofont: Inconsolata
 ```
 
+> 推荐的方式是将相关中英文字体放在一块，拷贝到 Ubuntu/CentOS 系统上
+
+```bash
+sudo mkdir /usr/share/fonts/truetype/win/
+sudo cp Thesis-Template-Bookdown/fonts/* /usr/share/fonts/truetype/win/
+sudo fc-cache -fsv
+```
 
 ### 2. 安装 Pandoc
 
 Pandoc 在 Windows 和 Ubuntu 系统上提供了安装包，唯独 CentOS 系统上没有，需要用户自己编译（CentOS 系统包管理器带的 Pandoc 版本太低不能用）。Pandoc 源码可以从 Github 仓库中下载 <https://github.com/jgm/pandoc/releases/>，下面介绍安装最新版 Pandoc 的过程
 
-1. 安装 stack 1.7.1 
+1. 安装 stack
 
 ```bash
 curl -sSL https://s3.amazonaws.com/download.fpcomplete.com/centos/7/fpco.repo | sudo tee /etc/yum.repos.d/fpco.repo
@@ -112,8 +119,17 @@ source /etc/profile
 
 如果你安装了 zsh 和 [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh) ，再将这行 `export PATH=$HOME/.local/bin:$PATH` 放在 `.zshrc` 里。
 
+### 3. 关于 Pandoc
 
-### 3. bookdown
+R Markdown 文档 (\*.Rmd) 首先通过 knitr 包 [@xie2015] 编译成 Markdown 文档 (\*.md)，然后 Markdown 文档再被 Pandoc 编译成其它格式，如 LaTeX (\*.tex) 、 HTML 等，这个过程由 rmarkdown 包完成。你不需要分别安装 knitr 和 rmarkdown 两个包，因为它们被 bookdown 包 [@xie2016] 所依赖，当你安装 bookdown 的时候，会自动安装上。而 Pandoc 不是一个 R 包，所以需要单独安装，但如果你使用 RStudio IDE 的话，也不需要安装，因为 RStudio 自带了一份 Pandoc，你可以运行下面一行命令获取当前的 Pandoc 版本号
+
+```{r}
+rmarkdown::pandoc_version()
+```
+
+如果你需要 Pandoc 的新特性，觉得自带的版本比较低，你可以从 Pandoc 官网 (<http://pandoc.org>)  手动安装一个新版本。 rmarkdown 会优先使用你安装的新版本。
+
+### 4. bookdown
 
 安装 R 的过程请看《R语言忍者秘笈》第二章的安装与配置 <https://bookdown.org/yihui/r-ninja/setup.html>
 
@@ -138,15 +154,15 @@ update.packages(ask = FALSE)
 
 有关 bookdown 的详细介绍请看谢益辉发布在网上的在线书 《bookdown: Authoring Books and Technical Documents with R Markdown》 <https://bookdown.org/yihui/bookdown>
 
-### 4. LaTeX
+### 5. LaTeX
 
-LaTeX 只有当你需要把书转化为 PDF 格式时才会用到，从 LaTeX 官网 (<https://www.latex-project.org/get/>) 你可以学习到很多东西，如安装 LaTeX。我们强烈推荐你安装一个轻量的跨平台 LaTeX 发行版 --- [TinyTeX](https://yihui.name/tinytex/)。它基于 TeX Live，可以通过 R 包 tinytex 愉快地安装，tinytex 在之前安装 bookdown 时已经安装，所以不用担心，安装 TinyTeX 你只需在 R 控制台下输入
+LaTeX 只有当你需要把书转化为 PDF 格式时才会用到，从 LaTeX 官网 (<https://www.latex-project.org/get/>) 你可以学习到很多东西，如安装 LaTeX。我们强烈推荐你安装一个轻量的跨平台 LaTeX 发行版 --- [TinyTeX](https://yihui.name/tinytex/)。它基于 TeX Live，可以通过 R 包 tinytex 安装，tinytex 在之前安装 bookdown 时已经安装，所以安装 TinyTeX 你只需在 R 控制台下输入
 
 ```{r,eval=FALSE}
 tinytex::install_tinytex()
 ```
 
-拥有 TinyTeX， 你应该再也不会看到这样的错误消息：
+有了 TinyTeX， 你应该再也不会看到这样的错误消息：
 
 ```latex
 ! LaTeX Error: File `titling.sty' not found.
@@ -182,7 +198,7 @@ cat(system("pdflatex --version", intern = TRUE),sep = "\n")
 tinytex::tlmgr_update()
 ```
 
-TeX Live 每年都会更新，随着时间的过去，你可能需要升级 TinyTeX 发行版，否则你不能安装和升级任何 LaTeX 包。
+TeX Live 每年都会更新，你可能需要升级 TinyTeX 发行版，否则你不能安装和升级任何 LaTeX 包。
 
 ```r
 tinytex::reinstall_tinytex()

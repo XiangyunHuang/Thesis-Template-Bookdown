@@ -1,6 +1,4 @@
-# 准备 {#Prerequisites}
-
-重现论文需要的主要 **R** 包
+# 重现论文需要的主要 **R** 包
 
 - rstan: 2.18.1
 - brms: 2.5.0
@@ -9,54 +7,9 @@
 - PrevMap: 1.4.2
 - spaMM: 2.4.35
 
+# 代码管理
 
-## 英文字体
-
-
-$$\mathcal{R},\mathbb{R},\mathbf{R},\mathscr{R},\mathcal{S},\mathbb{S},\mathbf{S},\mathscr{S},\mathsf{S},\mathrm{S},\mathtt{S}$$
-
-```{block2, type = 'rmdtip'}
-推荐的方式是将相关中英文字体放在一块，拷贝到 Ubuntu 系统上
-```
-
-```bash
-sudo mkdir /usr/share/fonts/truetype/win/
-sudo cp Thesis-Template-Bookdown/fonts/* /usr/share/fonts/truetype/win/
-sudo fc-cache -fsv
-```
-
-
-## Pandoc
-
-R Markdown 文档 (\*.Rmd) 首先通过 knitr 包 [@xie2015] 编译成 Markdown 文档 (\*.md)，然后 Markdown 文档再被 Pandoc 编译成其它格式，如 LaTeX (\*.tex) 、 HTML 等，这个过程由 rmarkdown 包完成。你不需要分别安装 knitr 和 rmarkdown 两个包，因为它们被 bookdown 包 [@xie2016] 所依赖，当你安装 bookdown 的时候，会自动安装上。而 Pandoc 不是一个 R 包，所以需要单独安装，但如果你使用 RStudio IDE 的话，也不需要安装，因为 RStudio 自带了一份 Pandoc，你可以运行下面一行命令获取当前的 Pandoc 版本号
-
-```{r}
-rmarkdown::pandoc_version()
-```
-
-如果你需要 Pandoc 的新特性，觉得自带的版本比较低，你可以从 Pandoc 官网 (<http://pandoc.org>)  手动安装一个新版本。 rmarkdown 会优先使用你安装的新版本。
-
-
-## 本书配置
-
-Adobe 开源的等宽字体 sourcecodepro 显示代码， Adobe Times Roman 作为正文字体，provides maths support using glyphs from the Symbol, Chancery and Computer Modern fonts together with letters, etc., from Times Roman.
-
-中文支持来自宏集 ctex 
-
-安装字体
-
-```{r,eval=FALSE}
-tinytex::tlmgr_install(c("ctex", "fandol", "psnfss", "sourcecodepro"))
-```
-
-
-## 软件信息
-
-```{r}
-xfun::session_info(c("rmarkdown","bookdown","tinytex"))
-```
-
-将所有代码块的代码都合在一处
+将所有代码块的代码都合在一处放在附录中
 
 ```{r ref.label=knitr::all_labels(), echo = T, eval = F}
 # https://yihui.name/en/2018/09/code-appendix/
