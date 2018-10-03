@@ -26,6 +26,7 @@ addons:
   apt:
     sources:
       - sourceline: ppa:opencpu/imagemagick
+      #- ubuntu-toolchain-r-test
     packages:
       - ghostscript
       - imagemagick
@@ -35,7 +36,9 @@ addons:
       - libudunits2-dev 
       - libgdal-dev 
       - libgeos-dev 
-      - libproj-dev 
+      - libproj-dev
+      #- gcc-8 
+      #- g++-8
 
 before_install:
   - mkdir ~/.R

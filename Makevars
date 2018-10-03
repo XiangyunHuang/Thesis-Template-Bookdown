@@ -1,2 +1,5 @@
 CC = gcc
 CXX14 = g++ -fPIC
+
+#CC = gcc-8
+#CXX14 = g++-8 -fPIC
