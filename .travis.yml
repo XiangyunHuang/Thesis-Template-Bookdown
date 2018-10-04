@@ -26,8 +26,7 @@ addons:
   apt:
     sources:
       - sourceline: ppa:opencpu/imagemagick
-      - ubuntu-toolchain-r-test
-      - llvm-toolchain-precise-3.9
+     # - ubuntu-toolchain-r-test
     packages:
       - ghostscript
       - imagemagick
@@ -43,9 +42,6 @@ addons:
      # - g++-8
 
 before_install:
-#  - chmod +x travis/check_format.sh
-#  - ls -l travis/  
-#  - travis/check_format.sh
 #  - mkdir ~/.R
 #  - cp Makevars ~/.R # CXX14 conflict with readr
   - npm install netlify-cli -g

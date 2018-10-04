@@ -1,3 +1,51 @@
+```{r include=FALSE, cache=FALSE}
+library(methods)
+set.seed(2018)
+library(ggplot2)
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  echo = FALSE,
+  cache = TRUE,
+  size = "scriptsize",
+  out.width = "70%",
+  fig.align = "center",
+  fig.width = 6,
+  fig.asp = 0.618
+)
+
+doc_type <- function() knitr::opts_knit$get('rmarkdown.pandoc.to')
+
+knitr::knit_hooks$set(
+  optipng = knitr::hook_optipng,
+  pdfcrop = knitr::hook_pdfcrop,
+  small.mar = function(before, options, envir) {
+    if (before) par(mar = c(4.1, 4.1, 0.5, 0.5))  # smaller margin on top and right
+  }
+)
+# https://github.com/yihui/knitr-examples/blob/master/085-pdfcrop.Rnw
+
+options(
+  digits = 3,
+  citation.bibtex.max = 999,
+  bitmapType = "cairo",
+  stringsAsFactors = FALSE,
+  repos = "https://mirrors.tuna.tsinghua.edu.cn/CRAN/",
+  knitr.graphics.auto_pdf = FALSE,
+  tikzDefaultEngine = "xetex",
+  tikzXelatexPackages = c(
+    getOption("tikzXelatexPackages"),
+    "\\usepackage[colorlinks, breaklinks]{hyperref}",
+    "\\usepackage{color,tikz}",
+    "\\usepackage[active,tightpage,xetex]{preview}",
+    "\\PreviewEnvironment{pgfpicture}",
+    "\\usepackage{amsmath,amsfonts,mathrsfs}"
+  )
+)
+
+is_on_travis = identical(Sys.getenv("TRAVIS"), "true")
+is_online = curl::has_internet()
+```
 # 统计模型 {#models}
 
 [重新安排逻辑顺序第三章 空间广义线性混合效应模型 1. 模型结构]{.todo}
@@ -98,6 +146,10 @@ V_{T}(u_{ij})
 \end{equation}
 
 \noindent 相关函数 $\rho(u)$ 的作用和地位就显而易见了，它是既决定理论变差又决定协方差矩阵的结构。
+
+```{r semi-variance,fig.cap="变差函数 $V_{T}(u)$ 示意图"}
+knitr::include_graphics("figures/semi-variance.png")
+```
 
 常见的自相关函数族有高斯协方差函数、球面协方差函数和 Matérn 协方差函数：
 

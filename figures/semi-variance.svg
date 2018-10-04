@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg width="648.1" height="418.8" version="1.1" viewBox="0 0 171.48 110.81" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+ <defs>
+  <marker id="marker5988" overflow="visible" orient="auto">
+   <path transform="matrix(-.8 0 0 -.8 -10 0)" d="m0 0 5-5-17.5 5 17.5 5z" fill-rule="evenodd" stroke="#000" stroke-width="1pt"/>
+  </marker>
+  <marker id="marker5906" overflow="visible" orient="auto">
+   <path transform="matrix(.8 0 0 .8 10 0)" d="m0 0 5-5-17.5 5 17.5 5z" fill-rule="evenodd" stroke="#000" stroke-width="1pt"/>
+  </marker>
+  <marker id="marker5824" overflow="visible" orient="auto">
+   <path transform="matrix(-.8 0 0 -.8 -10 0)" d="m0 0 5-5-17.5 5 17.5 5z" fill-rule="evenodd" stroke="#000" stroke-width="1pt"/>
+  </marker>
+  <marker id="marker5754" overflow="visible" orient="auto">
+   <path transform="matrix(.8 0 0 .8 10 0)" d="m0 0 5-5-17.5 5 17.5 5z" fill-rule="evenodd" stroke="#000" stroke-width="1pt"/>
+  </marker>
+  <marker id="marker5658" overflow="visible" orient="auto">
+   <path transform="matrix(.8 0 0 .8 10 0)" d="m0 0 5-5-17.5 5 17.5 5z" fill-rule="evenodd" stroke="#000" stroke-width="1pt"/>
+  </marker>
+  <marker id="marker5606" overflow="visible" orient="auto">
+   <path transform="matrix(-.8 0 0 -.8 -10 0)" d="m0 0 5-5-17.5 5 17.5 5z" fill-rule="evenodd" stroke="#000" stroke-width="1pt"/>
+  </marker>
+  <marker id="marker5042" overflow="visible" orient="auto">
+   <path transform="matrix(-.8 0 0 -.8 -10 0)" d="m0 0 5-5-17.5 5 17.5 5z" fill-rule="evenodd" stroke="#000" stroke-width="1pt"/>
+  </marker>
+  <marker id="marker5002" overflow="visible" orient="auto">
+   <path transform="matrix(.8 0 0 .8 10 0)" d="m0 0 5-5-17.5 5 17.5 5z" fill-rule="evenodd" stroke="#000" stroke-width="1pt"/>
+  </marker>
+ </defs>
+ <metadata>
+  <rdf:RDF>
+   <cc:Work rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:title/>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <g fill="none" stroke="#000">
+  <path d="m171.48 103.8h-160.71v-103.8" stroke-width=".33716"/>
+  <path d="m10.524 80.632c3.3008-16.95 6.595-33.866 20.854-42.689 14.259-8.8226 39.481-9.5356 64.701-10.249" stroke-width=".3743px"/>
+  <path d="m96.079 27.692 59.889-0.26737" stroke-width=".3743px"/>
+  <path d="m150.11 28.332 0.25719 75.376" marker-end="url(#marker5042)" marker-start="url(#marker5002)" stroke-width=".26458"/>
+  <path d="m85.13 79.372h12.83" stroke-width=".21493px"/>
+  <path d="m91.263 27.422v51.948" marker-end="url(#marker5606)" marker-start="url(#marker5658)" stroke-width=".26458"/>
+  <path d="m91.263 79.372v24.425" marker-end="url(#marker5824)" marker-start="url(#marker5754)" stroke-width=".26458"/>
+  <path d="m91.263 16.822v10.599" stroke-width=".3743px"/>
+  <path d="m11.139 21.852h80.123" marker-end="url(#marker5988)" marker-start="url(#marker5906)" stroke-width=".26458"/>
+ </g>
+ <g fill="#000000" font-family="'Times New Roman'" letter-spacing="0px" word-spacing="0px">
+  <text x="7.9101157" y="110.732" font-size="6.4879px" stroke-width=".3743" style="line-height:1.25" xml:space="preserve"><tspan x="7.9101157" y="110.732" font-size="6.4879px" stroke-width=".3743">0</tspan></text>
+  <g stroke-width=".26458">
+   <text x="134.23058" y="109.91716" font-size="3.8806px" style="line-height:1.25" xml:space="preserve"><tspan x="134.23058" y="109.91716" font-size="6.35px" stroke-width=".26458">距离 u</tspan></text>
+   <text x="3.0256991" y="14.157707" font-size="6.35px" writing-mode="tb-rl" style="line-height:1.25" xml:space="preserve"><tspan x="14.157707" y="3.0256991">变差函数 V<tspan baseline-shift="sub" font-size="4.2333px">T</tspan>(u) </tspan><tspan x="14.157707" y="-11.9743"/><tspan x="14.157707" y="-26.9743"/></text>
+   <g>
+    <text x="27.367367" y="18.126457" font-size="3.8806px" style="line-height:1.25" xml:space="preserve"><tspan x="27.367367" y="18.126457" font-size="6.35px" stroke-width=".26458">自相关阈值（变程）</tspan></text>
+    <text x="94.571541" y="93.532707" font-size="3.8806px" style="line-height:1.25" xml:space="preserve"><tspan x="94.571541" y="93.532707" font-size="6.35px" stroke-width=".26458">块金效应</tspan></text>
+    <text x="93.777794" y="59.136875" font-size="6.35px" style="line-height:1.25" xml:space="preserve"><tspan x="93.777794" y="59.136875" stroke-width=".26458">空间效应</tspan></text>
+   </g>
+  </g>
+ </g>
+</svg>
