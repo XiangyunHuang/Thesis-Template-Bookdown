@@ -1,5 +1,6 @@
 ---
-title: "master thesis template"
+title: "Master Thesis Template"
+subtitle: "China University of Mining and Technology, Beijing"
 author: "Xiang-Yun Huang"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site

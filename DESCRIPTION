@@ -9,6 +9,8 @@ Imports:
   rmarkdown,
   bookdown,
   formatR,
+  readr,
+  kableExtra,
   gridExtra,
   sf,
   ggplot2,
@@ -22,4 +24,5 @@ Suggests:
 Remotes: 
   rstudio/rmarkdown,
   rstudio/bookdown,
-  tidyverse/ggplot2
+  tidyverse/ggplot2,
+  tidyverse/readr

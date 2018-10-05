@@ -26,6 +26,7 @@ addons:
   apt:
     sources:
       - sourceline: ppa:opencpu/imagemagick
+     # - ubuntu-toolchain-r-test
     packages:
       - ghostscript
       - imagemagick
@@ -35,9 +36,14 @@ addons:
       - libudunits2-dev 
       - libgdal-dev 
       - libgeos-dev 
-      - libproj-dev 
+      - libproj-dev
+     # - clang-format-3.9
+     # - gcc-8 
+     # - g++-8
 
 before_install:
+#  - mkdir ~/.R
+#  - cp Makevars ~/.R # CXX14 conflict with readr
   - npm install netlify-cli -g
 #  - curl -fLo /tmp/tinytex.tar.gz https://travis-bin.yihui.name/tinytex.tar.gz
 #  - tar xzf /tmp/tinytex.tar.gz -C /$HOME
@@ -55,7 +61,8 @@ before_script:
   - Rscript -e 'update.packages(lib.loc = .libPaths()[1], ask = FALSE)'
 
 script:
-  - Rscript -e 'bookdown::render_book("index.Rmd", config_file = "_bookdown_skeleton.yml")'
+  - Rscript -e 'bookdown::render_book("index.Rmd")'
+ # - Rscript -e 'bookdown::render_book("index.Rmd", config_file = "_bookdown_skeleton.yml")'
 
 after_success:
   - netlify deploy -t $NETLIFY_PAT
