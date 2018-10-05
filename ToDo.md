@@ -12,59 +12,36 @@ https://slides.yihui.name/gif/latex-tweak.gif
 谢谢 益辉和 的建议
 ---
 
-二项空间模型，经验变换后响应变量视为高斯分布 从而变成线性模型
+## STAN 框架
 
-### MCEM 算法 {#MCEM}
+比较详细地介绍 微分几何 如何做 HMC 
 
-MCEM 算法 [@Zhang2002On]  C++ 实现 [@nimble2017] <https://r-nimble.org/>
+MCSE 蒙特卡罗标准误差 有效样本 Rhat 等量
 
-## 限制极大似然估计 {#REML}
+为什么用 分位点而不用 RMSE 均方误差  均方偏差 MS
 
-Testing environmental and genetic effects in the presence of spatial autocorrelation [@spaMM2014]
+RgoogleMaps [@Loecher2015] 获取卫星图像
 
-## 先验分布 {#prior-distribution}
+eight schools 数据集下载地址
 
-非信息先验分布
+https://stat.columbia.edu/~gelman/arm/examples/schools/
 
-## 协方差函数
+<https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started>
 
-协方差函数还是自相关函数还是核函数要统一一下
+M-H/Gibbs
 
-泊松过程
+<https://alexey.radul.name/ideas/2017/inference-by-quadrature/>
 
-JAGS 和 STAN 对比
-
-FastGP: Efficiently Using Gaussian Processes with Rcpp and RcppEigen
-
-Contains Rcpp and RcppEigen implementations of matrix operations useful for Gaussian process models, such as the inversion of a symmetric Toeplitz matrix, sampling from multivariate normal distributions, evaluation of the log-density of a multivariate normal vector, and Bayesian inference for latent variable Gaussian process models with elliptical slice sampling (Murray, Adams, and MacKay 2010).
-
-sgeostat: An Object-Oriented Framework for Geostatistical Modeling in S+
-
-An Object-oriented Framework for Geostatistical Modeling in S+ containing functions for variogram estimation, variogram fitting and kriging as well as some plot functions. Written entirely in S, therefore works only for small data sets in acceptable computing time.
-
-sparseLTSEigen: RcppEigen back end for sparse least trimmed squares regression
-
-Use RcppEigen to fit least trimmed squares regression models with an L1 penalty in order to obtain sparse models.
-
-
-adnuts 包 rstan 包
-
-STAN 框架
+吉布斯采样器 [@Ritter1992] 基于采样的方法计算边际密度 [@Gelfand1990]
 
 - https://github.com/ourcodingclub/CC-Stan-intro
 - https://github.com/ourcodingclub/CC-Stan-2
 - http://mc-stan.org/users/documentation/tutorials.html
 
-
 Exact sparse CAR models in Stan
 http://mc-stan.org/users/documentation/case-studies/mbjoseph-CARStan.html
 
-先验、似然和后验
-https://m-clark.github.io/bayesian-basics/example.html
-
-Bayesian Statistics
-https://statswithr.github.io/book
-
+二项空间模型，经验变换后响应变量视为高斯分布，从而变成线性模型
 
 高斯过程 协方差矩阵的 QR 分解 [@Bates1988]
 
@@ -75,39 +52,15 @@ A theory of statistical models for Monte Carlo integration 蒙特卡罗积分 [@
 
 介绍 Gibbs， M-H 和 NUTS 采样器以及 R 语言实现 [@Gelman2013]
 
-
 2002 年 Venables, W. N. 和 Ripley, B. D. 实现惩罚拟似然估计
-检验环境和基因效应在空间相关性中的存在性 [@spaMM2014]， 流行现象的时空分析[@surveillance2017]。 
-
-以具体例子介绍统计概念
-
-```{r spatial-point-patterns,fig.cap="空间点模式",fig.subcap=c("立体透视图","平面 image 图"),out.width="45%",echo=FALSE}
-knitr::include_graphics(path = c(
-  "figures/spatial-point-patterns-1.png",
-  "figures/spatial-point-patterns-2.png"
-))
-```
-
-另一种表示方式是平面的 image 图像
-
+检验环境和基因效应在空间相关性中的存在性 [@spaMM2014]， 流行现象的时空分析 [@surveillance2017]。 
 
 关于 GLMM 和 LMM 的材料 notesdown repo 下的 issues
 
-修正的第三类贝塞尔函数
-
-```r
-exp(0.5)*besselK(0.5,20)
-besselK(0.5,20,expon.scaled = T)
-```
-
-参考文献引用样式 张浩等 右上角标号
-
------
 
 # 先验分布
 
 - non-informative prior 无信息先验
-- Jeffreys' prior
 - vague/flat/diffuse priors 模糊/扁平/漫射，扩散
 
 An uninformative prior or diffuse prior expresses vague or general information about a variable
@@ -120,95 +73,59 @@ stackexchange <https://stats.stackexchange.com/questions/7497/is-a-vague-prior-t
 
 《高等数理统计》 无信息先验分布 page 368--372
 
+先验、似然和后验
+https://m-clark.github.io/bayesian-basics/example.html
 
-# Stan 平台
+Bayesian Statistics
+https://statswithr.github.io/book
 
-比较详细地介绍 微分几何 如何做 HMC 
 
-MCSE 蒙特卡罗标准误差 有效样本 Rhat 等量
-
-为什么用 分位点而不用 RMSE 均方误差  均方偏差 MS
-
-Hoffman, M. D. and Gelman, A. (2014). The No-U-Turn Sampler: adaptively setting path lengths in Hamiltonian Monte Carlo. Journal of Machine Learning Research. 15:1593–1623.
-
-adnuts  R语言版本 NUTS 算法
-
-## 拉普拉斯近似
-
-https://stats.stackexchange.com/questions/353716
-Constant of Laplace approximation
-
-## 鞍点近似
-
-saddlepoint approximation
-
-https://stats.stackexchange.com/questions/191492
-
-## INLA 
-
-INLA software can handle thousands of Gaussian latent variables, but only up to 15 hyperparameters, because INLA software uses CCD for hyperparameters. If MCMC is used for hyperparameters, then it’s possible to handle more hyperparameters. For example, GPstuff allows use of MCMC instead of CCD for hyperparameters, and Daniel Simpson would like to get Laplace approximation to Stan so that he could handle thousands of hyperparameters.
-
-INLA 软件能处理上千个高斯随机效应，但最多只能处理 15 个超参数，因为 INLA 使用 CCD 处理超参数，如果使用 MCMC 处理超参数，就有可能处理更多的超参数，如 GPstuff 使用 MCMC 而不是 CCD 处理超参数，Daniel Simpson 想把 Laplace approximation 带入 Stan，这样他就可以处理上千个超参数
-
-# 文献综述
+## 文献综述
 
 大大加长
 
 
 # 数值模拟和数据分析
 
-STAN
+马尔科夫链蒙特卡罗方法：
 
-随机游走 MH 算法
+- 随机游走 MH 算法  spBayes 实现
+- Langevin-Hastings 算法 geoRglm geoCount 实现
+- HMC 算法 NUTS 算法  STAN 实现
+- MCML 算法  PrevMap 实现
+- MCEM 算法 [@Zhang2002On]  C++ 实现 [@nimble2017] <https://r-nimble.org/>
 
-Langevin-Hastings 算法
+蒙特卡罗最大似然方法：马尔科夫链蒙特卡罗方法模拟空间随机效应的条件分布，获得似然函数的蒙特卡罗近似
 
-HMC 算法
+Hoffman, M. D. and Gelman, A. (2014). The No-U-Turn Sampler: adaptively setting path lengths in Hamiltonian Monte Carlo. Journal of Machine Learning Research. 15:1593–1623.
 
-STAN 理论
+adnuts  R 语言版本实现的 NUTS 算法
 
-spBayes、geoCount
-
-MCMC
-
-PrevMap/MCML/Low-Rank
-
-
-分层线性模型 (Hierarchical linear Model，简称 HLM，又称多层线性模型，Multilevel Linear Model)
-模型名称多样性格式参照 线性混合效应模型
-
-重新安排引用名称 chp:  sec:  小写字母 - 短横线连字符
-处理一些引用缺失引起的警告
-
-## 近似似然函数
+近似似然函数方法：其实是近似高维积分
 
 近似方法 [@Pinheiro1995]
 
+- 拉普拉斯近似似然函数  INLA 实现
+- Low-Rank 低秩近似  PrevMap 实现
+- 拉普拉斯近似 Constant of Laplace approximation https://stats.stackexchange.com/questions/353716
+- 鞍点近似 saddlepoint approximation https://stats.stackexchange.com/questions/191492
+- 限制极大似然估计 REML
 
-## 其它概率编程框架
+Testing environmental and genetic effects in the presence of spatial autocorrelation [@spaMM2014]
 
-什么是 probabilistic programming language
+## 空间统计三大块：空间点模式分析、地质统计、离散空间过程
 
-PyMC3
+以具体例子介绍这三个统计概念的区别和联系
 
-NIMBLE [@nimble2017]
+```{r spatial-point-patterns,fig.cap="空间点模式",fig.subcap=c("立体透视图","平面 image 图"),out.width="45%",echo=FALSE}
+knitr::include_graphics(path = c(
+  "figures/spatial-point-patterns-1.png",
+  "figures/spatial-point-patterns-2.png"
+))
+```
 
-## INLA 框架
+另一种表示方式是平面的 image 图像
 
-集成嵌套拉普拉斯近似 (Integrated Nested Laplace Approximations，简称 INLA)
-
-介绍模型
-
-https://www.flutterbys.com.au/stats/tut/tut12.9.html
-
-
-## 其它采样方法
-
-M-H/Gibbs
-
-<https://alexey.radul.name/ideas/2017/inference-by-quadrature/>
-
-吉布斯采样器 [@Ritter1992] 基于采样的方法计算边际密度 [@Gelfand1990]
 
 ## 高斯马尔科夫随机场
 
@@ -217,17 +134,12 @@ M-H/Gibbs
 分析，模拟和预测空间过程 [@RandomFields2015]
 
 
-RgoogleMaps [@Loecher2015] 获取卫星图像
+## 基于 Stan 建模的模型诊断
 
+http://mc-stan.org/users/documentation/case-studies/divergences_and_bias.html
 
-平面 r^2  
-
-----
 
 ## 基于 Stan 的 R 包
-
-- hBayesDM: hierarchical Bayesian modeling of Decision-Making tasks 任务决策的贝叶斯分层建模 <https://github.com/CCS-Lab/hBayesDM> <https://rpubs.com/CCSL/hBayesDM> 
-
 
 ```r
 tools::dependsOnPkgs('rstan',installed = available.packages())
@@ -247,19 +159,45 @@ tools::dependsOnPkgs('rstan',installed = available.packages())
 [45] "walker"          "ESTER"           "pollimetry"      "psycho"         
 [49] "tidyposterior"   "walkr"           "tidymodels"     
 ```
-eight schools 数据集下载地址
 
-https://stat.columbia.edu/~gelman/arm/examples/schools/
+## 与地质统计相关的 R 包
 
-<https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started>
+FastGP: Efficiently Using Gaussian Processes with Rcpp and RcppEigen
 
-四种颜色
+Contains Rcpp and RcppEigen implementations of matrix operations useful for Gaussian process models, such as the inversion of a symmetric Toeplitz matrix, sampling from multivariate normal distributions, evaluation of the log-density of a multivariate normal vector, and Bayesian inference for latent variable Gaussian process models with elliptical slice sampling (Murray, Adams, and MacKay 2010).
 
-darkorange dodgerblue grey Darkgrey
+sgeostat: An Object-Oriented Framework for Geostatistical Modeling in S+
+
+An Object-oriented Framework for Geostatistical Modeling in S+ containing functions for variogram estimation, variogram fitting and kriging as well as some plot functions. Written entirely in S, therefore works only for small data sets in acceptable computing time.
+
+sparseLTSEigen: RcppEigen back end for sparse least trimmed squares regression
+
+Use RcppEigen to fit least trimmed squares regression models with an L1 penalty in order to obtain sparse models.
+
+hBayesDM: hierarchical Bayesian modeling of Decision-Making tasks 任务决策的贝叶斯分层建模 <https://github.com/CCS-Lab/hBayesDM> <https://rpubs.com/CCSL/hBayesDM> 
+
+
+## 贝叶斯因子 {#bayes-factors}
+
+https://rpubs.com/lindeloev/bayes_factors 
+https://discourse.mc-stan.org/t/inf-bayes-factor-using-brms/5792
+
+
+
+## 排版有关的考量
 
 同一本书，引用不同的地方，参考文献的条目需要重复添加吗，只是页码范围不同
 
-http://mc-stan.org/users/documentation/case-studies/divergences_and_bias.html
+中英文简称：
+
+分层线性模型 (Hierarchical linear Model，简称 HLM，又称多层线性模型，Multilevel Linear Model)
+模型名称多样性格式参照 线性混合效应模型
+
+协方差函数还是自相关函数还是核函数要统一一下
+
+## 统一图形风格
+
+四种颜色: darkorange dodgerblue grey Darkgrey
 
 
 ## 贝叶斯数据分析 {#bayesian-data-analysis}
@@ -333,12 +271,30 @@ fit.bayes$accept
 - Markov 链的 batches；
 - x,y 是提供给目标函数 lupost 的额外参数
 
+---------------------------------------------------
 
-贝叶斯因子 
-https://rpubs.com/lindeloev/bayes_factors 
-https://discourse.mc-stan.org/t/inf-bayes-factor-using-brms/5792
 
-------------------------------------------------------------
-泊松分布带块金效应 
+## 其它概率编程框架
 
-蒙特卡罗最大似然方法：马尔科夫链蒙特卡罗方法模拟空间随机效应的条件分布，获得似然函数的蒙特卡罗近似
+什么是 probabilistic programming language
+
+PyMC3
+
+NIMBLE [@nimble2017]
+
+## INLA 框架
+
+集成嵌套拉普拉斯近似 (Integrated Nested Laplace Approximations，简称 INLA)
+
+介绍模型 https://www.flutterbys.com.au/stats/tut/tut12.9.html
+
+INLA software can handle thousands of Gaussian latent variables, but only up to 15 hyperparameters, because INLA software uses CCD for hyperparameters. If MCMC is used for hyperparameters, then it’s possible to handle more hyperparameters. For example, GPstuff allows use of MCMC instead of CCD for hyperparameters, and Daniel Simpson would like to get Laplace approximation to Stan so that he could handle thousands of hyperparameters.
+
+INLA 软件能处理上千个高斯随机效应，但最多只能处理 15 个超参数，因为 INLA 使用 CCD 处理超参数，如果使用 MCMC 处理超参数，就有可能处理更多的超参数，如 GPstuff 使用 MCMC 而不是 CCD 处理超参数，Daniel Simpson 想把 Laplace approximation 带入 Stan，这样他就可以处理上千个超参数
+
+## 修正的第三类贝塞尔函数
+
+```r
+exp(0.5)*besselK(0.5,20)
+besselK(0.5,20,expon.scaled = T)
+```
