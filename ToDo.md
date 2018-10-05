@@ -91,27 +91,41 @@ https://statswithr.github.io/book
 
 - 随机游走 MH 算法  spBayes 实现
 - Langevin-Hastings 算法 geoRglm geoCount 实现
-- HMC 算法 NUTS 算法  STAN 实现
+- HMC 算法 NUTS 算法  STAN 包  adnuts  R 实现
 - MCML 算法  PrevMap 实现
 - MCEM 算法 [@Zhang2002On]  C++ 实现 [@nimble2017] <https://r-nimble.org/>
 
-蒙特卡罗最大似然方法：马尔科夫链蒙特卡罗方法模拟空间随机效应的条件分布，获得似然函数的蒙特卡罗近似
+> 蒙特卡罗最大似然方法：马尔科夫链蒙特卡罗方法模拟空间随机效应的条件分布，获得似然函数的蒙特卡罗积分近似，然后极大化这个近似，获得参数的估计，即为 MCML 
 
 Hoffman, M. D. and Gelman, A. (2014). The No-U-Turn Sampler: adaptively setting path lengths in Hamiltonian Monte Carlo. Journal of Machine Learning Research. 15:1593–1623.
 
-adnuts  R 语言版本实现的 NUTS 算法
+近似似然函数方法：
 
-近似似然函数方法：其实是近似高维积分
-
-近似方法 [@Pinheiro1995]
+> 本质是近似空间随机效应的高维积分 [@Pinheiro1995]
 
 - 拉普拉斯近似似然函数  INLA 实现
 - Low-Rank 低秩近似  PrevMap 实现
 - 拉普拉斯近似 Constant of Laplace approximation https://stats.stackexchange.com/questions/353716
 - 鞍点近似 saddlepoint approximation https://stats.stackexchange.com/questions/191492
-- 限制极大似然估计 REML
+- REML 限制极大似然估计 Testing environmental and genetic effects in the presence of spatial autocorrelation [@spaMM2014]
 
-Testing environmental and genetic effects in the presence of spatial autocorrelation [@spaMM2014]
+
+## 动态展示线性预测效果
+
+- plotly (R)
+  - https://github.com/ropensci/plotly 
+  - https://plotly-book.cpsievert.me
+- leaflet (R)
+  - https://github.com/rstudio/leaflet 
+  - https://rstudio.github.io/leaflet/
+- highcharter (R)
+  - https://github.com/jbkunst/highcharter
+  - http://jkunst.com/highcharter/
+- Bokeh (Python)
+  - https://github.com/bokeh/bokeh https://bokeh.pydata.org/en/latest/docs/user_guide/geo.html
+  - https://github.com/andrea-cuttone/geoplotlib
+  - https://github.com/geopandas/geopandas
+  - https://github.com/ResidentMario/geoplot
 
 ## 空间统计三大块：空间点模式分析、地质统计、离散空间过程
 
