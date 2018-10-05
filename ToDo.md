@@ -121,6 +121,8 @@ Hoffman, M. D. and Gelman, A. (2014). The No-U-Turn Sampler: adaptively setting 
 - highcharter (R)
   - https://github.com/jbkunst/highcharter
   - http://jkunst.com/highcharter/
+- r2d3maps (R)
+  - https://github.com/dreamRs/r2d3maps
 - Bokeh (Python)
   - https://github.com/bokeh/bokeh https://bokeh.pydata.org/en/latest/docs/user_guide/geo.html
   - https://github.com/andrea-cuttone/geoplotlib
@@ -156,6 +158,8 @@ http://mc-stan.org/users/documentation/case-studies/divergences_and_bias.html
 ## 基于 Stan 的 R 包
 
 ```r
+pkg <- tools::dependsOnPkgs('rstan',installed = available.packages())
+install.packages(setdiff(pkg,intersect(.packages(T),pkg)))
 tools::dependsOnPkgs('rstan',installed = available.packages())
 ```
 ```
@@ -190,6 +194,8 @@ Use RcppEigen to fit least trimmed squares regression models with an L1 penalty 
 
 hBayesDM: hierarchical Bayesian modeling of Decision-Making tasks 任务决策的贝叶斯分层建模 <https://github.com/CCS-Lab/hBayesDM> <https://rpubs.com/CCSL/hBayesDM> 
 
+LaplacesDemon: Complete Environment for Bayesian Inference
+Provides a complete environment for Bayesian inference using a variety of different samplers (see ?LaplacesDemon for an overview). The README describes the history of the package development process.
 
 ## 贝叶斯因子 {#bayes-factors}
 
