@@ -338,4 +338,7 @@ fit.bayes$accept
 https://rpubs.com/lindeloev/bayes_factors 
 https://discourse.mc-stan.org/t/inf-bayes-factor-using-brms/5792
 
+------------------------------------------------------------
+泊松分布带块金效应 
 
+蒙特卡罗最大似然方法：马尔科夫链蒙特卡罗方法模拟空间随机效应的条件分布，获得似然函数的蒙特卡罗近似
