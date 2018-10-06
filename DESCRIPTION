@@ -5,20 +5,22 @@ Version: 0.0.0.9000
 Depends: 
     R (>= 3.5.0)
 Imports: 
-  colorspace (>= 1.4-0),
-  rmarkdown,
   bookdown,
+  brms,
+  colorspace (>= 1.4-0),
+  desc,
   formatR,
-  readr,
-  kableExtra,
-  gridExtra,
-  sf,
   ggplot2,
+  gridExtra,
+  kableExtra,
   mcmc,
+  rmarkdown,
   rstan,
   rstanarm,
   rstansim,
-  brms
+  sessioninfo,
+  sf,
+  tibble
 Suggests: 
   svglite
 Remotes: 

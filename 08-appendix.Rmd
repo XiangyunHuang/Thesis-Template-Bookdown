@@ -109,14 +109,24 @@ cat(readLines("code/gp.stan"),sep = "\n")
 
 ```{r,eval=is_on_travis,echo=is_on_travis,message=FALSE,warning=FALSE}
 cat(system("cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c", intern = TRUE), sep = "\n")
-parallel::detectCores()
 # 32  Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz
-# options(mc.cores = ceiling(parallel::detectCores()/2))
-
-# gc()
-# print(fit, digits = 3)
-# plot(fit)
-devtools::session_info(.packages(T))
-sessionInfo()
+parallel::detectCores()
 ```
 
+```{r, echo = FALSE, eval=is_on_travis, results="asis"}
+plat <- sessioninfo::platform_info()
+df <- data.frame(setting = names(plat), value = as.character(unclass(plat)))
+knitr::kable(df, format = "markdown")
+```
+
+```{r, echo = FALSE, eval=is_on_travis, results="asis"}
+deps <- desc::desc_get_deps()$package[-1]
+
+pkgs <- sessioninfo::package_info(deps)
+df <- tibble(
+  package = pkgs$package,
+  version = pkgs$ondiskversion,
+  source = stringr::str_replace(pkgs$source, "@", "\\\\@")
+)
+knitr::kable(df, format = "markdown")
+```
