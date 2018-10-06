@@ -23,5 +23,5 @@ bookdown::pdf_book:
   toc_appendix: no
   toc_bib: yes
   highlight: NULL
-#bookdown::epub_book:
-#  dev: svglite
+bookdown::epub_book:
+  dev: svglite
