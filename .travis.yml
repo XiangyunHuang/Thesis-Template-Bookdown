@@ -50,12 +50,13 @@ before_install:
 #  - export PATH=/$HOME/.TinyTeX/bin/x86_64-linux:$PATH
 #  - Rscript -e 'tinytex::tlmgr_install(readLines("latex/TeXLive.pkgs"))'
 #  - tlmgr install $(cat latex/TeXLive.pkgs | tr '\n' ' ') || true
-#  - mkdir -p /$HOME/.fonts
-#  - cp -r fonts/* /$HOME/.fonts/
-#  - fc-cache -fsv
-#  - fc-list :lang=en-us | sort
-#  - fc-list :lang=zh-cn | sort
-#  - du -h -d 1
+  - git clone https://github.com/XiangyunHuang/fonts.git fonts 
+  - mkdir -p /$HOME/.fonts
+  - cp -r fonts/* /$HOME/.fonts/
+  - fc-cache -fsv
+  - fc-list :lang=en-us | sort
+  - fc-list :lang=zh-cn | sort
+  - du -h -d 1
 
 before_script:
   - Rscript -e 'update.packages(lib.loc = .libPaths()[1], ask = FALSE)'
@@ -65,4 +66,5 @@ script:
  # - Rscript -e 'bookdown::render_book("index.Rmd", config_file = "_bookdown_skeleton.yml")'
 
 after_success:
+  - make pdf
   - netlify deploy -t $NETLIFY_PAT
