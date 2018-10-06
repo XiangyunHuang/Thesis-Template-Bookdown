@@ -50,9 +50,9 @@ before_install:
 #  - export PATH=/$HOME/.TinyTeX/bin/x86_64-linux:$PATH
 #  - Rscript -e 'tinytex::tlmgr_install(readLines("latex/TeXLive.pkgs"))'
 #  - tlmgr install $(cat latex/TeXLive.pkgs | tr '\n' ' ') || true
-  - git clone https://github.com/XiangyunHuang/fonts.git fonts 
+  - git clone https://github.com/XiangyunHuang/fonts.git winfonts 
   - mkdir -p /$HOME/.fonts
-  - cp -r fonts/* /$HOME/.fonts/
+  - cp -r winfonts/* /$HOME/.fonts/
   - fc-cache -fsv
   - fc-list :lang=en-us | sort
   - fc-list :lang=zh-cn | sort
