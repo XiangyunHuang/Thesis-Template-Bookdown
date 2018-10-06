@@ -1,6 +1,7 @@
 library(methods)
 set.seed(2018)
 library(ggplot2)
+library(tibble)
 knitr::opts_chunk$set(
   comment = "#>",
   collapse = TRUE,
