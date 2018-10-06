@@ -2,7 +2,7 @@ bookdown::gitbook:
   css: style.css
   config:
     toc:
-      collapse: none
+      collapse: section
       before: |
         <li><a href="./">空间广义线性混合效应模型及其应用</a></li>
       after: |
