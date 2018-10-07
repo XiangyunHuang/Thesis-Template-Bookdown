@@ -33,7 +33,7 @@ one_gp_fit <- sampling(sim_one_gp_model,
   seed = 2018
 )
 ```
-```{r one-dim-gp,fig.cap="模拟一维平稳空间高斯过程，协方差函数为幂指数形式(见\\@ref(eq:cov-exp-quad))，且均值为 $\\mathbf{0}$，$\\sigma^2=1, \\phi=1, \\kappa=2, \\tau^2 = 0.1$，横坐标表示采样的位置，纵坐标是目标值 $S(x)$"}
+```{r one-dim-gp,fig.cap='(ref:one-dim-gp)'}
 # sim_one_gp_dat <- extract(one_gp_fit)
 
 # pdf(file = "one-dim-gp.pdf", width = 8,height = 8*0.618)
@@ -44,6 +44,8 @@ one_gp_fit <- sampling(sim_one_gp_model,
 # dev.off()
 knitr::include_graphics(path = "figures/one-dim-gp.png")
 ```
+
+(ref:one-dim-gp) 模拟一维平稳空间高斯过程，协方差函数为幂指数型，见公式 \@ref(eq:cov-exp-quad)，且均值为 $\mathbf{0}$，$\sigma^2=1$，$\phi=1$，$\kappa=2$，$\tau^2 = 0.1$，横坐标表示采样的位置，纵坐标是目标值 $S(x)$。
 
 ## 二维平稳空间高斯过程 {#sim-two-gp}
 
@@ -86,13 +88,13 @@ plot(sim$coords, type = "n")
 text(sim$coords[, 1], sim$coords[, 2], format(sim$data, digits = 1), cex = 1.5)
 ```
 
-紧接上文，模拟模型当中的空间效应 $S(x)$ ， 其相关函数可以为指数族或者梅隆族，函数形式如公式 \@ref(eq:exp-matern) 所示，为描述简单起见，以指数族说明。
+紧接上文，模拟模型当中的空间效应 $S(x)$ ， 其相关函数可以为指数型或者梅隆型，函数形式如公式 \@ref(eq:exp-matern) 所示。
 
 \begin{equation}
 \rho(u) =
 \begin{cases}
-\exp(-(u/\phi)^{\kappa}) & \text{指数族}\\
-\{2^{\kappa -1}\Gamma(\kappa)\}^{-1}(u/\phi)^{\kappa}\mathcal{K}_{\kappa}(u/\phi) & \text{梅隆族}
+\exp(-(u/\phi)^{\kappa}) & \text{指数型}\\
+\{2^{\kappa -1}\Gamma(\kappa)\}^{-1}(u/\phi)^{\kappa}\mathcal{K}_{\kappa}(u/\phi) & \text{梅隆型}
 \end{cases} (\#eq:exp-matern)
 \end{equation}
 
