@@ -1,6 +1,6 @@
 # 数值模拟 {#simulations}
 
-空间广义线性混合效应模型（以下简称 SGLMM 模型）在广义线性混合效应模型（以下简称 GLMM 模型）基础上添加了与空间位置相关的随机效应，这种随机效应在文中称为空间效应 [@Diggle1998]。 它与采样点的位置、数量有关，采样点的位置决定空间过程的协方差结构， 而采样点的数量决定空间效应的维度，从而导致 SGLMM 模型比一般的 GLMM 模型复杂。作为过渡，我们在第 \@ref(sim-gp) 节模拟了平稳高斯过程。 第 \@ref(sim-sglmm) 节模拟 SGLMM 模型， 分两个小节展开叙述，第 \@ref(binomal-sglmm) 小节模拟响应变量服从二项分布的情形，  第 \@ref(possion-sglmm) 小节模拟响应变量服从泊松分布的情形， 在这两个小节里， 比较了蒙特卡罗极大似然算法（Monte Carlo Maximum Likelihood，简称 MCML）， 低秩近似算法（以下简称 Low-Rank 算法）， 贝叶斯马尔科夫链蒙特卡罗算法（以下简称贝叶斯 MCMC 算法）和 贝叶斯 STAN-MCMC 算法的性能差异。
+空间广义线性混合效应模型（以下简称 SGLMM 模型）在广义线性混合效应模型（以下简称 GLMM 模型）基础上添加了与空间位置相关的随机效应，这种随机效应在文中称为空间效应 [@Diggle1998]。 它与采样点的位置、数量有关，采样点的位置决定空间过程的协方差结构， 而采样点的数量决定空间效应的维度，从而导致 SGLMM 模型比一般的 GLMM 模型复杂。作为过渡，我们在第 \@ref(sim-one-gp) 和 \@ref(sim-two-gp) 节模拟了一维和二维平稳高斯过程。 第 \@ref(sim-sglmm) 节模拟 SGLMM 模型， 分两个小节展开叙述，第 \@ref(binomal-sglmm) 小节模拟响应变量服从二项分布的情形，  第 \@ref(possion-sglmm) 小节模拟响应变量服从泊松分布的情形， 在这两个小节里， 比较了蒙特卡罗极大似然算法（Monte Carlo Maximum Likelihood，简称 MCML）， 低秩近似算法（以下简称 Low-Rank 算法）， 贝叶斯马尔科夫链蒙特卡罗算法（以下简称贝叶斯 MCMC 算法）和 贝叶斯 STAN-MCMC 算法的性能差异。
 
 后面每个模型及参数设置都要详细说明，包括模拟过程要对应到前面的算法步骤，分不同的样本量n=50,70,90和参数设置$\phi,\sigma^2,\tau^2$取不同的值做模拟，
 
@@ -13,25 +13,43 @@
 g(\mu_i) = d(x_i)'\beta + S(x_i) + Z_i (\#eq:sim-sglmm)
 \end{equation}
 
-## 一维空间高斯过程
+## 一维平稳空间高斯过程 {#sim-one-gp}
 
-一维
-
-
-
-## 平稳空间高斯过程 {#sim-gp}
-
-这里，我们在规则平面上模拟平稳高斯过程 $\mathcal{S} = S(x), x \in \mathbb{R}^2$， 其均值为0， 自协方差函数为
+一维情形下，平稳高斯过程 $S(x)$ 的图像如图 \@ref(fig:sim-one-gp) 协方差函数 二次幂指数形式
 
 \begin{equation}
-\mathrm{Cov}(S(x_i),S(x_j)) = \sigma^2\exp\big\{-\big( \frac{ \| x_{i} - x_{j} \|_{2}}{\sqrt{2}\phi}\big)^{\kappa}\big\}  (\#eq:exp-quad)
+\mathsf{Cov}(S(x_i) + Z_i, S(x_j) + Z_j )  = \sigma^2\exp\big\{-\big( \frac{ \| x_{i} - x_{j} \|_{2}}{\sqrt{2}\phi}\big)^{\kappa}\big\} + \tau^2 (\#eq:cov_exp_quad)
 \end{equation}
 
-\noindent 设置参数 $\kappa = 2,\phi=1,\sigma^2=1$，单位平面区域为 $[0,1]\times[0,1]$， 将此区域划分为 $7\times 7$ 的小网格，设置每个格点为采样的位置。由自协方差函数 \@ref(eq:exp-quad) 可以获得 $\mathcal{S}$ 的协方差矩阵，然后使用 R包 **MASS** 提供的 `mvrnorm` 函数产生多元正态分布随机数。 模拟数据生成的图像见图 \@ref(fig:gp)， 格点上的值即为平稳空间高斯过程在该点的取值 （为方便显示，已四舍五入保留两位小数）。
+```{r, message=FALSE, echo=FALSE}
+sim_one_gp_model <- stan_model('code/sim_one_gp.stan')
+```
 
-```{r gp,fig.cap="平稳空间高斯过程：自相关函数为幂指数族", small.mar=TRUE, pdfcrop=TRUE,fig.asp=1,out.width="45%",fig.width=4.5}
+```{r, message=FALSE, echo=FALSE}
+x <- (-50:50)/25
+N <- length(x)
+
+one_gp_fit <- sampling(sim_one_gp_model,
+  data = list(x = x, N = N),
+  iter = 10000, warmup = 5000, chains = 4,
+  seed = 2018
+)
+```
+
+```{r sim-one-gp,message=FALSE,fig.cap="模拟一维平稳空间高斯过程，协方差函数为幂指数形式(见\\@ref(eq:exp-quad))，且均值为 $\mathbf{0}$，$\sigma^2=1, \phi=1, \kappa=2, \tau^2 = 0.1$，横坐标表示采样的位置，纵坐标是目标值 $S(x)$",small.mar=TRUE}
+sim_one_gp_dat <- extract(one_gp_fit)
+plot(x, colMeans(sim_one_gp_dat$y),
+  xlab = "Location", ylab = "S(x)"
+)
+```
+
+## 二维平稳空间高斯过程 {#sim-two-gp}
+
+二维情形下，平稳高斯过程的取值分布在平面上，在规则平面上模拟平稳高斯过程 $\mathcal{S} = S(x), x \in \mathbb{R}^2$， 其均值为 0， 自协方差函数为方程\@ref(eq:cov_exp_quad)，其参数 $\kappa = 2,\phi=1,\sigma^2=1$，单位平面区域为 $[0,1]\times[0,1]$， 将此区域划分为 $7\times 7$ 的小网格，设置每个格点为采样的位置。由自协方差函数 \@ref(eq:cov_exp_quad) 可以获得 $\mathcal{S}$ 的协方差矩阵，然后使用 R 包 **MASS** 提供的 `mvrnorm` 函数产生多元正态分布随机数。 模拟数据生成的图像见图 \@ref(fig:gp)， 格点上的值即为平稳空间高斯过程在该点的取值 （为方便显示，已四舍五入保留两位小数）。
+
+```{r gp,fig.cap="模拟二维平稳空间高斯过程，自相关函数为幂指数形式，水平方向为横坐标，垂直方向为纵坐标，图中的格点是目标值 $S(x)$", small.mar=TRUE,fig.asp=1,out.width="55%",fig.width=4.5}
 set.seed(2018)
-N <- 49
+N <- 36
 lscale <- 1
 sdgp <- 1
 ## 单位区域上采样
@@ -45,8 +63,25 @@ m <- sdgp^2 * exp(-D^2 / phi) # 多元高斯分布的协方差矩阵  二次幂�
 # powered.exponential (or stable)
 # rho(h) = exp[-(h/phi)^kappa] if 0 < kappa <= 2 此处 kappa 固定为 2
 S <- MASS::mvrnorm(1, rep(0, N), m) # 产生服从多元高斯分布的随机数
-plot(d1 ~ d2, data = d, type = "n")
-text(y = d$d1, x = d$d2, labels = round(S, digits = 1),xpd=T)
+plot(c(-0.1, 1.1), c(-0.1, 1.1),
+  type = "n",
+  panel.first = grid(lwd = 1.5, lty = 2, col = "lightgray"),
+  xlab = "Horizontal Coord", ylab = "Vertical Coord"
+)
+text(y = d$d1, x = d$d2, labels = round(S, digits = 2), xpd = TRUE)
+```
+```{r,eval=FALSE,include=FALSE}
+# nugget = tau^2 # nugget effect
+# cov.pars = c(sigma^2,phi) # partial sill and range parameter
+library(geoR)
+sim <- grf(36,
+  grid = "reg", method = "cholesky",
+  cov.pars = c(1, sqrt(2)), nugget = 1, mean = 0,
+  cov.model = "powered.exponential", kappa = 2
+)
+# a display of simulated locations and values
+plot(sim$coords, type = "n")
+text(sim$coords[, 1], sim$coords[, 2], format(sim$data, digits = 1), cex = 1.5)
 ```
 
 紧接上文，模拟模型当中的空间效应 $S(x)$ ， 其相关函数可以为指数族或者梅隆族，函数形式如公式 \@ref(eq:exp-matern) 所示，为描述简单起见，以指数族说明。
@@ -59,7 +94,7 @@ text(y = d$d1, x = d$d2, labels = round(S, digits = 1),xpd=T)
 \end{cases} (\#eq:exp-matern)
 \end{equation}
 
-\noindent 固定样本量 $n=1600$ ，其它参数为 $\sigma^2=1,\phi=25,\kappa=1$ ，在区域 $[-0.2,1.2]\times [-0.2,1.2]$ 上，分别模拟规则网格上的采样和 随机采样，图中 $S(x)$ 的值越大，颜色越红，反之，颜色越蓝。使用R函数 `dist` 计算样本点之间的距离，用 `MASS::mvrnorm` 函数生成服从多元高斯分布的随机数。
+\noindent 固定样本量 $n=1600$ ，其它参数为 $\sigma^2=1,\phi=25,\kappa=1$ ，在区域 $[-0.2,1.2]\times [-0.2,1.2]$ 上，分别模拟规则网格上的采样和 随机采样，图中 $S(x)$ 的值越大，颜色越红，反之，颜色越蓝。使用 R 函数 `dist` 计算样本点之间的距离，用 `MASS::mvrnorm` 函数生成服从多元高斯分布的随机数。
 
 ## 空间广义线性混合效应模型 {#sim-sglmm}
 
