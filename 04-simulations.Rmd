@@ -15,17 +15,15 @@ g(\mu_i) = d(x_i)'\beta + S(x_i) + Z_i (\#eq:sim-sglmm)
 
 ## 一维平稳空间高斯过程 {#sim-one-gp}
 
-一维情形下，平稳高斯过程 $S(x)$ 的图像如图 \@ref(fig:sim-one-gp) 协方差函数 二次幂指数形式
+一维情形下，平稳高斯过程 $S(x)$ 的图像如图 \@ref(fig:one-dim-gp) 协方差函数 二次幂指数形式
 
 \begin{equation}
-\mathsf{Cov}(S(x_i) + Z_i, S(x_j) + Z_j )  = \sigma^2\exp\big\{-\big( \frac{ \| x_{i} - x_{j} \|_{2}}{\sqrt{2}\phi}\big)^{\kappa}\big\} + \tau^2 (\#eq:cov_exp_quad)
+\mathsf{Cov}(S(x_i) + Z_i, S(x_j) + Z_j )  = \sigma^2\exp\big\{-\big( \frac{ \| x_{i} - x_{j} \|_{2}}{\sqrt{2}\phi}\big)^{\kappa}\big\} + \tau^2 (\#eq:cov-exp-quad)
 \end{equation}
 
-```{r, message=FALSE, echo=FALSE}
+```{r sim-one-gp, eval=FALSE, echo=FALSE}
 sim_one_gp_model <- stan_model('code/sim_one_gp.stan')
-```
 
-```{r, message=FALSE, echo=FALSE}
 x <- (-50:50)/25
 N <- length(x)
 
@@ -35,17 +33,21 @@ one_gp_fit <- sampling(sim_one_gp_model,
   seed = 2018
 )
 ```
+```{r one-dim-gp,fig.cap="模拟一维平稳空间高斯过程，协方差函数为幂指数形式(见\\@ref(eq:cov-exp-quad))，且均值为 $\\mathbf{0}$，$\\sigma^2=1, \\phi=1, \\kappa=2, \\tau^2 = 0.1$，横坐标表示采样的位置，纵坐标是目标值 $S(x)$"}
+# sim_one_gp_dat <- extract(one_gp_fit)
 
-```{r sim-one-gp,message=FALSE,fig.cap="模拟一维平稳空间高斯过程，协方差函数为幂指数形式(见\\@ref(eq:exp-quad))，且均值为 $\mathbf{0}$，$\sigma^2=1, \phi=1, \kappa=2, \tau^2 = 0.1$，横坐标表示采样的位置，纵坐标是目标值 $S(x)$",small.mar=TRUE}
-sim_one_gp_dat <- extract(one_gp_fit)
-plot(x, colMeans(sim_one_gp_dat$y),
-  xlab = "Location", ylab = "S(x)"
-)
+# pdf(file = "one-dim-gp.pdf", width = 8,height = 8*0.618)
+# par(mar = c(4.1, 4.1, 1.5, 0.5))
+# plot(x, colMeans(sim_one_gp_dat$y),
+#      xlab = "x", ylab = "S(x)"
+# )
+# dev.off()
+knitr::include_graphics(path = "figures/one-dim-gp.png")
 ```
 
 ## 二维平稳空间高斯过程 {#sim-two-gp}
 
-二维情形下，平稳高斯过程的取值分布在平面上，在规则平面上模拟平稳高斯过程 $\mathcal{S} = S(x), x \in \mathbb{R}^2$， 其均值为 0， 自协方差函数为方程\@ref(eq:cov_exp_quad)，其参数 $\kappa = 2,\phi=1,\sigma^2=1$，单位平面区域为 $[0,1]\times[0,1]$， 将此区域划分为 $7\times 7$ 的小网格，设置每个格点为采样的位置。由自协方差函数 \@ref(eq:cov_exp_quad) 可以获得 $\mathcal{S}$ 的协方差矩阵，然后使用 R 包 **MASS** 提供的 `mvrnorm` 函数产生多元正态分布随机数。 模拟数据生成的图像见图 \@ref(fig:gp)， 格点上的值即为平稳空间高斯过程在该点的取值 （为方便显示，已四舍五入保留两位小数）。
+二维情形下，平稳高斯过程的取值分布在平面上，在规则平面上模拟平稳高斯过程 $\mathcal{S} = S(x), x \in \mathbb{R}^2$， 其均值为 0， 自协方差函数为方程\@ref(eq:cov-exp-quad)，其参数 $\kappa = 2,\phi=1,\sigma^2=1$，单位平面区域为 $[0,1]\times[0,1]$， 将此区域划分为 $7\times 7$ 的小网格，设置每个格点为采样的位置。由自协方差函数 \@ref(eq:cov-exp-quad) 可以获得 $\mathcal{S}$ 的协方差矩阵，然后使用 R 包 **MASS** 提供的 `mvrnorm` 函数产生多元正态分布随机数。 模拟数据生成的图像见图 \@ref(fig:gp)， 格点上的值即为平稳空间高斯过程在该点的取值 （为方便显示，已四舍五入保留两位小数）。
 
 ```{r gp,fig.cap="模拟二维平稳空间高斯过程，自相关函数为幂指数形式，水平方向为横坐标，垂直方向为纵坐标，图中的格点是目标值 $S(x)$", small.mar=TRUE,fig.asp=1,out.width="55%",fig.width=4.5}
 set.seed(2018)
