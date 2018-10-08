@@ -39,7 +39,11 @@ knitr::include_graphics(path = "figures/Yields-Variogram.png")
 我们使用球形结构拟合这组数据中的空间结构，位置参数 $\phi$ 和块金效应的初始值可以从图 \@ref(fig:yields-variogram) 获取，其中 $\phi$ 是样本变差等于 1 时对应的空间距离。拟合模型 \@ref(eq:extended-linear-model)
 
 ```{r,eval=FALSE,echo=TRUE}
-m2 <- update(m1, corr = corSpher(c(31, 0.2), form = ~latitude + longitude, nugget = TRUE))
+m2 <- update(m1, corr = corSpher(
+  c(31, 0.2),
+  form = ~latitude + longitude,
+  nugget = TRUE
+))
 m2
 ```
 
