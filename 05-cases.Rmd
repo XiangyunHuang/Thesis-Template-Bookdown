@@ -91,7 +91,7 @@ knitr::include_graphics(path = "figures/map-loaloa.png")
 \mathrm{Cov}(S(x_i),S(x_j)) = \sigma^2 \big\{2^{\kappa-1}\Gamma(\kappa)\big\}^{-1}(u_{ij}/\phi)^{\kappa}K_{\kappa}(u_{ij}/\phi), \kappa = 2
 \] 
 
-在实际数据分析中，选择一组合适的初始值可以缩短各算法迭代的过程。我们分两步获取 $\beta = (\beta_{0},\beta_{1},\beta_{2}, \beta_{3},\beta_{4}, \beta_{5})$和 $\boldsymbol{\theta} = (\sigma^2,\phi)$的初始值。第一步，离散自协方差函数中的$\kappa$，再调用PrevMap包中的`shape.matern`函数选择一个$\kappa$；第二步，在去掉空间效应$S(x)$的情况下，以广义线性模型拟合数据得到$\beta$的初始估计值。然后分别使用贝叶斯MCMC算法和贝叶斯STAN-MCMC算法估计参数 $\beta = (\beta_{0},\beta_{1},\beta_{2}, \beta_{3},\beta_{4}, \beta_{5})$和 $\boldsymbol{\theta} = (\sigma^2,\phi)$，结果如表 \@ref(tab:loaloa-estimation2) 和表 \@ref(tab:loaloa-estimation3)所示。
+在实际数据分析中，选择一组合适的初始值可以缩短各算法迭代的过程。我们分两步获取 $\beta = (\beta_{0},\beta_{1},\beta_{2}, \beta_{3},\beta_{4}, \beta_{5})$ 和 $\boldsymbol{\theta} = (\sigma^2,\phi)$ 的初始值。第一步，离散自协方差函数中的 $\kappa$，再调用 **PrevMap** 包中的 `shape.matern` 函数选择一个 $\kappa$；第二步，在去掉空间效应 $S(x)$ 的情况下，以广义线性模型拟合数据得到 $\beta$的初始估计值。然后分别使用贝叶斯 MCMC 算法和贝叶斯 STAN-MCMC 算法估计参数 $\beta = (\beta_{0},\beta_{1},\beta_{2}, \beta_{3},\beta_{4}, \beta_{5})$ 和 $\boldsymbol{\theta} = (\sigma^2,\phi)$，结果如表 \@ref(tab:loaloa-estimation2) 和表 \@ref(tab:loaloa-estimation3)所示。
 
 Table: (\#tab:loaloa-estimation1) MCML算法估计模型的参数
 
@@ -106,7 +106,7 @@ Table: (\#tab:loaloa-estimation1) MCML算法估计模型的参数
 | $\sigma^2$  | 1.171       | 0.272       | 1.300e-03   |
 | $\phi$      | 0.486       | 0.353       | 2.344e-03   |
 
-通过表 \@ref(tab:loaloa-estimation1) 的P值，可以看出 $\beta_{0},\beta_{1},\beta_{2}$ 是显著的，分别对应模型的截距项，海拔(ELEVATION)和 NDVI的平均值(MEAN9901)，在这组数据中，刻画NDVI指标使用平均值比较能体现村庄周围植被的整体绿色度，而最大值MAX9901，最小值MIN9901，标准差STDEV9901与影响不显著。
+通过表 \@ref(tab:loaloa-estimation1) 的 P 值，可以看出 $\beta_{0},\beta_{1},\beta_{2}$ 是显著的，分别对应模型的截距项，海拔 (ELEVATION)和 NDVI 的平均值 (MEAN9901)，在这组数据中，刻画 NDVI 指标使用平均值比较能体现村庄周围植被的整体绿色度，而最大值 MAX9901，最小值 MIN9901，标准差 STDEV9901 与影响不显著。
 
 Table: (\#tab:loaloa-estimation2) 贝叶斯 MCMC 算法估计模型的参数
 
@@ -154,39 +154,6 @@ knitr::include_graphics(path = "figures/rongelap.png")
 \end{align}
 
 其中，$\beta_0$ 是截距， 响应变量 $Y_{i} \sim \mathrm{Poisson}(\lambda(x_i))$， 我们同样使用贝叶斯 MCMC 算法和 STAN-MCMC 算法计算 Poisson-SGLMM 模型的参数，比较效果。
-
-<!-- Table: (\#tab:rongelap-estimation1) MCML算法估计模型的参数 -->
-
-<!-- | 参数        | 估计        | 标准差      |   P 值      | -->
-<!-- | :---------: | :--------:  | :---------: | :------:    | -->
-<!-- | $\beta_{0}$ |  7.641      | 0.172       | 1.582e-14   | -->
-<!-- | $\sigma^2$  | 0.295       | 0.643       | -           | -->
-<!-- | $\phi$      | 103.075     | 1.812e+44   | -           | -->
-
-<!-- Table: (\#tab:rongelap-estimation2) 贝叶斯 MCMC 算法估计模型的参数 -->
-
-<!-- | 参数        | 估计        | 标准差      |   均方误差  | -->
-<!-- | :---------: | :--------:  | :---------: | :------:    | -->
-<!-- | $\beta_{0}$ | 7.988       | 0.062       | 5.095e-03   | -->
-<!-- | $\sigma^2$  | 0.380       | 0.048       | 3.926e-03   | -->
-<!-- | $\phi$      | 16.440      | 7.828       | 6.391e-02   | -->
-
-<!-- Table: (\#tab:rongelap-estimation3) 贝叶斯STAN-MCMC算法估计模型的参数 -->
-
-<!-- | 参数        | 估计        | 标准差      |   均方误差  | -->
-<!-- | :---------: | :--------:  | :---------: | :------:    | -->
-<!-- | $\beta_{0}$ | 8.697       | 0.028       | 5.563e-03   | -->
-<!-- | $\sigma^2$  | 0.812       | 0.017       | 1.390e-03   | -->
-<!-- | $\phi$      | 10.893      | 5.302       | 4.754e-02   | -->
-
-<!-- 比较表 \@ref(tab:rongelap-estimation2) 和表 \@ref(tab:rongelap-estimation3)，发现贝叶斯 STAN-MCMC 算法与贝叶斯 MCMC 算法相比，在均方误差的意义下效果稍好一点。 -->
-
-<!-- Table: (\#tab:rongelap-without-nugget-effect) 不带块金效应的模型 \@ref(eq:rongelap-without-nugget-effect) 参数估计和 95\% 的置信区间 -->
-
-<!-- | 参数            |   2.5\%分位点   |   97.5\%分位点  |   均值 (mean)  |  中位数 (median)  | -->
-<!-- | :-------------- | :-------------: | :-------------: | :------------: | :---------------: | -->
-<!-- | $\beta_0$       |    1.674000     |     1.989000    |    1.830112    |   -0.077961       | -->
-<!-- | $\sigma$        |    0.488595     |     0.594607    |    0.539014    |   -0.077961       | -->
 
 
 ## 冈比亚儿童疟疾流行强度的空间分布
