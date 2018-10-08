@@ -143,15 +143,33 @@ Peter J. Diggle 等 (1998年) [@Diggle1998] 提出蒙特卡罗极大似然方法
 朗格拉普岛位于南太平洋上，是马绍尔群岛的一部分，二战后，美国在该岛上进行了核武器测试，核爆炸后产生的放射性尘埃笼罩了全岛，目前该岛仍然不适合人类居住，只有经批准的科学研究人员才能登岛，核污染残留浓度是其中一项 [@Bordner2016]。rongelap 数据集包含伽马射线在 $N=157$ 站点不同时间间隔的放射量，伽马射线在时间间隔 units.m 内放射的粒子数目为 y，d1 和 d2 分别为测量坐标。 建立 Poisson-SGLMM 模型 
 
 ```{r rongelap-dataset,fig.cap="朗格拉普岛上采样点的位置，加号 + 表示采样的位置"}
-knitr::include_graphics(path = "figures/rongelap.png")
+knitr::include_graphics(path = "figures/rongelap-island.png")
 ```
 
 \begin{align}
-\log\{\lambda(x_{i})\}& =  \beta_{0} + S(x_{i}) (\#eq:rongelap-without-nugget-effect)\\
-\log\{\lambda(x_{i})\}& =  \beta_{0} + S(x_{i}) + Z_{i} (\#eq:rongelap-with-nugget-effect)
+\log\{\lambda(x_{i})\}& =  \beta + S(x_{i}) (\#eq:rongelap-without-nugget-effect)\\
+\log\{\lambda(x_{i})\}& =  \beta + S(x_{i}) + Z_{i} (\#eq:rongelap-with-nugget-effect)
 \end{align}
 
-\noindent 其中，$\beta_0$ 是截距， 响应变量 $Y_{i} \sim \mathrm{Poisson}(\lambda(x_i))$，使用贝叶斯 MCMC 算法和 STAN-MCMC 算法计算 Poisson-SGLMM 模型的参数，比较效果。
+\noindent 其中，$\beta_0$ 是截距， 响应变量 $Y_{i} \sim \mathrm{Poisson}(\lambda(x_i))$，平稳空间高斯过程的自协方差函数为 $\mathsf{Cov}(S(x_i),S(x_j)) = \sigma^2 \exp(-\|x_i -x_j\|_{2}/\phi)$，$\mathsf{Var}(Z_{i}) = \tau^2, i = 1,\ldots,N=157$
+
+使用贝叶斯 MCMC 算法和 STAN-MCMC 算法计算 Poisson-SGLMM 模型的参数，比较效果。
+
+蒙特卡罗极大似然算法迭代的初值 $\beta_{0} = 6.2,\sigma^2_{0} = 2.40,\phi_{0} = 340,\tau^2_{rel} =2.074$，模拟次数为 30000 次，前 10000 次迭代视为预热阶段 (warm-up) 而不用于参数的估计，其后每隔 20 次迭代采一个样本点，存储参数的迭代值。
+
+```{r profile-phi-tausq,fig.cap='(ref:profile-phi-tausq)'}
+knitr::include_graphics(path = "figures/profile-phitausq.png")
+```
+
+(ref:profile-phi-tausq) 关于 $\phi$ 和相对块金效应 $\tau^2_{rel} = \tau^2/\sigma^2$ 的剖面似然函数曲面，平稳空间高斯过程的协方差函数选用指数型
+
+Table: (\#tab:rangelap-mcml-result) 蒙特卡罗极大似然估计模型 \@ref(eq:rongelap-with-nugget-effect) 的参数
+
+| 参数        |   $\hat{\beta}$ | $\hat{\sigma}^{2}$  |   $\hat{\phi}$  | $\hat{\tau}^2$    |  $\log L_{m}$    |
+| :---------- | :-------------  | :-------------      | :------------   | :---------------  |:---------------: |
+|   初始值    |    6.2          |     2.40            |   340           |   2.074           |         -        |
+|   估计值    |    6.190        |     2.401           |   338.126       |   2.053           |    0.002892      |
+
 
 
 ## 冈比亚儿童疟疾流行强度的空间分布

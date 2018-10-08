@@ -26,7 +26,9 @@ autocorr.plot(MCmle.coda)
 mcmcobj <- prepare.likfit.glsm(MCmle.input.fixed)
 
 lik.boxcox.1.expon <- likfit.glsm(mcmcobj, ini.phi = 10, fix.nugget.rel = TRUE)
-lik.boxcox.1.expon.nugget <- likfit.glsm(mcmcobj, ini.phi = 100)
+
+lik.boxcox.1.expon.nugget <- likfit.glsm(mcmcobj, ini.phi = 100) # 极大似然 lambda = 1
+
 lik.boxcox.1.nospatial <- likfit.glsm(mcmcobj, fix.nugget.rel = TRUE, cov.model = "pure.nugget")
 lik.boxcox.1.matern1.nugget <- likfit.glsm(mcmcobj, ini.phi = 40, cov.model = "matern", kappa = 1)
 lik.boxcox.1.spherical.nugget <- likfit.glsm(mcmcobj, ini.phi = 400, cov.model = "spherical", nugget.rel = 2)
@@ -40,18 +42,19 @@ lik.expon.boxcox1.05 <- likfit.glsm(mcmcobj.mu, ini.phi = 196, nugget.rel = 0.78
 lik.expon.boxcox1.lambda <- likfit.glsm(mcmcobj.mu, ini.phi = 339.6, nugget.rel = 2.075, lambda = 1, fix.lambda = FALSE)
 
 
+# 估计 phi 和 tau^2 的策略 phi 160--800 间隔 20  tau^2_{R} = tau^2/sigma^2  1 到 3 化成 21分
 ## profile likelihood for (phi,tausq.rel) [two-dimensional figure].
 pr.lik.rongelap <- proflik.glsm(mcmcobj, lik.boxcox.1.expon.nugget,
   phi.values = seq(8, 40) * 20, nugget.rel.values = seq(1, 3, l = 21)
 )
 par(cex = 0.9)
 plot(pr.lik.rongelap, levels = seq(-5, 1, by = 0.1), labcex = 0.55)
-dev.off()
 
-# Figure 1:
-postscript("profile.phitausq.ps", height = 5, width = 6.5, horizontal = FALSE)
-par(cex = 0.9)
-plot(pr.lik.rongelap, levels = seq(-5, 1, by = 0.1), labcex = 0.55)
+
+# Figure 1: 关于方差成分 phi 和 tau^2 的剖面似然曲面 
+pdf("profile-phitausq.pdf")
+par(mar = c(4.1, 4.1, 0.5, 0.5))
+plot(pr.lik.rongelap, levels = seq(-5, 1, by = 0.05), labcex = 0.55)
 dev.off()
 
 ############ grid for prediction being defined:
