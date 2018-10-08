@@ -169,6 +169,9 @@ Thanks for your encouragement
 <!-- | $\sigma$        |    0.488595     |     0.594607    |    0.539014    |   -0.077961       | -->
 
 
+冈比亚儿童疟疾流行强度的空间分布
+[MCMC 和 INLA 比较]{.todo}
+
 
 ## STAN 框架
 

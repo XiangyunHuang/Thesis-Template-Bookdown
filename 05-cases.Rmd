@@ -140,25 +140,21 @@ Table: (\#tab:loaloa-estimation3) 贝叶斯 STAN-MCMC 算法估计模型的参�
 
 Peter J. Diggle 等 (1998年) [@Diggle1998] 提出蒙特卡罗极大似然方法估计不带块金效应的响应变量服从泊松分布的空间广义混合效应模型 (见模型 \@ref(eq:rongelap-without-nugget-effect) )的参数，分析了朗格拉普岛上核污染浓度的空间分布，后来，Ole F Christensen (2004年) [@Christensen2004] 发现该核污染数据集中存在不能被泊松分布解释的残差，因此在 Peter J. Diggle 等 (1998年) [@Diggle1998] 的基础上添加了块金效应 (见模型 \@ref(eq:rongelap-with-nugget-effect))， 同样使用蒙特卡罗极大似然方法估计了模型中的参数。
 
-朗格拉普岛位于南太平洋上，是马绍尔群岛的一部分，二战后，美国在该岛上进行了核武器测试，核爆炸后产生的放射性尘埃笼罩了全岛，目前该岛仍然不适合人类居住，只有经批准的科学研究人员才能登岛，核污染残留浓度是其中一项 [@Bordner2016]。rongelap 数据集包含伽马射线在 $N=157$ 站点不同时间间隔的放射量。
+朗格拉普岛位于南太平洋上，是马绍尔群岛的一部分，二战后，美国在该岛上进行了核武器测试，核爆炸后产生的放射性尘埃笼罩了全岛，目前该岛仍然不适合人类居住，只有经批准的科学研究人员才能登岛，核污染残留浓度是其中一项 [@Bordner2016]。rongelap 数据集包含伽马射线在 $N=157$ 站点不同时间间隔的放射量，伽马射线在时间间隔 units.m 内放射的粒子数目为 y，d1 和 d2 分别为测量坐标。 建立 Poisson-SGLMM 模型 
 
 ```{r rongelap-dataset,fig.cap="朗格拉普岛上采样点的位置，加号 + 表示采样的位置"}
 knitr::include_graphics(path = "figures/rongelap.png")
 ```
-
-伽马射线在时间 units.m 内放射的粒子数目为 y，d1 和 d2 分别为测量坐标。 类似第 \@ref(loaloa)节，首先建立 Poisson-SGLMM 模型 
 
 \begin{align}
 \log\{\lambda(x_{i})\}& =  \beta_{0} + S(x_{i}) (\#eq:rongelap-without-nugget-effect)\\
 \log\{\lambda(x_{i})\}& =  \beta_{0} + S(x_{i}) + Z_{i} (\#eq:rongelap-with-nugget-effect)
 \end{align}
 
-其中，$\beta_0$ 是截距， 响应变量 $Y_{i} \sim \mathrm{Poisson}(\lambda(x_i))$， 我们同样使用贝叶斯 MCMC 算法和 STAN-MCMC 算法计算 Poisson-SGLMM 模型的参数，比较效果。
+\noindent 其中，$\beta_0$ 是截距， 响应变量 $Y_{i} \sim \mathrm{Poisson}(\lambda(x_i))$，使用贝叶斯 MCMC 算法和 STAN-MCMC 算法计算 Poisson-SGLMM 模型的参数，比较效果。
 
 
 ## 冈比亚儿童疟疾流行强度的空间分布
-
-[MCMC 和 INLA 比较]{.todo}
 
 5 岁以下儿童 在非洲冈比亚的 65 个村庄里调查疟疾感染情况， 依冈比亚狭长的地带和横穿东西全境的冈比亚河， 将其看作东、中和西三个部分， 东部是河流上游，西部是河流下游相应地，村庄分为 5 个区域，西部两个， 南岸和北岸各一个，中游一个在南岸，东部两个，也是南岸和北岸各有一个， 村庄的位置在图中的黑点标记。
 
