@@ -33,6 +33,20 @@ The template is used for Master Thesis of China University of Mining and Technol
 
 ---
 
+### How to Use it 如何使用该模版 
+
+我假设你已经安装好了 [Git](https://git-scm.com/)、 [R](https://www.r-project.org/) 和 [RStudio](https://www.rstudio.com/)
+
+1. 克隆模版到本地
+
+```bash
+git clone --depth=1 --branch=release https://github.com/XiangyunHuang/Thesis-Template-Bookdown.git
+```
+
+2. 
+
+---
+
 > 下面是模版在各个系统上可能遇到的问题及解决方案
 
 ### 1. 中英文字体
