@@ -5,14 +5,16 @@
 ## 软件信息  {#sessioninfo .unnumbered}
 
 ```{r,echo=TRUE}
-xfun::session_info(packages = c("rmarkdown", "bookdown"), dependencies = FALSE)
+xfun::session_info(packages = c(
+  "rmarkdown", "bookdown"
+), dependencies = FALSE)
 ```
 
 
-## 随机数生成 {#random-number-generation .unnumbered}
+## 模拟空间广义线性混合效应模型 {#simulate-sglmm .unnumbered}
 
-基于空间广义线性混合效应模型生成随机数的函数：
-`generate_sim_data` 函数可生成响应变量服从泊松分布或二项分布，平稳高斯过程的自相关函数为二次幂指数族或梅隆族的随机数
+模拟空间广义线性混合效应模型的函数：
+`generate_sim_data` 函数可生成响应变量服从泊松分布或二项分布，平稳高斯过程的自相关函数为二次幂指数型或梅隆型的模型
 
 ```{r,eval=FALSE,echo=TRUE}
 generate_sim_data <- function(N = 49, intercept = -1.0, 
