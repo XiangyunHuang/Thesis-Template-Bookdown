@@ -1,13 +1,10 @@
 # 数据分析 {#applications}
 
-<!-- 为什么要做这个数据分析，数据要介绍清楚，模型的各个部分要介绍清楚， MCML/PrevMap  ML/Low-Rank 比较 -->
-<!-- 在实际数据情况下，哪个模型好，另一方面介绍，模型结论是什么，什么对流行度/感染程度 影响大，哪个影响小，变量影响程度可以用 P值是否显著来表达， -->
-
-loaloa 和 rongelap 两个真实数据集分别来自 R 包 **PrevMap** 和 **geoRglm**， 分别被 Diggle 和 Christensen 分析过 [@Christensen2004;@Diggle2007ATMP]，第 \@ref(loaloa) 节和第 \@ref(rongelap) 节给出分析这两个数据集的模型和结果。其中，响应变量服从二项分布的空间广义线性混合效应模型（简称 Binomial-SGLMM 模型）拟合数据集 loaloa， 而响应变量服从泊松分布的空间广义线性混合效应模型（简称 Poisson-SGLMM 模型）拟合数据集 rongelap。
+loaloa 和 rongelap 两个真实数据集分别来自 R 包 **geoRglm** 和 **PrevMap**， 且被 P. J. Diggle 等 (2007年) [@Diggle2007ATMP] 和 O. F. Christensen (2004年) [@Christensen2004] 分析过，第 \@ref(loaloa) 节和第 \@ref(rongelap) 节给出分析这两个数据集的模型和结果。其中，响应变量服从二项分布的空间广义线性混合效应模型拟合数据集 loaloa， 而响应变量服从泊松分布的空间广义线性混合效应模型拟合数据集 rongelap。
 
 ## 空间线性混合效应模型 {#sptial-random-effects}
 
-Stroup 和 Baenziger (1994年) [@Stroup1994] 采用完全随机的区组设计研究小麦产量与品种等因素的关系，在 4 块肥力不同的地里都随机种植了 56 种不同的小麦， 实验记录了小麦产量、品种、位置以及土地肥力等数据， José Pinheiro 和 Douglas Bates (2000年) [@Pinheiro2000] 将该数据集命名为 Wheat2 ，整理后放在 **nlme** 包里。 我们利用该真实的农业生产数据构建带空间效应的线性混合效应模型，展示诊断和添加空间效应的过程。
+W. W. Stroup 和 P. S. Baenziger (1994年) [@Stroup1994] 采用完全随机的区组设计研究小麦产量与品种等因素的关系， 在 4 块肥力不同的地里都随机种植了 56 种不同的小麦， 实验记录了小麦产量、品种、位置以及土地肥力等数据， José Pinheiro 和 Douglas Bates (2000年) [@Pinheiro2000] 将该数据集命名为 Wheat2 ，整理后放在 **nlme** 包里。 我们利用该真实的农业生产数据构建带空间效应的线性混合效应模型，展示诊断和添加空间效应的过程。
 
 图 \@ref(fig:yields-block) 按土壤肥力不同分块展示每种小麦的产量，图中暗示数据中有 block 效应，块之间也呈现异方差性，为了更好的表达这种依赖效应，可以基于经纬度信息添加与空间相关的结构 (spatial correlation structures)，相应的线性模型
 
