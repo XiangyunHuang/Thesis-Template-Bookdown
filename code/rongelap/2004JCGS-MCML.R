@@ -17,23 +17,23 @@ MCmle.input.fixed <- glsm.mcmc(rongelap,
 
 ## investigating mixing and convergence
 library(coda)
-MCmle.coda <- create.mcmc.coda(MCmle.input.fixed, mcmc.input = list(thin = 20, burn.in = 10000))
+MCmle.coda <- create.mcmc.coda(MCmle.input.fixed, mcmc.input = list(thin = 20, burn.in = 10000)) # 样本序列 = 1000 = 20000/20
 plot(MCmle.coda)
 autocorr.plot(MCmle.coda)
 
-## maximum likelihood
+## maximum likelihood 考虑不同协方差函数类型
 
 mcmcobj <- prepare.likfit.glsm(MCmle.input.fixed)
 
 lik.boxcox.1.expon <- likfit.glsm(mcmcobj, ini.phi = 10, fix.nugget.rel = TRUE)
 
-lik.boxcox.1.expon.nugget <- likfit.glsm(mcmcobj, ini.phi = 100) # 极大似然 lambda = 1
+lik.boxcox.1.expon.nugget <- likfit.glsm(mcmcobj, ini.phi = 100) # 极大似然 不做 box-cox 变换 lambda = 1
 
 lik.boxcox.1.nospatial <- likfit.glsm(mcmcobj, fix.nugget.rel = TRUE, cov.model = "pure.nugget")
 lik.boxcox.1.matern1.nugget <- likfit.glsm(mcmcobj, ini.phi = 40, cov.model = "matern", kappa = 1)
 lik.boxcox.1.spherical.nugget <- likfit.glsm(mcmcobj, ini.phi = 400, cov.model = "spherical", nugget.rel = 2)
 
-## investigating other link functions
+## investigating other link functions 考虑不同的联系函数
 mcmcobj.mu <- prepare.likfit.glsm(MCmle.input.fixed, use.intensity = TRUE)
 
 lik.expon.boxcox1.0 <- likfit.glsm(mcmcobj.mu, ini.phi = 150.9130915, nugget.rel = 0.1266416, lambda = 0)

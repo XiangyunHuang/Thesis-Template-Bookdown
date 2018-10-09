@@ -40,22 +40,19 @@ knitr::include_graphics(path = "figures/Yields-Variogram.png")
 
 ```{r,eval=FALSE,echo=TRUE}
 m2 <- update(m1, corr = corSpher(
-  c(31, 0.2),
-  form = ~latitude + longitude,
-  nugget = TRUE
+  c(31, 0.2), form = ~latitude + longitude, nugget = TRUE
 ))
-m2
 ```
 
-用限制极大似然法做广义最小二乘拟合，空间自相关函数采用球族。二次有理族。似然函数对初始值很敏感，去掉样本变差中距离比较远的
+用限制极大似然法做广义最小二乘拟合，空间自相关函数采用球型和二次有理型函数。似然函数对初始值很敏感，去掉样本变差中距离比较远的
 
 Table: (\#tab:yields-model-compare) 小麦模型比较
 
 |           | 自相关函数 |   $\phi(\phi_0)$         |  $\tau^2(\tau^2_{0})$      | $\sigma^2(\sigma^2_{0})$ |   log-REML  |
 |:----------| ----------:| -----------------------: | --------------------------:| ------------------------:| :----------:|
-| 模型 I    |       球族 | $1.515\times 10^{5}(31)$ | $5.471\times 10^{-5}(0.2)$ |    466.785               |  -533.418   |
-| 模型 II   | 二次有理族 |             $13.461(13)$ |               $0.193(0.2)$ |      8.847               |  -532.639   |
-| 模型 III  |       球族 |             $27.457(28)$ |               $0.209(0.2)$ |      7.410               |  -533.931   |
+| 模型 I    |       球型 | $1.515\times 10^{5}(31)$ | $5.471\times 10^{-5}(0.2)$ |    466.785               |  -533.418   |
+| 模型 II   | 二次有理型 |             $13.461(13)$ |               $0.193(0.2)$ |      8.847               |  -532.639   |
+| 模型 III  |       球型 |             $27.457(28)$ |               $0.209(0.2)$ |      7.410               |  -533.931   |
 
 说明两件事，其一选择合适的自相关函数可以取得好的拟合效果，其二算法对初值很敏感，选择合适的初值很重要。
 
@@ -151,24 +148,22 @@ knitr::include_graphics(path = "figures/rongelap-island.png")
 \log\{\lambda(x_{i})\}& =  \beta + S(x_{i}) + Z_{i} (\#eq:rongelap-with-nugget-effect)
 \end{align}
 
-\noindent 其中，$\beta_0$ 是截距， 响应变量 $Y_{i} \sim \mathrm{Poisson}(\lambda(x_i))$，平稳空间高斯过程的自协方差函数为 $\mathsf{Cov}(S(x_i),S(x_j)) = \sigma^2 \exp(-\|x_i -x_j\|_{2}/\phi)$，$\mathsf{Var}(Z_{i}) = \tau^2, i = 1,\ldots,N=157$
+\noindent 其中，$\beta_0$ 是截距， 响应变量 $Y_{i} \sim \mathrm{Poisson}( \lambda(x_i) )$，平稳空间高斯过程的自协方差函数为 $\mathsf{Cov}( S(x_i), S(x_j) ) = \sigma^2 \exp( -\|x_i -x_j\|_{2} / \phi )$，$\mathsf{Var}( Z_{i} ) = \tau^2, i = 1, \ldots, N = 157$
 
-使用贝叶斯 MCMC 算法和 STAN-MCMC 算法计算 Poisson-SGLMM 模型的参数，比较效果。
-
-蒙特卡罗极大似然算法迭代的初值 $\beta_{0} = 6.2,\sigma^2_{0} = 2.40,\phi_{0} = 340,\tau^2_{rel} =2.074$，模拟次数为 30000 次，前 10000 次迭代视为预热阶段 (warm-up) 而不用于参数的估计，其后每隔 20 次迭代采一个样本点，存储参数的迭代值。
+蒙特卡罗极大似然算法迭代的初值 $\beta_{0} = 6.2,\sigma^2_{0} = 2.40,\phi_{0} = 340,\tau^2_{rel} = 2.074$，模拟次数为 30000 次，前 10000 次迭代视为预热阶段 (warm-up) 而不用于参数的估计，其后每隔 20 次迭代采一个样本点，存储各模型参数的迭代值，其间模拟条件分布 $[S|y]$ 产生蒙特卡罗马尔科夫链使用了 Langevin-Hastings 算法 [@Omiros2003]。
 
 ```{r profile-phi-tausq,fig.cap='(ref:profile-phi-tausq)'}
 knitr::include_graphics(path = "figures/profile-phitausq.png")
 ```
 
-(ref:profile-phi-tausq) 关于 $\phi$ 和相对块金效应 $\tau^2_{rel} = \tau^2/\sigma^2$ 的剖面似然函数曲面，平稳空间高斯过程的协方差函数选用指数型
+(ref:profile-phi-tausq) 关于 $\phi$ 和相对块金效应 $\tau^2_{rel} = \tau^2 / \sigma^2$ 的剖面似然函数曲面，平稳空间高斯过程的协方差函数选用指数型
 
-Table: (\#tab:rangelap-mcml-result) 蒙特卡罗极大似然估计模型 \@ref(eq:rongelap-with-nugget-effect) 的参数
+Table: (\#tab:rangelap-mcml-result) 蒙特卡罗极大似然估计模型 \@ref(eq:rongelap-with-nugget-effect) 的参数，其中块金效应的估计值 $\hat{\tau}^2 = \hat{\sigma}^{2} \times \hat{\tau}^2_{rel} = 4.929$
 
-| 参数        |   $\hat{\beta}$ | $\hat{\sigma}^{2}$  |   $\hat{\phi}$  | $\hat{\tau}^2$    |  $\log L_{m}$    |
-| :---------- | :-------------  | :-------------      | :------------   | :---------------  |:---------------: |
-|   初始值    |    6.2          |     2.40            |   340           |   2.074           |         -        |
-|   估计值    |    6.190        |     2.401           |   338.126       |   2.053           |    0.002892      |
+| 参数    | $\hat{\beta}$ | $\hat{\sigma}^{2}$ | $\hat{\phi}$  | $\hat{\tau}^2_{rel}$ |  $\log L_{m}$    |
+| :------ | :-------------| :-------------     | :------------ | :------------------- |:---------------: |
+| 初始值  |    6.2        |     2.40           |   340         |   2.074              |         -        |
+| 估计值  |    6.190      |     2.401          |   338.126     |   2.053              |    0.002892      |
 
 
 
