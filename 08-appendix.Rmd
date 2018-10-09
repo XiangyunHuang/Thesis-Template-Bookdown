@@ -112,8 +112,8 @@ cat(readLines("code/gp.stan"),sep = "\n")
 ```
 
 ```{r,eval=is_on_travis,echo=is_on_travis,message=FALSE,warning=FALSE}
+## 32  Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz
 cat(system("cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c", intern = TRUE), sep = "\n")
-# 32  Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz
 parallel::detectCores()
 ```
 
