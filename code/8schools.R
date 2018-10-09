@@ -81,6 +81,44 @@ points(div_params_ncp$mu, log(div_params_ncp$tau),
 
 dev.off()
 
+# HMC 诊断
+
+check_hmc_diagnostics(fit)
+
+# Divergences:
+#   17 of 20000 iterations ended with a divergence (0.085%).
+# Try increasing 'adapt_delta' to remove the divergences.
+# 
+# Tree depth:
+#   0 of 20000 iterations saturated the maximum tree depth of 10.
+# 
+# Energy:
+#   E-BFMI indicated no pathological behavior.
+
+check_divergences(fit)
+check_treedepth(fit)
+check_energy(fit)
+
+# 设置图片背景
+rstan_ggtheme_options(panel.background = element_rect(fill = "gray"),
+                      legend.position = "top")
+rstan_gg_options(fill = "skyblue", color = "skyblue4", pt_color = "red")
+
+pdf(file = "supplement/8schools-diagnostic-plot.pdf")
+stan_diag(fit, information = c("sample")) # Histograms of lp__ and accept_stat (average Metropolis acceptance rate)
+stan_diag(fit, information = c("stepsize")) # Violin plots showing the distributions of lp__ and 
+# accept_stat at each of the sampled step sizes (one per chain)
+
+# samp_info <- stan_diag(fit, info = 'sample') # saves the three plots in a list
+# samp_info[[3]] # access just the third plot
+# 
+# stan_diag(fit, info = 'sample', chain = 1) # overlay chain 1
+
+stan_par(fit,par = "mu") 
+stan_rhat(fit) 
+stan_ess(fit) 
+stan_mcse(fit)
+dev.off()
 
 
 #########
