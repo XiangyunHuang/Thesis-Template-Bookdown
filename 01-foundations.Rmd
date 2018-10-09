@@ -471,6 +471,9 @@ print(fit)
 print(fit, "tau", probs = c(0.025, 0.975))
 # 获取 medians
 medians <- summary(fit)$summary[ , "50%"]
+# Markdown/LaTeX 格式表格
+knitr::kable(summary(fit)$summary, digits = 2, format = "markdown", padding = 2)
+knitr::kable(summary(fit)$summary, digits = 2, format = "latex")
 ```
 ```{r eval=FALSE,include=FALSE}
 # 从模拟数据获得与 print(fit) 一样的结果
@@ -496,8 +499,10 @@ library(broom)
 getAnywhere(tidy.stanfit) # 查看 tidy 方法
 tidy(fit, conf.int = T, conf.method = "quantile") # 默认求置信区间的方法，论文中的数据采用该法
 tidy(fit, conf.int = T, conf.method = "HPDinterval")
-knitr::kable(tidy(fit,conf.int=T, rhat = T, ess = T, 
-                  conf.method = "quantile", droppars = ""), digits = 2) # 获得表格
+knitr::kable(tidy(fit,
+  conf.int = T, rhat = T, ess = T,
+  conf.method = "quantile", droppars = ""
+), digits = 2) # 获得表格
 ```
 
 Table: (\#tab:eight-schools-output) 对 Eight Schools 数据集建立分层正态模型 \@ref(eq:hierarchical-normal-models)，采用 HMC 算法估计模型参数值
