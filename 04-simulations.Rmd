@@ -25,7 +25,7 @@ x <- (-50:50)/25
 N <- length(x)
 
 one_gp_fit <- sampling(sim_one_gp_model,
-  data = list(x = x, N = N),
+  data = list(x = x, N = N), show_messages = FALSE,
   iter = 10000, warmup = 5000, chains = 4,
   seed = 2018
 )

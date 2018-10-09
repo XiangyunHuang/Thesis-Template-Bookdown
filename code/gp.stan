@@ -12,7 +12,7 @@ transformed data {
       K[j, i] = K[i, j];
     }
   }
-  K[N, N] = 1 + 0.1;
+  K[N, N] = 1 + 0.1; // sigmasq = 1, tausq = 0.1
 }
 parameters {
   vector[N] y;
