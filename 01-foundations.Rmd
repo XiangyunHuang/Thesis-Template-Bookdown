@@ -461,7 +461,7 @@ schools_dat <- list(
 fit <- stan(
   model_name = "8schools",
   model_code = readLines("code/8schools.stan"),
-  data = schools_dat,
+  data = schools_dat, refresh = 0,
   iter = 10000, warmup = 5000, chains = 4,
   seed = 2018
 )
