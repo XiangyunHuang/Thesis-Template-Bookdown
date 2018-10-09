@@ -461,7 +461,7 @@ schools_dat <- list(
 fit <- stan(
   model_name = "8schools",
   model_code = readLines("code/8schools.stan"),
-  data = schools_dat, refresh = 0,
+  data = schools_dat, refresh = 0, verbose = FALSE,
   iter = 10000, warmup = 5000, chains = 4,
   seed = 2018
 )
@@ -471,6 +471,33 @@ print(fit)
 print(fit, "tau", probs = c(0.025, 0.975))
 # 获取 medians
 medians <- summary(fit)$summary[ , "50%"]
+```
+```{r eval=FALSE,include=FALSE}
+# 从模拟数据获得与 print(fit) 一样的结果
+schools_sim <- extract(fit, permuted = TRUE)
+
+apply(schools_sim$eta, 2, mean)
+apply(schools_sim$theta, 2, mean)
+
+lapply(schools_sim["mu"], mean)
+lapply(schools_sim["tau"], mean)
+lapply(schools_sim["lp__"], mean)
+
+t(apply(schools_sim$eta, 2, quantile, probs = c(2.5, 25, 50, 75, 97.5) / 100))
+t(apply(schools_sim$theta, 2, quantile, probs = c(2.5, 25, 50, 75, 97.5) / 100))
+
+lapply(schools_sim["mu"], quantile, probs = c(2.5, 25, 50, 75, 97.5) / 100)
+lapply(schools_sim["tau"], quantile, probs = c(2.5, 25, 50, 75, 97.5) / 100)
+lapply(schools_sim["lp__"], quantile, probs = c(2.5, 25, 50, 75, 97.5) / 100)
+```
+```{r,eval=FALSE,include=FALSE}
+# 清理 stanfit 对象
+library(broom)
+getAnywhere(tidy.stanfit) # 查看 tidy 方法
+tidy(fit, conf.int = T, conf.method = "quantile") # 默认求置信区间的方法，论文中的数据采用该法
+tidy(fit, conf.int = T, conf.method = "HPDinterval")
+knitr::kable(tidy(fit,conf.int=T, rhat = T, ess = T, 
+                  conf.method = "quantile", droppars = ""), digits = 2) # 获得表格
 ```
 
 Table: (\#tab:eight-schools-output) 对 Eight Schools 数据集建立分层正态模型 \@ref(eq:hierarchical-normal-models)，采用 HMC 算法估计模型参数值
