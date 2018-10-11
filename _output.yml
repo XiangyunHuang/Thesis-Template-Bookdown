@@ -6,7 +6,7 @@ bookdown::gitbook:
       before: |
         <li><a href="./">空间广义线性混合效应模型及其应用</a></li>
       after: |
-        <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+        <li><a href="https://github.com/rstudio/bookdown" target="blank">本论文由 bookdown 强力驱动</a></li>
     download: ["pdf"]
 bookdown::pdf_book:
   includes:

@@ -12,11 +12,14 @@ g(\mu_i) = d(x_i)'\beta + S(x_i) + Z_i (\#eq:sim-sglmm)
 
 ### 一维平稳空间高斯过程 {#sim-one-gp}
 
+如何模拟高斯过程，数学表达式
+
 一维情形下，平稳高斯过程 $S(x)$ 的图像如图 \@ref(fig:one-dim-gp)， 协方差函数采用二次幂指数形式，且额外添加一个非空间成分，见 \@ref(eq:cov-exp-quad)
 
-\begin{equation}
-\mathsf{Cov}(S(x_i), S(x_j))  = \sigma^2\exp\big\{-\big( \frac{ \| x_{i} - x_{j} \|_{2}}{\sqrt{2}\phi}\big)^{\kappa}\big\} + \tau^2 \mathbf{1}_{\{i=j\}}(\#eq:cov-exp-quad)
-\end{equation}
+\begin{align}
+\mathsf{Cov}(S(x_i), S(x_j)) & = \sigma^2 \exp\big\{ -\big( \frac{ |x_{i} - x_{j}| }{ \phi } \big) ^ {\kappa} \big\}  (\#eq:cov-exp-quad) \\
+\mathsf{Cov}(S(x_i), S(x_j)) & = \sigma^2 \exp\big\{ - \frac{|x_{i} - x_{j}|}{ \phi } \big\}  (\#eq:cov-exp)
+\end{align}
 
 ```{r sim-one-gp, eval=FALSE, echo=FALSE}
 # 指数型协方差函数
