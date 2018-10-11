@@ -1,20 +1,3 @@
----
-确实需要删掉很多内容，我设想使用者对 bookdown 了解的比较少，让他们照着样子替换比自己写要更加容易和安全一些。毕竟
-
-https://slides.yihui.name/gif/latex-tweak.gif
-
-谢谢 益辉和 的建议
-
-Thanks for your encouragement 
-
-我打算用一篇完整论文当 bookdown 模版的原因
-
-1. 在国内的环境下，基于 bookdown 完成我的论文总是充满质疑的，特别是那些还没用过 bookdown 的人， 每次我向他们推 bookdown 的时候，基本上都会被问：你自己用它排论文吗？So, here is. 
-
-2. 我的同学大都拿师兄师姐那传下来的完整 LaTeX 论文模版替换， 他们觉得省了不少功夫， 只需对照源文件和输出文件之间的效果，就可决定用哪种公式，图和表对应的 LaTeX 代码，所以，我也尽量考虑他们的方便，先抢占市场，以便于推广 bookdown 模版。
-
-3. 为了方便自己写论文就直接全文附上，正如您所说这导致用户要删很多内容，但是鉴于我院用户对 bookdown 的熟悉程度，我还是倾向于用全文，我后续补充一份放图、表和公式的使用说明在 Wiki 或者 README 里，可以吗？
----
 
 后面每个模型及参数设置都要详细说明，包括模拟过程要对应到前面的算法步骤，分不同的样本量n=50,70,90和参数设置$\phi,\sigma^2,\tau^2$取不同的值做模拟，
 
@@ -272,24 +255,6 @@ Hoffman, M. D. and Gelman, A. (2014). The No-U-Turn Sampler: adaptively setting 
 - REML 限制极大似然估计 Testing environmental and genetic effects in the presence of spatial autocorrelation [@spaMM2014]
 
 
-## 动态展示线性预测效果
-
-- plotly (R)
-  - https://github.com/ropensci/plotly 
-  - https://plotly-book.cpsievert.me
-- leaflet (R)
-  - https://github.com/rstudio/leaflet 
-  - https://rstudio.github.io/leaflet/
-- highcharter (R)
-  - https://github.com/jbkunst/highcharter
-  - http://jkunst.com/highcharter/
-- r2d3maps (R)
-  - https://github.com/dreamRs/r2d3maps
-- Bokeh (Python)
-  - https://github.com/bokeh/bokeh https://bokeh.pydata.org/en/latest/docs/user_guide/geo.html
-  - https://github.com/andrea-cuttone/geoplotlib
-  - https://github.com/geopandas/geopandas
-  - https://github.com/ResidentMario/geoplot
 
 ## 空间统计三大块：空间点模式分析、地质统计、离散空间过程
 
@@ -317,48 +282,6 @@ knitr::include_graphics(path = c(
 http://mc-stan.org/users/documentation/case-studies/divergences_and_bias.html
 
 
-## 基于 Stan 的 R 包
-
-```r
-pkg <- tools::dependsOnPkgs('rstan',installed = available.packages())
-install.packages(setdiff(pkg,intersect(.packages(T),pkg)))
-tools::dependsOnPkgs('rstan',installed = available.packages())
-```
-```
- [1] "adnuts"          "BANOVA"          "bayesLopod"      "beanz"          
- [5] "bmlm"            "BMSC"            "breathteststan"  "brms"           
- [9] "clinDR"          "CopulaDTA"       "ctsem"           "DeLorean"       
-[13] "dfped"           "dfpk"            "dgo"             "DrBats"         
-[17] "edstan"          "eggCounts"       "evidence"        "fergm"          
-[21] "gastempt"        "ggfan"           "glmmfields"      "gppm"           
-[25] "GPRMortality"    "hBayesDM"        "HCT"             "idealstan"      
-[29] "idem"            "JMbayes"         "MADPop"          "MCMCvis"        
-[33] "MIXFIM"          "projpred"        "prophet"         "RBesT"          
-[37] "rstanarm"        "rstansim"        "shinystan"       "survHE"         
-[41] "themetagenomics" "tmbstan"         "trialr"          "varian"         
-[45] "walker"          "ESTER"           "pollimetry"      "psycho"         
-[49] "tidyposterior"   "walkr"           "tidymodels"     
-```
-
-## 与地质统计相关的 R 包
-
-FastGP: Efficiently Using Gaussian Processes with Rcpp and RcppEigen
-
-Contains Rcpp and RcppEigen implementations of matrix operations useful for Gaussian process models, such as the inversion of a symmetric Toeplitz matrix, sampling from multivariate normal distributions, evaluation of the log-density of a multivariate normal vector, and Bayesian inference for latent variable Gaussian process models with elliptical slice sampling (Murray, Adams, and MacKay 2010).
-
-sgeostat: An Object-Oriented Framework for Geostatistical Modeling in S+
-
-An Object-oriented Framework for Geostatistical Modeling in S+ containing functions for variogram estimation, variogram fitting and kriging as well as some plot functions. Written entirely in S, therefore works only for small data sets in acceptable computing time.
-
-sparseLTSEigen: RcppEigen back end for sparse least trimmed squares regression
-
-Use RcppEigen to fit least trimmed squares regression models with an L1 penalty in order to obtain sparse models.
-
-hBayesDM: hierarchical Bayesian modeling of Decision-Making tasks 任务决策的贝叶斯分层建模 <https://github.com/CCS-Lab/hBayesDM> <https://rpubs.com/CCSL/hBayesDM> 
-
-LaplacesDemon: Complete Environment for Bayesian Inference
-Provides a complete environment for Bayesian inference using a variety of different samplers (see ?LaplacesDemon for an overview). The README describes the history of the package development process.
-
 ## 贝叶斯因子 {#bayes-factors}
 
 https://rpubs.com/lindeloev/bayes_factors 
@@ -370,91 +293,12 @@ https://discourse.mc-stan.org/t/inf-bayes-factor-using-brms/5792
 
 同一本书，引用不同的地方，参考文献的条目需要重复添加吗，只是页码范围不同
 
-中英文简称：
-
-分层线性模型 (Hierarchical linear Model，简称 HLM，又称多层线性模型，Multilevel Linear Model)
+中英文简称：分层线性模型 (Hierarchical linear Model，简称 HLM，又称多层线性模型，Multilevel Linear Model)
 模型名称多样性格式参照 线性混合效应模型
 
 协方差函数还是自相关函数还是核函数要统一一下
 
-## 统一图形风格
-
 四种颜色: darkorange dodgerblue grey Darkgrey
-
-
-## 贝叶斯数据分析 {#bayesian-data-analysis}
-
-以一个广义线性模型为例说明贝叶斯数据分析的过程。模拟数据集 logit 来自 R包 **mcmc**，它包含5个变量，一个响应变量 y 和四个预测变量 x1，x2，x3，x4。频率派的分析可以用这样几行 R 代码实现
-
-```{r frequentist-analysis,echo=TRUE}
-library(mcmc)
-data(logit)
-fit <- glm(y ~ x1 + x2 + x3 + x4, data = logit, 
-           family = binomial(), x = TRUE)
-summary(fit)
-```
-
-现在，我们想用贝叶斯的方法来分析同一份数据，假定5个参数（回归系数）的先验分布是独立同正态分布，且均值为 0，标准差为 2。
-
-该广义线性模型的对数后验密度（对数似然加上对数先验）可以通过下面的 R 命令给出
-
-```{r echo=TRUE}
-x <- fit$x
-y <- fit$y
-lupost <- function(beta, x, y) {
-  eta <- as.numeric(x %*% beta)
-  logp <- ifelse(eta < 0, eta - log1p(exp(eta)), -log1p(exp(-eta)))
-  logq <- ifelse(eta < 0, -log1p(exp(eta)), -eta - log1p(exp(-eta)))
-  logl <- sum(logp[ y == 1]) + sum(logq[y == 0])
-  return(logl - sum(beta^2) / 8)
-}
-```
-
-为了防止溢出 (overflow) 和巨量消失 (catastrophic cancellation)，计算 $\log(p)$ 和 $\log(q)$ 使用了如下技巧
-
-\begin{align*}
-p &= \frac{\exp(\eta)}{1 + \exp(\eta)} = \frac{1}{1 + \exp(- \eta)} \\
-q &= \frac{1}{1 + \exp(\eta)} = \frac{\exp(- \eta)}{1 + \exp(- \eta)}
-\end{align*}
-
-然后对上式取对数
-
-\begin{align*}
-\log(p) &= \eta - \log(1 + \exp(\eta)) = - \log(1 + \exp(- \eta)) \\
-\log(q) &= - \log(1 + exp(\eta)) = - \eta - \log(1 + \exp(-\eta))
-\end{align*}
-
-为防止溢出，我们总是让 exp 的参数取负数，也防止在 $|\eta|$ 很大时巨量消失。比如，当 $\eta$ 为很大的正数时，
-
-\begin{align*}
-p & \approx  1  \\
-q & \approx  0 \\
-\log(p) & \approx  - \exp(-\eta) \\
-\log(q) & \approx  - \eta - \exp(-\eta)
-\end{align*}
-
-当 $\eta$ 为很小的数时，使用 R 内置的函数 log1p 计算，当 $\eta$ 为大的负数时，情况类似^[更加精确的计算 $\log(1-\exp(-|a|)), |a| \ll 1$ 可以借助 **Rmpfr** 包 <https://r-forge.r-project.org/projects/rmpfr/>]。
-
-有了上面这些准备，现在可以运行随机游走 Metropolis 算法模拟后验分布
-
-```{r echo=TRUE}
-set.seed(2018)
-beta.init <- as.numeric(coefficients(fit))
-fit.bayes <- metrop(obj = lupost, initial = beta.init, 
-                    nbatch = 1e3, blen = 1, nspac = 1, x = x, y = y)
-names(fit.bayes)
-fit.bayes$accept
-```
-
-这里使用的 metrop 函数的参数说明如下：
-
-- 自编的 R 函数 lupost 计算未归一化的 Markov 链的平稳分布（后验分布）的对数密度；
-- beta.init 表示 Markov 链的初始状态；
-- Markov 链的 batches；
-- x,y 是提供给目标函数 lupost 的额外参数
-
----------------------------------------------------
-
 
 ## 其它概率编程框架
 
