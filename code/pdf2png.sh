@@ -5,5 +5,7 @@ convert -quality 100 -density 300x300 figures/map-loaloa.pdf figures/map-loaloa.
 # 优化 PNG 图片
 
 optipng -o5 figures/*.png
-convert -quality 100 -density 300x300 figures/one-dim-gp.pdf figures/one-dim-gp.png
+convert -quality 100 -density 300x300 figures/one-dim-gp-exp.pdf figures/one-dim-gp-exp.png
+convert -quality 100 -density 300x300 figures/one-dim-gp-exp-quad.pdf figures/one-dim-gp-exp-quad.png
+
 convert -quality 100 -density 300x300 figures/profile-phitausq.pdf figures/profile-phitausq.png

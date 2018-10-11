@@ -10,6 +10,7 @@ is_online = curl::has_internet()
 
 options(mc.cores = if(is_on_travis) 4 else 2)
 rstan_options(auto_write = TRUE)
+
 library(tibble)
 knitr::opts_chunk$set(
   comment = "#>",

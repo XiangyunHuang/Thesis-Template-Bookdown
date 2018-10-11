@@ -19,30 +19,50 @@ g(\mu_i) = d(x_i)'\beta + S(x_i) + Z_i (\#eq:sim-sglmm)
 \end{equation}
 
 ```{r sim-one-gp, eval=FALSE, echo=FALSE}
-sim_one_gp_model <- stan_model('code/sim_one_gp.stan')
+# 指数型协方差函数
+sim_one_gp_model_exp <- stan_model("code/sim_one_gp_exp.stan")
+# 幂二次指数型协方差函数
+sim_one_gp_model_exp_quad <- stan_model("code/sim_one_gp_exp_quad.stan")
 
-x <- (-50:50)/25
-N <- length(x)
+dat_list <- list(N = 2000, sigma = 1, phi = 0.15)
+set <- sample(1:dat_list$N, size = 36, replace = F) # 部分数据集
 
-one_gp_fit <- sampling(sim_one_gp_model,
-  data = list(x = x, N = N), show_messages = FALSE,
-  iter = 10000, warmup = 5000, chains = 4,
-  seed = 2018
+draw <- sampling(sim_one_gp_model_exp,
+  iter = 1, algorithm = "Fixed_param",
+  chains = 1, data = dat_list,
+  seed = 363360090
 )
-```
-```{r one-dim-gp,fig.cap='(ref:one-dim-gp)'}
-# sim_one_gp_dat <- extract(one_gp_fit)
 
-# pdf(file = "one-dim-gp.pdf", width = 8,height = 8*0.618)
+draw <- sampling(sim_one_gp_model_exp_quad,
+  iter = 1, algorithm = "Fixed_param",
+  chains = 1, data = dat_list,
+  seed = 363360090
+)
+
+samps <- rstan::extract(draw)
+plt_df <- with(samps, data.frame(x = x[1, ], f = f[1, ]))
+```
+```{r one-dim-gp,fig.cap='(ref:one-dim-gp)',fig.ncol=1,fig.sep="\\\\",fig.subcap=c("指数型协方差函数","幂二次指数型协方差函数")}
+# 指数型协方差函数  连续但是在原点不可微
+# pdf(file = "one-dim-gp-exp.pdf", width = 8, height = 8 * 0.618)
 # par(mar = c(4.1, 4.1, 1.5, 0.5))
-# plot(x, colMeans(sim_one_gp_dat$y),
-#      xlab = "x", ylab = "S(x)"
-# )
+# plot(f ~ x, data = plt_df, xlab = "x", ylab = "S(x)",pch = 16,col  = "Darkgrey")
+# points(f~x,data = plt_df[set,], pch = 16, col = 'darkorange')
 # dev.off()
-knitr::include_graphics(path = "figures/one-dim-gp.png")
+# 幂二次指数型协方差函数 不但连续而且无穷可微
+# pdf(file = "one-dim-gp-exp-quad.pdf", width = 8, height = 8 * 0.618)
+# par(mar = c(4.1, 4.1, 1.5, 0.5))
+# plot(f ~ x, data = plt_df, xlab = "x", ylab = "S(x)",pch = 16,col  = "Darkgrey")
+# points(f~x,data = plt_df[set,], pch = 16, col = 'darkorange')
+# dev.off()
+
+knitr::include_graphics(path = c(
+  "figures/one-dim-gp-exp.png",
+  "figures/one-dim-gp-exp-quad.png"
+))
 ```
 
-(ref:one-dim-gp) 模拟一维平稳空间高斯过程，协方差函数为幂指数型，见公式 \@ref(eq:cov-exp-quad)，且均值为 $\mathbf{0}$，$\sigma^2=1$，$\phi=1$，$\kappa=2$，$\tau^2 = 0.1$，横坐标表示采样的位置，纵坐标是目标值 $S(x)$。
+(ref:one-dim-gp) 模拟一维平稳空间高斯过程，协方差函数为指数型，见公式 \@ref(eq:cov-exp-quad)，均值为 $\mathbf{0}$，参数 $\sigma^1 = 1$，$\phi = 0.15$，$\kappa=2$，横坐标表示采样的位置，纵坐标是目标值 $S(x)$，图中生成 2000 个点。
 
 ### 二维平稳空间高斯过程 {#sim-two-gp}
 

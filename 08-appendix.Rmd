@@ -99,14 +99,14 @@ plot(fit.poisson)
 STAN 代码模拟高斯过程，自协方差函数见方程 \ref{eq:exp-quad}
 
 ```{r,echo=FALSE,comment=NA}
-cat(readLines("code/gp.stan"),sep = "\n")
+cat(readLines("code/sim_one_gp_exp.stan"),sep = "\n")
 ```
 
 `r if (knitr::is_html_output() & is_on_travis) '
 ## 编译信息  {#compileinfo}
 '`
 
-```{r compiling-sampling,fig.cap="基于 Stan 编程的模型编译和采样过程",fig.subcap=c("编译","采样"), eval=is_on_travis}
+```{r compiling-sampling,fig.cap="基于 Stan 编程的模型编译和采样过程",fig.subcap=c("编译","采样"), eval=is_on_travis,echo=is_on_travis}
 knitr::include_graphics(path = c(
   "figures/compiling.png", "figures/sampling.png"
 ))
