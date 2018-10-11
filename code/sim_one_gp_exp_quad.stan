@@ -21,6 +21,7 @@ generated quantities {
     matrix[N, N] L_cov;
     
     // cov = cov_exp_quad(x, sigma, phi);
+    /* 这段代码与 cov_exp_quad 等价
     for (i in 1:(N - 1)) {
       cov[i, i] = square(sigma);
       for (j in (i + 1):N) {
@@ -29,6 +30,15 @@ generated quantities {
       }
     }
     cov[N, N] = square(sigma);     
+    */
+    for (i in 1:(N - 1)) {
+      cov[i, i] = square(sigma);
+      for (j in (i + 1):N) {
+        cov[i, j] = square(sigma) * exp(- square(x[i] - x[j]) * inv( square(phi) ) );
+        cov[j, i] = cov[i, j];
+      }
+    }
+    cov[N, N] = square(sigma);       
     
     for (n in 1:N)
       cov[n, n] = cov[n, n] + 1e-12;

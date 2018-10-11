@@ -12,13 +12,11 @@ g(\mu_i) = d(x_i)'\beta + S(x_i) + Z_i (\#eq:sim-sglmm)
 
 ### 一维平稳空间高斯过程 {#sim-one-gp}
 
-如何模拟高斯过程，数学表达式
-
-一维情形下，平稳高斯过程 $S(x)$ 的图像如图 \@ref(fig:one-dim-gp)， 协方差函数采用二次幂指数形式，且额外添加一个非空间成分，见 \@ref(eq:cov-exp-quad)
+一维情形下，平稳高斯过程 $S(x)$ 的协方差函数采用幂指数型，见公式 \@ref(eq:cov-exp-quad)，当 $\kappa =1$ 时，为指数型，见公式 \@ref(eq:cov-exp-quad)。分 $\kappa =1$ 和 $\kappa =1$，模拟两个一维平稳空间高斯过程，协方差参数均为 $\sigma^2 = 1$，$\phi = 0.15$，均值向量都是 $\mathbf{0}$，在 $[-2,2]$ 的区间上，产生 2000 个服从均匀分布的随机数，由这些随机数的未知和协方差函数公式 \@ref(eq:cov-exp) 或 \@ref(eq:cov-exp-quad) 计算得到 2000 维的高斯分布的协方差矩阵 $G$，考虑到协方差矩阵的正定性，在矩阵对角线上添加扰动 $1 \times 10^{-12}$，然后根据 Cholesky 分解该对称正定矩阵，得到下三角块 $L$，使得 $G = L \times L^{\top}$，再产生 2000 个服从标准正态分布的随机向量 $\eta$，而 $L\eta$ 即为所需的服从平稳高斯过程的一组随机数。
 
 \begin{align}
-\mathsf{Cov}(S(x_i), S(x_j)) & = \sigma^2 \exp\big\{ -\big( \frac{ |x_{i} - x_{j}| }{ \phi } \big) ^ {\kappa} \big\}  (\#eq:cov-exp-quad) \\
-\mathsf{Cov}(S(x_i), S(x_j)) & = \sigma^2 \exp\big\{ - \frac{|x_{i} - x_{j}|}{ \phi } \big\}  (\#eq:cov-exp)
+\mathsf{Cov}(S(x_i), S(x_j)) & = \sigma^2 \exp\big\{ - \frac{|x_{i} - x_{j}|}{ \phi } \big\}  (\#eq:cov-exp) \\
+\mathsf{Cov}(S(x_i), S(x_j)) & = \sigma^2 \exp\big\{ -\big( \frac{ |x_{i} - x_{j}| }{ \phi } \big) ^ {\kappa} \big\}, 0 < \kappa \leq 2  (\#eq:cov-exp-quad) 
 \end{align}
 
 ```{r sim-one-gp, eval=FALSE, echo=FALSE}
@@ -45,7 +43,7 @@ draw <- sampling(sim_one_gp_model_exp_quad,
 samps <- rstan::extract(draw)
 plt_df <- with(samps, data.frame(x = x[1, ], f = f[1, ]))
 ```
-```{r one-dim-gp,fig.cap='(ref:one-dim-gp)',fig.ncol=1,fig.sep="\\\\",fig.subcap=c("指数型协方差函数","幂二次指数型协方差函数")}
+```{r one-dim-gp,fig.cap='(ref:one-dim-gp)',fig.ncol=1,fig.sep="\\\\",fig.subcap=c("平稳空间高斯过程 $S(x)$ 的协方差函数是指数型，均值向量为 $\\mathbf{0}$，协方差参数 $\\sigma^2 = 1$，$\\phi = 0.15$","平稳空间高斯过程 $S(x)$ 的协方差函数是幂二次指数型，均值向量为 $\\mathbf{0}$，协方差参数 $\\sigma^2 = 1$，$\\phi = 0.15$，$\\kappa=2$")}
 # 指数型协方差函数  连续但是在原点不可微
 # pdf(file = "one-dim-gp-exp.pdf", width = 8, height = 8 * 0.618)
 # par(mar = c(4.1, 4.1, 1.5, 0.5))
@@ -65,7 +63,9 @@ knitr::include_graphics(path = c(
 ))
 ```
 
-(ref:one-dim-gp) 模拟一维平稳空间高斯过程，协方差函数为指数型，见公式 \@ref(eq:cov-exp-quad)，均值为 $\mathbf{0}$，参数 $\sigma^1 = 1$，$\phi = 0.15$，$\kappa=2$，横坐标表示采样的位置，纵坐标是目标值 $S(x)$，图中生成 2000 个点。
+(ref:one-dim-gp) 模拟一维平稳空间高斯过程，协方差函数分别为指数型 \@ref(eq:cov-exp) 和幂二次指数型 \@ref(eq:cov-exp-quad)，均值为 $\mathbf{0}$，协方差参数 $\sigma^2 = 1$，$\phi = 0.15$，$\kappa=2$，横坐标表示采样的位置，纵坐标是目标值 $S(x)$，图中生成 2000 个点，橘黄色点是从中随机选择的 36 个点。
+
+根据定理 \@ref(thm:stationary-mean-square-properties)，指数型协方差函数的平稳高斯过程在原点连续但是不可微，而幂二次指数型协方差函数在原点无穷可微，可微性越好图像上表现越光滑，对比图 \@ref(fig:one-dim-gp) 的两个子图， 可以看出，在协方差参数 $\sigma^2 = 1$，$\phi = 0.15$ 相同的情况下，$\kappa$ 越大越光滑。
 
 ### 二维平稳空间高斯过程 {#sim-two-gp}
 
