@@ -12,7 +12,7 @@ g(\mu_i) = d(x_i)'\beta + S(x_i) + Z_i (\#eq:sim-sglmm)
 
 ### 一维平稳空间高斯过程 {#sim-one-gp}
 
-一维情形下，平稳高斯过程 $S(x)$ 的协方差函数采用幂指数型，见公式 \@ref(eq:cov-exp-quad)，当 $\kappa =1$ 时，为指数型，见公式 \@ref(eq:cov-exp-quad)。分 $\kappa =1$ 和 $\kappa =1$，模拟两个一维平稳空间高斯过程，协方差参数均为 $\sigma^2 = 1$，$\phi = 0.15$，均值向量都是 $\mathbf{0}$，在 $[-2,2]$ 的区间上，产生 2000 个服从均匀分布的随机数，由这些随机数的未知和协方差函数公式 \@ref(eq:cov-exp) 或 \@ref(eq:cov-exp-quad) 计算得到 2000 维的高斯分布的协方差矩阵 $G$，考虑到协方差矩阵的正定性，在矩阵对角线上添加扰动 $1 \times 10^{-12}$，然后根据 Cholesky 分解该对称正定矩阵，得到下三角块 $L$，使得 $G = L \times L^{\top}$，再产生 2000 个服从标准正态分布的随机向量 $\eta$，而 $L\eta$ 即为所需的服从平稳高斯过程的一组随机数。
+一维情形下，平稳高斯过程 $S(x)$ 的协方差函数采用幂指数型，见公式 \@ref(eq:cov-exp-quad)，当 $\kappa =1$ 时，为指数型，见公式 \@ref(eq:cov-exp-quad)。分 $\kappa =1$ 和 $\kappa =1$，模拟两个一维平稳空间高斯过程，协方差参数均为 $\sigma^2 = 1$，$\phi = 0.15$，均值向量都是 $\mathbf{0}$，在 $[-2,2]$ 的区间上，产生 2000 个服从均匀分布的随机数，由这些随机数的未知和协方差函数公式 \@ref(eq:cov-exp) 或 \@ref(eq:cov-exp-quad) 计算得到 2000 维的高斯分布的协方差矩阵 $G$，为保证协方差矩阵的正定性，在矩阵对角线上添加扰动 $1 \times 10^{-12}$，然后即可根据 Cholesky 分解该对称正定矩阵，得到下三角块 $L$，使得 $G = L \times L^{\top}$，再产生 2000 个服从标准正态分布的随机向量 $\eta$，而 $L\eta$ 即为所需的服从平稳高斯过程的一组随机数。
 
 \begin{align}
 \mathsf{Cov}(S(x_i), S(x_j)) & = \sigma^2 \exp\big\{ - \frac{|x_{i} - x_{j}|}{ \phi } \big\}  (\#eq:cov-exp) \\
@@ -63,30 +63,29 @@ knitr::include_graphics(path = c(
 ))
 ```
 
-(ref:one-dim-gp) 模拟一维平稳空间高斯过程，协方差函数分别为指数型 \@ref(eq:cov-exp) 和幂二次指数型 \@ref(eq:cov-exp-quad)，均值为 $\mathbf{0}$，协方差参数 $\sigma^2 = 1$，$\phi = 0.15$，$\kappa=2$，横坐标表示采样的位置，纵坐标是目标值 $S(x)$，图中生成 2000 个点，橘黄色点是从中随机选择的 36 个点。
+(ref:one-dim-gp) 模拟一维平稳空间高斯过程，协方差函数分别为指数型 \@ref(eq:cov-exp) 和幂二次指数型 \@ref(eq:cov-exp-quad)，均值为 $\mathbf{0}$，协方差参数 $\sigma^2 = 1$，$\phi = 0.15$，横坐标表示采样的位置，纵坐标是目标值 $S(x)$，图中 2000 个灰色点表示服从对应随机过程的随机数，橘黄色点是从中随机选择的 36 个点。
 
 根据定理 \@ref(thm:stationary-mean-square-properties)，指数型协方差函数的平稳高斯过程在原点连续但是不可微，而幂二次指数型协方差函数在原点无穷可微，可微性越好图像上表现越光滑，对比图 \@ref(fig:one-dim-gp) 的两个子图， 可以看出，在协方差参数 $\sigma^2 = 1$，$\phi = 0.15$ 相同的情况下，$\kappa$ 越大越光滑。
 
 ### 二维平稳空间高斯过程 {#sim-two-gp}
 
-二维情形下，在规则平面上模拟平稳高斯过程 $\mathcal{S} = S(x), x \in \mathbb{R}^2$， 其均值为 $\mathbf{0}$， 自协方差函数为方程 \@ref(eq:cov-exp-quad)，其参数 $\kappa = 2,\phi=1,\sigma^2=1$，单位平面区域为 $[0,1]\times[0,1]$， 将此区域划分为 $6\times 6$ 的小网格，每个格点为采样的位置。由自协方差函数 \@ref(eq:cov-exp-quad) 可以获得 $\mathcal{S}$ 的协方差矩阵，然后使用 R 包 **MASS** 提供的 `mvrnorm` 函数产生多元正态分布随机数。 模拟数据生成的图像见图 \@ref(fig:sim-two-gp)， 格点上的值即为平稳空间高斯过程在该点的取值 （为方便显示，已四舍五入保留两位小数）。
+二维情形下，在规则平面上模拟平稳高斯过程 $\mathcal{S} = S(x), x \in \mathbb{R}^2$， 其均值向量为零向量 $\mathbf{0}$， 协方差函数为指数型 (见公式 \@ref(eq:cov-exp)) ，协方差参数 $\phi = 1, \sigma^2 = 1$。在单位平面区域为 $[0,1] \times [0,1]$ 模拟服从上述二维空间平稳高斯过程，不妨将此区域划分为 $6 \times 6$ 的小网格，每个格点作为采样的位置，而在这些格点上的观察值即为目标值 $S(x)$。 
 
-```{r sim-two-gp,fig.cap="模拟二维平稳空间高斯过程，自相关函数为幂指数形式，水平方向为横坐标，垂直方向为纵坐标，图中的格点是目标值 $S(x)$", small.mar=TRUE,fig.asp=1,out.width="55%",fig.width=4.5}
+类似本章第 \@ref(sim-one-gp) 节模拟一维平稳空间过程的步骤， 首先根据采样点位置坐标和协方差函数 \@ref(eq:cov-exp-quad) 计算得目标空间过程的 $\mathcal{S}$ 协方差矩阵 $G$，然后使用 R 包 **MASS** 提供的 `mvrnorm` 函数产生多元正态分布随机数，与 \@ref(sim-one-gp) 节不同的是这里采用特征值分解，即 $G = L\Lambda L^{\top}$，与 Cholesky 分解相比，特征值分解更稳定些，但是 Cholesky 分解更快，Stan 即采用此法，后续过程与一维模拟一致。模拟获得的随机数用图 \@ref(fig:sim-two-gp) 表示， 格点上的值即为平稳空间高斯过程在该点的取值（为方便显示，已四舍五入保留两位小数）。
+
+```{r sim-two-gp,fig.cap="模拟二维平稳空间高斯过程，自相关函数为指数形式，水平方向为横坐标，垂直方向为纵坐标，图中的格点是目标值 $S(x)$", small.mar=TRUE,fig.asp=1,out.width="55%",fig.width=4.5}
 set.seed(2018)
 N <- 36
-lscale <- 1
-sdgp <- 1
+phi <- 1
+sigma <- 1
 ## 单位区域上采样
 d <- expand.grid(
   d1 = seq(0, 1, l = sqrt(N)),
   d2 = seq(0, 1, l = sqrt(N))
 )
 D <- as.matrix(dist(d)) # 计算采样点之间的欧氏距离
-phi <- 2 * lscale^2
-m <- sdgp^2 * exp(-D^2 / phi) # 多元高斯分布的协方差矩阵  二次幂指数核函数
-# powered.exponential (or stable)
-# rho(h) = exp[-(h/phi)^kappa] if 0 < kappa <= 2 此处 kappa 固定为 2
-S <- MASS::mvrnorm(1, rep(0, N), m) # 产生服从多元高斯分布的随机数
+G <- sigma^2 * exp(- D / phi) # 多元高斯分布的协方差矩阵
+S <- MASS::mvrnorm(1, rep(0, N), G) # 产生服从多元高斯分布的随机数
 plot(c(-0.1, 1.1), c(-0.1, 1.1),
   type = "n",
   panel.first = grid(lwd = 1.5, lty = 2, col = "lightgray"),
@@ -115,17 +114,35 @@ plot(sim$coords, type = "n")
 text(sim$coords[, 1], sim$coords[, 2], format(sim$data, digits = 1), cex = 1.5)
 ```
 
-紧接上文，模拟模型当中的空间效应 $S(x)$ ， 其相关函数可以为指数型或者梅隆型，函数形式如公式 \@ref(eq:exp-matern) 所示。
+同 \@ref(sim-one-gp) 节，平稳空间高斯过程 $S(x)$ 的协方差函数也可以为更一般的梅隆型，如公式 \@ref(eq:exp-matern) 所示。
 
 \begin{equation}
-\rho(u) =
-\begin{cases}
-\exp(-(u/\phi)^{\kappa}) & \text{指数型}\\
-\{2^{\kappa -1}\Gamma(\kappa)\}^{-1}(u/\phi)^{\kappa}\mathcal{K}_{\kappa}(u/\phi) & \text{梅隆型}
-\end{cases} (\#eq:exp-matern)
+\rho(u) = \{ 2^{\kappa -1} \Gamma(\kappa) \}^{-1}( u/\phi )^{\kappa} \mathcal{K}_{\kappa}( u/\phi ) (\#eq:exp-matern)
 \end{equation}
 
-\noindent 固定样本量 $n=1600$ ，其它参数为 $\sigma^2=1,\phi=25,\kappa=1$ ，在区域 $[-0.2,1.2]\times [-0.2,1.2]$ 上，分别模拟规则网格上的采样和 随机采样，图中 $S(x)$ 的值越大，颜色越红，反之，颜色越蓝。使用 R 函数 `dist` 计算样本点之间的距离，用 `MASS::mvrnorm` 函数生成服从多元高斯分布的随机数。
+\noindent 且在区域 $[0,1] \times [0,1]$ 上也可以随机采点，图中 $S(x)$ 的值越大，颜色越红，反之，颜色越蓝。
+
+```{r eval=FALSE}
+n <- 36
+coords <- cbind.data.frame(d1 = runif(n, 0, 1), d2 = runif(n, 0, 1))
+phi <- 1
+sigma <- 1
+R <- exp(- as.matrix(dist(coords)) / phi)
+S <- MASS::mvrnorm(1, rep(0, n), sigma * R)
+
+plot(c(-0.1, 1.1), c(-0.1, 1.1),
+  type = "n",
+  panel.first = grid(lwd = 1.5, lty = 2, col = "lightgray"),
+  xlab = "Horizontal Coord", ylab = "Vertical Coord"
+)
+text(
+  y = coords$d1, x = coords$d2,
+  labels = formatC(round(S, digits = 2), format = "f", 
+                   digits = 2, drop0trailing = FALSE), 
+  xpd = TRUE
+)
+```
+
 
 ## 空间广义线性混合效应模型 {#sim-sglmm}
 

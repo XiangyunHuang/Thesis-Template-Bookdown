@@ -1,5 +1,5 @@
 // Sample from a Gaussian process using exponentiated covariance function.
-// Fixed kernel hyperparameters: phi=1, sigma=sqrt(1)
+// Fixed kernel hyperparameters: phi=0.15, sigma=sqrt(1)
 
 data {
   int<lower=1> N;
