@@ -1,3 +1,36 @@
+---
+Exponential family: 
+
+$$
+f(y;\theta,\phi) = \exp[(a(y) b(\theta) + c(\theta))/f(\phi) + d(y,\phi)]
+$$
+
+Poisson (with $\lambda \to \theta$, $x \to y$) ($\phi=1$):
+
+\begin{equation*}
+\begin{split}
+f(y,\theta) & = \exp(-\theta) \theta^y/(y!) \\
+            & = \exp\left( \underbrace{y}_{a(y)} 
+                           \underbrace{\log \theta}_{b(\theta)} + 
+                           \underbrace{(-\theta)}_{c(\theta)} + 
+                           \underbrace{(- \log(y!))}_{d(y)} \right)
+\end{split} (\#eq:another-exp-fam)
+\end{equation*}
+
+---
+## 极大似然估计 {#maximum-likelihood-estimates}
+
+书本定义和性质，在后续章节介绍限制极大似然 Restricted Maximum likelihood, 简称 REML
+
+惩罚拟似然 Penalized Quasi-Likelihood, 简称 PQL 和边际拟似然 Marginal Quasi-Likelihood, 简称 MQL
+
+Profile Maximal Likelihood, 简称 PML
+
+Penalized maximum likelihood estimates are calculated using optimization methods such as the limited memory Broyden-Fletcher-Goldfarb-Shanno algorithm.
+
+BFGS 拟牛顿法和采样器 https://bookdown.org/rdpeng/advstatcomp
+
+---
 
 后面每个模型及参数设置都要详细说明，包括模拟过程要对应到前面的算法步骤，分不同的样本量n=50,70,90和参数设置$\phi,\sigma^2,\tau^2$取不同的值做模拟，
 

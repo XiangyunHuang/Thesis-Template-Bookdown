@@ -52,12 +52,9 @@ m(\mathbf{y}) = \int f(\mathbf{y|\mathbf{u}, \boldsymbol{\psi}})\phi_{n}(\mathbf
 
 \noindent 遭遇同样难以处理的高维积分问题，所以 $m(\mathbf{y})$ 亦不会有显式表达式。若取 $\pi(\boldsymbol{\psi})$ 为扁平先验 (flat priors) ，特别地，如 $\pi(\boldsymbol{\psi}) \propto 1$， 后验分布将简化为似然函数 \@ref(eq:likelihood-function-1) 的常数倍。 如果导出的后验是合适的， MCMC 算法可以用来研究似然函数， 但是对很多 GLMM 模型扁平先验 (flat priors) 会导出不合适的后验 (improper posteriors) [@Natarajan1995]， 所以选用  diffuse prior 来导出合适的后验 (proper posteriors)，并且导出的后验接近似然函数，但它的使用不要求 posterior mode 是 MLE [@Robert1996JASA]。
 
-
-
 一般地，我们假定在给定 $\beta$ 和 $S(x_i)$ 的条件下，响应变量 $Y_i$ 服从指数族，这里不失一般性地讨论空间广义线性混合效应模型的极大似然估计。条件概率密度函数 $Y_i|\beta,\mu_i$ 为
 $$f(y_i|\beta,S(x_i))=\exp\{ [y_{i}\mu_i-b(\mu_i)] + c(y_i) \}$$
 其中，$\mu_i = \mathrm{E}\big[Y_i|\beta,S(x_i)\big]$ 是典则参数，$Y_i \sim N(\mu,\sigma^2)$ 时，
-
 
 $T = (T_1,T_2,\ldots,T_n)'$ 是多元正态分布 $N(D\beta,\Sigma(\boldsymbol{\theta}))$，参数$\beta,\boldsymbol{\theta}$ 的似然函数
 
@@ -67,7 +64,7 @@ L(\beta',\boldsymbol{\theta}';y) = \int \prod_{i=1}^{n}f(y_i|t_i)f(T|\beta',\bol
 
 ## 剖面似然估计 {#profile-likelihood}
 
-众所周知，极大似然估计是一种被广泛接受的统计方法，因其优良的大样本性质。在宽松的正则条件下，极大似然估计服从渐进正态分布，满足无偏性，而且是有效的估计。在空间线性混合效应模型下，响应变量服从高斯分布
+极大似然估计是一种被广泛接受的统计方法，因其优良的大样本性质。在宽松的正则条件下，极大似然估计服从渐进正态分布，满足无偏性，而且是有效的估计。在空间线性混合效应模型下，响应变量服从高斯分布
 
 \begin{equation}
 \mathbf{y} \sim N(D\beta,\sigma^2 R(\phi) + \tau^2\mathbf{I})
@@ -119,26 +116,11 @@ L_{p}(\alpha) = L(\alpha,\hat{\psi}(\alpha)) = \max_{\psi} (L(\alpha,\psi))
 即我们考虑似然随 $\alpha$ 的变化情况，对每一个 $\alpha$ （保持 $\alpha$ 不变），我们指定 $\psi$ 的值使得对数似然取得最大值。剖面似然就是让我们可以观察到关于 $\alpha$ 的似然曲面，显然，其维数比完全似然面要低，与只有一个参数的对数似然一样，它也可以用来计算单个参数的置信区间。现在，我们注意到简化的对数似然 \@ref(eq:reduced-gauss-log-lik) 其实可以看作模型 \@ref(eq:gaussian-model) 关于 $(\nu^2,\phi)$ 的剖面对数似然 [@Diggle2007]。
 
 
-
-
-## 极大似然估计 {#maximum-likelihood-estimates}
-
-书本定义和性质，在后续章节介绍限制极大似然 Restricted Maximum likelihood, 简称 REML
-
-惩罚拟似然 Penalized Quasi-Likelihood, 简称 PQL 和边际拟似然 Marginal Quasi-Likelihood, 简称 MQL
-
-Profile Maximal Likelihood, 简称 PML
-
-Penalized maximum likelihood estimates are calculated using optimization methods such as the limited memory Broyden-Fletcher-Goldfarb-Shanno algorithm.
-
-BFGS 拟牛顿法和采样器 https://bookdown.org/rdpeng/advstatcomp
-
-
 ## 参数估计的算法 {#algrithms}
 
 <!-- Pairwise likelihood inference [@Pairwise2005] data cloning algorithm [@Baghishani2011] Approximate Monte Carlo EM Gradient [@Hosseini2016]-->
 
-贝叶斯方法构造马尔科夫链，需要很多次反复迭代，收敛速度慢，求解模型 \@ref(eq:SGLMM) 需要花费很多时间， 极大似然和重要性采样相结合的方法出现了，称之为蒙特卡罗极大似然法，简称 MCML。 1994年 Charles J. Geyer 首先从理论证明 MCML 方法的收敛性及相关似然估计的正态性， 为后续算法的开发、改进以及应用提供了理论支持 [@Geyer1994On]。 2002年 Hao Zhang 在做模型的估计和预测的时候提出蒙特卡罗期望极大梯度 (Monte Carlo EM Gradient) 算法 [@Zhang2002On]。2016 年 Fatemeh Hosseini 在 MCEMG 的基础上提出近似蒙特卡罗期望极大梯度 (Approximate Monte Carlo EM Gradient) 算法[@Hosseini2016]。2004 年 Ole F Christensen 将 MCML 方法用于 SGLMM 模型 [@Christensen2004]，2016 年 Peter J. Diggle 和 Emanuele Giorgi  将 MCML 方法应用于分析西非流行病调查数据。
+贝叶斯方法构造马尔科夫链，需要很多次反复迭代，收敛速度慢，求解模型 \@ref(eq:SGLMM) 需要花费很多时间， 极大似然和重要性采样相结合的方法出现了，称之为蒙特卡罗极大似然法，简称 MCML。 1994年 Charles J. Geyer 首先从理论证明 MCML 方法的收敛性及相关似然估计的正态性， 为后续算法的开发、改进以及应用提供了理论支持 [@Geyer1994On]。 2002 年 Hao Zhang 在做模型的估计和预测的时候提出蒙特卡罗期望极大梯度 (Monte Carlo EM Gradient) 算法 [@Zhang2002On]。2016 年 Fatemeh Hosseini 在 MCEMG 的基础上提出近似蒙特卡罗期望极大梯度 (Approximate Monte Carlo EM Gradient) 算法[@Hosseini2016]。2004 年 Ole F Christensen 将 MCML 方法用于 SGLMM 模型 [@Christensen2004]，2016 年 Peter J. Diggle 和 Emanuele Giorgi  将 MCML 方法应用于分析西非流行病调查数据。
 
 
 在依据似然函数做统计推断的情况下，必须解决高维积分的问题，解决高维积分的两条路：采用拉普拉斯近似方法近似积分，蒙特卡罗方法求积分
@@ -294,7 +276,7 @@ L_{m}(\beta,\boldsymbol{\theta})=\frac{1}{m}\sum_{i=1}^{n}\frac{N(t_{i};D\beta,\
 
 ### 贝叶斯 MCMC 算法 {#MCMC}
 
-凡是贝叶斯推断，必然用到 MCMC 算法，常见的有 Metropolis-Hastings 算法 [@Diggle1998; @Diggle2002Childhood] Langevin-Hastings 算法 （geoRglm/geoCount 实现） 汉密尔顿蒙特卡罗算法 （Stan/PrevMap 实现）
+<!-- 凡是贝叶斯推断，必然用到 MCMC 算法，常见的有 Metropolis-Hastings 算法 [@Diggle1998; @Diggle2002Childhood] Langevin-Hastings 算法 （geoRglm/geoCount 实现） 汉密尔顿蒙特卡罗算法 （Stan/PrevMap 实现） -->
 
 在贝叶斯框架里，$\beta, \boldsymbol{\theta}$ 的后验分布由贝叶斯定理和 $\beta, \boldsymbol{\theta}$ 的联合先验分布确定。假定 $\beta, \boldsymbol{\theta}$ 的先验分布如下：
 
@@ -430,7 +412,7 @@ S(x) \approx \sum_{i = 1}^r K(\|x-\tilde{x}_{i}\|; \phi, \kappa) U_{i} (\#eq:lr-
 
 ### 算法提出的背景和意义
 
-贝叶斯 MCMC 算法是一个计算密集型的算法，高效的实现对理论和应用都有非常重要的意义。因此，早在1989年剑桥大学研究人员开发出了 Windows 上的应用程序 WinBUGS，并被广泛使用。随着个人电脑的普及、Linux 和 MacOS 系统的蓬勃发展， 只能运行于 Windows 系统上的 WinBUGS 逐渐落后于时代，并在 2008 年宣布停止开发。 随后， OpenBUGS 以开源的开发方式重现了 WinBUGS 的功能，还可跨平台运行，弥补了 WinBUGS 的不足，而后又出现了同类的开源软件 JAGS。 无论是 OpenBUGS 还是 JAGS 都无法适应当代计算机硬件的迅猛发展， 它们的设计由于历史局限性， 已经无法满足在兼容性、 扩展性和高效性方面的要求。 因此， 哥伦比亚大学的统计系以开源的方式开发了新一代贝叶斯推断子程序库 Stan， 它与前辈们最明显的最直观的不同在于，它不是一个像 WinBUGS/OpenBUGS/JAGS 那样的软件有菜单窗口， [Stan](http://mc-stan.org/) 是一种概率编程语言 [@Stan2017JSS]， 可以替代 BUGS ( **B**ayesian inference **U**sing **G**ibbs **S**ampling )  [@BUGS2009] 作为 MCMC 算法的高效实现。相比较于同类软件，Stan 的优势有：底层完全基于 C++ 实现；拥有活跃和快速发展的社区；支持在CPU/GPU上大规模并行计算；独立于系统和硬件平台；提供多种编程语言的接口，如 PyStan、 RStan 等等。 在大数据的背景下， 拥有数千台服务器的企业越来越多， 计算机资源达到前所未有的规模， 这为Stan的广泛应用打下了基础， 我们基于 R 语言编程接口实现求解 SGLMM 模型的贝叶斯 MCMC 算法（以下简称 STAN-MCMC 算法）。
+贝叶斯 MCMC 算法是一个计算密集型的算法，高效的实现对理论和应用都有非常重要的意义。因此，早在 1989 年剑桥大学研究人员开发出了 Windows 上的应用程序 WinBUGS，并被广泛使用。随着个人电脑的普及、Linux 和 MacOS 系统的蓬勃发展， 只能运行于 Windows 系统上的 WinBUGS 逐渐落后于时代，并在 2008 年宣布停止开发。 随后， OpenBUGS 以开源的开发方式重现了 WinBUGS 的功能，还可跨平台运行，弥补了 WinBUGS 的不足，而后又出现了同类的开源软件 JAGS。 无论是 OpenBUGS 还是 JAGS 都无法适应当代计算机硬件的迅猛发展， 它们的设计由于历史局限性， 已经无法满足在兼容性、 扩展性和高效性方面的要求。 因此， 哥伦比亚大学的统计系以开源的方式开发了新一代贝叶斯推断子程序库 Stan， 它与前辈们最明显的最直观的不同在于，它不是一个像 WinBUGS/OpenBUGS/JAGS 那样的软件有菜单窗口， [Stan](http://mc-stan.org/) 是一种概率编程语言 [@Stan2017JSS]， 可以替代 BUGS ( **B**ayesian inference **U**sing **G**ibbs **S**ampling )  [@BUGS2009] 作为 MCMC 算法的高效实现。相比较于同类软件，Stan 的优势有：底层完全基于 C++ 实现；拥有活跃和快速发展的社区；支持在CPU/GPU上大规模并行计算；独立于系统和硬件平台；提供多种编程语言的接口，如 PyStan、 RStan 等等。 在大数据的背景下， 拥有数千台服务器的企业越来越多， 计算机资源达到前所未有的规模， 这为Stan的广泛应用打下了基础， 我们基于 R 语言编程接口实现求解 SGLMM 模型的贝叶斯 MCMC 算法（以下简称 STAN-MCMC 算法）。
 
 <!-- 可用于贝叶斯框架下，空间广义线性混合效应模型的参数估计基于 GPU 加速是一个不错的选择， Stan 开发者也把 GPU 加速列入开发日程。SCIKIT-CUDA 和 ArrayFire 等基于 CUDA 开发的通用加速框架获得越来越多的关注。基于 Stan 实现的汉密尔顿蒙特卡罗算法 -->
 <!-- 不管怎么改进 MCMC 算法，它始终是一个计算量非常大，非常耗时的算法，那么高效地实现就比较有意义，基于 C++ 语言编写的高性能计算库 Stan，其主要目的是实现 -->
