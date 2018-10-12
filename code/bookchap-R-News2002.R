@@ -91,12 +91,31 @@ image(
 )
 dev.off()
 
-quantile(run.sim$posterior$beta$sample, probs = c(2.5, 25, 50, 75, 97.5) / 1 )
-quantile(run.sim$posterior$phi$sample, probs = c(2.5, 25, 50, 75, 97.5) / 1 )
-quantile(run.sim$posterior$sigmasq$sample, probs = c(2.5, 25, 50, 75, 97.5) / 1 )
+quantile(run.sim$posterior$beta$sample, probs = c(2.5, 25, 50, 75, 97.5) / 100)
+quantile(run.sim$posterior$phi$sample, probs = c(2.5, 25, 50, 75, 97.5) / 100)
+quantile(run.sim$posterior$sigmasq$sample, probs = c(2.5, 25, 50, 75, 97.5) / 100)
+
+mean(run.sim$posterior$beta$sample)
+mean(run.sim$posterior$phi$sample)
+mean(run.sim$posterior$sigmasq$sample)
+
+var(run.sim$posterior$beta$sample)
+var(run.sim$posterior$phi$sample)
+var(run.sim$posterior$sigmasq$sample)
+
+# 对 beta 的估计
+run.sim$posterior$beta$mean
+run.sim$posterior$beta$var # 估计的方差
+
+run.sim$posterior$phi$mean
+run.sim$posterior$phi$var
+
+run.sim$posterior$sigmasq$mean
+run.sim$posterior$sigmasq$var
 
 # 64 个采样点 exp(S)/(1 + exp(S)) 后验分布的 5个分位点
-loc_quant <- t(apply(run.sim$posterior$simulations, 1, quantile, probs = c(2.5, 25, 50, 75, 97.5) / 100))
+loc_quant <- t(apply(run.sim$posterior$simulations, 1, quantile, 
+                     probs = c(2.5, 25, 50, 75, 97.5) / 100))
 loc_prob <- cbind(
   mean = apply(run.sim$posterior$simulations, 1, mean), # 后验分布 p(x) 的均值
   var = apply(run.sim$posterior$simulations, 1, var),  # 后验分布 p(x) 的方差
@@ -104,5 +123,6 @@ loc_prob <- cbind(
   loc_quant
 )
 rownames(loc_prob) <- paste0("$p(x_{", seq(64), "})$")
+# 输出为 markdown 形式插入到 R Markdown 文档中
 knitr::kable(loc_prob, digits = 3, format = "markdown", padding = 2)
 

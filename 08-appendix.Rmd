@@ -6,7 +6,7 @@
 
 ## 表格 {#tables-simulations .unnumbered}
 
-Table: (\#tab:LH-binom-SGLMM) Langevin-Hastings 算法：模型 \@ref(eq:binom-SGLMM) 中 64 个采样点处 $p(x_i) = \exp[S(x_i)]/\{1 + \exp[S(x_i)]\}$ 的后验分布的均值(mean)，方差(variance)，标准差(standard deviation)和 5 个分位点，样本量为 1000 
+Table: (\#tab:LH-binom-SGLMM) Langevin-Hastings 算法：模型 \@ref(eq:binom-SGLMM) 中 64 个采样点处概率 $p(x_i) = \exp[S(x_i)]/\{1 + \exp[S(x_i)]\}$ 的后验分布的均值(mean)，方差(variance)，标准差(standard deviation)和 5 个分位点，样本量为 1000 
 
 |             |   mean|    var|     sd|   2.5%|    25%|    50%|    75%|  97.5%|
 |:------------|------:|------:|------:|------:|------:|------:|------:|------:|
