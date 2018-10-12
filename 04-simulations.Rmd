@@ -153,13 +153,13 @@ text(sim$coords[, 1], sim$coords[, 2], format(sim$data, digits = 1), cex = 1.5)
 g(\mu_i) = \beta_{0} + \beta_{1} * X_{1} + \beta_{2} * X_{2} + S(x) (\#eq:sim-SGLMM)
 \end{equation}
 
-\noindent 其中，$\beta_0$ 是截距，$\beta_{1},\beta_{2}$ 是固定效应 $X_{1}$ 和 $X_{2}$ 的系数，$S(x)$ 是平稳空间高斯过程，其均值为0，自协方差函数为 $\mathrm{Cov}(S(x_i),S(x_j)) = \sigma^2 \big\{2^{\kappa-1}\Gamma(\kappa)\big\}^{-1}(u/\phi)^{\kappa}K_{\kappa}(u/\phi)$，在后续的模拟中 $\kappa = 2$，$g$ 是联系函数，由响应变量 $Y$ 服从的分布决定，在第 \@ref(binomal-sglmm) 小节中，$g(\mu_i) = \log\{\frac{p(x_i)}{1-p(x_i)}\}$，$Y_{i} \sim \mathrm{Binomal}(m_{i},p(x_{i}))$，在位置 $x_i$ 处，以概率 $p(x_i)$ 重复抽取了 $m_i$ 个样本，总样本数 $M=\sum_{i=1}^{N}m_i$，$N$ 是采样点的个数，在第 \@ref(possion-sglmm) 小节中，$Y_i \sim \mathrm{Possion}(\lambda(x_{i}))$，类似地，$g(\mu_i) = \log\{\lambda(x_{i})\}$。
+\noindent 其中，$\beta_0$ 是截距，$\beta_{1},\beta_{2}$ 是固定效应 $X_{1}$ 和 $X_{2}$ 的系数，$S(x)$ 是平稳空间高斯过程，其均值为 $\mathbf{0}$，协方差函数为 $\mathrm{Cov}(S(x_i),S(x_j)) = \sigma^2 \big\{2^{\kappa-1}\Gamma(\kappa)\big\}^{-1}(u/\phi)^{\kappa}K_{\kappa}(u/\phi)$，在后续的模拟中 $\kappa = 0.5$，$g$ 是联系函数，由响应变量 $Y$ 服从的分布决定，在第 \@ref(binomal-sglmm) 小节中，$g(\mu_i) = \log\{\frac{p(x_i)}{1-p(x_i)}\}$，$Y_{i} \sim \mathrm{Binomal}(m_{i},p(x_{i}))$，在位置 $x_i$ 处，以概率 $p(x_i)$ 重复抽取了 $m_i$ 个样本，总样本数 $M=\sum_{i=1}^{N}m_i$，$N$ 是采样点的个数，在第 \@ref(possion-sglmm) 小节中，$g(\mu_i) = \log\{\lambda(x_{i})\}$，$Y_i \sim \mathrm{Possion}(\lambda(x_{i}))$。
 
 ### 响应变量服从二项分布 {#binomal-sglmm}
 
-响应变量服从二项分布，模型为 \@ref(eq:sim-SGLMM)， 固定效应参数 $\beta = (\beta_0,\beta_1,\beta_2)$， 空间效应参数 $\boldsymbol{\theta} = (\sigma^2,\phi)$。 参数设置为 $\beta = c(-1,1,0.5), \boldsymbol{\theta} = (1,1)$，采样点数目为 $N=49$， 每个采样点抽取的样本数 $m_i = 100,i = 1,2,\ldots,N$，在这组参数下，重复产生 100 个数据集。 分别使用低秩近似算法(LR)， 蒙特卡罗最大似然算法 (MCML)， 贝叶斯 MCMC 算法 (MCMC) 和贝叶斯 STAN-MCMC 算法 (STAN-MCMC) 估计模型的参数。
+响应变量服从二项分布，模型为 \@ref(eq:sim-SGLMM)， 固定效应参数 $\beta = (\beta_0,\beta_1,\beta_2)$， 空间效应参数 $\boldsymbol{\theta} = (\sigma^2,\phi)$。 参数设置为 $\beta = c(-1,1,0.5), \boldsymbol{\theta} = (1,1)$，采样点数目为 $N = 49$， 每个采样点抽取的样本数 $m_i = 100,i = 1,2,\ldots,N$，在这组参数下，重复产生 100 个数据集。 分别使用低秩近似算法(LR)， 蒙特卡罗最大似然算法 (MCML)， 贝叶斯 MCMC 算法 (MCMC) 和贝叶斯 STAN-MCMC 算法 (STAN-MCMC) 估计模型的参数。
 
-
+[@geoRglm2002] 与 Stan
 
 
 ### 响应变量服从泊松分布 {#possion-sglmm}
