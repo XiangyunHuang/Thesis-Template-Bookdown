@@ -80,13 +80,13 @@ image(
   x = run.sim, locations = pred.grid, values.to.plot = sim.predict, 
   col = gray(seq(1, 0, l = 30)),
   x.leg = c(0.1, 0.9), y.leg = c(-0.12, -0.07), cex = 1.0, 
-  xlab = "Coordinate X", ylab = "Coordinate Y"
+  xlab = "Horizontal Coordinate", ylab = "Vertical Coordinate"
 )
 # 预测值对应的方差
 image(
   x = run.sim, locations = pred.grid, 
   values = sim.predict.var, col = gray(seq(1, 0, l = 30)),
   x.leg = c(0.1, 0.9), y.leg = c(-0.12, -0.07), cex = 1.0, 
-  xlab = "Coordinate X", ylab = "Coordinate Y"
+  xlab = "Horizontal Coordinate", ylab = "Vertical Coordinate"
 )
 dev.off()
