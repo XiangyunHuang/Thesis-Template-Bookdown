@@ -169,10 +169,11 @@ knitr::include_graphics(path = "figures/binom-without-nugget-geoRglm.png")
 \sigma^2 & \sim \mathrm{Inv-}\chi^2(5,0.5)
 \end{align}
 
+Langevin-Hastings 算法运行 11000 次迭代，前 1000 次迭代用作热身 (warm-up)，后 10 万次迭代里间隔 100 采样
+
 分别使用低秩近似算法 (LR)， 蒙特卡罗最大似然算法 (MCML)， 贝叶斯 MCMC 算法 (MCMC) 和贝叶斯 STAN-MCMC 算法 (STAN-MCMC) 估计模型的参数。与 Stan 比较
 
-64个采样点处 $p(x_i),i = 1,\ldots,64$ 的后验分布的均值、方差、标准差和5个分位点见附表 \@ref(tab:LH-binom-SGLMM)
-
+64 个采样点处 $p(x_i),i = 1,\ldots,64$ 的后验分布的均值、方差、标准差和5个分位点见附表 \@ref(tab:LH-binom-SGLMM)
 
 
 
