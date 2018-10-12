@@ -9,3 +9,6 @@ convert -quality 100 -density 300x300 figures/one-dim-gp-exp.pdf figures/one-dim
 convert -quality 100 -density 300x300 figures/one-dim-gp-exp-quad.pdf figures/one-dim-gp-exp-quad.png
 
 convert -quality 100 -density 300x300 figures/profile-phitausq.pdf figures/profile-phitausq.png
+
+convert -quality 100 -density 300x300 figures/binom-without-nugget-geoRglm.pdf figures/binom-without-nugget-geoRglm.png
+
