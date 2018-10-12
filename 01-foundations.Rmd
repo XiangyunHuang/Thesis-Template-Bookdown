@@ -471,7 +471,7 @@ print(fit)
 print(fit, "tau", probs = c(0.025, 0.975))
 # 获取 medians
 medians <- summary(fit)$summary[ , "50%"]
-# Markdown/LaTeX 格式表格
+# Markdown/LaTeX 格式表格 padding 用来控制间距
 knitr::kable(summary(fit)$summary, digits = 2, format = "markdown", padding = 2)
 knitr::kable(summary(fit)$summary, digits = 2, format = "latex")
 ```
