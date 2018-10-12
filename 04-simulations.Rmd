@@ -161,7 +161,7 @@ g(\mu_i) = \log\{\frac{p(x_i)}{1-p(x_i)}\} = \alpha + S(x_i) (\#eq:binom-SGLMM)
 knitr::include_graphics(path = "figures/binom-without-nugget-geoRglm.png")
 ```
 
-基于 Langevin-Hastings 采样器实现的马尔科夫链蒙特卡罗算法，参数 $\alpha$ 的先验分布选均值为0，方差为 1 的标准正态分布，参数 $\phi$ 的先验分布选期望为 0.2 的指数分布，参数 $\sigma^2$ 的先验分布是非中心的逆卡方分布，其非中心化参数为 0.5，自由度为 5，各参数的先验选择来自 Ole F. Christensen 和 Peter J. Ribeiro Jr. (2002年) [@geoRglm2002]。
+基于 Langevin-Hastings 采样器实现的马尔科夫链蒙特卡罗算法，参数 $\alpha$ 的先验分布选均值为 0，方差为 1 的标准正态分布，参数 $\phi$ 的先验分布选期望为 0.2 的指数分布，参数 $\sigma^2$ 的先验分布是非中心的逆卡方分布，其非中心化参数为 0.5，自由度为 5，各参数的先验选择来自 Ole F. Christensen 和 Peter J. Ribeiro Jr. (2002年) [@geoRglm2002]。
 
 \begin{align}
 \alpha   & \sim \mathcal{N}(0,1) \\
