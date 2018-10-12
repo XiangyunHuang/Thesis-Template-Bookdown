@@ -137,12 +137,12 @@ text(sim$coords[, 1], sim$coords[, 2], format(sim$data, digits = 1), cex = 1.5)
 同 \@ref(sim-one-gp) 节，二维平稳空间高斯过程 $S(x)$ 的协方差函数也可以为更一般的梅隆型，如公式 \@ref(eq:exp-matern) 所示。
 
 \begin{equation}
-\rho(u) = \{ 2^{\kappa -1} \Gamma(\kappa) \}^{-1}( u/\phi )^{\kappa} \mathcal{K}_{\kappa}( u/\phi ) (\#eq:exp-matern)
+\rho(u) = \sigma^2 \{ 2^{\kappa -1} \Gamma(\kappa) \}^{-1}( u/\phi )^{\kappa} \mathcal{K}_{\kappa}( u / \phi ) (\#eq:exp-matern)
 \end{equation}
 
 \noindent 且在区域 $[0,1] \times [0,1]$ 上也可以随机采点，如图 \@ref(fig:sim-two-gp) 的右子图所示。
 
-模拟平稳空间高斯过程的其它 R 包实现方法： Paulo J. Ribeiro Jr. 和 Peter J. Diggle 开发了 **geoR** 包 [@geoR2001]，提供的 `grf` 函数除了实现 Cholesky 分解，还实现了奇异值分解，特征值分解协方差矩阵的算法。当采样点不太多时，Cholesky 分解已经足够好，下面的第 \@ref(sim-sglmm) 节对平稳空间高斯过程的数值模拟即采用此法，当采样点很多，为了加快模拟的速度，可以选用 Martin Schlather 等开发的 **RandomFields** 包 [@RandomFields2015]，内置的 `GaussRF` 函数实现了用高斯马尔科夫随机场近似平稳空间高斯过程的算法。此外，Håvard Rue 等 也实现了从平稳高斯过程到高斯马尔科夫随机场的近似算法，开发了更为高效的 INLA 程序库 [@INLA2015]，其内置的近似程序得到了广泛的应用 [@Virgilio2018;@Blangiardo2015;@Faraway2018]。
+模拟平稳空间高斯过程的其它 R 包实现方法： Paulo J. Ribeiro Jr. 和 Peter J. Diggle 开发了 **geoR** 包 [@geoR2001]，提供的 `grf` 函数除了实现 Cholesky 分解，还实现了奇异值分解，特征值分解协方差矩阵的算法。当采样点不太多时，Cholesky 分解已经足够好，下面的第 \@ref(sim-sglmm) 节对平稳空间高斯过程的数值模拟即采用此法，当采样点很多，为了加快模拟的速度，可以选用 Martin Schlather 等开发的 **RandomFields** 包 [@RandomFields2015]，内置的 `GaussRF` 函数实现了用高斯马尔科夫随机场近似平稳空间高斯过程的算法，此外，Håvard Rue 等 (2009年) [@Rue2009] 也实现了从平稳高斯过程到高斯马尔科夫随机场的近似算法，开发了更为高效的 INLA 程序库 [@INLA2015]，其内置的近似程序得到了广泛的应用 [@Virgilio2018;@Blangiardo2015;@Faraway2018]。
 
 
 ## 空间广义线性混合效应模型 {#sim-sglmm}
@@ -162,9 +162,14 @@ g(\mu_i) = \beta_{0} + \beta_{1} * X_{1} + \beta_{2} * X_{2} + S(x) (\#eq:sim-SG
 [@geoRglm2002] 与 Stan
 
 
+
+
+
+
+
 ### 响应变量服从泊松分布 {#possion-sglmm}
 
-响应变量服从泊松分布，模型为 \@ref(eq:sim-SGLMM)，固定效应参数 $\beta = (\beta_0, \beta_1, \beta_2)$， 空间效应参数 $\boldsymbol{\theta} = (\sigma^2,\phi)$。 参数设置为 $\beta = c(-1,1,0.5), \boldsymbol{\theta} = (1,1)$， 采样点数目为 $N=49$， 每个采样点抽取的样本数 $m_i = 100,i = 1,2,\ldots,N$，在这组参数下，重复产生 100 个数据集。
+响应变量服从泊松分布，模型为 \@ref(eq:sim-SGLMM)，固定效应参数 $\beta = (\beta_0, \beta_1, \beta_2)$， 空间效应参数 $\boldsymbol{\theta} = (\sigma^2,\phi)$。 参数设置为 $\beta = c(-1,1,0.5), \boldsymbol{\theta} = (1,1)$， 采样点数目为 $N = 49$， 每个采样点抽取的样本数 $m_i = 100, i = 1, 2, \ldots,N$，在这组参数下，重复产生 100 个数据集。
 
 
 模拟结果如表 \@ref(tab:kable) 所示
