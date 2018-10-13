@@ -9,7 +9,6 @@ set.seed(2018)
 sim <- grf(grid = expand.grid(x = seq(0.0555, 0.944444, l = 8), y = seq(0.0555, 0.944444, l = 8)), 
            cov.pars = c(0.5, 0.2)) # kappa = 0.5, nugget = 0 
 # cov.pars 依次是 sigma^2 (partial sill) 和 phi (range parameter)
-attr(sim, "class") <- "geodata"
 sim$units.m <- rep(4, 64) # 64 个采样点 每个采样点的观察值服从二项分布，其值分别取 0,1,2,3
 sim$prob <- exp(sim$data) / (1 + exp(sim$data))
 sim$data <- rbinom(64, size = sim$units.m, prob = sim$prob)
@@ -19,7 +18,7 @@ sim$data <- rbinom(64, size = sim$units.m, prob = sim$prob)
 pdf(file = "binom-without-nugget-geoRglm.pdf",width = 8,height = 4)
 par(mfrow = c(1, 2), mar = c(2.3, 2.5, .5, .7), mgp = c(1.5, .6, 0), cex = 1)
 plot(c(0, 1), c(-0.1, 1), type = "n", xlab = "Horizontal Coordinate", ylab = "Vertical Coordinate")
-text(sim$coords[, 1], sim$coords[, 2], format(round(sim$prob, digits = 2)), cex = 0.9)
+text(sim$coords[, 1], sim$coords[, 2], format(sim$prob, digits = 2), cex = 0.9)
 plot(c(0, 1), c(-0.1, 1), type = "n", xlab = "Horizontal Coordinate", ylab = "Vertical Coordinate")
 text(sim$coords[, 1], sim$coords[, 2], format(sim$data), cex = 1.1)
 points(sim$coords[c(1, 29), ], cex = 5.5)
@@ -106,7 +105,8 @@ df <- data.frame(
 
 # 无块金效应 tau^2 = 0  kappa = 0.5 样本量 N = 6*6 = 36 
 # 参数真值 beta = 0 phi = 0.2 sigmasq = 0.5
-knitr::kable(t(df), col.names = c("mean","var","2.5%","25%","50%","75%","97.5%"),digits = 3,format = "markdown")
+knitr::kable(t(df), col.names = c("mean","var","2.5%","25%","50%","75%","97.5%"),
+             digits = 3,format = "markdown", padding = 2)
 
 
 # marginal modes

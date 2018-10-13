@@ -157,23 +157,17 @@ g(\mu_i) = \log\{\frac{p(x_i)}{1-p(x_i)}\} = \alpha + S(x_i) (\#eq:binom-SGLMM)
 
 固定效应参数 $\alpha = 0$，协方差参数记为 $\boldsymbol{\theta} = (\sigma^2, \phi) = (0.5, 0.2)$，采样点数目为 $N = 64$，每个采样点抽取的样本数 $m_i = 4, i = 1, 2, \ldots, 64$。首先模拟平稳空间高斯过程 $S(x)$，在单位区域 $[0,1] \times [0,1]$ 划分为 $8 \times 8$ 的网格，格点选为采样位置，用 **geoR** 包提供的 `grf` 函数产生协方差参数为 $\boldsymbol{\theta} = (\sigma^2,\phi) = (0.5, 0.2)$ 的平稳空间高斯过程，由公式 \@ref(eq:binom-SGLMM) 可知 $p(x_i) = \exp(S(x_i))/(1 + \exp(S(x_i)))$， 即每个格点处二项分布的概率值，然后依此概率，由 `rbinom` 函数产生服从二项分布的观察值 $Y_i$，$Y_i$ 的取值范围为 $0, 1, 2, 3, 4$，模拟的数据集可以用图 \@ref(fig:binom-without-nugget-geoRglm) 直观表示。
 
-```{r binom-without-nugget-geoRglm,fig.cap="左图表示二维规则平面上的平稳空间高斯过程，格点是采样点的位置，其上的数字是 $S(x)$ 的值，已经四舍五入保留两位小数，右图表示观察值 $Y$ 随空间位置的变化，格点上的值即为观察值 $Y$，图中的两个圈分别是第1个(左下)和第29个(右上)采样点",out.width="90%"}
+```{r binom-without-nugget-geoRglm,fig.cap="左图表示二维规则平面上的平稳空间高斯过程，格点是采样点的位置，其上的数字是 $p(x)$ 的值，已经四舍五入保留两位小数，右图表示观察值 $Y$ 随空间位置的变化，格点上的值即为观察值 $Y$，图中的两个圈分别是第1个(左下)和第29个(右上)采样点",out.width="90%"}
 knitr::include_graphics(path = "figures/binom-without-nugget-geoRglm.png")
 ```
 
-基于 Langevin-Hastings 采样器实现的马尔科夫链蒙特卡罗算法，参数 $\alpha$ 的先验分布选均值为 0，方差为 1 的标准正态分布，参数 $\phi$ 的先验分布选期望为 0.2 的指数分布，参数 $\sigma^2$ 的先验分布是非中心的逆卡方分布，其非中心化参数为 0.5，自由度为 5，各参数的先验选择来自 Ole F. Christensen 和 Peter J. Ribeiro Jr. (2002年) [@geoRglm2002]。
+基于 Langevin-Hastings 采样器实现的马尔科夫链蒙特卡罗算法，参数 $\alpha$ 的先验分布选均值为 0，方差为 1 的标准正态分布，参数 $\phi$ 的先验分布选期望为 0.2 的指数分布，参数 $\sigma^2$ 的先验分布是非中心的逆卡方分布，其非中心化参数为 0.5，自由度为 5，各参数的先验选择来自 Ole F. Christensen 和 Peter J. Ribeiro Jr. (2002年) [@geoRglm2002]。Langevin-Hastings 算法运行 11000 次迭代，前 1000 次迭代用作热身 (warm-up)，后 10 万次迭代里间隔 100 采样。
 
 \begin{align}
 \alpha   & \sim \mathcal{N}(0,1) \\
 \phi     & \sim \mathrm{Exp}(0.2) \\
 \sigma^2 & \sim \mathrm{Inv-}\chi^2(5,0.5)
 \end{align}
-
-Langevin-Hastings 算法运行 11000 次迭代，前 1000 次迭代用作热身 (warm-up)，后 10 万次迭代里间隔 100 采样
-
-分别使用低秩近似算法 (LR)， 蒙特卡罗最大似然算法 (MCML)， 贝叶斯 MCMC 算法 (MCMC) 和贝叶斯 STAN-MCMC 算法 (STAN-MCMC) 估计模型的参数。与 Stan 比较
-
-64 个采样点处 $p(x_i), i = 1, \ldots, 64$ 的后验分布的均值、方差、标准差和 5个分位点见附表 \@ref(tab:LH-binom-SGLMM)
 
 Table: (\#tab:MCLH-vs-NUTS)  Langevin-Hastings 算法与 NUTS 算法的数值模拟比较，模型参数 $\alpha,\phi,\sigma^2$ 的估计值（后验分布的均值）、方差（后验分布的方差）和 5 个分位点（后验分布的 5 个分位点），采样点数目分别考虑了 $N = 36, 64, 81, 100$ 的情况，括号内为相应参数的真值
 
@@ -189,74 +183,28 @@ Table: (\#tab:MCLH-vs-NUTS)  Langevin-Hastings 算法与 NUTS 算法的数值模
 |$\phi$     |  0.116(0.2)| 0.006|  0.005|  0.055|  0.105|  0.17| 0.280| 81 |
 |$\sigma^2$ |  0.468(0.5)| 0.057|  0.180|  0.311|  0.414|  0.56| 1.129| 81 |
 
-参数 $\alpha,\phi,\sigma^2$ 的贝叶斯估计没有显式表达式，通常用后验分布的均值作为参数的估计，估计的精度或者说好坏用后验分布的方差衡量，而均方误差在参数估计取后验均值时，就是后验方差，所以表 \@ref(tab: MCLH-vs-NUTS) 不再提供估计的均方误差值，而是提供了 5 个后验分布的分位点，在 95\% 的置信水平下，分位点 0.025 和 0.975 组成了置信区间的上下界。
-
-
+参数 $\alpha,\phi,\sigma^2$ 的贝叶斯估计没有显式表达式，通常用后验分布的均值作为参数的估计， 估计的精度或者说好坏用后验分布的方差衡量，而均方误差在参数估计取后验均值时，就是后验方差，所以表 \@ref(tab:MCLH-vs-NUTS) 不再提供估计的均方误差值，而是提供了 5 个后验分布的分位点，在 95\% 的置信水平下，样本分位点 0.025 和 0.975 的值组成了置信区间的上下界。64 个采样点处 $p(x_i), i = 1, \ldots, 64$ 的后验分布的均值、方差、标准差和 5个分位点见附表 \@ref(tab:LH-binom-SGLMM)
 
 
 ### 响应变量服从泊松分布 {#possion-sglmm}
 
-
-模拟的空间广义线性混合效应模型是
-
-\begin{equation}
-g(\mu_i) = S(x) (\#eq:sim-SGLMM)
-\end{equation}
-
-\noindent 其中，$S(x)$ 是平稳空间高斯过程，其均值为 $\mathbf{0}$，协方差函数为 $\mathrm{Cov}(S(x_i),S(x_j)) = \sigma^2 \big\{2^{\kappa-1}\Gamma(\kappa)\big\}^{-1}(u/\phi)^{\kappa}K_{\kappa}(u/\phi)$，其中 $\kappa = 0.5$，$g$ 是联系函数，由响应变量 $Y$ 服从的分布决定，在第  小节中，$g(\mu_i) = \log\{\frac{p(x_i)}{1-p(x_i)}\}$，$Y_{i} \sim \mathrm{Binomal}(m_{i},p(x_{i}))$，在位置 $x_i$ 处，以概率 $p(x_i)$ 重复抽取了 $m_i$ 个样本，总样本数 $M=\sum_{i=1}^{N}m_i$，$N$ 是采样点的个数，在第 小节中，$g(\mu_i) = \log\{\lambda(x_{i})\}$，$Y_i \sim \mathrm{Possion}(\lambda(x_{i}))$。
-
-响应变量服从泊松分布，模型为 \@ref(eq:poss-SGLMM)，
+响应变量 $Y$ 服从泊松分布，即 $Y_i \sim \mathrm{Possion}(\lambda(x_{i}))$，泊松空间广义线性混合效应模型 \@ref(eq:pois-SGLMM)
 
 \begin{equation}
-g(\mu_i) = \log\{\lambda(x_{i})\} = S(x) (\#eq:poss-SGLMM)
+g(\mu_i) = \log(\lambda(x_i)) = \alpha + S(x_i) (\#eq:pois-SGLMM)
 \end{equation}
 
-固定效应参数 $\beta = (\beta_0, \beta_1, \beta_2)$， 空间效应参数 $\boldsymbol{\theta} = (\sigma^2,\phi)$。 参数设置为 $\beta = c(-1,1,0.5), \boldsymbol{\theta} = (1,1)$， 采样点数目为 $N = 49$， 每个采样点抽取的样本数 $m_i = 100, i = 1, 2, \ldots,N$，在这组参数下，重复产生 100 个数据集。
+\noindent 其中，$S(x)$ 是平稳空间高斯过程，其均值为 $\mathbf{0}$，协方差函数为 $\mathrm{Cov}(S(x_i),S(x_j)) = \sigma^2 \big\{2^{\kappa-1}\Gamma(\kappa)\big\}^{-1}(u/\phi)^{\kappa}K_{\kappa}(u/\phi)$，$\kappa = 0.5$，联系函数 $g(\mu_i) = \log\{\lambda(x_{i})\}$。
+
+类似 \@ref(sim-binomal-sglmm) 小节产生随机数的过程，
+
+Table: (\#tab:Pois-MCLV-vs-NUTS) 模型参数真值设置为 $\alpha = 1, \sigma^2 = 1, \phi = 0.2, \kappa = 0.5$
+
+|            |   mean|    var|   2.5%|    25%|    50%|    75%|  97.5%|
+|:-----------|------:|------:|------:|------:|------:|------:|------:|
+|$\alpha$    |  0.983|  0.034|  0.628|  0.868|  0.985|  1.102|  1.335|
+|$\phi$      |  0.324|  0.054|  0.020|  0.140|  0.280|  0.460|  0.900|
+|$\sigma^2$  |  0.883|  0.083|  0.446|  0.681|  0.833|  1.036|  1.610|
 
 
-模拟结果如表 \@ref(tab:kable) 所示
 
-```{r kable}
-library(purrr)
-library(kableExtra)
-db <- mtcars[, 1:7]
-db2 <- cbind(rownames(db), db)
-colnames(db2) <- c("Methods", rep(c("Bias", "RMSE"), 3), "")
-if (knitr::is_latex_output()) {
-  kable(db2,
-    format = "latex", booktabs = TRUE, escape = T, row.names = F,
-    longtable = FALSE, caption = "第1种类型的统计表格样式",
-    linesep = c("", "", "", "", "", "\\midrule")
-  ) %>%
-    kable_styling(
-      latex_options = c("hold_position", "repeat_header"),
-      full_width = F, position = "center", repeat_header_method = "replace",
-      repeat_header_text = "续表@ref(tab:kable)"
-    ) %>%
-    add_header_above(c(" ",
-      "$\\\\sigma^2$" = 2, "$\\\\phi$" = 2,
-      "$\\\\tau^2$" = 2, "$r=\\\\delta/\\\\phi$" = 1
-    ), escape = F) %>%
-    footnote(
-      general_title = "注：", title_format = "italic", threeparttable = T,
-      general = "* 星号表示的内容很长"
-    )
-} else {
-  kable(db2,
-    format = "html", booktabs = TRUE, escape = T, row.names = F,
-    caption = "第1种类型的统计表格样式"
-  ) %>%
-    kable_styling(
-      bootstrap_options = c("basic"),
-      full_width = F, position = "center"
-    ) %>%
-    add_header_above(c("",
-      "$\\sigma^2$" = 2, "$\\phi$" = 2,
-      "$\\tau^2$" = 2, "$r=\\delta/\\phi$" = 1
-    ), escape = F) %>%
-    footnote(
-      general_title = "注：", title_format = "italic", threeparttable = T,
-      general = "* 星号表示的内容很长"
-    )
-}
-```

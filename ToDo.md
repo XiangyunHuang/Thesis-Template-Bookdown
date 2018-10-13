@@ -1,3 +1,5 @@
+分别使用低秩近似算法 (LR)， 蒙特卡罗最大似然算法 (MCML)， 贝叶斯 MCMC 算法 (MCMC) 和贝叶斯 STAN-MCMC 算法 (STAN-MCMC) 估计模型的参数。与 Stan 比较
+
 ---
 Exponential family: 
 
