@@ -91,21 +91,27 @@ image(
 )
 dev.off()
 
-quantile(run.sim$posterior$beta$sample, probs = c(2.5, 25, 50, 75, 97.5) / 100)
-quantile(run.sim$posterior$phi$sample, probs = c(2.5, 25, 50, 75, 97.5) / 100)
-quantile(run.sim$posterior$sigmasq$sample, probs = c(2.5, 25, 50, 75, 97.5) / 100)
 
-mean(run.sim$posterior$beta$sample)
-mean(run.sim$posterior$phi$sample)
-mean(run.sim$posterior$sigmasq$sample)
+df <- data.frame(
+  beta = c(mean(run.sim$posterior$beta$sample), 
+           var(run.sim$posterior$beta$sample), 
+           quantile(run.sim$posterior$beta$sample, probs = c(2.5, 25, 50, 75, 97.5) / 100)),
+  phi = c(mean(run.sim$posterior$phi$sample), 
+          var(run.sim$posterior$phi$sample), 
+          quantile(run.sim$posterior$phi$sample, probs = c(2.5, 25, 50, 75, 97.5) / 100)),
+  sigmasq = c(mean(run.sim$posterior$sigmasq$sample), 
+              var(run.sim$posterior$sigmasq$sample), 
+              quantile(run.sim$posterior$sigmasq$sample, probs = c(2.5, 25, 50, 75, 97.5) / 100))
+)
 
-var(run.sim$posterior$beta$sample)
-var(run.sim$posterior$phi$sample)
-var(run.sim$posterior$sigmasq$sample)
+# 无块金效应 tau^2 = 0  kappa = 0.5 样本量 N = 6*6 = 36 
+# 参数真值 beta = 0 phi = 0.2 sigmasq = 0.5
+knitr::kable(t(df), col.names = c("mean","var","2.5%","25%","50%","75%","97.5%"),digits = 3,format = "markdown")
 
-# 对 beta 的估计
+
+# marginal modes
 run.sim$posterior$beta$mean
-run.sim$posterior$beta$var # 估计的方差
+run.sim$posterior$beta$var 
 
 run.sim$posterior$phi$mean
 run.sim$posterior$phi$var
