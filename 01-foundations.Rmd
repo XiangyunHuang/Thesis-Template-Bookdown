@@ -519,17 +519,12 @@ Table: (\#tab:eight-schools-output) 对 Eight Schools 数据集建立分层正�
 knitr::include_graphics(path = "figures/posterior_mu_tau.png")
 ```
 
-为了得到可靠的后验估计，做出合理的推断，诊断序列的几何遍历性是必不可少的部分
+为了得到可靠的后验估计，做出合理的推断，诊断序列的平稳性是必不可少的部分
 
 ```{r diagnostic,fig.cap="诊断图",fig.subcap=c("诊断序列的平稳性","蒙特卡罗均值误差和发散点"),fig.ncol=1,fig.sep="\\\\"}
 knitr::include_graphics(path = c("figures/trace_mu_log_tau.png",
                                  "figures/mcmc_mean_tau_div.png"))
 ```
-
-
-
-
-## 弱先验信息
 
 
 

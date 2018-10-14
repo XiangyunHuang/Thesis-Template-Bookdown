@@ -77,7 +77,7 @@ Table: (\#tab:LH-binom-SGLMM) Langevin-Hastings 算法：模型 \@ref(eq:binom-S
 
 
 
-## 数据模拟 {#simulate-code .unnumbered}
+## 代码 {#simulate-code .unnumbered}
 
 ### 模拟平稳高斯过程 {#simulate-SGP-code .unnumbered}
 
@@ -139,7 +139,7 @@ generate_sim_data <- function(N = 49, intercept = -1.0,
 }
 ```
 
-## HMC 算法 {#HMC-Algrithms .unnumbered}
+### HMC 算法 {#HMC-Algrithms .unnumbered}
 
 ```{r,echo=TRUE,eval=FALSE}
 # 加载程序包
