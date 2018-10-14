@@ -76,21 +76,19 @@ Table: (\#tab:LH-binom-SGLMM) Langevin-Hastings 算法：模型 \@ref(eq:binom-S
 |$p(x_{64})$  |  0.633|  0.017|  0.131|  0.354|  0.545|  0.644|  0.729|  0.861|
 
 
-
 ## 代码 {#simulate-code .unnumbered}
 
-### 模拟平稳高斯过程 {#simulate-SGP-code .unnumbered}
+### 模拟平稳空间高斯过程 {#simulate-SGP-code .unnumbered}
 
-STAN 代码模拟高斯过程，自协方差函数见方程 \ref{eq:exp-quad}
+STAN 代码模拟高斯过程，指数型自协方差函数见方程 \ref{eq:cov-exp} 
 
 ```{r,echo=FALSE,comment=NA}
 cat(readLines("code/sim_one_gp_exp.stan"), sep = "\n")
 ```
 
-### 模拟空间广义线性混合效应模型 {#simulate-SGLMM-code .unnumbered}
+### 模拟空间广义线性模型 {#simulate-SGLMM-code .unnumbered}
 
-模拟空间广义线性混合效应模型的函数：
-`generate_sim_data` 函数可生成响应变量服从泊松分布或二项分布，平稳高斯过程的自相关函数为二次幂指数型或梅隆型的模型
+模拟空间广义线性混合效应模型的函数：函数可生成响应变量服从泊松分布或二项分布，平稳高斯过程的自相关函数为二次幂指数型或梅隆型的模型
 
 ```{r,eval=FALSE,echo=TRUE}
 generate_sim_data <- function(N = 49, intercept = -1.0, 
@@ -145,7 +143,7 @@ generate_sim_data <- function(N = 49, intercept = -1.0,
 # 加载程序包
 library(rstan)
 library(brms)
-# 以并行方式运行STAN-MCMC算法，指定CPU的核心数
+# 以并行方式运行 STAN-MCMC 算法，指定 CPU 的核心数
 options(mc.cores = parallel::detectCores())
 # 将编译后的模型写入磁盘，可防止重新编译
 rstan_options(auto_write = TRUE)
@@ -184,7 +182,7 @@ plot(fit.poisson)
 ## 编译信息  {#compileinfo .unnumbered}
 '`
 
-```{r compiling-sampling,fig.cap="基于 Stan 编程的模型编译和采样过程",fig.subcap=c("编译","采样"), eval=knitr::is_html_output() & is_on_travis,echo=is_on_travis}
+```{r compiling-sampling,fig.cap="基于 Stan 编程的模型编译和采样过程图",fig.subcap=c("编译","采样"), eval=knitr::is_html_output() & is_on_travis,echo=FALSE}
 knitr::include_graphics(path = c(
   "figures/compiling.png", 
   "figures/sampling.png"
@@ -196,7 +194,6 @@ knitr::include_graphics(path = c(
 '`
 
 ```{r,eval=is_on_travis & knitr::is_html_output(),echo=is_on_travis & knitr::is_html_output()}
-## 32  Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz
 cat(system("cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c", intern = TRUE), sep = "\n")
 parallel::detectCores()
 ```
