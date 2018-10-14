@@ -29,9 +29,10 @@ rmd_files: [
   "05-cases.Rmd",
   "06-summary.Rmd",
 
-  "07-ack-author.Rmd",
-  "08-appendix.Rmd",
-  "09-references.Rmd",
+  "07-acknowledge.Rmd",
+  "08-author.Rmd",
+  "09-appendix.Rmd",
+  "10-references.Rmd",
 ]
 
 edit: https://github.com/XiangyunHuang/Thesis-Template-Bookdown/edit/master/%s
