@@ -194,7 +194,6 @@ knitr::include_graphics(path = c(
 '`
 
 ```{r,eval=is_on_travis & knitr::is_html_output(),echo=is_on_travis & knitr::is_html_output()}
-## 32  Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz
 cat(system("cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c", intern = TRUE), sep = "\n")
 parallel::detectCores()
 ```
