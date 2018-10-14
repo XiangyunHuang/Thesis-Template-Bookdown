@@ -1,5 +1,24 @@
 分别使用低秩近似算法 (LR)， 蒙特卡罗最大似然算法 (MCML)， 贝叶斯 MCMC 算法 (MCMC) 和贝叶斯 STAN-MCMC 算法 (STAN-MCMC) 估计模型的参数。与 Stan 比较
 
+## 线性混合效应模型 {#Linear-Mixed-Effects-Models}
+
+模型结构，参数估计，惩罚最小二乘和广义最小二乘
+极大似然估计和限制极大似然估计 lme4 包 [@Bates2015]
+剖面似然估计 profile 似然
+
+## 空间线性混合效应模型
+
+Kriging 插值 [@gstat2004;@gstat2016]
+gstat: Spatial and Spatio-Temporal Geostatistical Modelling, Prediction and Simulation
+
+MCMC 方法应用于 GLMM 模型 [@MCMCglmm2010]
+
+在依据似然函数做统计推断的情况下，必须解决高维积分的问题，解决高维积分的两条路：采用拉普拉斯近似方法近似积分，蒙特卡罗方法求积分
+
+<!-- Pairwise likelihood inference [@Pairwise2005] data cloning algorithm [@Baghishani2011] Approximate Monte Carlo EM Gradient [@Hosseini2016]-->
+
+[重新安排逻辑顺序第三章: 空间广义线性混合效应模型]{.todo}
+
 ---
 Exponential family: 
 

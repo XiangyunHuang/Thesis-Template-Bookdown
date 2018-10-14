@@ -1,54 +1,4 @@
-```{r include=FALSE, cache=FALSE}
-library(methods)
-set.seed(2018)
-library(ggplot2)
-knitr::opts_chunk$set(
-  comment = "#>",
-  collapse = TRUE,
-  echo = FALSE,
-  cache = TRUE,
-  size = "scriptsize",
-  out.width = "70%",
-  fig.align = "center",
-  fig.width = 6,
-  fig.asp = 0.618
-)
-
-doc_type <- function() knitr::opts_knit$get('rmarkdown.pandoc.to')
-
-knitr::knit_hooks$set(
-  optipng = knitr::hook_optipng,
-  pdfcrop = knitr::hook_pdfcrop,
-  small.mar = function(before, options, envir) {
-    if (before) par(mar = c(4.1, 4.1, 0.5, 0.5))  # smaller margin on top and right
-  }
-)
-# https://github.com/yihui/knitr-examples/blob/master/085-pdfcrop.Rnw
-
-options(
-  digits = 3,
-  citation.bibtex.max = 999,
-  bitmapType = "cairo",
-  stringsAsFactors = FALSE,
-  repos = "https://mirrors.tuna.tsinghua.edu.cn/CRAN/",
-  knitr.graphics.auto_pdf = FALSE,
-  tikzDefaultEngine = "xetex",
-  tikzXelatexPackages = c(
-    getOption("tikzXelatexPackages"),
-    "\\usepackage[colorlinks, breaklinks]{hyperref}",
-    "\\usepackage{color,tikz}",
-    "\\usepackage[active,tightpage,xetex]{preview}",
-    "\\PreviewEnvironment{pgfpicture}",
-    "\\usepackage{amsmath,amsfonts,mathrsfs}"
-  )
-)
-
-is_on_travis = identical(Sys.getenv("TRAVIS"), "true")
-is_online = curl::has_internet()
-```
 # 统计模型 {#models}
-
-[重新安排逻辑顺序第三章 空间广义线性混合效应模型 1. 模型结构]{.todo}
 
 第 \@ref(Linear-Models) 节，第 \@ref(Generalized-Linear-Models) 节和第 \@ref(Generalized-Linear-Mixed-Effects-Models) 节简略介绍了线性模型， 广义线性模型和广义线性混合效应模型及其数学表示， 并随同模型给出了模型求解的 R 包或函数， 为空间广义线性混合效应模型的介绍做铺垫。第 \@ref(Spatial-Generalized-linear-mixed-effects-models) 节重点介绍了空间广义线性混合效应模型（以下简称为 SGLMM 模型）， 并分三小节介绍模型中的重要成分， 第  小节介绍 SGLMM 模型中的空间效应， 即平稳空间高斯过程， 第 \@ref(covariance-function) 小节介绍影响空间效应结构的关键部分 --- 自协方差函数和平稳空间高斯过程的核函数或自相关函数， 第 \@ref(identify) 小节介绍非空间的随机效应，在地质统计中常称为块金效应，以及它带来的 SGLMM 模型可识别问题与相应处理方式。
 
@@ -62,7 +12,6 @@ Y = X^{\top}\beta + \epsilon, \mathrm{E}(\epsilon) = 0, \mathrm{Cov}(\epsilon) =
 
 \noindent 其中，$Y = (y_1,y_2,\ldots,y_n)^{\top}$ 是 $n$ 维列向量，代表对响应变量 $Y$ 的 $n$ 次观测； $\beta = (\beta_0,\beta_1,\ldots,\beta_{p-1})^{\top}$ 是 $p$ 维列向量， 代表模型 \@ref(eq:LM) 的协变量 $X$ 的系数，$\beta_0$ 是截距项； $X^{\top} = (1_{(1\times n)}^{\top},X_{(1)}^{\top},X_{(2)}^{\top},\ldots,X_{(p-1)}^{\top})$， $1_{(1\times n)}^{\top}$ 是全 1 的 $n$ 维列向量，而 $X_{(i)}^{\top} = (x_{1i},x_{2i},\ldots,x_{ni})^{\top}$ 代表对第 $i$ 个自变量的 $n$ 次观测； $\epsilon = (\epsilon_1,\epsilon_2,\ldots,\epsilon_n)^{\top}$ 是 $n$ 维列向量，代表模型的随机误差，并且假定 $\mathrm{E}(\epsilon_i \epsilon_j) = 0, i \ne j$， 即模型误差项之间线性无关，且方差齐性，都是 $\sigma^2(>0)$。 估计模型 \@ref(eq:LM) 的参数常用最小二乘和最大似然方法， 求解线性模型 \@ref(eq:LM) 的参数可以用 R 函数 `lm`，近年来，高维乃至超高维稀疏线性模型成为热门的研究方向，相关的 R 包也越来越多，比较流行的有 **glmnet** [@glmnet2011JSS] 和 **SIS** [@SIS2016JSS]。
 
-<!-- 最小二乘估计/最大似然估计 回归系数与方差 -->
 
 ## 广义线性模型 {#Generalized-Linear-Models}
 
@@ -74,15 +23,6 @@ g(\mu) = X^{\top}\beta  (\#eq:GLM)
 
 \noindent 其中，$\mu \equiv \mathrm{E}(Y)$， $g$ 代表联系函数，特别地，当 $Y \sim N(\mu,\sigma^2)$ 时，联系函数 $g(x) = x$，模型 \@ref(eq:GLM) 变为一般线性模型 \@ref(eq:LM)。当 $Y \sim \mathrm{Binomial}(n,p)$ 时，响应变量 $Y$ 的期望 $\mu =\mathrm{E}(Y) = np$， 联系函数 $g(x)=\ln(\frac{x}{1-x})$，模型 \@ref(eq:GLM) 变为$\log(\frac{p}{1-p})=X^{\top}\beta$。 当 $Y \sim \mathrm{Possion}(\lambda)$ 时，响应变量 $Y$ 的期望 $\mu =\mathrm{E}(Y) = \lambda$， 联系函数$g(x) = \ln(x)$， 模型 \@ref(eq:GLM) 变为 $\log(\lambda) = X^{\top}\beta$。 指数族下其余分布对应的联系函数此处不一一列举， 完整列表可以参看 1989 年 McCullagh 和 Nelder 所著的《广义线性模型》 [@McCullagh1989]。 模型 \@ref(eq:GLM) 最早由 Nelder 和 Wedderburn 在1972年提出[@Nelder1972]，它弥补了模型 \@ref(eq:LM) 的两个重要缺点： 一是因变量只能取连续值的情况， 二是期望与自变量只能用线性关系联系 [@Chen2011]。 求解广义线性模型 \@ref(eq:GLM) 的 R 函数是 `glm`， 常用拟似然法去估计模型 \@ref(eq:GLM) 的参数。
 
-<!-- 最小二乘估计/极大似然估计 回归系数与方差 -->
-
-
-## 线性混合效应模型 {#Linear-Mixed-Effects-Models}
-
-模型结构，参数估计，惩罚最小二乘和广义最小二乘
-极大似然估计和限制极大似然估计 lme4 包 [@Bates2015]
-剖面似然估计 profile 似然
-
 ## 广义线性混合效应模型 {#Generalized-Linear-Mixed-Effects-Models} 
 
 广义线性混合模型的一般形式
@@ -92,17 +32,6 @@ g(\mu) = X^{\top}\boldsymbol{\beta} + Z^{\top}\mathbf{b}  (\#eq:GLMM)
 \end{equation}
 
 \noindent 其中， $Z^{\top}$ 是 $q$ 维随机效应 $\mathbf{b}$ 的 $n \times q$ 的数据矩阵，其它符号含义如前所述。广义线性混合效应模型中既包含固定效应 $\boldsymbol{\beta}$ 又包含随机效应 $\mathbf{b}$ 。 线性模型 \@ref(eq:LM) 和广义线性模型 \@ref(eq:GLM) 中的协变量都是固定效应， 而随机效应是那些不能直接观察到的潜效应， 但是对响应变量却产生显著影响。 特别是在基因变异位点与表现型的关系研究中， 除了用最新科技做全基因组扫描获取显著的基因位点， 还应该把那些看似不显著， 联合在一起却显著的位点作为随机效应去考虑 [@Yang2010Common]。求解模型 \@ref(eq:GLMM)的 R 包有 **nlme** ，**mgcv**  和 **lme4**， 参数估计的方法一般有限制极大似然法。 除了求解模型 \@ref(eq:GLMM) 外， **nlme** 可以拟合一些非线性混合效应模型， **mgcv** 可以拟合广义可加混合效应模型， **lme4** 使用了高性能的 Eigen 数值代数库，可以加快模型的求解过程。
-
-MCMC 方法应用于 GLMM 模型 [@MCMCglmm2010]
-
-
-## 空间线性混合效应模型
-
-Kriging 插值 [@gstat2004;@gstat2016]
-gstat: Spatial and Spatio-Temporal Geostatistical Modelling, Prediction and Simulation
-
-
-
 
 ## 空间广义线性混合效应模型 {#Spatial-Generalized-linear-mixed-effects-models}
 

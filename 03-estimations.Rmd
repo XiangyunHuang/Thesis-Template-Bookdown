@@ -118,12 +118,7 @@ L_{p}(\alpha) = L(\alpha,\hat{\psi}(\alpha)) = \max_{\psi} (L(\alpha,\psi))
 
 ## 参数估计的算法 {#algrithms}
 
-<!-- Pairwise likelihood inference [@Pairwise2005] data cloning algorithm [@Baghishani2011] Approximate Monte Carlo EM Gradient [@Hosseini2016]-->
-
 贝叶斯方法构造马尔科夫链，需要很多次反复迭代，收敛速度慢，求解模型 \@ref(eq:SGLMM) 需要花费很多时间， 极大似然和重要性采样相结合的方法出现了，称之为蒙特卡罗极大似然法，简称 MCML。 1994年 Charles J. Geyer 首先从理论证明 MCML 方法的收敛性及相关似然估计的正态性， 为后续算法的开发、改进以及应用提供了理论支持 [@Geyer1994On]。 2002 年 Hao Zhang 在做模型的估计和预测的时候提出蒙特卡罗期望极大梯度 (Monte Carlo EM Gradient) 算法 [@Zhang2002On]。2016 年 Fatemeh Hosseini 在 MCEMG 的基础上提出近似蒙特卡罗期望极大梯度 (Approximate Monte Carlo EM Gradient) 算法[@Hosseini2016]。2004 年 Ole F Christensen 将 MCML 方法用于 SGLMM 模型 [@Christensen2004]，2016 年 Peter J. Diggle 和 Emanuele Giorgi  将 MCML 方法应用于分析西非流行病调查数据。
-
-
-在依据似然函数做统计推断的情况下，必须解决高维积分的问题，解决高维积分的两条路：采用拉普拉斯近似方法近似积分，蒙特卡罗方法求积分
 
 
 ### 拉普拉斯近似算法 {#LA}
