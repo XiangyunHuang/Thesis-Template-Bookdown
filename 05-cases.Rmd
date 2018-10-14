@@ -1,6 +1,6 @@
 # 数据分析 {#applications}
 
-loaloa 和 rongelap 两个真实数据集分别来自 R 包 **geoRglm** 和 **PrevMap**， 且被 Peter J. Diggle 等 (2007年) [@Diggle2007ATMP] 和 Ole F Christensen (2004年) [@Christensen2004] 分析过，第 \@ref(loaloa) 节和第 \@ref(rongelap) 节给出分析这两个数据集的模型和结果。其中，响应变量服从二项分布的空间广义线性混合效应模型拟合数据集 loaloa， 而响应变量服从泊松分布的空间广义线性混合效应模型拟合数据集 rongelap。
+loaloa 和 rongelap 两个真实数据集分别来自 R 包 **geoRglm** 和 **PrevMap**， 且被 Peter J. Diggle 等 (2007年) [@Diggle2007ATMP] 和 Ole F Christensen (2004年) [@Christensen2004] 分析过，第 \@ref(case-loaloa) 节和第 \@ref(case-rongelap) 节给出分析这两个数据集的模型和结果。其中，响应变量服从二项分布的空间广义线性混合效应模型拟合数据集 loaloa， 而响应变量服从泊松分布的空间广义线性混合效应模型拟合数据集 rongelap。
 
 ## 空间线性混合效应模型 {#sptial-random-effects}
 
@@ -64,7 +64,7 @@ knitr::include_graphics(path = c("figures/heteroscedasticity.png","figures/norma
 
 
 
-## 喀麦隆及周边地区盘尾丝虫病的空间分布 {#loaloa}
+## 喀麦隆及周边地区盘尾丝虫病的空间分布 {#case-loaloa}
 
 盘尾丝虫病是由一种可致盲的热带疾病，非洲盘尾丝虫病控制项目 APOC (African Programme for Onchocerciasis Control) 搜集了 $N=168$ 个村庄的 $M = 21938$ 个血液样本，每个村庄抽取的样本量为 $m_i=\mathrm{NO\_EXAM}$， 其中感染了的 NO_INF 人， 在该村庄 （坐标 $x_i$）观察到的感染比例 $p(x_i) = \mathrm{NO\_INF/NO\_EXAM}$ ， 在村庄 1 公里的范围内添加了周围环境的指标， 有从美国地质调查局获得的海拔信息 ELEVATION (<https://www.usgs.gov/>) 和卫星在 1999 年至 2001 年间测得的植被绿色度数据 NDVI (<http://free.vgt.vito.be>)， NDVI 分四个指标， 分别是所有 NDVI 的平均值 MEAN9901，最大值 MAX9901，最小值 MIN9901，标准差 STDEV9901。 样本采集的区域如图 \@ref(fig:loaloa-map) 所示
 
@@ -133,7 +133,7 @@ Table: (\#tab:loaloa-estimation3) 贝叶斯 STAN-MCMC 算法估计模型的参�
 
 比较表 \@ref(tab:loaloa-estimation2) 和表 \@ref(tab:loaloa-estimation3)， 发现贝叶斯 STAN-MCMC 算法比贝叶斯 MCMC 算法稍好一点， 多半的参数估计的标准差要小一些， 均方误差普遍要小一点。
 
-## 朗格拉普岛放射性残留物的空间分布 {#rongelap}
+## 朗格拉普岛核污染浓度的空间分布 {#case-rongelap}
 
 Peter J. Diggle 等 (1998年) [@Diggle1998] 提出蒙特卡罗极大似然方法估计不带块金效应的响应变量服从泊松分布的空间广义混合效应模型 (见模型 \@ref(eq:rongelap-without-nugget-effect) )的参数，分析了朗格拉普岛上核污染浓度的空间分布，后来，Ole F Christensen (2004年) [@Christensen2004] 发现该核污染数据集中存在不能被泊松分布解释的残差，因此在 Peter J. Diggle 等 (1998年) [@Diggle1998] 的基础上添加了块金效应，见模型 \@ref(eq:rongelap-with-nugget-effect)， 同样使用蒙特卡罗极大似然方法估计了模型中的参数。
 
@@ -167,9 +167,9 @@ Table: (\#tab:rangelap-mcml-result) 蒙特卡罗极大似然估计模型 \@ref(e
 
 
 
-## 冈比亚儿童疟疾流行强度的空间分布
+## 冈比亚儿童疟疾流行强度的空间分布 {#case-gambia}
 
-5 岁以下儿童 在非洲冈比亚的 65 个村庄里调查疟疾感染情况， 依冈比亚狭长的地带和横穿东西全境的冈比亚河， 将其看作东、中和西三个部分， 东部是河流上游，西部是河流下游相应地，村庄分为 5 个区域，西部两个， 南岸和北岸各一个，中游一个在南岸，东部两个，也是南岸和北岸各有一个， 村庄的位置在图中的黑点标记。
+5 岁以下儿童在非洲冈比亚的 65 个村庄里调查疟疾感染情况， 依冈比亚狭长的地带和横穿东西全境的冈比亚河， 将其看作东、中和西三个部分， 东部是河流上游，西部是河流下游相应地，村庄分为 5 个区域，西部两个， 南岸和北岸各一个，中游一个在南岸，东部两个，也是南岸和北岸各有一个， 村庄的位置在图中的黑点标记。
 
 ```{r childhood-malaria,fig.cap="冈比亚 65 个村庄的空间位置，黑点标记，插入的图是响应区域的放大版，由箭头指向"}
 knitr::include_graphics(path = "figures/gambia-map.png")
