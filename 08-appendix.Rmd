@@ -79,15 +79,15 @@ Table: (\#tab:LH-binom-SGLMM) Langevin-Hastings 算法：模型 \@ref(eq:binom-S
 
 ## 数据模拟 {#simulate-code .unnumbered}
 
-### 模拟平稳高斯过程 {#simulate-SGP-code}
+### 模拟平稳高斯过程 {#simulate-SGP-code .unnumbered}
 
 STAN 代码模拟高斯过程，自协方差函数见方程 \ref{eq:exp-quad}
 
 ```{r,echo=FALSE,comment=NA}
-cat(readLines("code/sim_one_gp_exp.stan"),sep = "\n")
+cat(readLines("code/sim_one_gp_exp.stan"), sep = "\n")
 ```
 
-### 模拟空间广义线性混合效应模型 {#simulate-SGLMM-code}
+### 模拟空间广义线性混合效应模型 {#simulate-SGLMM-code .unnumbered}
 
 模拟空间广义线性混合效应模型的函数：
 `generate_sim_data` 函数可生成响应变量服从泊松分布或二项分布，平稳高斯过程的自相关函数为二次幂指数型或梅隆型的模型
@@ -181,40 +181,41 @@ plot(fit.poisson)
 
 
 `r if (knitr::is_html_output() & is_on_travis) '
-## 编译信息  {#compileinfo}
+## 编译信息  {#compileinfo .unnumbered}
 '`
 
-```{r compiling-sampling,fig.cap="基于 Stan 编程的模型编译和采样过程",fig.subcap=c("编译","采样"), eval=is_on_travis,echo=is_on_travis}
+```{r compiling-sampling,fig.cap="基于 Stan 编程的模型编译和采样过程",fig.subcap=c("编译","采样"), eval=knitr::is_html_output() & is_on_travis,echo=is_on_travis}
 knitr::include_graphics(path = c(
-  "figures/compiling.png", "figures/sampling.png"
+  "figures/compiling.png", 
+  "figures/sampling.png"
 ))
 ```
 
 `r if (knitr::is_html_output() & is_on_travis) '
-## 硬件环境  {#hardwareinfo}
+## 硬件环境  {#hardwareinfo .unnumbered}
 '`
 
-```{r,eval=is_on_travis,echo=is_on_travis}
+```{r,eval=is_on_travis & knitr::is_html_output(),echo=is_on_travis & knitr::is_html_output()}
 ## 32  Intel(R) Xeon(R) CPU E5-2680 v2 @ 2.80GHz
 cat(system("cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c", intern = TRUE), sep = "\n")
 parallel::detectCores()
 ```
 
 `r if (knitr::is_html_output() & is_on_travis) '
-## 系统环境  {#sysinfo}
+## 系统环境  {#sysinfo .unnumbered}
 '`
 
-```{r, echo = FALSE, eval=is_on_travis, results="asis"}
+```{r, echo = FALSE, eval=is_on_travis & knitr::is_html_output(), results="asis"}
 plat <- sessioninfo::platform_info()
 df <- data.frame(setting = names(plat), value = as.character(unclass(plat)))
 knitr::kable(df, format = "markdown")
 ```
 
 `r if (knitr::is_html_output() & is_on_travis) '
-## 软件环境  {#softwareinfo}
+## 软件环境  {#softwareinfo .unnumbered}
 '`
 
-```{r, echo = FALSE, eval=is_on_travis, results="asis"}
+```{r, echo = FALSE, eval=is_on_travis & knitr::is_html_output(), results="asis"}
 deps <- desc::desc_get_deps()$package[-1]
 
 pkgs <- sessioninfo::package_info(deps)
