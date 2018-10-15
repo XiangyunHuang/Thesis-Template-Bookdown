@@ -71,4 +71,4 @@ script:
 after_success:
   - make pdf
   - ./_deploy.sh
-  - netlify deploy -t $NETLIFY_PAT
+  #- netlify deploy -t $NETLIFY_PAT
