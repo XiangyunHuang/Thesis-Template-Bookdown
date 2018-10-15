@@ -183,7 +183,7 @@ Table: (\#tab:MCLH-vs-NUTS)  Langevin-Hastings 算法与 NUTS 算法的数值模
 |$\phi$     |  0.116(0.2)| 0.006|  0.005|  0.055|  0.105|  0.17| 0.280| 81 |
 |$\sigma^2$ |  0.468(0.5)| 0.057|  0.180|  0.311|  0.414|  0.56| 1.129| 81 |
 
-参数 $\alpha,\phi,\sigma^2$ 的贝叶斯估计没有显式表达式，通常用后验分布的均值作为参数的估计， 估计的精度或者说好坏用后验分布的方差衡量，而均方误差在参数估计取后验均值时，就是后验方差，所以表 \@ref(tab:MCLH-vs-NUTS) 不再提供估计的均方误差值，而是提供了 5 个后验分布的分位点，在 95\% 的置信水平下，样本分位点 0.025 和 0.975 的值组成了置信区间的上下界。64 个采样点处 $p(x_i), i = 1, \ldots, 64$ 的后验分布的均值、方差、标准差和 5个分位点见附表 \@ref(tab:LH-binom-SGLMM)
+参数 $\alpha,\phi,\sigma^2$ 的贝叶斯估计没有显式表达式，通常用后验分布的均值作为参数的估计，即所谓的贝叶斯估计，它的定义就是使得估计的均方误差达到最小时的估计。贝叶斯估计 的精度或者说好坏常用后验分布的方差衡量，因为均方误差在参数估计取后验均值时就是后验方差，所以表 \@ref(tab:MCLH-vs-NUTS) 不再提供估计的均方误差值，而是提供了 5 个后验分布的分位点，在 95\% 的置信水平下，样本分位点 0.025 和 0.975 的值组成了置信区间的上下界。除了获得各参数的估计值外，还获得 64 个采样点处 $p(x_i), i = 1, \ldots, 64$ 的后验均值、方差、标准差和 5个分位点，详见附表 \@ref(tab:LH-binom-SGLMM)
 
 
 ### 响应变量服从泊松分布 {#possion-sglmm}
@@ -196,8 +196,7 @@ g(\mu_i) = \log(\lambda(x_i)) = \alpha + S(x_i) (\#eq:pois-SGLMM)
 
 \noindent 其中，$S(x)$ 是平稳空间高斯过程，其均值为 $\mathbf{0}$，协方差函数为 $\mathrm{Cov}(S(x_i),S(x_j)) = \sigma^2 \big\{2^{\kappa-1}\Gamma(\kappa)\big\}^{-1}(u/\phi)^{\kappa}K_{\kappa}(u/\phi)$，联系函数 $g(\mu_i) = \log\{\lambda(x_{i})\}$。
 
-类似 \@ref(sim-binomal-sglmm) 小节产生随机数的过程，
-
+类似 \@ref(sim-binomal-sglmm) 小节，首先产生服从平稳空间高斯过程 $S(x)$ 的随机数 $S(x_i),i=1,\ldots,N$，则根据 \@ref(eq:pois-SGLMM) 式， $\lambda(x_i) = \exp(\alpha + S(x_i))$，又响应变量 $Y_i \sim \mathrm{Possion}(\lambda(x_{i}))$，根据 R 内置函数 `rpois` 产生服从参数为 $\lambda(x_i)$ 的泊松分布的随机数。  
 Table: (\#tab:Pois-MCLV-vs-NUTS) 模型参数真值设置为 $\alpha = 0.5, \phi = 0.2, \sigma^2 = 2.0, \kappa = 1.5$，采样点数目分别为 $N=36,64,100$
 
 |           |  true|   mean|    var|    2.5%|     25%|    50%|    75%|  97.5%|   N   |
