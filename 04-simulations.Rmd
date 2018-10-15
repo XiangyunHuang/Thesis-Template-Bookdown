@@ -169,7 +169,7 @@ knitr::include_graphics(path = "figures/binom-without-nugget-geoRglm.png")
 \sigma^2 & \sim \mathrm{Inv-}\chi^2(5,0.5)
 \end{align}
 
-Table: (\#tab:MCLH-vs-NUTS)  Langevin-Hastings 算法与 NUTS 算法的数值模拟比较，模型参数 $\alpha,\phi,\sigma^2$ 的估计值（后验分布的均值）、方差（后验分布的方差）和 5 个分位点（后验分布的 5 个分位点），采样点数目分别考虑了 $N = 36, 64, 81, 100$ 的情况，括号内为相应参数的真值
+Table: (\#tab:MCLH-vs-NUTS)  Langevin-Hastings 算法与汉密尔顿蒙特卡罗算法的数值模拟比较，模型参数 $\alpha,\phi,\sigma^2$ 的估计值（后验分布的均值）、方差（后验分布的方差）和 5 个分位点（后验分布的 5 个分位点），采样点数目分别考虑了 $N = 36, 64, 81, 100$ 的情况，括号内为相应参数的真值
 
 |        |  mean|   var|   2.5\%|    25\%|   50\%|   75\%| 97.5\%|   N  |
 |:-------|-----:|-----:|-------:|-------:|------:|------:|------:|-----:|
@@ -196,7 +196,8 @@ g(\mu_i) = \log(\lambda(x_i)) = \alpha + S(x_i) (\#eq:pois-SGLMM)
 
 \noindent 其中，$S(x)$ 是平稳空间高斯过程，其均值为 $\mathbf{0}$，协方差函数为 $\mathrm{Cov}(S(x_i),S(x_j)) = \sigma^2 \big\{2^{\kappa-1}\Gamma(\kappa)\big\}^{-1}(u/\phi)^{\kappa}K_{\kappa}(u/\phi)$，联系函数 $g(\mu_i) = \log\{\lambda(x_{i})\}$。
 
-类似 \@ref(sim-binomal-sglmm) 小节，首先产生服从平稳空间高斯过程 $S(x)$ 的随机数 $S(x_i),i=1,\ldots,N$，则根据 \@ref(eq:pois-SGLMM) 式， $\lambda(x_i) = \exp(\alpha + S(x_i))$，又响应变量 $Y_i \sim \mathrm{Possion}(\lambda(x_{i}))$，根据 R 内置函数 `rpois` 产生服从参数为 $\lambda(x_i)$ 的泊松分布的随机数。  
+类似 \@ref(sim-binomal-sglmm) 小节，首先产生服从平稳空间高斯过程 $S(x)$ 的随机数 $S(x_i),i=1,\ldots,N$，则根据 \@ref(eq:pois-SGLMM) 式， $\lambda(x_i) = \exp(\alpha + S(x_i))$，又响应变量 $Y_i \sim \mathrm{Possion}(\lambda(x_{i}))$，根据 R 内置函数 `rpois` 产生服从参数为 $\lambda(x_i)$ 的泊松分布的随机数。
+
 Table: (\#tab:Pois-MCLV-vs-NUTS) 模型参数真值设置为 $\alpha = 0.5, \phi = 0.2, \sigma^2 = 2.0, \kappa = 1.5$，采样点数目分别为 $N=36,64,100$
 
 |           |  true|   mean|    var|    2.5%|     25%|    50%|    75%|  97.5%|   N   |
@@ -210,6 +211,16 @@ Table: (\#tab:Pois-MCLV-vs-NUTS) 模型参数真值设置为 $\alpha = 0.5, \phi
 |$\alpha$   |   0.5|  0.323|  0.657|  -1.449|  -0.124|  0.416|  0.812|  1.831|  100  |
 |$\phi$     |   0.2|  0.617|  0.085|   0.220|   0.400|  0.560|  0.785|  1.320|  100  |
 |$\sigma^2$ |   2.0|  1.479|  0.498|   0.545|   0.941|  1.352|  1.822|  3.195|  100  |
+|$\alpha$  |   0.5|  0.498|  0.402|  -0.775|  0.082|  0.534|  0.917|  1.798|  64|
+|$\phi$    |   0.2|  0.385|  0.003|   0.285|  0.343|  0.380|  0.422|  0.509|  64|
+|$\sigma^2$|   2.0|  2.473|  0.292|   1.585|  2.102|  2.416|  2.804|  3.734|  64|
 
+100 个采样点的模拟实验中，精心调了 Langevin-Hastings 算法的参数，得到比较好的估计值，在该组参数设置下，更改采样点数目分别为 36 和 64，得到估计值，见表 \@ref(tab:Pois-MCLV-vs-NUTS)，可以看出估计值变差。
+
+添加偏差 置信区间长度
+
+Stan 2000 次迭代，前 1000 次迭代作为 warm-up 阶段，后 1000 次迭代全部采样
+
+完整的表格见附表 \@ref(tab:HMC-Pois-SGLMM)
 
 ## 本章小结 {#sec:simulations}
