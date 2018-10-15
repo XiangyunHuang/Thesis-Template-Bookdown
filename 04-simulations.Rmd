@@ -213,3 +213,4 @@ Table: (\#tab:Pois-MCLV-vs-NUTS) 模型参数真值设置为 $\alpha = 0.5, \phi
 |$\sigma^2$ |   2.0|  1.479|  0.498|   0.545|   0.941|  1.352|  1.822|  3.195|  100  |
 
 
+## 本章小结 {#sec:simulations}
