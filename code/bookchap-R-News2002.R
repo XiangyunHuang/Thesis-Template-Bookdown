@@ -6,8 +6,9 @@ library(geoRglm)
 
 set.seed(2018)
 ## Simulating data 二项分布
-sim <- grf(grid = expand.grid(x = seq(0.0555, 0.944444, l = 8), y = seq(0.0555, 0.944444, l = 8)), 
-           cov.pars = c(0.5, 0.2)) # kappa = 0.5, nugget = 0 
+sim <- grf(grid = expand.grid(x = seq(0.0555, 0.944444, l = 8),
+                              y = seq(0.0555, 0.944444, l = 8)), 
+           cov.pars = c(0.5, 0.2), kappa = 0.5, nugget = 0 )
 # cov.pars 依次是 sigma^2 (partial sill) 和 phi (range parameter)
 sim$units.m <- rep(4, 64) # 64 个采样点 每个采样点的观察值服从二项分布，其值分别取 0,1,2,3
 sim$prob <- exp(sim$data) / (1 + exp(sim$data))
