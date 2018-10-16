@@ -50,8 +50,8 @@ library(geoRglm)
 set.seed(371)
 sim <- grf(
   grid = expand.grid(
-    x = seq(0, 1, l = 8),
-    y = seq(0, 1, l = 8)
+    x = seq(0, 1, l = 10),
+    y = seq(0, 1, l = 10)
   ),
   cov.pars = c(2, 0.2), cov.model = "mat", kappa = 1.5
 )
@@ -62,9 +62,9 @@ sim$data <- rpois(length(sim$data), lambda = sim$lambda)
 fit_sim_pois_gp <- stan_model("code/fit_sim_pois_gp_matern.stan")
 
 sim_pois_data <- list(
-  N = 64, x = as.matrix(dist(expand.grid(
-    seq(0, 1, l = 8),
-    seq(0, 1, l = 8)
+  N = 100, x = as.matrix(dist(expand.grid(
+    seq(0, 1, l = 10),
+    seq(0, 1, l = 10)
   ))),
   COVFN = 2, y = sim$data
 )
@@ -105,14 +105,14 @@ sigmasq <- c(
 
 df <- data.frame(alpha = alpha, phi = phi, sigmasq = sigmasq)
 
-knitr::kable(cbind(c(0.5, 0.2, 2.0), t(df), rep(64, 3)),
+knitr::kable(cbind(c(0.5, 0.2, 2.0), t(df), rep(100, 3)),
   col.names = c("true", "mean", "var", paste0(c(2.5, 25, 50, 75, 97.5), "%"), "N"),
   digits = 3, format = "markdown", padding = 2
 )
 
 
-knitr::kable(summary(samp_sim_pois)$summary[c("alpha", "phi", "sigmasq"), ], 
-             digits = 3, format = "markdown", padding = 2)
+# knitr::kable(summary(samp_sim_pois)$summary[c("alpha", "phi", "sigmasq"), ], 
+#              digits = 3, format = "markdown", padding = 2)
 
 
 ####################################
@@ -123,29 +123,29 @@ library(geoRglm)
 set.seed(2018)
 
 sim <- grf(
-  grid = expand.grid(x = seq(0.0555, 0.944444, l = 8), y = seq(0.0555, 0.944444, l = 8)),
+  grid = expand.grid(x = seq(0.0555, 0.944444, l = 9), y = seq(0.0555, 0.944444, l = 9)),
   cov.pars = c(0.5, 0.2), cov.model = "matern", kappa = 0.5, nugget = 0, mean = 0
 )
 # cov.pars 依次是 sigma^2 (partial sill) 和 phi (range parameter)
-sim$units.m <- rep(4, 64) # 64 个采样点 每个采样点的观察值服从二项分布，其值分别取 0,1,2,3
+sim$units.m <- rep(4, 81) # 64 个采样点 每个采样点的观察值服从二项分布，其值分别取 0,1,2,3
 sim$prob <- exp(sim$data) / (1 + exp(sim$data))
-sim$data <- rbinom(64, size = sim$units.m, prob = sim$prob)
+sim$data <- rbinom(81, size = sim$units.m, prob = sim$prob)
 
 fit_sim_binom_gp <- stan_model("code/fit_sim_binom_gp_exp.stan")
 
 
 sim_binom_data <- list(
-  N = 64, x = as.matrix(dist(expand.grid(
-    seq(0.0555, 0.944444, l = 8),
-    seq(0.0555, 0.944444, l = 8)
+  N = 81, x = as.matrix(dist(expand.grid(
+    seq(0.0555, 0.944444, l = 9),
+    seq(0.0555, 0.944444, l = 9)
   ))),
   COVFN = 1, y = sim$data
 )
 
 samp_sim_binom <- sampling(fit_sim_binom_gp,
   data = sim_binom_data, cores = 1, chains = 1,
-  iter = 110000, control = list(adapt_delta = 0.95),
-  warmup = 10000, thin = 100
+  iter = 2000, control = list(adapt_delta = 0.95),
+  warmup = 1000, thin = 1
 )
 
 samp_sim_binom
@@ -178,7 +178,7 @@ sigmasq <- c(
 
 df <- data.frame(alpha = alpha, phi = phi, sigmasq = sigmasq)
 
-knitr::kable(cbind(c(0, 0.2, 0.5), t(df), rep(64, 3)),
+knitr::kable(cbind(c(0, 0.2, 0.5), t(df), rep(81, 3)),
   col.names = c("true", "mean", "var", paste0(c(2.5, 25, 50, 75, 97.5), "%"), "N"),
   digits = 3, format = "markdown", padding = 2
 )
