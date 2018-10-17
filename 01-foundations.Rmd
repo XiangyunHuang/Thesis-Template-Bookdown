@@ -442,6 +442,7 @@ medians <- summary(fit)$summary[ , "50%"]
 # Markdown/LaTeX 格式表格 padding 用来控制间距
 knitr::kable(summary(fit)$summary, digits = 2, format = "markdown", padding = 2)
 knitr::kable(summary(fit)$summary, digits = 2, format = "latex")
+format(object.size(fit), units = "auto") # 查看对象占用的内存大小
 ```
 ```{r eval=FALSE,include=FALSE}
 # 从模拟数据获得与 print(fit) 一样的结果
