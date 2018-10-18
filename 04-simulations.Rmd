@@ -205,7 +205,7 @@ g(\mu_i) = \log(\lambda(x_i)) = \alpha + S(x_i) (\#eq:pois-SGLMM)
 
 \noindent 其中，$S(x)$ 是平稳空间高斯过程，其均值为 $\mathbf{0}$，协方差函数为 $\mathrm{Cov}(S(x_i),S(x_j)) = \sigma^2 \big\{2^{\kappa-1}\Gamma(\kappa)\big\}^{-1}(u/\phi)^{\kappa}K_{\kappa}(u/\phi)$，联系函数 $g(\mu_i) = \log\{\lambda(x_{i})\}$。
 
-类似 \@ref(sim-binomal-sglmm) 小节，首先产生服从平稳空间高斯过程 $S(x)$ 的随机数 $S(x_i),i=1,\ldots,N$，则根据 \@ref(eq:pois-SGLMM) 式， $\lambda(x_i) = \exp(\alpha + S(x_i))$，又响应变量 $Y_i \sim \mathrm{Possion}(\lambda(x_{i}))$，根据 R 内置函数 `rpois` 产生服从参数为 $\lambda(x_i)$ 的泊松分布的随机数。
+类似 \@ref(sim-binomal-sglmm) 小节，首先产生服从平稳空间高斯过程 $S(x)$ 的随机数 $S(x_i),i=1,\ldots,N$，然后根据 \@ref(eq:pois-SGLMM) 式， $\lambda(x_i) = \exp(\alpha + S(x_i))$，又响应变量 $Y_i \sim \mathrm{Possion}(\lambda(x_{i}))$，根据 R 内置函数 `rpois` 产生服从参数为 $\lambda(x_i)$ 的泊松分布的随机数。
 
 Table: (\#tab:Pois-MCLV-vs-NUTS) 模型参数真值设置为 $\alpha = 0.5, \phi = 0.2, \sigma^2 = 2.0, \kappa = 1.5$，采样点数目分别为 $N=36,64,100$
 
