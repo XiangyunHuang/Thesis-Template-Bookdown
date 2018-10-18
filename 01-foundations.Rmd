@@ -361,7 +361,14 @@ Table: (\#tab:calculate-volume-of-hyperball) 前 10 维单位超立方体内切�
 
 Stan 内置的采样器 No-U-Turn (简称 NUTS) 源于汉密尔顿蒙特卡罗算法 (Hamiltonian Monte Carlo，简称 HMC)，最早由 Matthew D. Hoffman 和 Andrew Gelman (2014年) [@hoffman2014] 提出。与 Stan 有相似功能的软件 BUGS 和 JAGS 主要采用的是 Gibbs 采样器，前者基于 Pascal 语言开发于 1989 年至 2004 年，后者基于 C++ 活跃开发于 2007 年至 2013 年。在时间上， Stan 具有后发优势，特别在灵活性和扩展性方面，它支持任意的目标函数，模型语言也更加简单易于推广学习，其每一行都是命令式的语句，而 BUGS 和 JAGS 采用声明式；在大量数据的建模分析中， Stan 可以更快地处理复杂模型，这一部分归功于它高效的算法实现和内存管理，另一部分在于高级的 MCMC 算法 --- 带 NUTS 采样器的 HMC 算法。
 
-Donald B. Rubin (1981年) [@Rubin1981] 分析了 Donald L. Alderman 和 Donald E. Powers [@Alderman1980] 收集的原始数据，得出表 \@ref(tab:eight-high-schools)， Andrew Gelman 和 John B. Carlin 等 (2003年) [@Gelman2003] 建立分层正态模型 \@ref(eq:hierarchical-normal-models) 分析 Eight Schools 数据集，这里再次以该数据集和模型为例介绍 Stan 的使用。
+Donald B. Rubin (1981年) [@Rubin1981] 分析了 Donald L. Alderman 和 Donald E. Powers [@Alderman1980] 收集的原始数据，得出表 \@ref(tab:eight-high-schools)， Andrew Gelman 和 John B. Carlin 等 (2003年) [@Gelman2003] 建立分层正态模型 \@ref(eq:hierarchical-normal-models) 分析 Eight Schools 数据集，由美国教育考试服务调查搜集，用以分析不同的培训项目对学生考试分数的影响，其随机调查了 8 所高中，学生的成绩作为培训效应的估计 $y_j$，其样本方差 $\sigma^2_j$，数据集见表 \@ref(tab:eight-high-schools)。这里再次以该数据集和模型为例介绍 Stan 的使用。
+
+Table: (\#tab:eight-high-schools) Eight Schools 数据集
+
+|   School   |   A   |   B   |   C   |   D   |   E   |   F   |   G   |   H   |
+|:----------:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
+|   $y_i$    |  28   |   8   |   -3  |   7   |   -1  |   1   |   18  |   12  |
+| $\sigma_i$ |  15   |  10   |   16  |   11  |    9  |   11  |   10  |   18  |
 
 \begin{equation}
 \begin{aligned}
@@ -375,16 +382,7 @@ p(\mu,\tau) & \propto 1 \\
 (\#eq:hierarchical-normal-models)
 \end{equation}
 
-由美国教育考试服务调查搜集，用以分析不同的培训项目对学生考试分数的影响，其随机调查了 8 所高中，学生的成绩作为培训效应的估计 $y_j$，其样本方差 $\sigma^2_j$，数据集见表 \@ref(tab:eight-high-schools)。
-
-Table: (\#tab:eight-high-schools) Eight Schools 数据集
-
-|   School   |   A   |   B   |   C   |   D   |   E   |   F   |   G   |   H   |
-|:----------:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
-|   $y_i$    |  28   |   8   |   -3  |   7   |   -1  |   1   |   18  |   12  |
-| $\sigma_i$ |  15   |  10   |   16  |   11  |    9  |   11  |   10  |   18  |
-
-分层正态模型可以在 Stan 中写成如下形式，在工作目录下把它保存为 `8schools.stan ` 
+根据公式组 \@ref(eq:hierarchical-normal-models) 指定的各参数的先验分布，分层正态模型可以在 Stan 中写成如下形式，我们在工作目录下把它保存为 `8schools.stan ` ，供后续编程使用。
 
 ```{r code-8schools,comment=NA}
 cat(readLines("code/8schools.stan"),sep = "\n")
