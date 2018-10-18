@@ -2,7 +2,7 @@
 
 loaloa 和 rongelap 两个真实数据集分别来自 R 包 **geoRglm** 和 **PrevMap**， 且被 Peter J. Diggle 等 (2007年) [@Diggle2007ATMP] 和 Ole F Christensen (2004年) [@Christensen2004] 分析过，第 \@ref(case-loaloa) 节和第 \@ref(case-rongelap) 节给出分析这两个数据集的模型和结果。其中，响应变量服从二项分布的空间广义线性混合效应模型拟合数据集 loaloa， 而响应变量服从泊松分布的空间广义线性混合效应模型拟合数据集 rongelap。
 
-## 空间线性混合效应模型 {#sptial-random-effects}
+## 空间线性混合效应模型 {#sec:sptial-random-effects}
 
 Walter W. Stroup 和 P. Stephen Baenziger (1994年) [@Stroup1994] 采用完全随机的区组设计研究小麦产量与品种等因素的关系，在 4 块肥力不同的地里都随机种植了 56 种不同的小麦， 实验记录了小麦产量、品种、位置以及土地肥力等数据， José Pinheiro 和 Douglas Bates (2000年) [@Pinheiro2000] 将该数据集命名为 Wheat2 ，整理后放在 **nlme** 包里。 这里利用该真实的农业生产数据构建带空间效应的线性混合效应模型，展示诊断和添加空间效应的过程。
 
