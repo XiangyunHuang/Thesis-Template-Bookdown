@@ -1,23 +1,8 @@
 # 参数估计 {#algorithms}
 
-模型的参数估计是建模分析的重要步骤，鉴于空间广义线性混合效应模型(简称 SGLMM)的复杂性，文献中的参数估计方法，如最小二乘估计(简称 LSE)和极大似然估计(简称 MLE) 都没有显式的表达式，因此必须发展有效的算法。
-
-目前，文献中的出现的算法有低秩近似算法、蒙特卡罗极大似然算法和马尔科夫链蒙特卡罗算法，但这些尚未应用到 SGLMM 模型的参数估计中， 我们应用这些算法去估计 SGLMM 模型参数，特别提出了新的算法。
+模型的参数估计是建模分析的重要步骤，鉴于空间广义线性混合效应模型(简称 SGLMM)的复杂性，文献中的参数估计方法，如最小二乘估计(简称 LSE)和极大似然估计(简称 MLE) 都没有显式的表达式，因此必须发展有效的算法。目前，文献中的出现的算法有低秩近似算法、蒙特卡罗极大似然算法和马尔科夫链蒙特卡罗算法，我们应用这些算法去估计 SGLMM 模型参数，特别提出了基于 Stan 实现的贝叶斯 MCMC 算法。
 
 第 \@ref(algrithms) 节介绍求解 SGLMM 模型 \@ref(eq:again-SGLMM) 参数的三类算法， 分别是第 \@ref(MCML) 小节介绍的蒙特卡罗极大似然算法(简称 MCML 算法)， 第 \@ref(LowRank) 小节介绍的低秩近似算法(简称 Low-Rank)， 第 \@ref(MCMC) 小节介绍的贝叶斯框架下的马尔科夫链蒙特卡罗算法 (简称贝叶斯 MCMC）。在贝叶斯 MCMC 算法的基础上，改进算法实现形式，提出 STAN-MCMC 算法，在第 \@ref(STAN-MCMC) 节予以详细介绍。
-
-\begin{equation}
-g(\mu_i) =T_{i} = d(x_i)'\beta + S(x_i) + Z_i (\#eq:again-SGLMM)
-\end{equation}
-
-\noindent 其中，设置 $d_{i} = d'(x_i)$，$d'(x_i)$ 主要是强调协变量的空间内容， 这里表示采样点的观测数据向量， 即 $p$ 个协变量在第 $i$ 个位置 $x_i$ 的观察值。 $\mathcal{S} = \{S(x): x \in \mathbb{R}^2\}$ 是均值为0，方差为 $\sigma^2$，平稳且各向同性的空间高斯过程，自相关函数是 $\rho(u;\phi)$，$S(x_i)$ 是空间效应，$Z_i \stackrel{i.i.d}{\sim} N(0,\tau^2)$ 的块金效应，$g$ 是联系函数，$x_i \in \mathbb{R}^2$是采样点的位置。 综上，模型 \@ref(eq:again-SGLMM) 待估计的参数有 $\beta$ 和 $\boldsymbol{\theta}' = (\sigma^2,\phi,\tau^2)$。 特别地，当响应变量分别服从二项分布和泊松分布时， 模型 \@ref(eq:again-SGLMM) 分别变为模型 \@ref(eq:BL-SGLMM) 和模型 \@ref(eq:Poss-SGLMM)。
-
-\begin{align}
-\log\{\frac{p_i}{1-p_i}\} & = T_{i} = d(x_i)'\beta + S(x_i) + Z_i  (\#eq:BL-SGLMM)\\
-\log(\lambda_i)           & = T_{i} = d(x_i)'\beta + S(x_i) + Z_i  (\#eq:Poss-SGLMM)
-\end{align}
-
-\noindent 模型 \@ref(eq:BL-SGLMM) 中，响应变量 $Y_i$ 服从二项分布 $Y_i \sim \mathrm{Binomial}(m_i,p_i)$， 均值 $\mathrm{E}(Y_i|S(x_i),Z_i)=m_{i}p_{i}$， $m_i$ 表示在 $x_i$ 的位置抽取的样本量，总的样本量就是 $M=\sum_{i=1}^{N}m_i$，$N$ 表示采样点的个数。模型 \@ref(eq:Poss-SGLMM) 中， 响应变量 $Y_i$ 服从泊松分布 $Y_i \sim \mathrm{Possion}(\lambda_i)$。 在获取响应变量 $Y$ 的观测的过程中，与广义线性或广义线性混合效应模型 \@ref(eq:GLM) 和 \@ref(eq:GLMM) 不同的在于：在每个采样点 $x_i$，$Y_i$ 都服从参数不同但同类的分布。 下面如无特殊说明， 算法描述对象都是模型 \@ref(eq:BL-SGLMM)。
 
 ## 极大似然估计 {#mle}
 
@@ -208,8 +193,22 @@ Q''(\mathbf{s}) =  -\mathrm{diag} \{b''(D\boldsymbol{\beta} + \mathbf{s}) \} - \
 
 牛顿--拉夫森算法收敛速度是很快的，但是必须提供一个很好的初值，好的初值对于快速收敛到近似似然函数 $\ell(\boldsymbol{\theta};\mathbf{y})$ 的极大值点很重要。指定外迭代中的初值 $\boldsymbol{\theta}_{0}$的一个策略是首先拟合一个简单的广义线性模型，获得回归系数 $\boldsymbol{\beta}$ 的初值，基于这些值计算线性预测值 $\hat{\boldsymbol{\mu}}$；然后计算残差 $\hat{\boldsymbol{r}} = (\hat{\boldsymbol{\mu}} - \mathbf{y})$， $\hat{\boldsymbol{r}}$ 的方差作为 $\sigma^2$ 的初值，如果 SGLMM 带有块金效应，就用 $\sigma^2$ 的初值的一定比例，如 10\% 作为 $\tau^2$ 的初值；最后，$\phi$ 的初值选择两个距离最大的观测点之间的距离的 10\%，比较保险的办法是选择不同的 $\phi$ 作为初值，这个过程需要不断的试错以期获得算法的收敛。
 
-
 ### 蒙特卡罗极大似然算法 {#MCML}
+
+为描述蒙特卡罗极大似然算法，空间广义线性混合效应模型的结构表述如下
+
+\begin{equation}
+g(\mu_i) = T_{i} = d(x_i)'\beta + S(x_i) + Z_i (\#eq:again-SGLMM)
+\end{equation}
+
+\noindent 其中，设置 $d_{i} = d'(x_i)$，$d'(x_i)$ 主要是强调协变量的空间内容， 这里表示采样点的观测数据向量， 即 $p$ 个协变量在第 $i$ 个位置 $x_i$ 的观察值。 $\mathcal{S} = \{S(x): x \in \mathbb{R}^2\}$ 是均值为 $\mathbf{0}$，方差为 $\sigma^2$，平稳且各向同性的空间高斯过程，自相关函数是 $\rho(u;\phi)$，$S(x_i)$ 是空间效应，$Z_i \stackrel{i.i.d}{\sim} N(0,\tau^2)$ 的块金效应，$g$ 是联系函数，$x_i \in \mathbb{R}^2$是采样点的位置。 综上，模型 \@ref(eq:again-SGLMM) 待估计的参数有 $\beta$ 和 $\boldsymbol{\theta}' = (\sigma^2,\phi,\tau^2)$。 特别地，当响应变量分别服从二项分布和泊松分布时， 模型 \@ref(eq:again-SGLMM) 分别变为模型 \@ref(eq:BL-SGLMM) 和模型 \@ref(eq:Poss-SGLMM)。
+
+\begin{align}
+\log\{\frac{p_i}{1-p_i}\} & = T_{i} = d(x_i)'\beta + S(x_i) + Z_i  (\#eq:BL-SGLMM)\\
+\log(\lambda_i)           & = T_{i} = d(x_i)'\beta + S(x_i) + Z_i  (\#eq:Poss-SGLMM)
+\end{align}
+
+\noindent 模型 \@ref(eq:BL-SGLMM) 中，响应变量 $Y_i$ 服从二项分布 $Y_i \sim \mathrm{Binomial}(m_i,p_i)$， 均值 $\mathrm{E}(Y_i|S(x_i),Z_i)=m_{i}p_{i}$， $m_i$ 表示在 $x_i$ 的位置抽取的样本量，总的样本量就是 $M=\sum_{i=1}^{N}m_i$，$N$ 表示采样点的个数。模型 \@ref(eq:Poss-SGLMM) 中， 响应变量 $Y_i$ 服从泊松分布 $Y_i \sim \mathrm{Possion}(\lambda_i)$。 在获取响应变量 $Y$ 的观测的过程中，与广义线性或广义线性混合效应模型 \@ref(eq:GLM) 和 \@ref(eq:GLMM) 不同的在于：在每个采样点 $x_i$，$Y_i$ 都服从参数不同但同类的分布。 下面如无特殊说明， 算法描述对象都是模型 \@ref(eq:BL-SGLMM)。
 
 模型 \@ref(eq:BL-SGLMM) 中参数 $\beta$ 和 $\boldsymbol{\theta}' = (\sigma^2,\phi,\tau^2)$ 的似然函数是通过对 $T_i$ 内的随机效应积分获得的。 用大写 $D$ 表示 $n\times p$ 的数据矩阵,  $y' = (y_1,y_2,\cdots,y_n)$ 表示各空间位置 $x_i$ 处响应变量的观测值，对应模型 \@ref(eq:BL-SGLMM) 中的 $Y_i \sim \mathrm{Binomial}(m_i,p_i)$， $T = (T_1,T_2,\ldots,T_n)$ 的边际分布是 $N(D\beta, \Sigma(\boldsymbol{\theta}))$， 其中，协方差矩阵 $\Sigma(\boldsymbol{\theta})$ 的对角元是 $\sigma^2+\tau^2$， 非对角元是 $\sigma^2\rho(u_{ij})$， $u_{ij}$ 是位置 $x_i$ 与 $x_j$ 之间的距离。在给定 $T'=t'=(t_1,t_2,\cdots,t_n)$ 下， $Y'=(Y_1,\cdots,Y_n)$ 的条件分布是独立二项概率分布函数的乘积 $f(y|t)=\prod_{i=1}^{n}f(y_{i}|t_{i})$， 因此， $\beta$ 和 $\boldsymbol{\theta}$ 的似然函数可以写成
 
@@ -217,7 +216,7 @@ Q''(\mathbf{s}) =  -\mathrm{diag} \{b''(D\boldsymbol{\beta} + \mathbf{s}) \} - \
 L(\beta,\boldsymbol{\theta}) = f(y;\beta,\boldsymbol{\theta}) = \int_{\mathbb{R}^{n}}N(t;D\beta,\Sigma(\boldsymbol{\theta}))f(y|t)dt (\#eq:likelihood)
 \end{equation}
 
-\noindent 其中，$N(\cdot;\mu,\Sigma)$ 表示均值为$\mu$，协方差矩阵为 $\Sigma$ 的多元高斯分布的密度函数。 1994 年 Charles J. Geyer 在给定 $Y=y$ 的情况下，使用 $T$ 的条件分布 $f(T|Y=y)$ 模拟近似方程 \@ref(eq:likelihood) 中的高维积分 [@Geyer1994On]，则似然函数 $L(\beta,\boldsymbol{\theta})$ 可以重写为
+\noindent 其中，$N(\cdot;\mu,\Sigma)$ 表示均值为 $\mu$，协方差矩阵为 $\Sigma$ 的多元高斯分布的密度函数。 1994 年 Charles J. Geyer 在给定 $Y=y$ 的情况下，使用 $T$ 的条件分布 $f(T|Y=y)$ 模拟近似方程 \@ref(eq:likelihood) 中的高维积分 [@Geyer1994On]，则似然函数 $L(\beta,\boldsymbol{\theta})$ 可以重写为
 
 \begin{equation}
 \begin{aligned}
@@ -284,8 +283,6 @@ L_{m}(\beta,\boldsymbol{\theta})=\frac{1}{m}\sum_{i=1}^{n}\frac{N(t_{i};D\beta,\
 
 低秩近似算法分两部分来阐述，第一部分讲空间高斯过程的近似，第二部分将该近似方法应用于 SGLMM 模型。
 
-#### 空间高斯过程的近似 {#low-rank-gp}
-
 空间高斯过程 $\mathcal{S}$， $\mathcal{S} = \{S(x),x\in\mathbb{R}^2\}$，对任意给定一组空间位置 $x_1,x_2,\ldots,x_n, \forall x_{i} \in \mathbb{R}^2$，随机变量 $S(x_i),i = 1,2,\ldots,n$ 的联合分布 $\mathcal{S}=\{S(x_1),S(x_2),\ldots,S(x_n)\}$ 是多元高斯分布，其由均值 $\mu(x) = \mathrm{E}[S(x)]$ 和协方差 $G_{ij} =\gamma(x_i,x_j)= \mathrm{Cov}\{S(x_i),S(x_j)\}$ 完全确定，即 $\mathcal{S} \sim \mathrm{MVN}(\mu_{S},G)$。
 
 低秩近似算法使用奇异值分解协方差矩阵 $G$ [@Diggle2007]， 将协方差矩阵 $G$ 分解，也意味着将空间高斯过程 $\mathcal{S}$ 分解，分解过程如下
@@ -330,8 +327,6 @@ S(x) = \sum_{j=1}^{m}A_{j}f_{j}(x), \forall x \in \mathbb{R}^2 (\#eq:svd-S4)
 
 \noindent  随机系数 $A_{j}$ 满足相互独立。
 
-#### 低秩近似算法
-
 为方便叙述起见，低秩近似算法以模型 \@ref(eq:lowrank-SGLMM) 为描述对象，它是模型 \@ref(eq:again-SGLMM) 的特殊形式，主要区别是模型 \@ref(eq:lowrank-SGLMM) 中，联系函数 $g(\mu) = \log\big(\frac{\mu}{1-\mu}\big)$
 
 \begin{equation}
@@ -360,30 +355,20 @@ S(x) \approx \sum_{i = 1}^r K(\|x-\tilde{x}_{i}\|; \phi, \kappa) U_{i} (\#eq:lr-
 
 注意到平稳空间高斯过程 $S(x)$ 经过方程 \@ref(eq:lr-approx) 的近似已不再平稳。通过乘以 $$\frac{1}{n}\sum_{i = 1}^n \sum_{j = 1}^m K(\|\tilde{x}_{j}-\tilde{x}_{i}\|; \phi, \kappa)^2$$ 来调整 $\sigma^2$。 事实上，调整后的 $\sigma^2$ 会更接近于高斯过程 $S(x)$ 的实际方差。
 
-低秩近似的关键是对高斯过程 $\mathcal{S}$ 的协方差矩阵 $\Sigma(\theta)$ 做降维分解， 这对 $\Sigma(\theta)$ 的逆和行列式运算是非常重要的，在计算之前，将 $K(\theta)$ 表示为 $n\times r$ 的核矩阵，它是由自相关函数（或称核函数）决定的空间距离矩阵，协方差矩阵 $\Sigma(\theta) = \sigma^2K(\theta)K(\theta)'+\tau^2 I_{n}$，$I_{n}$ 是 $n\times n$ 的单位矩阵。根据 Woodbury 公式可得 $$\Sigma(\theta)^{-1} = \sigma^2\nu^{-2}(I_{n}-\nu^{-2}K(\theta)(\nu^{-2}K(\theta)' K(\theta)+I_{r})^{-1}K(\theta)')$$ 其中， $\nu^2 = \tau^2/\sigma^2$，求 $n$ 阶方阵 $\Sigma(\theta)$ 的逆变成求 $r$ 阶方阵的逆， 从而达到了降维的目的。 下面再根据 Sylvester 行列式定理计算 $\Sigma(\theta)$ 的行列式 $|\Sigma(\theta)|$
-
+低秩近似的关键是对高斯过程 $\mathcal{S}$ 的协方差矩阵 $\Sigma(\theta)$ 做降维分解， 这对 $\Sigma(\theta)$ 的逆和行列式运算是非常重要的，在计算之前，将 $K(\theta)$ 表示为 $n\times r$ 的核矩阵，它是由自协方差函数决定的空间距离矩阵，协方差矩阵 $\Sigma(\theta) = \sigma^2K(\theta)K(\theta)'+\tau^2 I_{n}$，$I_{n}$ 是 $n\times n$ 的单位矩阵。根据 Woodbury 公式可得 $$\Sigma(\theta)^{-1} = \sigma^2\nu^{-2}(I_{n}-\nu^{-2}K(\theta)(\nu^{-2}K(\theta)' K(\theta)+I_{r})^{-1}K(\theta)')$$ 其中， $\nu^2 = \tau^2/\sigma^2$，求 $n$ 阶方阵 $\Sigma(\theta)$ 的逆变成求 $r$ 阶方阵的逆， 从而达到了降维的目的。 下面再根据 Sylvester 行列式定理计算 $\Sigma(\theta)$ 的行列式 $|\Sigma(\theta)|$
 \begin{eqnarray*}
 |\Sigma(\theta)| & = & |\sigma^2K(\theta)K(\theta)'+\tau^2 I_{n}| \\ 
                  & = & \tau^{2n}|\nu^{-2}K(\theta)' K(\theta)+I_{r}|
 \end{eqnarray*}
-
-\noindent 类似地，行列式运算的维数从 $n\times n$ 降到了 $r\times r$。
+\noindent 类似地，行列式运算的维数从 $n\times n$ 降到了 $r\times r$ [@Diggle2007]。
 
 ## 贝叶斯 STAN-MCMC 算法 {#STAN-MCMC}
 
-### 算法提出的背景和意义
+<!-- ### 算法提出的背景和意义 {#subsec:motivations} -->
 
-贝叶斯 MCMC 算法是一个计算密集型的算法，高效的实现对理论和应用都有非常重要的意义。因此，早在 1989 年剑桥大学研究人员开发出了 Windows 上的应用程序 WinBUGS，并被广泛使用。随着个人电脑的普及、Linux 和 MacOS 系统的蓬勃发展， 只能运行于 Windows 系统上的 WinBUGS 逐渐落后于时代，并在 2008 年宣布停止开发。 随后， OpenBUGS 以开源的开发方式重现了 WinBUGS 的功能，还可跨平台运行，弥补了 WinBUGS 的不足，而后又出现了同类的开源软件 JAGS。 无论是 OpenBUGS 还是 JAGS 都无法适应当代计算机硬件的迅猛发展， 它们的设计由于历史局限性， 已经无法满足在兼容性、 扩展性和高效性方面的要求。 因此， 哥伦比亚大学的统计系以开源的方式开发了新一代贝叶斯推断子程序库 Stan， 它与前辈们最明显的最直观的不同在于，它不是一个像 WinBUGS/OpenBUGS/JAGS 那样的软件有菜单窗口， [Stan](http://mc-stan.org/) 是一种概率编程语言 [@Stan2017JSS]， 可以替代 BUGS ( **B**ayesian inference **U**sing **G**ibbs **S**ampling )  [@BUGS2009] 作为 MCMC 算法的高效实现。相比较于同类软件，Stan 的优势有：底层完全基于 C++ 实现；拥有活跃和快速发展的社区；支持在CPU/GPU上大规模并行计算；独立于系统和硬件平台；提供多种编程语言的接口，如 PyStan、 RStan 等等。 在大数据的背景下， 拥有数千台服务器的企业越来越多， 计算机资源达到前所未有的规模， 这为 Stan 的广泛应用打下了基础， 我们基于 R 语言编程接口实现求解 SGLMM 模型的贝叶斯 MCMC 算法（以下简称 STAN-MCMC 算法）。
+贝叶斯 MCMC 算法是一个计算密集型的算法，高效的实现对理论和应用都有非常重要的意义。因此，早在 1989 年剑桥大学研究人员开发出了 Windows 上的应用程序 WinBUGS，并被广泛使用。随着个人电脑的普及、Linux 和 MacOS 系统的蓬勃发展， 只能运行于 Windows 系统上的 WinBUGS 逐渐落后于时代，并在 2008 年宣布停止开发。 随后， OpenBUGS 以开源的开发方式重现了 WinBUGS 的功能，还可跨平台运行，弥补了 WinBUGS 的不足，而后又出现了同类的开源软件 JAGS。 无论是 OpenBUGS 还是 JAGS 都无法适应当代计算机硬件的迅猛发展， 它们的设计由于历史局限性， 已经无法满足在兼容性、 扩展性和高效性方面的要求。 因此， 哥伦比亚大学的统计系以开源的方式开发了新一代贝叶斯推断子程序库 Stan， 它与前辈们最明显的最直观的不同在于，它不是一个像 WinBUGS/OpenBUGS/JAGS 那样的软件有菜单窗口， [Stan](http://mc-stan.org/) 是一种概率编程语言 [@Stan2017JSS]， 可以替代 BUGS ( **B**ayesian inference **U**sing **G**ibbs **S**ampling )  [@BUGS2009] 作为 MCMC 算法的高效实现。相比较于同类软件，Stan 的优势有：底层完全基于 C++ 实现；拥有活跃和快速发展的社区；支持在CPU/GPU上大规模并行计算；独立于系统和硬件平台；提供多种编程语言的接口，如 PyStan、 RStan 等等。 在大数据的背景下， 拥有数千台服务器的企业越来越多， 计算机资源达到前所未有的规模， 这为 Stan 的广泛应用打下了基础， 基于 Stan 实现求解 SGLMM 模型的贝叶斯 MCMC 算法(简称 STAN-MCMC)。
 
-<!-- 可用于贝叶斯框架下，空间广义线性混合效应模型的参数估计基于 GPU 加速是一个不错的选择， Stan 开发者也把 GPU 加速列入开发日程。SCIKIT-CUDA 和 ArrayFire 等基于 CUDA 开发的通用加速框架获得越来越多的关注。基于 Stan 实现的汉密尔顿蒙特卡罗算法 -->
-<!-- 不管怎么改进 MCMC 算法，它始终是一个计算量非常大，非常耗时的算法，那么高效地实现就比较有意义，基于 C++ 语言编写的高性能计算库 Stan，其主要目的是实现 -->
-<!-- 1. 全贝叶斯推断使用 No-U-Turn 采样器，是汉密尔顿蒙特卡罗算法的变种 -->
-<!-- 2. 近似贝叶斯推断使用自动微分变分推理方法 -->
-<!-- 3. 惩罚极大似然估计使用 L-BFGS 优化算法 -->
-<!-- 论文基于第一点，做了适用于空间广义线性混合效应模型的算法实现 -->
-<!-- 主要参考了 2007 年书籍，算法的适应性和针对特定问题的高效率， -->
-
-### STAN-MCMC 算法实现过程 {#STANMCMC}
+<!-- ### STAN-MCMC 算法实现过程 {#STANMCMC} -->
 
 为了与本章第 \@ref(MCMC) 节提出的贝叶斯 MCMC 算法比较，我们基于它编写了程序。目前，我与 Paul Bürkner 一起开发了 **brms** 包 [@brms2017JSS]， 主要工作是修复程序调用和文档书写错误， 特别是与求解 SGLMM 模型相关的`gp`函数，相关细节见 **brms** 的 Github 开发仓库。
 
@@ -393,62 +378,58 @@ S(x) \approx \sum_{i = 1}^r K(\|x-\tilde{x}_{i}\|; \phi, \kappa) U_{i} (\#eq:lr-
 2. 更新参数向量 $\theta$ ：(i) 从指定的先验分布中均匀抽取新的 $\theta'$ ；(ii) 以概率 $\Delta(\theta,\theta') = \min \big\{\frac{p(S|\theta')}{p(S|\theta)},1\big\}$，否则不改变 $\theta$；
 3. 更新高斯过程 $S$ 的取值：(i) 抽取新的值 $S_{i}'$， 向量 $S$ 的第 $i$ 值来自一元条件高斯密度 $p(S_{i}'|S_{-i},\theta)$，$S_{-i}'$ 表示移除 $S$ 中的第 $i$ 个值；(ii) 以概率 $\Delta(S_{i},S_{i}') = \min\big\{ \frac{p(y_{i}|s_{i}',\beta)}{p(y_{i}s_{i},\beta)},1 \big\}$ 接受 $S_{i}'$，否则不改变$S_i$；(iii) 重复 (i) 和 (ii) $\forall i = 1,2,\ldots,n$；
 4. 更新模型系数 $\beta$ ：从条件密度 $p(\beta'|\beta)$ 以概率 $$\Delta = \min \big\{ \frac{\prod_{j=1}^{n}p(y_i|s_{i},\beta')p(\beta|\beta')}{\prod_{j=1}^{n}p(y_i|s_{i},\beta)p(\beta'|\beta)},1  \big\}$$ 接受 $\beta'$，否则不改变$\beta$。
-5. 重复步骤2，3，4既定的次数。获得参数 $\beta,\theta$ 的迭代序列。
+5. 重复步骤2，3，4 既定的次数，获得参数 $\beta,\theta$ 的迭代序列。
 
-即到达平稳的初始位置，然后根据后续的平稳序列采样，获得各参数的后验分布的样本及对应估计值。程序实现的主要步骤（以 R 语言接口 **rstan** 和 **brms** 为例说明）：
-
-1. 安装 C++ 编译工具，如果在 Windows 平台上，就从 R 官网下载安装 RTools， 它包含一套完整的 C++ 开发工具。 然后添加 gcc/g++ 编译器的路径到系统环境变量。 如果在Linux系统上， 这些工具都是自带的， 环境变量也不用配置， 减少了很多麻烦。其它配置细节见 Stan 开发官网 ^[<https://github.com/stan-dev/rstan/wiki>]。
-2. 在 R 软件控制台，安装 **rstan** 和 **brms** 包以及相关依赖包。
-3. 加载 **rstan** 和 **brms** 包，配置参数如下：
-
-    ```{r,echo=TRUE,eval=FALSE}
-    # 加载程序包
-    library(rstan)
-    library(brms)
-    # 以并行方式运行STAN-MCMC算法，指定 CPU 的核心数
-    options(mc.cores = parallel::detectCores())
-    # 将编译后的模型写入磁盘，可防止重新编译
-    rstan_options(auto_write = TRUE)
-    ```
-
-4. 调用 brms 包的 brm 函数
-
-    ```{r,echo=TRUE,eval=FALSE}
-    fit.binomal <- brm(formula = y | trials(units.m) ~ 
-      0 + intercept + x1 + x2 + gp(d1, d2), 
-      data = sim_binom_data,
-      prior = set_prior("normal(0,10)", class = "b"),
-      chains = 4, thin = 5, iter = 15000, family = binomial()
-    )    
-    ```
-
+\noindent 直到参数的迭代序列平稳，然后根据后续的平稳序列采样，获得各参数后验分布的样本，再根据样本估计参数值。程序实现的主要步骤(以 R 语言接口 **rstan** 和 **brms** 为例说明)：首先安装 C++ 编译工具，如果在 Windows 平台上，就从 R 官网下载安装 [RTools][rtools]， 它包含一套完整的 C++ 开发工具。 然后添加 gcc/g++ 编译器的路径到系统环境变量。 如果在 Linux 系统上， 这些工具都是自带的， 环境变量也不用配置， 减少了很多麻烦，但是在 Linux 系统上可以获得更好的算法性能。其它配置细节见 Stan 开发[官网][stan-setup]。其次，在 R 软件控制台，安装 **rstan** 和 **brms** 包以及相关依赖包。然后，加载 **rstan** 和 **brms** 包，配置参数如下：
+```{r,echo=TRUE,eval=FALSE}
+# 加载程序包
+library(rstan)
+library(brms)
+# 以并行方式运行STAN-MCMC算法，指定 CPU 的核心数
+options(mc.cores = parallel::detectCores())
+# 将编译后的模型写入磁盘，可防止重新编译
+rstan_options(auto_write = TRUE)
+```
+\noindent 接着调用 **brms** 包的 `brm` 函数
+```{r,echo=TRUE,eval=FALSE}
+fit.binomal <- brm(formula = y | trials(units.m) ~ 
+  0 + intercept + x1 + x2 + gp(d1, d2), 
+  data = sim_binom_data,
+  prior = set_prior("normal(0,10)", class = "b"),
+  chains = 4, thin = 5, iter = 15000, family = binomial()
+)    
+```
 \noindent `brm` 函数可设置的参数有几十个，下面仅列出部分
 
-1. _formula_ ：设置 SGLMM 模型的结构，其中波浪号左侧是响应变量，`trials` 表示在每个采样点抽取的样本量；波浪号右侧 `0 + intercept` 表示截距项， `x1` 和 `x2` 表示协变量，`gp(d1, d2)` 表示采样坐标为 `(d1,d2)` 自相关函数为幂指数族的平稳高斯过程
-2. _data_ ： SGLMM 模型拟合的数据`sim_binom_data` 
-3. _prior_ ： 设置SGLMM模型参数的先验分布
-4. _chains_ ： 指定同时生成马尔科夫链的数目
-5. _iter_ ： STAN-MCMC 算法总迭代次数
-6. _thin_ ： burn-in 位置之后，每隔 thin 的间距就采一个样本
-7. _family_ : 指定响应变量服从的分布，如二项分布，泊松分布等
+1. `formula` ：设置 SGLMM 模型的结构，其中波浪号左侧是响应变量，`trials` 表示在每个采样点抽取的样本量；波浪号右侧 `0 + intercept` 表示截距项， `x1` 和 `x2` 表示协变量，`gp(d1, d2)` 表示采样坐标为 `(d1,d2)` 自相关函数为幂指数族的平稳高斯过程
+2. `data` ： SGLMM 模型拟合的数据`sim_binom_data` 
+3. `prior` ： 设置SGLMM模型参数的先验分布
+4. `chains` ： 指定同时生成马尔科夫链的数目
+5. `iter` ： STAN-MCMC 算法总迭代次数
+6. `thin` ： `burn-in` 位置之后，每隔 `thin` 的间距就采一个样本
+7. `family` : 指定响应变量服从的分布，如二项分布，泊松分布等
 
-### 求解模型的 R 包
+## 实现参数估计的 R 包 {#subsec:sglmm-with-r}
 
-R语言作为免费自由的统计计算和绘图环境，因其更新快，社区庞大，扩展包更是超过了 13000 个，提供了大量前沿统计方法的代码实现。如 **spBayes** 包使用贝叶斯 MCMC 算法估计 SGLMM 模型的参数  [@spBayes2015]； **coda** 包诊断马尔科夫链的平稳性 [@coda2006]；**MCMCvis** 包分析和可视化贝叶斯 MCMC 算法的输出， 提取模型参数， 转化 JAGS、Stan 和 BUGS 软件的输出结果到R对象，以利后续分析；**geoR** 包 在空间线性混合效应模型上实现了贝叶斯 MCMC 算法 [@geoR2001]；**geoRglm** 包在 **geoR** 包的基础上将模型范围扩展到 SGLMM 模型 [@geoRglm2002]；**glmmBUGS** 包提供了 WinBUGS、 OpenBUGS 和 JAGS 软件的统一接口 [@glmmBUGS2010MCMC]；**gstat** 包迁移自S语言，提供了克里金插值方法 [@gstat2016]。 目前，R 语言社区提供的求解 SGLMM 模型的 R 包和功能实现，见表 \@ref(tab:sglmm-packages)。
+R 语言作为免费自由的统计计算和绘图环境，因其更新快，社区庞大，扩展包更是超过了 13000 个，提供了大量前沿统计方法的代码实现。如 **spBayes** 包使用贝叶斯 MCMC 算法估计 SGLMM 模型的参数  [@spBayes2015]； **coda** 包诊断马尔科夫链的平稳性 [@coda2006]；**MCMCvis** 包分析和可视化贝叶斯 MCMC 算法的输出， 提取模型参数， 转化 JAGS、Stan 和 BUGS 软件的输出结果到 R 对象，以利后续分析；**geoR** 包 在空间线性混合效应模型上实现了贝叶斯 MCMC 算法 [@geoR2001]；**geoRglm** 包在 **geoR** 包的基础上将模型范围扩展到 SGLMM 模型 [@geoRglm2002]；**glmmBUGS** 包提供了 WinBUGS、 OpenBUGS 和 JAGS 软件的统一接口 [@glmmBUGS2010MCMC]。 目前，R 语言社区提供的求解 SGLMM 模型的 R 包和功能实现，见表 \@ref(tab:sglmm-packages)。
 
 Table: (\#tab:sglmm-packages)  求解空间广义线性混合效应模型的 R 包功能比较：加号 + 表示可用，减号 - 表示不可用，星号 \* 标记的只在空间线性混合效应模型下可用
 
 |               | PrevMap | geoR  | geoRglm | geostatsp | geoBayes | spBayes |
-|    :---:      |  :---:  | :---: |  :---:  |   :---:   |   :---:  |  :---:  |
-|   二项模型    |    +    |   -   |    +    |     +     |     +    |    +    |
-|   似然推断    |    +    |   -   |    +    |     -     |     -    |    -    |
-|  贝叶斯推断   |    +    |   -   |    +    |     +     |     +    |    +    |
-|   块金效应    |    +    |   -   |    +    |     +     |     +    |    -    |
-|   低秩近似    |    +    |   -   |    -    |     -     |     -    |    +    |
+| :------------ |  :---:  | :---: |  :---:  |   :---:   |   :---:  |  :---:  |
+| 二项空间模型  |    +    |   -   |    +    |     +     |     +    |    +    |
+| 基于似然函数推断    |    +    |   -   |    +    |     -     |     -    |    -    |
+| 基于贝叶斯推断   |    +    |   -   |    +    |     +     |     +    |    +    |
+| 模型的块金效应    |    +    |   -   |    +    |     +     |     +    |    -    |
+|   低秩近似算法    |    +    |   -   |    -    |     -     |     -    |    +    |
 |   分层模型    |    +    |   -   |    -    |     +     |     -    |    -    |
 |  非线性预测   |    +    |   +\* |    +    |     -     |     +    |    +    |
 |   多元预测    |    +    |   +\* |    +    |     -     |     +    |    +    |
-|   各向异性    |    -    |   +\* |    +    |     +\*   |     -    |    -    |
-|   非梅隆核    |    -    |   +\* |    +    |     -     |     +    |    +    |
+| 空间过程各向异性    |    -    |   +\* |    +    |     +\*   |     -    |    -    |
+| 非梅隆型协方差函数    |    -    |   +\* |    +    |     -     |     +    |    +    |
 
-## 本章小结 {#sec:estimations}
+<!-- ## 本章小结 {#sec:estimations} -->
+
+
+[stan-setup]: https://github.com/stan-dev/rstan/wiki
+[rtools]: https://cran.r-project.org/bin/windows/Rtools/
