@@ -174,6 +174,14 @@ Table: (\#tab:rangelap-mcml-result) 蒙特卡罗极大似然估计模型 \@ref(e
 ```{r childhood-malaria,fig.cap="冈比亚 65 个村庄的空间位置，黑点标记，插入的图是响应区域的放大版，由箭头指向"}
 knitr::include_graphics(path = "figures/gambia-map.png")
 ```
+```{r eval=FALSE}
+# CMR # 喀麦隆地图
+# GMB # 冈比亚地图
+library(raster)
+GMB_map <- getData('GADM', country='GMB', level=0)
+par(mai=c(0,0,0,0))
+plot(GMB_map)
+```
 
 \begin{equation}
 \log\{p_{ij}/(1-p_{ij})\} = \alpha + \beta^{\top}z_{ij} + S(x_i) (\#eq:gambia-without-nugget-effect)

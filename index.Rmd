@@ -33,7 +33,9 @@ description: "Spatial generalized linear mixed models, Stationary Spatial Gaussi
 
 # 绪论 {#intro}
 
-空间统计的内容非常丰富，主要分为地质统计 (geostatistics)、 离散空间变差 (discrete spatial variation) 和空间点过程 (spatial point processes) 三大块 [@Cressie1993]。 地质统计这个术语最初来自南非的采矿业 [@Krige1951]， 并由 Georges Matheron 及其同事继承和发展， 用以预测黄金的矿藏含量和质量， 空间广义线性混合效应模型 (Spatial Generalized Linear Mixed Model，简称 SGLMM) 在空间数据建模中具有重要的地位， 除了采矿业， 还可应用于卫生统计、 气象统计和空间经济统计等领域， 如分析地区范围内的疟疾分布， 有限气象站点条件下， 预测地区的污染物浓度分布等具有非常广泛的应用。
+空间统计的内容非常丰富，主要分为地质统计 (geostatistics)、 离散空间变差 (discrete spatial variation) 和空间点过程 (spatial point processes) 三大块 [@Cressie1993]。 地质统计这个术语最初来自南非的采矿业 [@Krige1951]， 并由 Georges Matheron 及其同事继承和发展，用以预测黄金的矿藏含量和质量， 
+
+空间广义线性混合效应模型 (Spatial Generalized Linear Mixed Model，简称 SGLMM) 在空间数据建模中具有重要的地位， 除了采矿业， 还可应用于卫生统计、 气象统计和空间经济统计等领域， 如分析地区范围内的疟疾分布， 有限气象站点条件下， 预测地区的污染物浓度分布等具有非常广泛的应用。
 
 ## 研究意义 {#motivations}
 

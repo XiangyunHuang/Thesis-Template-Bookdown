@@ -13,6 +13,8 @@ gstat: Spatial and Spatio-Temporal Geostatistical Modelling, Prediction and Simu
 
 MCMC 方法应用于 GLMM 模型 [@MCMCglmm2010]
 
+马尔科夫链的收敛性分析、平稳性诊断、遍历性
+
 在依据似然函数做统计推断的情况下，必须解决高维积分的问题，解决高维积分的两条路：采用拉普拉斯近似方法近似积分，蒙特卡罗方法求积分
 
 <!-- Pairwise likelihood inference [@Pairwise2005] data cloning algorithm [@Baghishani2011] Approximate Monte Carlo EM Gradient [@Hosseini2016]-->
