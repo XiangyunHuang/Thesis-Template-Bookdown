@@ -33,15 +33,11 @@ description: "Spatial generalized linear mixed models, Stationary Spatial Gaussi
 
 # 绪论 {#intro}
 
-空间统计的内容非常丰富，主要分为地质统计 (geostatistics)、 离散空间变差 (discrete spatial variation) 和空间点过程 (spatial point processes) 三大块 [@Cressie1993]。 地质统计这个术语最初来自南非的采矿业 [@Krige1951]， 并由 Georges Matheron 及其同事继承和发展，用以预测黄金的矿藏含量和质量，
-
-空间广义线性混合效应模型 (Spatial Generalized Linear Mixed Model，简称 SGLMM) 在空间数据建模中具有重要的地位， 除了采矿业， 还可应用于卫生统计、 气象统计和空间经济统计等领域， 如分析地区范围内的疟疾分布， 有限气象站点条件下， 预测地区的污染物浓度分布等具有非常广泛的应用。
+空间统计的内容非常丰富，主要分为地质统计 (geostatistics)、 离散空间变差 (discrete spatial variation) 和空间点过程 (spatial point processes) 三大块 [@Cressie1993]。 地质统计这个术语最初来自南非的采矿业 [@Krige1951]， 并由 Georges Matheron 及其同事继承和发展，用以预测黄金的矿藏含量和质量。空间广义线性混合效应模型 (Spatial Generalized Linear Mixed Model，简称 SGLMM) 在空间数据建模中具有重要的地位，除了采矿业，还可应用于卫生统计、 气象统计和空间经济统计等领域，如分析地区范围内的疟疾分布，有限气象站点条件下，预测地区 PM2.5 污染物浓度分布等。
 
 ## 研究意义 {#motivations}
 
-空间广义线性混合效应模型有着广泛的应用， 如评估岩心样本石油含量， 分析核污染物浓度的空间分布 [@Diggle1998]， 预测冈比亚儿童疟疾流行度的空间分布， 冈比亚疟疾空间分布 [@Thomson1999;@Diggle2002Childhood] 和喀麦隆及其周边地区的热带眼线虫流行病的的空间分布 [@Diggle2007ATMP]， 对热带疾病预防和控制项目提供决策支持 [@Schl2016Using]。 在热带地区，淋巴丝虫病和盘尾丝虫病是严峻的公共卫生问题， 据世界卫生组织统计， 在非洲撒哈拉以南、 阿拉伯半岛和南美洲的 34 个国家约 2000 \~ 4000 万人感染河盲病 [@Takougang2002Rapid]。 例如， 喀麦隆中部省份 Loa loa 是导致河盲病的寄生虫， 它感染强度与疾病流行度之间存在线性关系， 即 Loa loa 感染强度越大流行度越高 [@Boussinesq2001]。 1997 年，研究表明 Loa loa 流行度对应的高感染强度的临界值为 20\% [@Gardon1997Serious]， 而研究个体水平的感染情况与群体水平流行度之间的关系有助于大规模给药 [@Schl2016Using]。 
-
-更加高效的算法或算法的实现可以更加快速准确有效地做疾病预防和医疗资源分配。
+空间广义线性混合效应模型有着广泛的应用，如评估岩心样本石油含量，分析核污染物浓度的空间分布 [@Diggle1998]， 预测冈比亚儿童疟疾流行度的空间分布 [@Thomson1999;@Diggle2002Childhood]， 喀麦隆及其周边地区的热带眼线虫流行病的的空间分布 [@Diggle2007ATMP]，对热带疾病预防和控制项目提供决策支持 [@Schl2016Using]。 在热带地区，淋巴丝虫病和盘尾丝虫病是严峻的公共卫生问题， 据世界卫生组织统计， 在非洲撒哈拉以南、 阿拉伯半岛和南美洲的 34 个国家约 2000 \~ 4000 万人感染河盲病 [@Takougang2002Rapid]。 例如， 喀麦隆中部省份 Loa loa 是导致河盲病的寄生虫，它的感染强度与疾病流行度之间存在线性关系， 即 Loa loa 感染强度越大流行度越高 [@Boussinesq2001]。 1997 年，研究表明 Loa loa 流行度对应的高感染强度的临界值为 20\% [@Gardon1997Serious]， 而研究个体水平的感染情况与群体水平流行度之间的关系有助于大规模给药 [@Schl2016Using]，所以更加高效的算法和算法实现可以更快、更准、更有效地在大范围内做疾病预防和医疗资源分配。
 
 ## 文献综述 {#reviews}
 

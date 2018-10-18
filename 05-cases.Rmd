@@ -230,3 +230,5 @@ Table: (\#tab:gambia-with-nugget-effect) 带块金效应的模型 \@ref(eq:gambi
 
 
 ## 本章小结 {#sec:cases}
+
+
