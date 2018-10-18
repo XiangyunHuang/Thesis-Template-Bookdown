@@ -1,24 +1,73 @@
+```{r include=FALSE, cache=FALSE}
+library(methods)
+set.seed(2018)
+# 加载依赖
+library(ggplot2)
+library(StanHeaders)
+library(rstan)
+# 设置环境
+is_on_travis = identical(Sys.getenv("TRAVIS"), "true")
+is_online = curl::has_internet()
+
+options(mc.cores = if(is_on_travis) 4 else 2)
+rstan_options(auto_write = TRUE)
+
+library(tibble)
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  echo = FALSE,
+  cache = TRUE,
+  size = "scriptsize",
+  out.width = "70%",
+  fig.align = "center",
+  fig.width = 6,
+  fig.asp = 0.618
+)
+
+doc_type <- function() knitr::opts_knit$get('rmarkdown.pandoc.to')
+
+knitr::knit_hooks$set(
+  optipng = knitr::hook_optipng,
+  pdfcrop = knitr::hook_pdfcrop,
+  small.mar = function(before, options, envir) {
+    if (before) par(mar = c(4.1, 4.1, 0.5, 0.5))  # smaller margin on top and right
+  }
+)
+# https://github.com/yihui/knitr-examples/blob/master/085-pdfcrop.Rnw
+
+options(
+  digits = 3,
+  citation.bibtex.max = 999,
+  bitmapType = "cairo",
+  stringsAsFactors = FALSE,
+  repos = "https://mirrors.tuna.tsinghua.edu.cn/CRAN/",
+  knitr.graphics.auto_pdf = FALSE,
+  tikzDefaultEngine = "xetex",
+  tikzXelatexPackages = c(
+    getOption("tikzXelatexPackages"),
+    "\\usepackage[colorlinks, breaklinks]{hyperref}",
+    "\\usepackage{color,tikz}",
+    "\\usepackage[active,tightpage,xetex]{preview}",
+    "\\PreviewEnvironment{pgfpicture}",
+    "\\usepackage{amsmath,amsfonts,mathrsfs}"
+  )
+)
+
+```
 # 数值模拟 {#simulations}
 
-空间广义线性混合效应模型在广义线性混合效应模型基础上添加了与空间位置相关的随机效应，这种随机效应在文献中常称为空间效应 [@Diggle1998]。 它与采样点的位置、数量都有关系， 其中采样点的位置决定空间过程的协方差结构， 而采样点的数量决定空间效应的维度，从而导致空间广义线性混合效应模型比普通的广义线性混合效应模型复杂。作为过渡，我们在第 \@ref(sim-one-gp) 和 \@ref(sim-two-gp) 节模拟了一维和二维平稳高斯过程。 第 \@ref(sim-sglmm) 节模拟 SGLMM 模型， 分两个小节展开叙述，第 \@ref(sim-binomal-sglmm) 小节模拟响应变量服从二项分布的情形，  第 \@ref(possion-sglmm) 小节模拟响应变量服从泊松分布的情形，在这两个小节里， 比较了蒙特卡罗极大似然算法，低秩近似算法，贝叶斯马尔科夫链蒙特卡罗算法和贝叶斯 STAN-MCMC 算法的性能差异。
-
-模拟空间广义线性混合效应模型 \@ref(eq:sim-sglmm) 分三节进行，第一节模拟空间高斯过程 $S(x)$，第二节模拟响应变量 $Y$ 服从二项分布 ，第三节模拟响应变量 $Y$ 服从正态分布。空间高斯过程在模型 \@ref(eq:sim-sglmm) 中作为随机效应存在，不同于一般随机效应的地方在于它与样本的空间位置有关，一般地，假定 $S(x)$ 服从 $N$ 元高斯分布 $N(\mu_{S},G)$，$x = (d_1,d_2) \in \mathbb{R}^2$， $\mu_{S} = \mathbf{0}_{N\times1}$， $G_{(ij)} = \mathrm{Cov}(S(x_i),S(x_j))=\sigma^2*\rho(u_{ij})$， $S(x)$ 的相关函数 $\rho(u_{ij}) = \exp(-u_{ij}/\phi), u_{ij} \equiv \|x_{i}-x_{j}\|_2$，其中 $\phi$ 和 $\sigma^2$ 都是未知待估参数。可见采样点的位置 $(d_1,d_2)$ 和相关函数 $\rho(u)$ 一起决定空间高斯过程的形式，并且 $S(x)$ 的维度就是采样点的数目 $N$。这样通常导致空间效应的维度比协变量的数目大很多，模型 \@ref(eq:sim-sglmm) 的估计问题也比一般的广义线性混合效应模型困难。
-
-\begin{equation}
-g(\mu_i) = d(x_i)'\beta + S(x_i) + Z_i (\#eq:sim-sglmm)
-\end{equation}
+空间广义线性混合效应模型在广义线性混合效应模型基础上添加了与空间位置相关的随机效应，这种随机效应在文献中常称为空间效应 [@Diggle1998]。 它与采样点的位置、数量都有关系， 其中采样点的位置决定空间过程的协方差结构， 而采样点的数量决定空间效应的维度，从而导致空间广义线性混合效应模型比普通的广义线性混合效应模型复杂。作为过渡，我们在第 \@ref(sim-one-gp) 和 \@ref(sim-two-gp) 节模拟了一维和二维平稳高斯过程。 第 \@ref(sim-sglmm) 节模拟 SGLMM 模型， 分两个小节展开叙述，第 \@ref(sim-binomal-sglmm) 小节模拟响应变量服从二项分布的情形，  第 \@ref(possion-sglmm) 小节模拟响应变量服从泊松分布的情形，在这两个小节里， 比较了贝叶斯 MCMC 算法和贝叶斯 STAN-MCMC 算法的性能差异。
 
 ## 平稳空间高斯过程 {#spatial-gaussian-processes}
 
 ### 一维平稳空间高斯过程 {#sim-one-gp}
 
 一维情形下，平稳高斯过程 $S(x)$ 的协方差函数采用幂指数型，见公式 \@ref(eq:cov-exp-quad)，当 $\kappa =1$ 时，为指数型，见公式 \@ref(eq:cov-exp-quad)。分 $\kappa =1$ 和 $\kappa =1$，模拟两个一维平稳空间高斯过程，协方差参数均为 $\sigma^2 = 1$，$\phi = 0.15$，均值向量都是 $\mathbf{0}$，在 $[-2,2]$ 的区间上，产生 2000 个服从均匀分布的随机数，由这些随机数的未知和协方差函数公式 \@ref(eq:cov-exp) 或 \@ref(eq:cov-exp-quad) 计算得到 2000 维的高斯分布的协方差矩阵 $G$，为保证协方差矩阵的正定性，在矩阵对角线上添加扰动 $1 \times 10^{-12}$，然后即可根据 Cholesky 分解该对称正定矩阵，得到下三角块 $L$，使得 $G = L \times L^{\top}$，再产生 2000 个服从标准正态分布的随机向量 $\eta$，而 $L\eta$ 即为所需的服从平稳高斯过程的一组随机数。
-
 \begin{align}
 \mathsf{Cov}(S(x_i), S(x_j)) & = \sigma^2 \exp\big\{ - \frac{|x_{i} - x_{j}|}{ \phi } \big\}  (\#eq:cov-exp) \\
 \mathsf{Cov}(S(x_i), S(x_j)) & = \sigma^2 \exp\big\{ -\big( \frac{ |x_{i} - x_{j}| }{ \phi } \big) ^ {\kappa} \big\}, 0 < \kappa \leq 2  (\#eq:cov-exp-quad) 
 \end{align}
-
 ```{r sim-one-gp, eval=FALSE, echo=FALSE}
 # 指数型协方差函数
 sim_one_gp_model_exp <- stan_model("code/sim_one_gp_exp.stan")
@@ -43,7 +92,7 @@ draw <- sampling(sim_one_gp_model_exp_quad,
 samps <- rstan::extract(draw)
 plt_df <- with(samps, data.frame(x = x[1, ], f = f[1, ]))
 ```
-```{r one-dim-gp,fig.cap='(ref:one-dim-gp)',fig.ncol=1,fig.sep="\\\\",fig.subcap=c("平稳空间高斯过程 $S(x)$ 的协方差函数是指数型，均值向量为 $\\mathbf{0}$，协方差参数 $\\sigma^2 = 1$，$\\phi = 0.15$","平稳空间高斯过程 $S(x)$ 的协方差函数是幂二次指数型，均值向量为 $\\mathbf{0}$，协方差参数 $\\sigma^2 = 1$，$\\phi = 0.15$，$\\kappa=2$")}
+```{r one-dim-gp,fig.cap='(ref:one-dim-gp)',fig.ncol=1,fig.sep="\\\\",fig.subcap=c("平稳空间高斯过程 $S(x)$ 的协方差函数是指数型，均值向量为 $\\mathbf{0}$，协方差参数 $\\sigma^2 = 1$，$\\phi = 0.15$","平稳空间高斯过程 $S(x)$ 的协方差函数是幂二次指数型，均值向量为 $\\mathbf{0}$，协方差参数 $\\sigma^2 = 1$，$\\phi = 0.15$，$\\kappa=2$"),out.width="85%",fig.pos="!htb"}
 # 指数型协方差函数  连续但是在原点不可微
 # pdf(file = "one-dim-gp-exp.pdf", width = 8, height = 8 * 0.618)
 # par(mar = c(4.1, 4.1, 1.5, 0.5))
@@ -135,11 +184,9 @@ text(sim$coords[, 1], sim$coords[, 2], format(sim$data, digits = 1), cex = 1.5)
 ```
 
 同 \@ref(sim-one-gp) 节，二维平稳空间高斯过程 $S(x)$ 的协方差函数也可以为更一般的梅隆型，如公式 \@ref(eq:exp-matern) 所示。
-
 \begin{equation}
 \rho(u) = \sigma^2 \{ 2^{\kappa -1} \Gamma(\kappa) \}^{-1}( u/\phi )^{\kappa} \mathcal{K}_{\kappa}( u / \phi ) (\#eq:exp-matern)
 \end{equation}
-
 \noindent 且在区域 $[0,1] \times [0,1]$ 上也可以随机采点，如图 \@ref(fig:sim-two-gp) 的右子图所示。
 
 模拟平稳空间高斯过程的其它 R 包实现方法： Paulo J. Ribeiro Jr. 和 Peter J. Diggle 开发了 **geoR** 包 [@geoR2001]，提供的 `grf` 函数除了实现 Cholesky 分解，还实现了奇异值分解，特征值分解协方差矩阵的算法。当采样点不太多时，Cholesky 分解已经足够好，下面的第 \@ref(sim-sglmm) 节对平稳空间高斯过程的数值模拟即采用此法，当采样点很多，为了加快模拟的速度，可以选用 Martin Schlather 等开发的 **RandomFields** 包 [@RandomFields2015]，内置的 `GaussRF` 函数实现了用高斯马尔科夫随机场近似平稳空间高斯过程的算法，此外，Håvard Rue 等 (2009年) [@Rue2009] 也实现了从平稳高斯过程到高斯马尔科夫随机场的近似算法，开发了更为高效的 INLA 程序库 [@INLA2015]，其内置的近似程序得到了广泛的应用 [@Virgilio2018;@Blangiardo2015;@Faraway2018]。
@@ -150,26 +197,22 @@ text(sim$coords[, 1], sim$coords[, 2], format(sim$data, digits = 1), cex = 1.5)
 ### 响应变量服从二项分布 {#sim-binomal-sglmm}
 
 响应变量服从二项分布 $Y_{i} \sim \mathrm{Binomal}(m_{i},p(x_{i}))$，在位置 $x_i$ 处，以概率 $p(x_i)$ 重复抽取了 $m_i$ 个样本，总样本数 $M=\sum_{i=1}^{N}m_i$，$N$ 是采样点的个数，二项空间广义线性混合效应模型为 \@ref(eq:binom-SGLMM)，联系函数为 $g(\mu_i) = \log\{\frac{p(x_i)}{1-p(x_i)}\}$，$S(x)$ 是均值为 $\mathbf{0}$，协方差函数为 $\mathrm{Cov}(S(x_i),S(x_j)) = \sigma^2 \big\{2^{\kappa-1}\Gamma(\kappa)\big\}^{-1}(u/\phi)^{\kappa}K_{\kappa}(u/\phi), \kappa = 0.5$ 的平稳空间高斯过程。
-
 \begin{equation}
 g(\mu_i) = \log\{\frac{p(x_i)}{1-p(x_i)}\} = \alpha + S(x_i) (\#eq:binom-SGLMM)
 \end{equation}
-
 固定效应参数 $\alpha = 0$，协方差参数记为 $\boldsymbol{\theta} = (\sigma^2, \phi) = (0.5, 0.2)$，采样点数目为 $N = 64$，每个采样点抽取的样本数 $m_i = 4, i = 1, 2, \ldots, 64$。首先模拟平稳空间高斯过程 $S(x)$，在单位区域 $[0,1] \times [0,1]$ 划分为 $8 \times 8$ 的网格，格点选为采样位置，用 **geoR** 包提供的 `grf` 函数产生协方差参数为 $\boldsymbol{\theta} = (\sigma^2,\phi) = (0.5, 0.2)$ 的平稳空间高斯过程，由公式 \@ref(eq:binom-SGLMM) 可知 $p(x_i) = \exp(S(x_i))/(1 + \exp(S(x_i)))$， 即每个格点处二项分布的概率值，然后依此概率，由 `rbinom` 函数产生服从二项分布的观察值 $Y_i$，$Y_i$ 的取值范围为 $0, 1, 2, 3, 4$，模拟的数据集可以用图 \@ref(fig:binom-without-nugget-geoRglm) 直观表示。
 
 ```{r binom-without-nugget-geoRglm,fig.cap="左图表示二维规则平面上的平稳空间高斯过程，格点是采样点的位置，其上的数字是 $p(x)$ 的值，已经四舍五入保留两位小数，右图表示观察值 $Y$ 随空间位置的变化，格点上的值即为观察值 $Y$，图中的两个圈分别是第1个(左下)和第29个(右上)采样点",out.width="90%"}
 knitr::include_graphics(path = "figures/binom-without-nugget-geoRglm.png")
 ```
 
-基于 Langevin-Hastings 采样器实现的马尔科夫链蒙特卡罗算法，参数 $\alpha$ 的先验分布选均值为 0，方差为 1 的标准正态分布，参数 $\phi$ 的先验分布选期望为 0.2 的指数分布，参数 $\sigma^2$ 的先验分布是非中心的逆卡方分布，其非中心化参数为 0.5，自由度为 5，各参数的先验选择来自 Ole F. Christensen 和 Peter J. Ribeiro Jr. (2002年) [@geoRglm2002]。Langevin-Hastings 算法运行 110000 次迭代，前 10000 次迭代用作热身 (warm-up)，后 10 万次迭代里间隔 100 次迭代采样，获得关于参数 $\alpha,\phi,\sigma^2$ 的后验分布的样本，样本量是1000。
+基于 Langevin-Hastings 采样器实现的马尔科夫链蒙特卡罗算法，参数 $\alpha$ 的先验分布选均值为 0，方差为 1 的标准正态分布，参数 $\phi$ 的先验分布选期望为 0.2 的指数分布，参数 $\sigma^2$ 的先验分布是非中心的逆卡方分布，其非中心化参数为 0.5，自由度为 5，各参数的先验选择来自 Ole F. Christensen 和 Peter J. Ribeiro Jr. (2002年) [@geoRglm2002]。Langevin-Hastings 算法运行 110000 次迭代，前 10000 次迭代用作热身 (warm-up)，后 10 万次迭代里间隔 100 次迭代采样，获得关于参数 $\alpha,\phi,\sigma^2$ 的后验分布的样本，样本量是 1000。
+\begin{equation}
+\alpha \sim \mathcal{N}(0,1), \quad \phi \sim \mathrm{Exp}(0.2), \quad \sigma^2  \sim \mathrm{Inv-}\chi^2(5,0.5)
+\end{equation}
+参数 $\alpha,\phi,\sigma^2$ 的贝叶斯估计没有显式表达式，通常用 MCMC 算法获得后验分布的样本均值作为参数的估计。贝叶斯估计的定义是使得估计的均方误差达到最小时的估计，因此贝叶斯估计的精度或者说好坏常用后验分布的方差衡量，因为均方误差在参数估计取后验均值时是后验方差，故而表 \@ref(tab:MCLH-vs-NUTS) 不再提供估计的均方误差值，而是提供了 5 个后验分布的分位点，在 95\% 的置信水平下，样本分位点 0.025 和 0.975 的值组成了置信区间的上下界。除了获得各参数的估计值外，还获得 64 个采样点处 $p(x_i), i = 1, \ldots, 64$ 的后验均值、方差、标准差和 5个分位点，详见附表 \@ref(tab:LH-binom-SGLMM)
 
-\begin{align}
-\alpha   & \sim \mathcal{N}(0,1) \\
-\phi     & \sim \mathrm{Exp}(0.2) \\
-\sigma^2 & \sim \mathrm{Inv-}\chi^2(5,0.5)
-\end{align}
-
-Table: (\#tab:MCLH-vs-NUTS)  Langevin-Hastings 算法与汉密尔顿蒙特卡罗算法的数值模拟比较，模型参数 $\alpha,\phi,\sigma^2$ 的估计值（后验分布的均值）、方差（后验分布的方差）和 5 个分位点（后验分布的 5 个分位点），采样点数目分别考虑了 $N = 36, 64, 81, 100$ 的情况，括号内为相应参数的真值
+Table: (\#tab:MCLH-vs-NUTS)  Langevin-Hastings 算法与汉密尔顿蒙特卡罗算法的数值模拟比较，前者在R软件里基于 **geoRglm** 包实现，后者基于 Stan 实现，模型参数 $\alpha,\phi,\sigma^2$ 的估计值（后验分布的均值）、方差（后验分布的方差）和 5 个分位点（后验分布的 5 个分位点），采样点数目分别考虑了 $N = 36, 64, 81, 100$ 的情况，第一列是各参数的真值，表格前半部分是Langevin-Hastings算法实现的结果，后半部分是 Stan 实现的结果
 
 |        |  true|  mean|   var|   2.5\%|    25\%|   50\%|   75\%| 97.5\%|   N  |
 |:-------|-----:|-----:|-------:|-------:|------:|------:|------:|-----:|-----:|
@@ -191,8 +234,6 @@ Table: (\#tab:MCLH-vs-NUTS)  Langevin-Hastings 算法与汉密尔顿蒙特卡罗
 |$\alpha$    |   0.0|  -0.082|  0.170|  -0.893|  -0.321|  -0.078|  0.174|  0.742|  81|
 |$\phi$      |   0.2|   1.110|  0.331|   0.453|   0.721|   0.986|  1.330|  2.506|  81|
 |$\sigma^2$  |   0.5|   0.410|  0.105|   0.105|   0.205|   0.317|  0.503|  1.211|  81|
-
-参数 $\alpha,\phi,\sigma^2$ 的贝叶斯估计没有显式表达式，通常用后验分布的均值作为参数的估计，即所谓的贝叶斯估计，它的定义就是使得估计的均方误差达到最小时的估计。贝叶斯估计 的精度或者说好坏常用后验分布的方差衡量，因为均方误差在参数估计取后验均值时就是后验方差，所以表 \@ref(tab:MCLH-vs-NUTS) 不再提供估计的均方误差值，而是提供了 5 个后验分布的分位点，在 95\% 的置信水平下，样本分位点 0.025 和 0.975 的值组成了置信区间的上下界。除了获得各参数的估计值外，还获得 64 个采样点处 $p(x_i), i = 1, \ldots, 64$ 的后验均值、方差、标准差和 5个分位点，详见附表 \@ref(tab:LH-binom-SGLMM)
 
 
 ### 响应变量服从泊松分布 {#possion-sglmm}
@@ -234,8 +275,8 @@ Table: (\#tab:Pois-MCLV-vs-NUTS) 模型参数真值设置为 $\alpha = 0.5, \phi
 
 添加偏差、置信区间长度、时间花费
 
-Stan 2000 次迭代，前 1000 次迭代作为 warm-up 阶段，后 1000 次迭代全部采样，所以样本量也是1000。
+基于 Stan 实现的贝叶斯 STAN-MCMC 算法进行了 2000 次迭代，前 1000 次迭代作为 warm-up 阶段，后 1000 次迭代全部采样，所以样本量也是 1000。
 
-完整的表格见附表 \@ref(tab:HMC-Pois-SGLMM)
+包含有效样本数 $n_{eff}$ 潜在尺度缩减因子 $\hat{R}$ 以及蒙特卡罗均值误差 se\_mean 的完整表格见附表 \@ref(tab:HMC-Pois-SGLMM)
 
-## 本章小结 {#sec:simulations}
+<!-- ## 本章小结 {#sec:simulations} -->
