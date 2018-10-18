@@ -61,7 +61,7 @@ V_{T}(u_{ij})
 \mathrm{Cov}(T_{i}(x),T_{j}(x)) &= \mathrm{E}[S(x_i)S(x_j)]  = \sigma^2\rho(u_{ij})
 \end{aligned}
 \end{equation}
-\noindent 相关函数 $\rho(u)$ 的作用和地位就显而易见了，它是既决定理论变差又决定协方差矩阵的结构。图 \@ref(fig:semi-variance) 给出一般变差函数的示意图，作为粗略估计，纵截距可以看作是块金效应参数 $\tau^2$，而图中的变差函数基台值，即变差函数 $V_{T}(u_{ij})$ 趋于稳定的函数值，它是块金效应和空间效应的和，作为空间效应参数 $\sigma^2$ 的粗略估计，我们用它减去块金效应即得。基于样本变差函数图 \@ref(fig:semi-variance) 我们可以获得随机效应方差分量的初始估计，其使用案列见第 \@ref(applications) 章第 \@ref(sec:sptial-random-effects) 节。
+\noindent 相关函数 $\rho(u)$ 的作用和地位就显而易见了，它是既决定理论变差又决定协方差矩阵的结构。图 \@ref(fig:semi-variance) 给出一般变差函数的示意图，作为粗略估计，纵截距可以看作是块金效应参数 $\tau^2$，而图中的变差函数基台值，即变差函数 $V_{T}(u_{ij})$ 趋于稳定的函数值，它是块金效应和空间效应的和，作为空间效应参数 $\sigma^2$ 的粗略估计，我们用它减去块金效应即得。基于样本变差函数图 \@ref(fig:semi-variance) 我们可以获得随机效应方差分量的初始估计，其使用案列见第 \@ref(applications) 章第 \@ref(sec:spatial-random-effects) 节。
 
 ```{r semi-variance,fig.cap="变差函数 $V_{T}(u)$ 示意图"}
 knitr::include_graphics("figures/semi-variance.png")
