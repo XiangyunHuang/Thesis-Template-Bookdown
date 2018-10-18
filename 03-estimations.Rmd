@@ -206,7 +206,7 @@ Q''(\mathbf{s}) =  -\mathrm{diag} \{b''(D\boldsymbol{\beta} + \mathbf{s}) \} - \
 6. 用 BFGS 算法获得下一个值 $\boldsymbol{\theta}_{i+1}$；
 7. 重复上述过程直到收敛，获得参数的估计值 $\hat{\boldsymbol{\theta}}$。
 
-牛顿-拉夫森算法收敛速度是很快的，但是必须提供一个很好的初值，好的初值对于快速收敛到近似似然函数 $\ell(\boldsymbol{\theta};\mathbf{y})$ 的极大值点很重要。指定外迭代中的初值 $\boldsymbol{\theta}_{0}$的一个策略是首先拟合一个简单的广义线性模型，获得回归系数 $\boldsymbol{\beta}$ 的初值，基于这些值计算线性预测值 $\hat{\boldsymbol{\mu}}$；然后计算残差 $\hat{\boldsymbol{r}} = (\hat{\boldsymbol{\mu}} - \mathbf{y})$， $\hat{\boldsymbol{r}}$ 的方差作为 $\sigma^2$ 的初值，如果 SGLMM 带有块金效应，就用 $\sigma^2$ 的初值的一定比例，如 10\% 作为 $\tau^2$ 的初值；最后，$\phi$ 的初值选择两个距离最大的观测点之间的距离的 10\%，比较保险的办法是选择不同的 $\phi$ 作为初值，这个过程需要不断的试错以期获得算法的收敛。
+牛顿--拉夫森算法收敛速度是很快的，但是必须提供一个很好的初值，好的初值对于快速收敛到近似似然函数 $\ell(\boldsymbol{\theta};\mathbf{y})$ 的极大值点很重要。指定外迭代中的初值 $\boldsymbol{\theta}_{0}$的一个策略是首先拟合一个简单的广义线性模型，获得回归系数 $\boldsymbol{\beta}$ 的初值，基于这些值计算线性预测值 $\hat{\boldsymbol{\mu}}$；然后计算残差 $\hat{\boldsymbol{r}} = (\hat{\boldsymbol{\mu}} - \mathbf{y})$， $\hat{\boldsymbol{r}}$ 的方差作为 $\sigma^2$ 的初值，如果 SGLMM 带有块金效应，就用 $\sigma^2$ 的初值的一定比例，如 10\% 作为 $\tau^2$ 的初值；最后，$\phi$ 的初值选择两个距离最大的观测点之间的距离的 10\%，比较保险的办法是选择不同的 $\phi$ 作为初值，这个过程需要不断的试错以期获得算法的收敛。
 
 
 ### 蒙特卡罗极大似然算法 {#MCML}
