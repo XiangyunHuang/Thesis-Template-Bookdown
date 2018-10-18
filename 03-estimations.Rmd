@@ -197,7 +197,7 @@ Q''(\mathbf{s}) =  -\mathrm{diag} \{b''(D\boldsymbol{\beta} + \mathbf{s}) \} - \
 2. 计算协方差矩阵 $\Sigma$ 及其逆 $\Sigma^{-1}$；
 3. 通过如下步骤极大$Q$函数，获得估计值 $\hat{\mathbf{s}}$；
    (a) 为 $\mathbf{s}$ 选择初始值；
-   (b) 按 \@ref(eq:first-deriv) 式计算 $Q'(\mathbf{s})$，按 \@ref(eq:second-deriv) 式计算 $Q''(\mathbf{s})$，其中导数的计算可以参见黄湘云的文章 [@Huang2016COS]；
+   (b) 按 \@ref(eq:first-deriv) 式计算 $Q'(\mathbf{s})$，按 \@ref(eq:second-deriv) 式计算 $Q''(\mathbf{s})$，其中导数计算的代码实现见黄湘云(2016年) [@Huang2016COS]；
    (c) 解线性方程组 $Q''(\mathbf{s})\mathbf{s}^{\star} = Q'(\mathbf{s})$；
    (d) 更新 $\mathbf{s = s + s^{\star}}$；
    (e) 迭代直到收敛以获得 $\hat{\mathbf{s}}$。
