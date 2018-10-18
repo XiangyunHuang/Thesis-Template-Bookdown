@@ -91,7 +91,7 @@ knitr::include_graphics("figures/semi-variance.png")
 \rho_{0}(u)=\{2^{\kappa -1}\Gamma(\kappa)\}^{-1}(u)^{\kappa}\mathcal{K}_{\kappa}(u),u > 0 (\#eq:matern2)
 \end{equation}
 
-\noindent 其中，$\mathcal{K}_{\kappa}(\cdot)$ 是阶数为 $\kappa$ 的第二类修正的贝塞尔函数(详见第 \@ref(prepare) 章第\@ref(sec:stationary-gaussian-process) 节)， $\kappa(>0)$ 是平滑参数，满足这些条件的空间过程 $\mathcal{S}$ 是 $\lceil\kappa\rceil-1$ 次均方可微的。值得注意的是 Matérn 族其实包含幂指数族
+\noindent 其中，$\mathcal{K}_{\kappa}(\cdot)$ 是阶数为 $\kappa$ 的第二类修正的贝塞尔函数(详见第 \@ref(prepare) 章第\@ref(sec:modified-bessel-function) 节)， $\kappa(>0)$ 是平滑参数，满足这些条件的空间过程 $\mathcal{S}$ 是 $\lceil\kappa\rceil-1$ 次均方可微的。值得注意的是 Matérn 族其实包含幂指数族
 \noindent 当 $\kappa = 0.5$时，$\rho_{0}(u) = \exp(-u)$， $S(x)$ 均方连续但是不可微，当 $\kappa \to \infty$ 时， $\rho_{0}(u) = \exp(-u^2)$， $S(x)$ 无限次均方可微。
 
 在实际数据分析中，估计 $\kappa$ 时，为了节省计算，又不失一般性，经验做法是取离散的 $\kappa$ 值，如 $\kappa = 0.5, 1.5, 2.5$， 这样，平稳空间高斯过程就分别具有 $S(x)$ 均方连续不可微、一次可微和二次可微三种不同程度的光滑性。根据第 \@ref(prepare) 章第 \@ref(sec:stationary-gaussian-process) 节定理 \@ref(thm:stationary-mean-square-properties)，自相关函数 $\rho(u)$ 的可微性表示了空间过程 $\mathcal{S}$ 的曲面平滑程度。为更加直观地观察 $\rho(u)$，作图 \@ref(fig:matern-2d) 和图 \@ref(fig:matern-3d)。

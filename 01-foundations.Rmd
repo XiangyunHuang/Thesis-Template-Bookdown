@@ -223,7 +223,9 @@ Bartlett (1955 年) [@Bartlett1955] 得到如下结论
 自相关函数为 $\rho(u)$ 的平稳随机过程是 $k$ 次均方可微 (mean-square differentiable) 的，当且仅当 $\rho(u)$ 在 $u = 0$ 处是 $2k$ 次可微的。
 ```
 
-空间过程的协方差函数是梅隆型时，需要用到修正的第二类贝塞尔函数 $\mathcal{K}_{\kappa}(u)$，它是修正的贝塞尔方程的解 [@Abramowitz1972]，函数形式如下
+## 修正的第二类贝塞尔函数 {#sec:modified-bessel-function}
+
+平稳空间高斯过程的自协方差函数是梅隆型时，需要用到修正的第二类贝塞尔函数 $\mathcal{K}_{\kappa}(u)$，它是修正的贝塞尔方程的解 [@Abramowitz1972]，函数形式如下
 
 \begin{equation}
 \begin{aligned}
@@ -241,39 +243,35 @@ knitr::include_graphics(path = "figures/bessel.png")
 
 ## 拉普拉斯近似 {#sec:Laplace-approximation}
 
-先回顾一下基本的泰勒展开，一个函数可以在点 $a$ 处展开成和的形式，有时候是无穷多项，可以使用其中的有限项最为近似，通常会使用前三项，即到达二阶导的位置。
+先回顾一下基本的泰勒展开，将一个函数 $f(x)$ 在点 $a$ 处展开成和的形式，有时候是无穷多项，可以使用其中的有限项作为近似，通常会选用前三项，即到达函数 $f(x)$ 二阶导的位置。
 
-\[
-f(x) = f(a) + \frac{f'(a)}{1!}(x-a) + \frac{f''(a)}{2!}(x-a)^2 + \frac{f'''(a)}{3!}(x-a)^3 + \ldots
-\]
+\[ f(x) = f(a) + \frac{f'(a)}{1!}(x-a) + \frac{f''(a)}{2!}(x-a)^2 + \frac{f'''(a)}{3!}(x-a)^3 + \ldots \]
 
-以基本的抛物线为例， $f(x) = x^2$，在 $a = 2$ 处展开
+\noindent 以基本的抛物线函数 $f(x) = x^2$ 为例，考虑将它在 $a = 2$ 处展开。首先计算 $f(x)$ 的各阶导数
 
-\[ f(x) = x^2, \quad f'(x) = 2x, \quad f''(x) = 2, \quad f'''(x) = 0 \]
+\[ f(x) = x^2, \quad f'(x) = 2x, \quad f''(x) = 2, \quad f^{(n)}(x) = 0, \quad n = 3,4,\ldots \]
 
-因此，
+\noindent 因此，
 
 \[ f(x) = x^2 = 2^2 + 2(2)(x-2) + \frac{2}{2}(x-2)^2 \]
 
-拉普拉斯近似用正态分布来估计任意分布，它使用泰勒展开的前三项近似 $\log g(x)$，展开的位置是 $\hat{x}$，则 
+拉普拉斯近似本质上是用正态分布来近似任意分布 $g(x)$，用泰勒展开的前三项近似 $\log g(x)$，展开的位置是密度函数 $g(x)$ 的极值点 $\hat{x}$，则有
 
 \[
 \log g(x) \approx \log g(\hat{x}) + \frac{\partial \log g(\hat{x})}{\partial x} (x - \hat{x}) + \frac{\partial^2 \log g(\hat{x})}{2\partial x^2} (x - \hat{x})^2
 \]
 
-在函数 $g(x)$ 的极值点 $\hat{x}$ 展开， $x = \hat{x}$ 一阶导是 0，用曲率去估计方差是 $\hat{\sigma}^2 = -1/\frac{\partial^2 \log g(\hat{x})}{2\partial x^2}$，再重写上述近似
+\noindent 由于是在函数 $g(x)$ 的极值点 $\hat{x}$ 展开， 所以 $x = \hat{x}$ 一阶导是 0，用曲率去估计方差是 $\hat{\sigma}^2 = -1/\frac{\partial^2 \log g(\hat{x})}{2\partial x^2}$，再重写上述近似
 
 \[ \log g(x) \approx \log g(\hat{x}) - \frac{1}{2\hat{\sigma}^2} (x - \hat{x})^2 \]
 
-现在，用这个结果做正态近似，将上式两端取指数和积分，移去常数项
+\noindent 现在，用这个结果做正态近似，将上式两端先取指数，再积分，移去常数项
 
 \[
 \int g(x) \mathrm{d}x = \int \exp[\log g(x)] \mathrm{d}x \approx \mathrm{constant} \int \exp[- \frac{(x - \hat{x})^2}{2\hat{\sigma}^2}] \mathrm{d}x
 \]
 
-拉普拉斯方法用正态分布近似分布 $f(x)$， 其均值 $\hat{x}$，可以通过求解 $f'(x) = 0$ 获得，方差 $\hat{\sigma}^2 = -1/f''(\hat{x})$  
-
-以卡方分布 $\chi^2$ 为例，
+\noindent 则拉普拉斯方法近似任意密度函数 $g(x)$ 得到的正态分布的均值为 $\hat{x}$， $\hat{x}$ 可以通过求解方程 $g'(x) = 0$ 获得，方差为 $\hat{\sigma}^2 = -1/g''(\hat{x})$。下面以卡方分布 $\chi^2$ 为例，由于
 
 \begin{align*}
     f(x; k) & = \frac{ x^{k/2-1} \mathrm{e}^{-x/2} }{ 2^{k/2}\Gamma(k/2) }, x \geq 0 \\
@@ -282,11 +280,11 @@ f(x) = f(a) + \frac{f'(a)}{1!}(x-a) + \frac{f''(a)}{2!}(x-a)^2 + \frac{f'''(a)}{
 \log f''(x) & = -(k/2-1)/x^2
 \end{align*}
 
-所以
+\noindent 所以卡方分布的拉普拉斯近似为
 
 \[ \chi_{k}^2 \overset{LA}{\sim}  N(\hat{x} = k-2, \hat{\sigma}^2 = 2(k-2)) \]
 
-自由度越大，近似效果越好，对于多元分布的情况不难推广，使用多元泰勒展开和黑塞矩阵即可表示。并且参数集 $\theta$ 有唯一的极大值点 $\hat{\theta}$ [@Tierney1986]。
+\noindent 自由度越大，近似效果越好，对于多元分布的情况不难推广，使用多元泰勒展开和黑塞矩阵即可表示[@Tierney1986]。
 
 
 ## 先验后验分布 {#sec:bayes-prior}
