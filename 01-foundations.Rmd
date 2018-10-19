@@ -11,7 +11,7 @@ f_{Y}(y;\theta,\phi) = \exp\big\{ \big(y\theta - b(\theta) \big)/a(\phi) + c(y,\
 (\#eq:common-exponential-family)
 \end{equation}
 
-其中，$a(\cdot),b(\cdot),c(\cdot)$ 是某些特定的函数。如果 $\phi$ 已知，这是一个含有典则参数 $\theta$ 的指数族模型，如果 $\phi$ 未知，它可能是含有两个参数的指数族。对于正态分布
+\noindent 其中，$a(\cdot),b(\cdot),c(\cdot)$ 是某些特定的函数。如果 $\phi$ 已知，这是一个含有典则参数 $\theta$ 的指数族模型，如果 $\phi$ 未知，它可能是含有两个参数的指数族。对于正态分布
 
 \begin{equation}
 \begin{aligned}
@@ -20,31 +20,31 @@ f_{Y}(y;\theta,\phi) & = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\{-\frac{(y - \mu)^2}
 \end{aligned} (\#eq:normal-distribution)
 \end{equation}
 
-通过与 \@ref(eq:common-exponential-family) 式对比，可知 $\theta = \mu$，$\phi = \sigma^2$，并且有
+\noindent 通过与 \@ref(eq:common-exponential-family) 式对比，可知 $\theta = \mu$，$\phi = \sigma^2$，并且有
 
 \[
 a(\phi) = \phi, \quad b(\theta) = \theta^2/2, \quad c(y,\phi) = - \frac{1}{2}\{ y^2/\sigma^2 + \log(2\pi\sigma^2) \} 
 \]
 
-记 $l(\theta,\phi;y) = \log f_{Y}(y;\theta,\phi)$ 为给定样本点 $y$ 的情况下，关于 $\theta$ 和 $\phi$ 的对数似然函数。样本分布 $Y$ 的均值和方差具有如下关系
+\noindent 记 $l(\theta,\phi;y) = \log f_{Y}(y;\theta,\phi)$ 为给定样本点 $y$ 的情况下，关于 $\theta$ 和 $\phi$ 的对数似然函数。样本 $Y$ 的均值和方差具有如下关系
 
 \begin{equation}
 \mathsf{E}\big( \frac{\partial l}{\partial \theta} \big) = 0
 (\#eq:mean-log-lik)
 \end{equation}
 
-和
+\noindent 和
 
 \begin{equation}
 \mathsf{E}\big( \frac{\partial^2 l}{\partial \theta^2} \big) + \mathsf{E}\big(\frac{\partial l}{\partial \theta}\big)^2  = 0
 (\#eq:variance-log-lik)
 \end{equation}
 
-从 \@ref(eq:common-exponential-family) 式知
+\noindent 从 \@ref(eq:common-exponential-family) 式知
 
 \[ l(\theta,\phi;y) = {y\theta - b(\theta)}/a(\phi) + c(y,\phi) \]
 
-因此，
+\noindent 因此，
 
 \begin{equation}
 \begin{aligned}
@@ -53,21 +53,21 @@ a(\phi) = \phi, \quad b(\theta) = \theta^2/2, \quad c(y,\phi) = - \frac{1}{2}\{ 
 \end{aligned} (\#eq:partial-log-lik)
 \end{equation}
 
-从 \@ref(eq:mean-log-lik) 式和 \@ref(eq:partial-log-lik)，可以得出
+\noindent 从 \@ref(eq:mean-log-lik) 式和 \@ref(eq:partial-log-lik)，可以得出
 
 \[ 
 0 = \mathsf{E}\big( \frac{\partial l}{\partial \theta} \big) = \big\{ \mu - b'(\theta) \big\}/a(\phi)
 \]
 
-所以
+\noindent 所以
 
 \[ \mathsf{E}(Y) = \mu = b'(\theta) \]
 
-根据 \@ref(eq:variance-log-lik) 式和 \@ref(eq:partial-log-lik) 式，可得
+\noindent 根据 \@ref(eq:variance-log-lik) 式和 \@ref(eq:partial-log-lik) 式，可得
 
 \[ 0 = - \frac{b''(\theta)}{a(\phi)} + \frac{\mathsf{Var}(Y)}{a^2(\phi)} \]
 
-所以
+\noindent 所以
 
 \[ \mathsf{Var}(Y) = b''(\theta)a(\phi) \]
 
@@ -77,11 +77,11 @@ a(\phi) = \phi, \quad b(\theta) = \theta^2/2, \quad c(y,\phi) = - \frac{1}{2}\{ 
 
 \[ a(\phi) = \phi/w \]
 
-其中 $\phi$ 可由 $\sigma^2$ 表示，故而也叫做发散参数 (dispersion parameter)，是一个与样本观察值相关的常数，$w$ 是已知的权重，随样本观察值变化。对正态分布模型而言，$w$ 的分量是 $m$ 个相互独立的样本观察值的均值，我们有
+\noindent 其中 $\phi$ 可由 $\sigma^2$ 表示，故而也叫做发散参数 (dispersion parameter)，是一个与样本观察值相关的常数，$w$ 是已知的权重，随样本观察值变化。对正态分布模型而言，$w$ 的分量是 $m$ 个相互独立的样本观察值的均值，有
 
 \[ a(\phi) = \sigma^2/m\]
 
-所以，$w = m$。
+\noindent 所以，$w = m$。
 
 根据 \@ref(eq:common-exponential-family)式，正态、泊松和二项分布的特征见表 \@ref(tab:common-characteristics)，其它常见分布见 Peter McCullagh 等 (1989年) [@McCullagh1989]。
 
@@ -206,7 +206,7 @@ I(\theta_{0}) = \mathsf{E}_{\theta_{0}} \big[ \frac{ p'(x,\theta_{0}) }{ p(x,\th
 
 \[ \lim_{h \to 0} \mathsf{E}\big[ \{S(x + h) - S(x)\}^{2} \big] = 0 \] 
 
-则称 $S(x)$ 是均方连续(mean-square continuous)的。
+\noindent 则称 $S(x)$ 是均方连续(mean-square continuous)的。
 ```
 
 ```{definition, label="differentiable", name="可微性", echo=TRUE}
@@ -214,7 +214,7 @@ I(\theta_{0}) = \mathsf{E}_{\theta_{0}} \big[ \frac{ p'(x,\theta_{0}) }{ p(x,\th
 
 \[ \lim_{h \to 0} \mathsf{E} \big[ \{ \frac{S(x+h) - S(x)}{h} - S'(x) \}^2 \big] = 0 \]
 
-则称 $S(x)$ 是均方可微的，并且 $S'(x)$ 就是均方意义下的一阶导数。如果 $S'(x)$ 是均方可微的，则 $S(x)$ 是二次均方可微的，随机过程 $S(x)$ 的高阶均方可微性可类似定义。
+\noindent 则称 $S(x)$ 是均方可微的，并且 $S'(x)$ 就是均方意义下的一阶导数。如果 $S'(x)$ 是均方可微的，则 $S(x)$ 是二次均方可微的，随机过程 $S(x)$ 的高阶均方可微性可类似定义。
 ```
 
 Bartlett (1955 年) [@Bartlett1955] 得到如下结论
@@ -234,7 +234,7 @@ I_{-\kappa}(u) & =  \sum_{m=0}^{\infty} \frac{1}{m!\Gamma(m + \kappa + 1)} \big(
 \end{aligned} (\#eq:besselK-function)
 \end{equation}
 
-其中 $u \geq 0$，$\kappa \in \mathbb{R}$，如果 $\kappa \in \mathbb{Z}$，则取该点的极限值，$\mathcal{K}_{\kappa}(u)$ 的值可由 R 内置的函数 `besselK` 计算 [@Campbell1980]。
+\noindent 其中 $u \geq 0$，$\kappa \in \mathbb{R}$，如果 $\kappa \in \mathbb{Z}$，则取该点的极限值，$\mathcal{K}_{\kappa}(u)$ 的值可由 R 内置的函数 `besselK` 计算 [@Campbell1980]。
 
 ```{r Bessel-function,fig.cap="贝塞尔函数图像"}
 knitr::include_graphics(path = "figures/bessel.png")
