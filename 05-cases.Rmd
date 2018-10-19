@@ -88,9 +88,9 @@ Table: (\#tab:rangelap-mcml-result) 蒙特卡罗极大似然算法估计模型 \
 
 正如第\@ref(simulations)章第\@ref(sec:simulations)节对蒙特卡罗极大似然算法所指出的那样，必须提供足够接近真值的初值，才能获得好的参数估计。由图 \@ref(fig:profile-phi-tausq) 不难看出，关于 $\phi$ 和相对块金效应 $\tau^2_{rel}$ 的剖面似然函数曲面类似一个极其狭长的、坡度又平缓的山谷，基于似然的算法对这种类型的问题还没有好的解决办法，目前取多个不同参数初值进行迭代，用迭代值画出剖面似然函数曲面，通过观察获得最佳初值。
 
-## 冈比亚儿童疟疾流行强度的空间分布 {#case-gambia}
+## 冈比亚儿童疟疾流行度的空间分布 {#case-gambia}
 
-5 岁以下儿童在非洲冈比亚的 65 个村庄里调查疟疾感染情况， 依冈比亚狭长的地形和横穿东西全境的冈比亚河， 将其看作东、中和西三个部分， 东部是河流上游，西部是河流下游，村庄分为 5 个区域，西部两个， 南岸和北岸各一个，中游一个在南岸，东部两个，也是南岸和北岸各有一个， 村庄的位置在图 \@ref(fig:childhood-malaria)中以黑点标记。
+**geoR** 包内的 gambia 数据集用以分析 5 岁以下儿童在非洲冈比亚 65 个村庄的疟疾感染情况， 依冈比亚狭长的地形和横穿东西全境的冈比亚河， 将其看作东、中和西三个部分， 东部是河流上游，西部是河流下游，村庄分为 5 个区域，西部两个， 南岸和北岸各一个，中游一个在南岸，东部两个，也是南岸和北岸各有一个， 村庄的位置在图 \@ref(fig:childhood-malaria) 中以黑点标记。
 
 ```{r childhood-malaria,fig.cap="图中黑点标记冈比亚 65 个村庄的空间位置，虚线框内是局部放大的地图"}
 knitr::include_graphics(path = "figures/gambia-map.png")
@@ -103,16 +103,15 @@ GMB_map <- getData('GADM', country='GMB', level=0)
 par(mai=c(0,0,0,0))
 plot(GMB_map)
 ```
-
+基于 Peter J. Diggle 等 (2002) [@Diggle2002Childhood] 建立如下空间广义线性混合效应模型
 \begin{equation}
-\log\{p_{ij}/(1-p_{ij})\} = \alpha + \beta^{\top}z_{ij} + S(x_i) (\#eq:gambia-without-nugget-effect)
+\log\{p_{ij}/(1-p_{ij})\} = \alpha + \boldsymbol{\beta}^{\top}z_{ij} + S(x_i) (\#eq:gambia-without-nugget-effect)
 \end{equation}
+\noindent 其中 $\alpha$ 是截距，$\boldsymbol{\beta}^{\top} = (\beta_1,\beta_2,\beta_3,\beta_4,\beta_5,\beta_6,\beta_7,\beta_8,\beta_9)$ 分别是协变量儿童年龄(age)、蚊帐没有消毒(untreated)、蚊帐消毒(treated)、村庄周围绿植覆盖度(greenness)、村庄是否有医疗中心(PHC)、村庄所属区域4个(area 1 作为比较基准)的回归参数，$S(x)$ 是平稳空间高斯过程，自协方差函数 $\mathsf{Cov}(S(x_i),S(x_j)) = \sigma^2\rho(u), u = \|x_i -x_j \|_2$，自相关函数 $\rho(u) = \{2^{\kappa -1}\Gamma(\kappa)\}^{-1}(u/\phi)^{\kappa}\mathcal{K}_{\kappa}(u/\phi),u > 0$ 为 Matérn 型，$Y_{ij} \sim \mathrm{Bernoulli}(p_{ij})$，其中 $Y_{ij}$表示在第$i$个村庄的第$j$个儿童血液中是否含有疟原虫，有就取1，没有就取0，$p_{ij}$是伯努利分布的成功概率，实际含义是儿童携带疟原虫的可能性。
 
-其中 $\alpha$ 是截距，$\beta^{\top}$ 分别是协变量儿童年龄(age)、蚊帐没有消毒(untreated)、蚊帐消毒(treated)、村庄是否有医疗中心(PHC)、村庄所属区域(area 1 作为比较基准)的回归参数，$S(x)$ 是平稳空间高斯过程，自协方差函数 $\mathsf{Cov}(S(x_i),S(x_j)) = \sigma^2\rho(u), u = \|x_i -x_j \|_2$，自相关函数 $\rho(u) = \{2^{\kappa -1}\Gamma(\kappa)\}^{-1}(u/\phi)^{\kappa}\mathcal{K}_{\kappa}(u/\phi),u > 0$ 为 Matérn 型。
-
-使用贝叶斯 MCMC 算法计算模型\@ref(eq:gambia-without-nugget-effect)各参数后验估计值，算法实现基于第\@ref(algorithms)章第\@ref(MCMC)节，并主要依赖 **geoRglm** 包实现。
+Peter J. Diggle 等 (2002) [@Diggle2002Childhood] 使用贝叶斯 MCMC 算法计算模型\@ref(eq:gambia-without-nugget-effect)参数后验估计值，算法实现基于第\@ref(algorithms)章第\@ref(MCMC)节，并主要依赖 **geoRglm** 包实现，计算结果见表\@ref(tab:gambia-without-nugget-effect)。
  
-Table: (\#tab:gambia-without-nugget-effect) 模型 \@ref(eq:gambia-without-nugget-effect) 参数的贝叶斯估计， 估计的 95\% 的置信区间端点分别来自后验 2.5\% 和97.5\% 分位点，第三列和第四列分别是后验均值和中位数
+Table: (\#tab:gambia-without-nugget-effect) 模型 \@ref(eq:gambia-without-nugget-effect) 参数的贝叶斯估计， 估计的 95\% 的置信区间端点分别来自后验 2.5\% 和97.5\% 分位点，第3列和第4列分别是后验均值和中位数
 
 | 参数                  |   2.5\%分位点   |   97.5\%分位点  |   均值 (mean)  |  中位数 (median)  |
 | :-------------------- | :-------------: | :-------------: | :------------: | :---------------: |
@@ -130,11 +129,11 @@ Table: (\#tab:gambia-without-nugget-effect) 模型 \@ref(eq:gambia-without-nugge
 | $\phi$                |     0.915789    |     10.20069    |    2.522294    |    1.422975       |
 | $\kappa$              |     0.079522    |     2.784646    |    1.084108    |    0.937436       |
 
-表 \@ref(tab:gambia-without-nugget-effect) 来自 Peter Diggle 等 (2002) [@Diggle2002Childhood] 用算法实现贝叶斯 MCMC 算法的结果，作为对比，这里在模型 \@ref(eq:gambia-without-nugget-effect) 的基础上添加块金效应 $U_{i}$，建立模型\@ref(eq:gambia-with-nugget-effect)，基于 Stan 实现贝叶斯 MCMC 算法以估计模型\@ref(eq:gambia-with-nugget-effect)中的各个参数值，计算结果见表 \@ref(tab:gambia-with-nugget-effect)，观察到块金效应占比 $\nu^2 = \tau^2/\sigma^2 = 0.000002$，是一个很小的值，在实际应用中可以忽略。
-
+作为对比，在模型 \@ref(eq:gambia-without-nugget-effect) 的基础上添加块金效应 $U_{i}$，建立模型\@ref(eq:gambia-with-nugget-effect)
 \begin{equation}
-\log\{p_{ij}/(1-p_{ij})\} = \alpha + \beta^{\top}z_{ij} + U_{i} + S(x_i) (\#eq:gambia-with-nugget-effect)
+\log\{p_{ij}/(1-p_{ij})\} = \alpha + \boldsymbol{\beta}^{\top}z_{ij} + U_{i} + S(x_i) (\#eq:gambia-with-nugget-effect)
 \end{equation}
+再用 Stan 实现贝叶斯 MCMC 算法估计模型\@ref(eq:gambia-with-nugget-effect)中的各个参数值，计算结果见表 \@ref(tab:gambia-with-nugget-effect)。观察到块金效应占比 $\nu^2 = \tau^2/\sigma^2 = 0.000002$，是一个很小的值，在实际应用中应该可以忽略。与模型\@ref(eq:gambia-without-nugget-effect) 不同的是模型\@ref(eq:gambia-with-nugget-effect)的回归系数向量 $\boldsymbol{\beta}$ 不包含 $\beta_6,\ldots,\beta_9$四个回归系数，这是因为 **geoR** 包内的 gambia 数据集缺失与区域有关的标记信息，因此不能复现 Peter J. Diggle 等 (2002) [@Diggle2002Childhood] 的结果。
 
 Table: (\#tab:gambia-with-nugget-effect) 模型 \@ref(eq:gambia-with-nugget-effect) 参数的贝叶斯估计值和 95\% 的置信区间，第1至4列依次是后验2.5\%、97.5\%分位点、后验均值以及后验中位数
 
@@ -150,6 +149,8 @@ Table: (\#tab:gambia-with-nugget-effect) 模型 \@ref(eq:gambia-with-nugget-effe
 | $\sigma^2$            |     0.240826    |     1.662284    |    0.793031    |    0.740790       |
 | $\phi$                |     1.242164    |     53.351207   |   11.653717    |    7.032258       |
 | $\kappa$              |     0.150735    |     1.955524    |    0.935064    |    0.830548       |
+
+由于年龄在模型中以天计，所以会发现回归系数 $\beta_1$ 在两个模型中都很小，
 
 ## 本章小结 {#sec:cases}
 
