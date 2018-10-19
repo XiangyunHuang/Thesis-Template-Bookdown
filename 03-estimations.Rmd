@@ -78,9 +78,9 @@ L_{p}(\alpha) = L(\alpha,\hat{\psi}(\alpha)) = \max_{\psi} (L(\alpha,\psi))
 \noindent 即考虑似然函数随 $\alpha$ 的变化情况，对每一个 $\alpha$ (保持 $\alpha$ 不变)，指定 $\psi$ 的值使得对数似然取得最大值。剖面似然就是让我们可以观察到关于 $\alpha$ 的似然曲面，显然，其维数比完全似然面要低，与只有一个参数的对数似然一样，它也可以用来计算单个参数的置信区间。现在，注意到简化的对数似然 \@ref(eq:reduced-gauss-log-lik) 其实可以看作模型 \@ref(eq:gaussian-model) 关于 $(\nu^2,\phi)$ 的剖面对数似然 [@Diggle2007]。
 
 
-## 参数估计的算法 {#algrithms}
+## 参数估计的算法 {#sec:algrithms}
 
-### 拉普拉斯近似算法 {#LA}
+### 拉普拉斯近似算法 {#subsec:LA}
 
 为描述拉普拉斯近似算法，空间广义线性混合效应模型(简称 SGLMM)的结构重新表述如下
 \begin{equation}
@@ -162,7 +162,7 @@ Q''(\mathbf{s}) =  -\mathrm{diag} \{b''(D\boldsymbol{\beta} + \mathbf{s}) \} - \
 
 牛顿--拉夫森算法收敛速度是很快的，但是必须提供一个很好的初值，好的初值对于快速收敛到近似似然函数 $\ell(\boldsymbol{\theta};\mathbf{y})$ 的极大值点很重要。指定外迭代中的初值 $\boldsymbol{\theta}_{0}$的一个策略是首先拟合一个简单的广义线性模型，获得回归系数 $\boldsymbol{\beta}$ 的初值，基于这些值计算线性预测值 $\hat{\boldsymbol{\mu}}$；然后计算残差 $\hat{\boldsymbol{r}} = (\hat{\boldsymbol{\mu}} - \mathbf{y})$， $\hat{\boldsymbol{r}}$ 的方差作为 $\sigma^2$ 的初值，如果 SGLMM 带有块金效应，就用 $\sigma^2$ 的初值的一定比例，如 10\% 作为 $\tau^2$ 的初值；最后，$\phi$ 的初值选择两个距离最大的观测点之间的距离的 10\%，比较保险的办法是选择不同的 $\phi$ 作为初值，这个过程需要不断的试错以期获得算法的收敛。
 
-### 蒙特卡罗极大似然算法 {#MCML}
+### 蒙特卡罗极大似然算法 {#subsec:MCML}
 
 为描述蒙特卡罗极大似然算法，空间广义线性混合效应模型的结构表述如下
 \begin{equation}

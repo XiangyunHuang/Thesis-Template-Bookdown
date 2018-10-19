@@ -1,63 +1,6 @@
-```{r include=FALSE, cache=FALSE}
-library(methods)
-set.seed(2018)
-# 加载依赖
-library(ggplot2)
-library(StanHeaders)
-library(rstan)
-# 设置环境
-is_on_travis = identical(Sys.getenv("TRAVIS"), "true")
-is_online = curl::has_internet()
-
-options(mc.cores = if(is_on_travis) 4 else 2)
-rstan_options(auto_write = TRUE)
-
-library(tibble)
-knitr::opts_chunk$set(
-  comment = "#>",
-  collapse = TRUE,
-  echo = FALSE,
-  cache = TRUE,
-  size = "scriptsize",
-  out.width = "70%",
-  fig.align = "center",
-  fig.width = 6,
-  fig.asp = 0.618
-)
-
-doc_type <- function() knitr::opts_knit$get('rmarkdown.pandoc.to')
-
-knitr::knit_hooks$set(
-  optipng = knitr::hook_optipng,
-  pdfcrop = knitr::hook_pdfcrop,
-  small.mar = function(before, options, envir) {
-    if (before) par(mar = c(4.1, 4.1, 0.5, 0.5))  # smaller margin on top and right
-  }
-)
-# https://github.com/yihui/knitr-examples/blob/master/085-pdfcrop.Rnw
-
-options(
-  digits = 3,
-  citation.bibtex.max = 999,
-  bitmapType = "cairo",
-  stringsAsFactors = FALSE,
-  repos = "https://mirrors.tuna.tsinghua.edu.cn/CRAN/",
-  knitr.graphics.auto_pdf = FALSE,
-  tikzDefaultEngine = "xetex",
-  tikzXelatexPackages = c(
-    getOption("tikzXelatexPackages"),
-    "\\usepackage[colorlinks, breaklinks]{hyperref}",
-    "\\usepackage{color,tikz}",
-    "\\usepackage[active,tightpage,xetex]{preview}",
-    "\\PreviewEnvironment{pgfpicture}",
-    "\\usepackage{amsmath,amsfonts,mathrsfs}"
-  )
-)
-
-```
 # 数值模拟 {#simulations}
 
-空间广义线性混合效应模型在广义线性混合效应模型基础上添加了与空间位置相关的随机效应，这种随机效应在文献中常称为空间效应 [@Diggle1998]。 它与采样点的位置、数量都有关系， 其中采样点的位置决定空间过程的协方差结构， 而采样点的数量决定空间效应的维度，从而导致空间广义线性混合效应模型比普通的广义线性混合效应模型复杂。作为过渡，我们在第 \@ref(sim-one-gp) 和 \@ref(sim-two-gp) 节模拟了一维和二维平稳高斯过程。 第 \@ref(sim-sglmm) 节模拟 SGLMM 模型， 分两个小节展开叙述，第 \@ref(sim-binomal-sglmm) 小节模拟响应变量服从二项分布的情形，  第 \@ref(possion-sglmm) 小节模拟响应变量服从泊松分布的情形，在这两个小节里， 比较了贝叶斯 MCMC 算法和贝叶斯 STAN-MCMC 算法的性能差异。
+空间广义线性混合效应模型在广义线性混合效应模型基础上添加了与空间位置相关的随机效应，这种随机效应在文献中常称为空间效应 [@Diggle1998]。 它与采样点的位置、数量都有关系， 其中采样点的位置决定空间过程的协方差结构， 而采样点的数量决定空间效应的维度，从而导致空间广义线性混合效应模型比普通的广义线性混合效应模型复杂。作为过渡，我们在第 \@ref(sim-one-gp) 和 \@ref(sim-two-gp) 节模拟了一维和二维平稳高斯过程。 第 \@ref(sim-sglmm) 节模拟 SGLMM 模型， 分两个小节展开叙述，第 \@ref(sim-binomal-sglmm) 小节模拟响应变量服从二项分布的情形，  第 \@ref(possion-sglmm) 小节模拟响应变量服从泊松分布的情形，在这两个小节里，比较了贝叶斯 MCMC 算法和贝叶斯 STAN-MCMC 算法的表现，前者基于 R 包 **geoRglm** 内置的 Langevin-Hastings 算法实现，后者基于 Stan 内置的 HMC 算法实现，贝叶斯 STAN-MCMC 算法相当于是一次适应于 SGLMM 模型的二次开发，并且基于 Stan 平台。
 
 ## 平稳空间高斯过程 {#spatial-gaussian-processes}
 
@@ -105,7 +48,6 @@ plt_df <- with(samps, data.frame(x = x[1, ], f = f[1, ]))
 # plot(f ~ x, data = plt_df, xlab = "x", ylab = "S(x)",pch = 16,col  = "Darkgrey")
 # points(f~x,data = plt_df[set,], pch = 16, col = 'darkorange')
 # dev.off()
-
 knitr::include_graphics(path = c(
   "figures/one-dim-gp-exp.png",
   "figures/one-dim-gp-exp-quad.png"
@@ -212,7 +154,7 @@ knitr::include_graphics(path = "figures/binom-without-nugget-geoRglm.png")
 \end{equation}
 参数 $\alpha,\phi,\sigma^2$ 的贝叶斯估计没有显式表达式，通常用 MCMC 算法获得后验分布的样本均值作为参数的估计。贝叶斯估计的定义是使得估计的均方误差达到最小时的估计，因此贝叶斯估计的精度或者说好坏常用后验分布的方差衡量，因为均方误差在参数估计取后验均值时是后验方差，故而表 \@ref(tab:MCLH-vs-NUTS) 不再提供估计的均方误差值，而是提供了 5 个后验分布的分位点，在 95\% 的置信水平下，样本分位点 0.025 和 0.975 的值组成了置信区间的上下界。除了获得各参数的估计值外，还获得 64 个采样点处 $p(x_i), i = 1, \ldots, 64$ 的后验均值、方差、标准差和 5个分位点，详见附表 \@ref(tab:LH-binom-SGLMM)
 
-Table: (\#tab:MCLH-vs-NUTS)  Langevin-Hastings 算法与汉密尔顿蒙特卡罗算法的数值模拟比较，前者在R软件里基于 **geoRglm** 包实现，后者基于 Stan 实现，模型参数 $\alpha,\phi,\sigma^2$ 的估计值（后验分布的均值）、方差（后验分布的方差）和 5 个分位点（后验分布的 5 个分位点），采样点数目分别考虑了 $N = 36, 64, 81, 100$ 的情况，第一列是各参数的真值，表格前半部分是Langevin-Hastings算法实现的结果，后半部分是 Stan 实现的结果
+Table: (\#tab:MCLH-vs-NUTS)  Langevin-Hastings 算法与 HMC 算法的数值模拟比较，前者在R软件里基于 **geoRglm** 包实现，后者基于 Stan 实现，模型参数 $\alpha,\phi,\sigma^2$ 的估计值（后验分布的均值）、方差（后验分布的方差）和 5 个分位点（后验分布的 5 个分位点），采样点数目分别考虑了 $N = 36, 64, 81, 100$ 的情况，第一列是各参数的真值，表格前半部分是 Langevin-Hastings 算法实现的结果，后半部分是 Stan 实现的结果
 
 |        |  true|  mean|   var|   2.5\%|    25\%|   50\%|   75\%| 97.5\%|   N  |
 |:-------|-----:|-----:|-------:|-------:|------:|------:|------:|-----:|-----:|
@@ -246,9 +188,9 @@ g(\mu_i) = \log(\lambda(x_i)) = \alpha + S(x_i) (\#eq:pois-SGLMM)
 
 \noindent 其中，$S(x)$ 是平稳空间高斯过程，其均值为 $\mathbf{0}$，协方差函数为 $\mathrm{Cov}(S(x_i),S(x_j)) = \sigma^2 \big\{2^{\kappa-1}\Gamma(\kappa)\big\}^{-1}(u/\phi)^{\kappa}K_{\kappa}(u/\phi)$，联系函数 $g(\mu_i) = \log\{\lambda(x_{i})\}$。
 
-类似 \@ref(sim-binomal-sglmm) 小节，首先产生服从平稳空间高斯过程 $S(x)$ 的随机数 $S(x_i),i=1,\ldots,N$，然后根据 \@ref(eq:pois-SGLMM) 式， $\lambda(x_i) = \exp(\alpha + S(x_i))$，又响应变量 $Y_i \sim \mathrm{Possion}(\lambda(x_{i}))$，根据 R 内置函数 `rpois` 产生服从参数为 $\lambda(x_i)$ 的泊松分布的随机数。
+类似 \@ref(sim-binomal-sglmm) 小节，首先产生服从平稳空间高斯过程 $S(x)$ 的随机数 $S(x_i),i=1,\ldots,N$，然后根据 \@ref(eq:pois-SGLMM) 式， $\lambda(x_i) = \exp(\alpha + S(x_i))$，又响应变量 $Y_i \sim \mathrm{Possion}(\lambda(x_{i}))$，根据 R 内置函数 `rpois` 产生服从参数为 $\lambda(x_i)$ 的泊松分布的随机数。算法模拟的结果见表 \@ref(tab:Pois-MCLV-vs-NUTS)，包含有效样本数 $n_{eff}$ 潜在尺度缩减因子 $\hat{R}$ 以及蒙特卡罗均值误差 se\_mean 的完整表格见附表 \@ref(tab:HMC-Pois-SGLMM)，参数迭代序列的收敛性诊断分析过程已在第\@ref(prepare) 章第\@ref(sec:stan-samplers)节给出，这里不再赘述，所有的模拟实验都是在完成收敛性分析后给出的。
 
-Table: (\#tab:Pois-MCLV-vs-NUTS) 模型参数真值设置为 $\alpha = 0.5, \phi = 0.2, \sigma^2 = 2.0, \kappa = 1.5$，采样点数目分别为 $N=36,64,100$
+Table: (\#tab:Pois-MCLV-vs-NUTS) 在模型\@ref(eq:pois-SGLMM)的设置下，算法 Langevin-Hastings 和 HMC 算法的比较，模型参数真值设置为 $\alpha = 0.5, \phi = 0.2, \sigma^2 = 2.0, \kappa = 1.5$，采样点数目分别为 $N=36,64,100$，对于每组参数设置，重复模拟了100次。第一列是各参数的真值，表格前半部分是 Langevin-Hastings 算法实现的结果，后半部分是 Stan 实现的结果
 
 |           |  true|   mean|    var|    2.5%|     25%|    50%|    75%|  97.5%|   N   |
 |:----------|-----:|------:|------:|-------:|-------:|------:|------:|------:|------:|
@@ -271,12 +213,17 @@ Table: (\#tab:Pois-MCLV-vs-NUTS) 模型参数真值设置为 $\alpha = 0.5, \phi
 |$\phi$     |   0.2|  0.461|  0.006|   0.331|   0.406|  0.455|  0.511|  0.628|  100|
 |$\sigma^2$ |   2.0|  1.848|  0.317|   0.889|   1.441|  1.779|  2.173|  3.124|  100|
 
-100 个采样点的模拟实验中，精心调了 Langevin-Hastings 算法的参数，得到比较好的估计值，在该组参数设置下，更改采样点数目分别为 36 和 64，得到估计值，见表 \@ref(tab:Pois-MCLV-vs-NUTS)，可以看出估计值变差。
+100 个采样点的模拟实验中，花了近三天时间精心调了 Langevin-Hastings 算法的参数，得到比较好的估计值，在该组参数设置下，更改采样点数目分别为 36 和 64，又需要重新调整 Langevin-Hastings 算法的参数设置，以获得参数的后验分布和后续的后验量的计算。
 
-添加偏差、置信区间长度、时间花费
+在同组参数设置下，基于 Stan 实现的 HMC 算法与 Langevin-Hastings 算法相比，效果要好，其一体现在后验方差（也是贝叶斯估计下的均方误差）更小，见表 \@ref(tab:Pois-MCLV-vs-NUTS)；其二对于应用的意义更大，它不需要调参数，对先验分布的要求更加宽松；其三算法收敛的更快，基于 Langevin-Hastings 算法实现的贝叶斯 MCMC 算法迭代次数设置为110000，前10000次迭代作为 warm-up，间隔100次迭代采样，收集到的样本量是 1000，基于 Stan 实现的 HMC 算法只进行了 2000 次迭代，前 1000 次迭代作为 warm-up 阶段，后 1000 次迭代全部采样，所以样本量也是 1000。这里需要补充说明一下，比较两个算法却在迭代次数上做了不同的设置，是因为首先要保证模型参数的迭代序列要收敛，只有这样才能作参数的后验估计，那么同样达到收敛状态，Langevin-Hastings 算法大约110000次迭代，而基于 Stan 实现的 HMC 算法大于2000次迭代，如果强行继续增加后者算法的迭代次数是意义不大的，因为它已经收敛，增加迭代次数只会无端添加算法运行时间。
 
-基于 Stan 实现的贝叶斯 STAN-MCMC 算法进行了 2000 次迭代，前 1000 次迭代作为 warm-up 阶段，后 1000 次迭代全部采样，所以样本量也是 1000。
 
-包含有效样本数 $n_{eff}$ 潜在尺度缩减因子 $\hat{R}$ 以及蒙特卡罗均值误差 se\_mean 的完整表格见附表 \@ref(tab:HMC-Pois-SGLMM)
+## 本章小结 {#sec:simulations}
 
-<!-- ## 本章小结 {#sec:simulations} -->
+**geoRglm** 包实现的 Langevin-Hastings 算法，相比较而言，收敛速度慢，迭代序列自相关性表现拖尾，因此在上述模拟实验中，为了降低相关性，采样间隔取100，这就直接要求增加总的迭代次数，以达到足够的后验样本量，才能用于后验量的计算，此外，在调参数的过程中面临不收敛的情况是常有的，而这个不收敛的原因至少有两个，其一是参数初值不合适，其二是总迭代次数不够，因此我也遭遇了 Ole F. Christensen 迭代上百万次的[情形][geoRglm-feq]，不过为了尽量保持统一的参数设置下，我倾向于继续调整参数初值，而保持总迭代次数110000次不变。而为了在每组模型设置下，都获得最佳的参数，这是一件十分耗时的工作，因为该算法的参数只有不断试错才能获得更加合适的参数设置，特别地，在已经收敛的情形下，再去调参数，这个过程会更加漫长。
+
+基于 Stan 实现的贝叶斯 STAN-MCMC 算法，其内置的 HMC 算法是结合了 NUTS 采样器，搜索模型参数的策略更加友好，不需要手动调参数，只需要指定合适的参数先验，使得迭代序列保持收敛即可，编程过程中，对模型参数的重参数化对迭代进程和结果会产生一定影响，如第\@ref(prepare)章第\@ref(sec:stan-samplers)节基于 Eight Schools 数据集介绍分层正态模型就对参数 $\mu$ 和 $\sigma$ 做了重参数化。
+
+基于似然推断的算法，如第\@ref(algorithms)章第\@ref(subsec:MCML)小节介绍的蒙特卡罗极大似然算法和第\@ref(subsec:LA)小节介绍的拉普拉斯近似算法，都需要非常接近真值的参数初值，才能得到好的结果，因为在大多数情形下，SGLMM 模型的对数似然曲面是呈现山岭或峡谷状，局部极值点多而且对数似然函数值变化不大，导致收敛速度极慢甚至不收敛，非常难得到全局极大。因此，一个合适的策略是在合理的初值周围打网格，格点作为迭代初值，以成千上万个不同初值进行迭代，将计算的对数似然值画在二维平面上，通过这种降维观察的方式，获得一个可靠的全局极大值点，作为参数的最佳似然估计，在后续的第\@ref(applications)章第\@ref(case-rongelap)节以分析朗格拉普岛核污染数据集为例，介绍这一策略。
+
+[geoRglm-feq]: http://gbi.agrsci.dk/~ofch/geoRglm/Intro/books.html
