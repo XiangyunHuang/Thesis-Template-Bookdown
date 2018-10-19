@@ -206,16 +206,16 @@ Table: (\#tab:HMC-Pois-SGLMM) 汉密尔顿蒙特卡罗算法，采样点 64 个�
 
 ## 图 {#simulate-plot .unnumbered}
 
-```{r rangelap-trace-plot,fig.cap="Langevin-Hastings 算法模拟条件分布 $[S(x\\_i)|Y\\_i], i = 1,\\ldots,4$，第一列是迭代序列图，第二列是对应的密度分布"}
-knitr::include_graphics(path = "figures/rangelap-mcml-diagnosis-trace-9.png")
+```{r rongelap-trace-plot,fig.cap="Langevin-Hastings 算法模拟条件分布 $[S(x\\_{i})|Y\\_{i}], i = 1,\\ldots,4$，第一列是迭代序列图，第二列是对应的密度分布"}
+knitr::include_graphics(path = "figures/rongelap-mcml-diagnosis-trace-9.png")
 ```
-从图 \@ref(rangelap-trace-plot) 可以看出迭代序列符合平稳性的特征
+从图 \@ref(fig:rongelap-trace-plot) 可以看出迭代序列符合平稳性的特征
 
-```{r rangelap-acf-plot,fig.cap="条件分布 $[S(x\\_i)|Y\\_i], i = 1,\\ldots,4$ 的采样序列的自相关图"}
-knitr::include_graphics(path = "figures/rangelap-mcml-diagnosis-acf-9.png")
+```{r rongelap-acf-plot,fig.cap="条件分布 $[S(x\\_{i})|Y\\_{i}], i = 1,\\ldots,4$ 的采样序列的自相关图"}
+knitr::include_graphics(path = "figures/rongelap-mcml-diagnosis-acf-9.png")
 ```
 
-从图 \@ref(rangelap-acf-plot) 可以看出迭代序列满足马尔科夫性，没有明显的延迟相关性。
+从图 \@ref(fig:rongelap-acf-plot) 可以看出迭代序列满足马尔科夫性，没有明显的延迟相关性。
 
 ## 代码 {#simulate-code .unnumbered}
 

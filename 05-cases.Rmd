@@ -128,7 +128,7 @@ rongelap 数据集包含几个观测变量，分别是放射粒子数、相应�
 knitr::include_graphics(path = "figures/rongelap-island.png")
 ```
 
-蒙特卡罗极大似然算法迭代的初值 $\beta_{0} = 6.2,\sigma^2_{0} = 2.40,\phi_{0} = 340,\tau^2_{rel} = 2.074$，模拟次数为 30000 次，前 10000 次迭代视为预热阶段 (warm-up) 而不用于参数的估计，其后每隔 20 次迭代采一个样本点，即存储模型各参数的迭代值。模拟平稳空间高斯过程 $S(x)$ 关于响应变量$Y$的条件分布 $[S(x_i)|Y_i]$ 时，使用了第\@ref(algorithms)章第\@ref(#MCMC)节介绍的 Langevin-Hastings 算法 [@Omiros2003]，157 个站点意味着有 157 个条件分布需要模拟，共产生 157个迭代链，每条链需保持平稳才可用于模型参数的推断，因此需要先检验每条链的平稳性，可以采用自相关图和时序图来检验，篇幅所限，取部分站点展示，见附图\@ref(rangelap-trace-plot) 和图 \@ref(rangelap-acf-plot)。
+蒙特卡罗极大似然算法迭代的初值 $\beta_{0} = 6.2,\sigma^2_{0} = 2.40,\phi_{0} = 340,\tau^2_{rel} = 2.074$，模拟次数为 30000 次，前 10000 次迭代视为预热阶段 (warm-up) 而不用于参数的估计，其后每隔 20 次迭代采一个样本点，即存储模型各参数的迭代值。模拟平稳空间高斯过程 $S(x)$ 关于响应变量$Y$的条件分布 $[S(x_i)|Y_i]$ 时，使用了第\@ref(algorithms)章第\@ref(#MCMC)节介绍的 Langevin-Hastings 算法 [@Omiros2003]，157 个站点意味着有 157 个条件分布需要模拟，共产生 157个迭代链，每条链需保持平稳才可用于模型参数的推断，因此需要先检验每条链的平稳性，可以采用自相关图和时序图来检验，篇幅所限，取部分站点展示，见附图\@ref(fig:rongelap-trace-plot) 和图 \@ref(fig:rongelap-acf-plot)。
 
 ```{r profile-phi-tausq,fig.cap='(ref:profile-phi-tausq)'}
 knitr::include_graphics(path = "figures/profile-phitausq.png")
@@ -136,14 +136,14 @@ knitr::include_graphics(path = "figures/profile-phitausq.png")
 
 (ref:profile-phi-tausq) 关于 $\phi$ 和相对块金效应 $\tau^2_{rel} = \tau^2 / \sigma^2$ 的剖面似然函数曲面，平稳空间高斯过程的协方差函数选用指数型
 
-Table: (\#tab:rangelap-mcml-result) 蒙特卡罗极大似然估计模型 \@ref(eq:rongelap-with-nugget-effect) 的参数，其中块金效应的估计值 $\hat{\tau}^2 = \hat{\sigma}^{2} \times \hat{\tau}^2_{rel} = 4.929$
+Table: (\#tab:rangelap-mcml-result) 蒙特卡罗极大似然算法估计模型 \@ref(eq:rongelap-with-nugget-effect) 的参数，其中块金效应的估计值 $\hat{\tau}^2 = \hat{\sigma}^{2} \times \hat{\tau}^2_{rel} = 4.929$
 
 | 参数    | $\hat{\beta}$ | $\hat{\sigma}^{2}$ | $\hat{\phi}$  | $\hat{\tau}^2_{rel}$ |  $\log L_{m}$          |
 | :------:| :-------------| :-------------     | :------------ | :------------------- |:---------------------  |
 | 初始值  |    6.200      |     2.400          |   340.000     |   2.074              |         -              |
 | 估计值  |    6.190      |     2.401          |   338.126     |   2.053              | $2.892 \times 10^{-3}$ |
 
-
+正如第\@ref(simulations)章第\@ref(sec:simulations)节对蒙特卡罗极大似然算法所指出的那样，必须提供足够接近真值的初值，才能获得好的参数估计。由图 \@ref(fig:profile-phi-tausq) 不难看出，关于 $\phi$ 和相对块金效应 $\tau^2_{rel}$ 的剖面似然函数曲面类似一个极其狭长的、坡度又平缓的山谷，基于似然的算法对这种类型的问题还没有好的解决办法，目前取多个不同参数初值进行迭代，用迭代值画出剖面似然函数曲面，通过观察获得最佳初值。
 
 ## 冈比亚儿童疟疾流行强度的空间分布 {#case-gambia}
 
