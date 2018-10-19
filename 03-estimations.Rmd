@@ -1,10 +1,10 @@
 # 参数估计 {#algorithms}
 
-模型的参数估计是建模分析的重要步骤，鉴于空间广义线性混合效应模型(简称 SGLMM)的复杂性，文献中的参数估计方法，如最小二乘估计(简称 LSE)和极大似然估计(简称 MLE) 都没有显式的表达式，因此必须发展有效的算法。目前，文献中的出现的算法有低秩近似算法、蒙特卡罗极大似然算法和马尔科夫链蒙特卡罗算法，我们应用这些算法去估计 SGLMM 模型参数，特别提出了基于 Stan 实现的贝叶斯 MCMC 算法。
+模型的参数估计是建模分析的重要步骤，鉴于空间广义线性混合效应模型(简称 SGLMM)的复杂性，文献中的参数估计方法，如最小二乘估计(简称 LSE)和极大似然估计(简称 MLE) 都没有显式的表达式，因此必须发展有效的算法。目前，文献中的出现的算法有低秩近似算法、蒙特卡罗极大似然算法和马尔科夫链蒙特卡罗算法，应用这些算法去估计 SGLMM 模型参数，特别提出了基于 Stan 实现的贝叶斯 MCMC 算法。
 
-第 \@ref(algrithms) 节介绍求解 SGLMM 模型 \@ref(eq:again-SGLMM) 参数的三类算法， 分别是第 \@ref(MCML) 小节介绍的蒙特卡罗极大似然算法(简称 MCML 算法)， 第 \@ref(LowRank) 小节介绍的低秩近似算法(简称 Low-Rank)， 第 \@ref(MCMC) 小节介绍的贝叶斯框架下的马尔科夫链蒙特卡罗算法 (简称贝叶斯 MCMC）。在贝叶斯 MCMC 算法的基础上，改进算法实现形式，提出 STAN-MCMC 算法，在第 \@ref(STAN-MCMC) 节予以详细介绍。
+第\@ref(sec:mle)节和第\@ref(sec:profile-likelihood)节分别介绍 SGLMM 模型的极大似然估计和空间线性混合模型下的剖面似然估计，由于模型的复杂性，文献中出现了三类算法，分别是第 \@ref(subsec:MCML) 小节介绍的蒙特卡罗极大似然算法(简称 MCML 算法)， 第 \@ref(LowRank) 小节介绍的低秩近似算法(简称 Low-Rank)， 第 \@ref(MCMC) 小节介绍的贝叶斯框架下的马尔科夫链蒙特卡罗算法 (简称贝叶斯 MCMC）。在贝叶斯 MCMC 算法的基础上提出 STAN-MCMC 算法，在第 \@ref(STAN-MCMC) 节予以详细介绍。
 
-## 极大似然估计 {#mle}
+## 极大似然估计 {#sec:mle}
 
 设研究区域 $D \subseteq \mathbb{R}^2$， 对于第 $i$ 次观测， $s_i$ 表示区域 $D$ 内的位置，$Y(s_i)$ 表示响应变量，$\mathbf{x}(s_i), i = 1, \ldots, n$ 是一个 $p$ 维的固定效应，定义如下的 SGLMM 模型：
 
@@ -31,7 +31,7 @@ m(\mathbf{y}) &= \int f(\mathbf{y|\mathbf{u}, \boldsymbol{\psi}})\phi_{n}(\mathb
 
 \noindent 同样遭遇难以处理的高维积分问题，所以 $m(\mathbf{y})$ 亦不会有显式表达式。特别地，若取 $\pi(\boldsymbol{\psi})$ 为扁平先验 (flat priors) ，如 $\pi(\boldsymbol{\psi}) \propto 1$， 后验分布将简化为似然函数 \@ref(eq:likelihood-function-1) 的常数倍。 如果导出的后验是合适的， MCMC 算法可以用来研究似然函数， 但是对很多 SGLMM 模型扁平先验 (flat priors) 会导出不合适的后验 (improper posteriors) [@Natarajan1995]， 所以选用模糊先验 (diffuse prior) 来导出合适的后验 (proper posteriors)，导出的后验能接近似然函数，并不要求后验模 (posterior mode) 完全是似然函数的极大似然估计 MLE [@Robert1996JASA]。
 
-## 剖面似然估计 {#profile-likelihood}
+## 剖面似然估计 {#sec:profile-likelihood}
 
 极大似然估计是一种被广泛接受的参数估计方法，因其优良的大样本性质，在宽松的正则条件下，极大似然估计服从渐进正态分布，满足无偏性，而且是有效的估计。为了叙述方便，似然函数能有显式表达式，我们考虑空间线性混合效应模型，即响应变量服从正态分布的情况，以此来介绍剖面似然估计 (profile likelihood estimate)。
 
@@ -145,7 +145,7 @@ Q''(\mathbf{s}) =  -\mathrm{diag} \{b''(D\boldsymbol{\beta} + \mathbf{s}) \} - \
 \end{equation}
 \noindent 现在极大化近似对数似然 \@ref(eq:approx-log-lik) 式，此时是求模型参数，可称之为外迭代过程，常用的算法是 Broyden-Fletcher-Goldfarb-Shanno (BFGS) 算法，它内置在 R 函数 `optim()` 中。方便起见，模型参数记为 $\boldsymbol{\theta} = (\boldsymbol{\beta},\log(\sigma^2),\log(\tau^2),\log(\phi),\log(\psi))$，且 $\hat{\boldsymbol{\theta}}$ 表示 $\boldsymbol{\theta}$ 的最大似然估计，则 $\hat{\boldsymbol{\theta}}$ 的渐进分布为
 \[ \hat{\boldsymbol{\theta}} \sim N(\boldsymbol{\theta}, \mathbf{I}_{o}^{-1}(\hat{\boldsymbol{\theta}})) \]
-\noindent 其中 $\mathbf{I}_{o}(\hat{\boldsymbol{\theta}})$ 为观察到的样本信息矩阵，注意到在空间广义线性混合效应模型下，不能直接计算 Fisher 信息阵，因为对数似然函数没有显式表达式，只有数值迭代获得在 $\hat{\boldsymbol{\theta}}$ 处的观测信息矩阵。通常，这类渐进近似对协方差参数的估计效果不好，而我们感兴趣的恰恰是协方差参数 $\sigma^2, \tau^2, \phi$，在数据集不太大的情形下，可用第 \@ref(profile-likelihood) 节介绍的剖面似然方法计算协方差参数的置信区间。剖面似然的详细实现过程见 **bbmle** 包 [@R-bbmle]，下面给出计算的细节步骤：
+\noindent 其中 $\mathbf{I}_{o}(\hat{\boldsymbol{\theta}})$ 为观察到的样本信息矩阵，注意到在空间广义线性混合效应模型下，不能直接计算 Fisher 信息阵，因为对数似然函数没有显式表达式，只有数值迭代获得在 $\hat{\boldsymbol{\theta}}$ 处的观测信息矩阵。通常，这类渐进近似对协方差参数的估计效果不好，而我们感兴趣的恰恰是协方差参数 $\sigma^2, \tau^2, \phi$，在数据集不太大的情形下，可用第 \@ref(sec:profile-likelihood) 节介绍的剖面似然方法计算协方差参数的置信区间。剖面似然的详细实现过程见 **bbmle** 包 [@R-bbmle]，下面给出计算的细节步骤：
 
 1. 选择模型参数 $\boldsymbol{\theta}$ 的初始值 $\boldsymbol{\theta}_{i}$；
 2. 计算协方差矩阵 $\Sigma$ 及其逆 $\Sigma^{-1}$；

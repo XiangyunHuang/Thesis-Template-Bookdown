@@ -1,60 +1,3 @@
-```{r include=FALSE, cache=FALSE}
-library(methods)
-set.seed(2018)
-# 加载依赖
-library(ggplot2)
-library(StanHeaders)
-library(rstan)
-# 设置环境
-is_on_travis = identical(Sys.getenv("TRAVIS"), "true")
-is_online = curl::has_internet()
-
-options(mc.cores = if(is_on_travis) 4 else 2)
-rstan_options(auto_write = TRUE)
-
-library(tibble)
-knitr::opts_chunk$set(
-  comment = "#>",
-  collapse = TRUE,
-  echo = FALSE,
-  cache = TRUE,
-  size = "scriptsize",
-  out.width = "70%",
-  fig.align = "center",
-  fig.width = 6,
-  fig.asp = 0.618
-)
-
-doc_type <- function() knitr::opts_knit$get('rmarkdown.pandoc.to')
-
-knitr::knit_hooks$set(
-  optipng = knitr::hook_optipng,
-  pdfcrop = knitr::hook_pdfcrop,
-  small.mar = function(before, options, envir) {
-    if (before) par(mar = c(4.1, 4.1, 0.5, 0.5))  # smaller margin on top and right
-  }
-)
-# https://github.com/yihui/knitr-examples/blob/master/085-pdfcrop.Rnw
-
-options(
-  digits = 3,
-  citation.bibtex.max = 999,
-  bitmapType = "cairo",
-  stringsAsFactors = FALSE,
-  repos = "https://mirrors.tuna.tsinghua.edu.cn/CRAN/",
-  knitr.graphics.auto_pdf = FALSE,
-  tikzDefaultEngine = "xetex",
-  tikzXelatexPackages = c(
-    getOption("tikzXelatexPackages"),
-    "\\usepackage[colorlinks, breaklinks]{hyperref}",
-    "\\usepackage{color,tikz}",
-    "\\usepackage[active,tightpage,xetex]{preview}",
-    "\\PreviewEnvironment{pgfpicture}",
-    "\\usepackage{amsmath,amsfonts,mathrsfs}"
-  )
-)
-
-```
 # 数据分析 {#applications}
 
 第\@ref(sec:spatial-random-effects)节基于小麦产量数据建立空间线性混合效应模型，以 R 软件和相关 R 包为工具，介绍空间统计建模分析的过程，特别是诊断和添加空间随机效应的分析方法和模型参数初值的确定方式。这个分析方法和初值的确定方式具有普适性，对于更复杂的空间广义线性混合效应模型也是适用的。第\@ref(case-rongelap)节和第\@ref(case-gambia)节分别建立响应变量服从泊松分布和二项分布的空间广义线性混合效应模型，分析两个真实数据集 rongelap  和 gambia，它们分别来自 R 包 **geoRglm** 和 **geoR**，曾被 Ole F Christensen (2004年) [@Christensen2004]  和 Peter J. Diggle 等 (2007年) [@Diggle2007ATMP] 分析过，这里基于贝叶斯 STAN-MCMC 算法分析这两个数据集。
@@ -75,13 +18,13 @@ y_{ij} = \tau_i + \epsilon_{ij}, \quad \boldsymbol{\epsilon} \sim \mathcal{N}(\m
 
 进一步，继续探索线性模型\@ref(eq:extended-linear-model)中的协方差 $\boldsymbol{\Lambda}$ 的结构，不妨先假定模型 \@ref(eq:extended-linear-model) 的随机误差是独立且方差齐性的，即 $\boldsymbol{\Lambda} = \boldsymbol{I}$ 。那么，可用如下一行命令拟合模型
 
-```{r,eval=FALSE,echo=TRUE}
+```{r gls,eval=FALSE,echo=TRUE}
 m1 <- gls(yield ~ variety - 1, Wheat2)
 ```
 
 \noindent 接着，需要确认方差齐性的假设是否合适。那么，拟合残差图是一个有用又方便的判断工具，特别的，对于空间效应的探索，这里就使用拟合残差的变差图探索数据中存在的空间相关性，使用 **nlme** 包中的 `Variogram` 函数可以获得之前 `gls` 函数拟合方差齐性的线性模型的残差的变差图，即
 
-```{r,eval=FALSE,echo=TRUE}
+```{r variogram,eval=FALSE,echo=TRUE}
 Variogram(m1, form = ~latitude + longitude)
 ```
 
@@ -93,7 +36,7 @@ knitr::include_graphics(path = "figures/Yields-Variogram.png")
 
 基于上述分析，这里先采用球性自协方差函数拟合这组数据中的空间结构，位置参数 $\phi$ 和块金效应的初始值可以从图 \@ref(fig:yields-variogram) 获取，其中 $\phi$ 是样本变差等于 1 时对应的空间距离 31。考虑空间效应后，可以这样拟合模型 \@ref(eq:extended-linear-model)
 
-```{r,eval=FALSE,echo=TRUE}
+```{r update-gls,eval=FALSE,echo=TRUE}
 m2 <- update(m1, corr = corSpher(
   c(31, 0.2), form = ~latitude + longitude, nugget = TRUE
 ))
@@ -147,12 +90,12 @@ Table: (\#tab:rangelap-mcml-result) 蒙特卡罗极大似然算法估计模型 \
 
 ## 冈比亚儿童疟疾流行强度的空间分布 {#case-gambia}
 
-5 岁以下儿童在非洲冈比亚的 65 个村庄里调查疟疾感染情况， 依冈比亚狭长的地带和横穿东西全境的冈比亚河， 将其看作东、中和西三个部分， 东部是河流上游，西部是河流下游相应地，村庄分为 5 个区域，西部两个， 南岸和北岸各一个，中游一个在南岸，东部两个，也是南岸和北岸各有一个， 村庄的位置在图中的黑点标记。
+5 岁以下儿童在非洲冈比亚的 65 个村庄里调查疟疾感染情况， 依冈比亚狭长的地形和横穿东西全境的冈比亚河， 将其看作东、中和西三个部分， 东部是河流上游，西部是河流下游，村庄分为 5 个区域，西部两个， 南岸和北岸各一个，中游一个在南岸，东部两个，也是南岸和北岸各有一个， 村庄的位置在图 \@ref(fig:childhood-malaria)中以黑点标记。
 
-```{r childhood-malaria,fig.cap="冈比亚 65 个村庄的空间位置，黑点标记，插入的图是响应区域的放大版，由箭头指向"}
+```{r childhood-malaria,fig.cap="图中黑点标记冈比亚 65 个村庄的空间位置，虚线框内是局部放大的地图"}
 knitr::include_graphics(path = "figures/gambia-map.png")
 ```
-```{r eval=FALSE}
+```{r gambia-map-raster,eval=FALSE}
 # CMR # 喀麦隆地图
 # GMB # 冈比亚地图
 library(raster)
@@ -165,7 +108,11 @@ plot(GMB_map)
 \log\{p_{ij}/(1-p_{ij})\} = \alpha + \beta^{\top}z_{ij} + S(x_i) (\#eq:gambia-without-nugget-effect)
 \end{equation}
 
-Table: (\#tab:gambia-without-nugget-effect) 不带块金效应的模型 \@ref(eq:gambia-without-nugget-effect) 参数估计和 95\% 的置信区间
+其中 $\alpha$ 是截距，$\beta^{\top}$ 分别是协变量儿童年龄(age)、蚊帐没有消毒(untreated)、蚊帐消毒(treated)、村庄是否有医疗中心(PHC)、村庄所属区域(area 1 作为比较基准)的回归参数，$S(x)$ 是平稳空间高斯过程，自协方差函数 $\mathsf{Cov}(S(x_i),S(x_j)) = \sigma^2\rho(u), u = \|x_i -x_j \|_2$，自相关函数 $\rho(u) = \{2^{\kappa -1}\Gamma(\kappa)\}^{-1}(u/\phi)^{\kappa}\mathcal{K}_{\kappa}(u/\phi),u > 0$ 为 Matérn 型。
+
+使用贝叶斯 MCMC 算法计算模型\@ref(eq:gambia-without-nugget-effect)各参数后验估计值，算法实现基于第\@ref(algorithms)章第\@ref(MCMC)节，并主要依赖 **geoRglm** 包实现。
+ 
+Table: (\#tab:gambia-without-nugget-effect) 模型 \@ref(eq:gambia-without-nugget-effect) 参数的贝叶斯估计， 估计的 95\% 的置信区间端点分别来自后验 2.5\% 和97.5\% 分位点，第三列和第四列分别是后验均值和中位数
 
 | 参数                  |   2.5\%分位点   |   97.5\%分位点  |   均值 (mean)  |  中位数 (median)  |
 | :-------------------- | :-------------: | :-------------: | :------------: | :---------------: |
@@ -183,13 +130,13 @@ Table: (\#tab:gambia-without-nugget-effect) 不带块金效应的模型 \@ref(eq
 | $\phi$                |     0.915789    |     10.20069    |    2.522294    |    1.422975       |
 | $\kappa$              |     0.079522    |     2.784646    |    1.084108    |    0.937436       |
 
-表 \@ref(tab:gambia-without-nugget-effect) 来自 Peter Diggle 等 (2002) [@Diggle2002Childhood] 的结果
+表 \@ref(tab:gambia-without-nugget-effect) 来自 Peter Diggle 等 (2002) [@Diggle2002Childhood] 用算法实现贝叶斯 MCMC 算法的结果，作为对比，这里在模型 \@ref(eq:gambia-without-nugget-effect) 的基础上添加块金效应 $U_{i}$，建立模型\@ref(eq:gambia-with-nugget-effect)，基于 Stan 实现贝叶斯 MCMC 算法以估计模型\@ref(eq:gambia-with-nugget-effect)中的各个参数值，计算结果见表 \@ref(tab:gambia-with-nugget-effect)，观察到块金效应占比 $\nu^2 = \tau^2/\sigma^2 = 0.000002$，是一个很小的值，在实际应用中可以忽略。
 
 \begin{equation}
 \log\{p_{ij}/(1-p_{ij})\} = \alpha + \beta^{\top}z_{ij} + U_{i} + S(x_i) (\#eq:gambia-with-nugget-effect)
 \end{equation}
 
-Table: (\#tab:gambia-with-nugget-effect) 带块金效应的模型 \@ref(eq:gambia-with-nugget-effect) 参数估计和 95\% 的置信区间
+Table: (\#tab:gambia-with-nugget-effect) 模型 \@ref(eq:gambia-with-nugget-effect) 参数的贝叶斯估计值和 95\% 的置信区间，第1至4列依次是后验2.5\%、97.5\%分位点、后验均值以及后验中位数
 
 | 参数                  |   2.5\%分位点   |   97.5\%分位点  |   均值 (mean)  |  中位数 (median)  |
 | :-------------------- | :-------------: | :-------------: | :------------: | :---------------: |
@@ -203,9 +150,6 @@ Table: (\#tab:gambia-with-nugget-effect) 带块金效应的模型 \@ref(eq:gambi
 | $\sigma^2$            |     0.240826    |     1.662284    |    0.793031    |    0.740790       |
 | $\phi$                |     1.242164    |     53.351207   |   11.653717    |    7.032258       |
 | $\kappa$              |     0.150735    |     1.955524    |    0.935064    |    0.830548       |
-
-将投影坐标系 (UTM) 转化为地理坐标系 (WGS84)
-
 
 ## 本章小结 {#sec:cases}
 
