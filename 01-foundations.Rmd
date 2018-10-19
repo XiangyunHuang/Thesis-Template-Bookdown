@@ -5,83 +5,55 @@
 ## 指数族 {#sec:exp}
 
 一般地，样本 $\mathbf{Y}$ 的分布服从指数族，即形如
-
 \begin{equation}
 f_{Y}(y;\theta,\phi) = \exp\big\{ \big(y\theta - b(\theta) \big)/a(\phi) + c(y,\phi) \big\}
 (\#eq:common-exponential-family)
 \end{equation}
-
 \noindent 其中，$a(\cdot),b(\cdot),c(\cdot)$ 是某些特定的函数。如果 $\phi$ 已知，这是一个含有典则参数 $\theta$ 的指数族模型，如果 $\phi$ 未知，它可能是含有两个参数的指数族。对于正态分布
-
 \begin{equation}
 \begin{aligned}
 f_{Y}(y;\theta,\phi) & = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\{-\frac{(y - \mu)^2}{2\sigma^2}  \}  \\
  & = \exp\big \{ (y\mu - \mu^2/2)/\sigma^2 - \frac{1}{2}\big(y^2/\sigma^2 + \log(2\pi\sigma^2)\big) \big\}
 \end{aligned} (\#eq:normal-distribution)
 \end{equation}
-
 \noindent 通过与 \@ref(eq:common-exponential-family) 式对比，可知 $\theta = \mu$，$\phi = \sigma^2$，并且有
-
 \[
 a(\phi) = \phi, \quad b(\theta) = \theta^2/2, \quad c(y,\phi) = - \frac{1}{2}\{ y^2/\sigma^2 + \log(2\pi\sigma^2) \} 
 \]
-
 \noindent 记 $l(\theta,\phi;y) = \log f_{Y}(y;\theta,\phi)$ 为给定样本点 $y$ 的情况下，关于 $\theta$ 和 $\phi$ 的对数似然函数。样本 $Y$ 的均值和方差具有如下关系
-
 \begin{equation}
 \mathsf{E}\big( \frac{\partial l}{\partial \theta} \big) = 0
 (\#eq:mean-log-lik)
 \end{equation}
-
 \noindent 和
-
 \begin{equation}
 \mathsf{E}\big( \frac{\partial^2 l}{\partial \theta^2} \big) + \mathsf{E}\big(\frac{\partial l}{\partial \theta}\big)^2  = 0
 (\#eq:variance-log-lik)
 \end{equation}
-
 \noindent 从 \@ref(eq:common-exponential-family) 式知
-
 \[ l(\theta,\phi;y) = {y\theta - b(\theta)}/a(\phi) + c(y,\phi) \]
-
 \noindent 因此，
-
 \begin{equation}
 \begin{aligned}
 \frac{\partial l}{\partial \theta} & = {y - b'(\theta)}/a(\phi)  \\
 \frac{\partial^2 l}{\partial \theta^2}  & = - b''(\theta)/a(\phi)
 \end{aligned} (\#eq:partial-log-lik)
 \end{equation}
-
 \noindent 从 \@ref(eq:mean-log-lik) 式和 \@ref(eq:partial-log-lik)，可以得出
-
 \[ 
 0 = \mathsf{E}\big( \frac{\partial l}{\partial \theta} \big) = \big\{ \mu - b'(\theta) \big\}/a(\phi)
 \]
-
 \noindent 所以
-
 \[ \mathsf{E}(Y) = \mu = b'(\theta) \]
-
 \noindent 根据 \@ref(eq:variance-log-lik) 式和 \@ref(eq:partial-log-lik) 式，可得
-
 \[ 0 = - \frac{b''(\theta)}{a(\phi)} + \frac{\mathsf{Var}(Y)}{a^2(\phi)} \]
-
 \noindent 所以
-
 \[ \mathsf{Var}(Y) = b''(\theta)a(\phi) \]
-
 可见，$Y$ 的方差是两个函数的乘积，一个是 $b''(\theta)$， 它仅仅依赖典则参数，被叫做方差函数，另一个是 $a(\phi)$，它独立于 $\theta$，仅仅依赖 $\phi$，方差函数可以看作是 $\mu$ 的函数，记作 $V(\mu)$。
 
 函数 $a(\phi)$ 通常形如
-
 \[ a(\phi) = \phi/w \]
-
-\noindent 其中 $\phi$ 可由 $\sigma^2$ 表示，故而也叫做发散参数 (dispersion parameter)，是一个与样本观察值相关的常数，$w$ 是已知的权重，随样本观察值变化。对正态分布模型而言，$w$ 的分量是 $m$ 个相互独立的样本观察值的均值，有
-
-\[ a(\phi) = \sigma^2/m\]
-
-\noindent 所以，$w = m$。
+\noindent 其中 $\phi$ 可由 $\sigma^2$ 表示，故而也叫做发散参数 (dispersion parameter)，是一个与样本观察值相关的常数，$w$ 是已知的权重，随样本观察值变化。对正态分布模型而言，$w$ 的分量是 $m$ 个相互独立的样本观察值的均值，有 $a(\phi) = \sigma^2/m$，所以，$w = m$。
 
 根据 \@ref(eq:common-exponential-family)式，正态、泊松和二项分布的特征见表 \@ref(tab:common-characteristics)，其它常见分布见 Peter McCullagh 等 (1989年) [@McCullagh1989]。
 
@@ -103,42 +75,30 @@ Table: (\#tab:common-characteristics) 指数族内常见的一元分布的共同
 ## 最小二乘估计 {#sec:lse}
 
 考虑如下线性模型的最小二乘估计
-
 \begin{equation}
 \mathsf{E}\mathbf{Y} = \mathbf{X}\boldsymbol{\beta}; \mathsf{Var}(\mathbf{Y}) = \sigma^2 \mathbf{I}_{n} (\#eq:linear-models)
 \end{equation}
-
-其中， $\mathbf{Y}$ 为 $n \times 1$ 维观测向量， $\mathbf{X}$ 为已知的 $n \times p (p \leq n)$ 阶设计矩阵，$\boldsymbol{\beta}$ 为 $p \times 1$ 维未知参数，$\sigma^2$ 未知，$\mathbf{I}_{n}$ 为 $n$ 阶单位阵。
-
+\noindent 其中， $\mathbf{Y}$ 为 $n \times 1$ 维观测向量， $\mathbf{X}$ 为已知的 $n \times p (p \leq n)$ 阶设计矩阵，$\boldsymbol{\beta}$ 为 $p \times 1$ 维未知参数，$\sigma^2$ 未知，$\mathbf{I}_{n}$ 为 $n$ 阶单位阵。
 ```{definition, label="least-squares-estimate", name="最小二乘估计", echo=TRUE}
 在模型 \@ref(eq:linear-models) 中，如果
-
 \begin{equation}
 (\mathbf{Y} - \mathbf{X}\hat{\boldsymbol{\beta}})^{\top}(\mathbf{Y} - \mathbf{X}\hat{\boldsymbol{\beta}}) = \min_{\beta}(\mathbf{Y} - \mathbf{X}\boldsymbol{\beta})^{\top}(\mathbf{Y} - \mathbf{X}\boldsymbol{\beta}) (\#eq:least-squares)
 \end{equation}
-
 \noindent 则称 $\hat{\boldsymbol{\beta}}$ 为 $\boldsymbol{\beta}$ 的最小二乘估计 (Least Squares Estimate，简称 LSE)。
 ```
-
 ```{theorem, label="unbiased", name="最小二乘估计", echo=TRUE}
 若模型  \@ref(eq:linear-models) 中的 $\mathbf{X}$ 是列满秩的矩阵，则 $\boldsymbol{\beta}$ 的最小二乘估计为
-
 \[
 \hat{\boldsymbol{\beta}}_{LS} = ( \mathbf{X}^{\top}\mathbf{X} )^{-1}\mathbf{X}^{\top} \mathbf{Y}, \quad  \mathsf{Var}(\hat{\boldsymbol{\beta}}_{LS}) = \sigma^2 (\mathbf{X}^{\top}\mathbf{X})^{-1}  
 \]
-
 \noindent $\sigma^2$ 的最小二乘估计为
-
 \[
 \hat{\sigma^2}_{LS} = (\mathbf{Y} - \mathbf{X}\hat{\boldsymbol{\beta}}_{LS})^{\top}(\mathbf{Y} - \mathbf{X}\hat{\boldsymbol{\beta}}_{LS})/(n - p)
 \]
-
 若将模型  \@ref(eq:linear-models) 的条件 $\mathsf{Var}(\mathbf{Y}) = \sigma^2 \mathbf{I}_{n}$ 改为 $\mathsf{Var}(\mathbf{Y}) = \sigma^2 \mathbf{G}$， $G(>0)$ 为已知正定阵，则$\boldsymbol{\beta}$ 的最小二乘估计为
-
 \[
 \tilde{\boldsymbol{\beta}}_{LS} = ( \mathbf{X}^{\top} G^{-1} \mathbf{X})^{-1} \mathbf{X}^{\top} G^{-1} \mathbf{Y} 
 \]
-
 \noindent 称 $\tilde{\boldsymbol{\beta}}_{LS}$ 为广义最小二乘估计 (Generalized Least Squares Estimate，简称 GLSE)，特别地，当 $G = \mathrm{diag}(\sigma^2_{1},\ldots,\sigma^2_{n})$，$\sigma^2_{i},i = 1,\ldots,n$ 已知时，称 $\tilde{\boldsymbol{\beta}}_{LS}$ 为加权最小二乘估计 (Weighted Least Squares Estimate，简称 WLSE)[@wang2004]
 ```
 
@@ -147,26 +107,18 @@ Table: (\#tab:common-characteristics) 指数族内常见的一元分布的共同
 
 ```{definition, label="maximum-likelihood-estimate", name="极大似然估计", echo=TRUE}
 设 $p(\mathbf{x};\boldsymbol{\theta}),\boldsymbol{\theta} \in \boldsymbol{\Theta}$ 是 $(\mathbb{R}^n,\mathscr{P}_{\mathbb{R}^n})$ 上的一族联合密度函数，对给定的 $\mathbf{x}$，称
-
 \[ L(\boldsymbol{\theta};\mathbf{x}) = kp(\mathbf{x};\boldsymbol{\theta}) \]
-
 \noindent 为 $\boldsymbol{\theta}$ 的似然函数，其中 $k > 0$ 是不依赖于 $\boldsymbol{\theta}$ 的量，常取 $k=1$。进一步，若存在 $(\mathbb{R}^n,\mathscr{P}_{\mathbb{R}^n})$ 到 $(\boldsymbol{\Theta},\mathscr{P}_{\boldsymbol{\Theta}})$ 的统计量 $\hat{\boldsymbol{\theta}}(\mathbf{x})$ 使
-
 \[ L(\hat{\boldsymbol{\theta}}(\mathbf{x});\mathbf{x}) = \sup_{\boldsymbol{\theta}} L(\boldsymbol{\theta};\mathbf{x}) \]
-
 \noindent 则 $\hat{\boldsymbol{\theta}}(\mathbf{x})$ 称为 $\boldsymbol{\theta}$ 的一个极大似然估计(Maximum Likelihood Eestimate，简称 MLE)。
 ```
 
 概率密度函数很多可以写成具有指数函数的形式，如指数族，采用似然函数的对数通常更为简便。称
-
 \[ l(\boldsymbol{\theta},\mathbf{x}) = \ln L(\boldsymbol{\theta},\mathbf{x}) \]
-
 \noindent 为 $\boldsymbol{\theta}$ 的对数似然函数。对数变换是严格单调的，所以 $l(\boldsymbol{\theta},\mathbf{x})$ 与 $L(\boldsymbol{\theta},\mathbf{x})$ 的极大值是等价的。当 MLE 存在时，寻找 MLE 的常用方法是求导数。如果 $\hat{\boldsymbol{\theta}}(\mathbf{x})$ 是 $\boldsymbol{\Theta}$ 的内点，则 $\hat{\boldsymbol{\theta}}(\mathbf{x})$ 是下列似然方程组
-
 \begin{equation}
 \partial l(\boldsymbol{\theta},\mathbf{x})/ \partial \boldsymbol{\theta}_{i} = 0, \quad i = 1,\ldots, m (\#eq:likelihood-equations)
 \end{equation}
-
 \noindent 的解。$p(\mathbf{x};\boldsymbol{\theta})$ 属于指数族时，似然方程组 \@ref(eq:likelihood-equations) 的解唯一。
 
 ```{theorem, label="consistency", name="相合性", echo=TRUE}
@@ -182,45 +134,29 @@ Table: (\#tab:common-characteristics) 指数族内常见的一元分布的共同
 2. 在参数真值 $\theta_{0}$ 的邻域内，$| \partial^3 \ln p/\partial \theta^3 | \leq H(x)$，且 $\mathsf{E}H(x) < \infty$；
 3. 在参数真值 $\theta_{0}$ 处，
 
-\begin{equation} 
-\mathsf{E}_{\theta_{0}} \big[ \frac{ p'(x,\theta_{0}) }{ p(x,\theta_{0}) } \big] = 0, \quad
+$$\mathsf{E}_{\theta_{0}} \big[ \frac{ p'(x,\theta_{0}) }{ p(x,\theta_{0}) } \big] = 0, \quad
 \mathsf{E}_{\theta_{0}} \big[ \frac{ p''(x,\theta_{0}) }{ p(x,\theta_{0}) } \big] = 0, \quad
-I(\theta_{0}) = \mathsf{E}_{\theta_{0}} \big[ \frac{ p'(x,\theta_{0}) }{ p(x,\theta_{0}) } \big]^{2} > 0
-\end{equation}
-
-\noindent 其中撇号表示对 $\theta$ 的微分。记 $\hat{\theta}_{n}$ 为 $n \to \infty$ 时，似然方程组的相合解，则
-
-\[ \sqrt{n}(\hat{\theta}_{n} - \theta_{0}) \longrightarrow  \mathcal{N}(\mathbf{0},I^{-1}(\theta))\]
+I(\theta_{0}) = \mathsf{E}_{\theta_{0}} \big[ \frac{ p'(x,\theta_{0}) }{ p(x,\theta_{0}) } \big]^{2} > 0$$
+\noindent 其中撇号表示对 $\theta$ 的微分。记 $\hat{\theta}_{n}$ 为 $n \to \infty$ 时，似然方程组的相合解，则$\sqrt{n}(\hat{\theta}_{n} - \theta_{0}) \longrightarrow  \mathcal{N}(\mathbf{0},I^{-1}(\theta))$。
 ```
 
 ## 平稳高斯过程 {#sec:stationary-gaussian-process}
 
 一般地，空间高斯过程 $\mathcal{S} = \{S(x),x\in\mathbb{R}^2\}$ 必须满足条件：任意给定一组空间位置 $x_1,x_2,\ldots,x_n, \forall x_{i} \in \mathbb{R}^2$， 每个位置上对应的随机变量 $S(x_i), i = 1,2,\ldots,n$ 的联合分布 $\mathcal{S} = \{S(x_1), S(x_2),\ldots,S(x_n)\}$ 是多元高斯分布，其由均值 $\mu(x) = \mathrm{E}[S(x)]$ 和协方差 $G_{ij} = \gamma(x_i,x_j) = \mathrm{Cov}\{S(x_i),S(x_j)\}$ 完全确定，即 $\mathcal{S} \sim \mathrm{MVN}(\mu_{S},G)$。
 
-平稳空间高斯过程需要空间高斯过程满足平稳性条件：其一， $\mu(x) = \mu, \forall x \in \mathbb{R}^2$， 其二，自协方差函数 $\gamma(x_i,x_j) = \gamma(u),u=\|x_{i} - x_{j}\|$。 可见均值 $\mu$ 是一个常数， 而自协方差函数 $\gamma(x_i,x_j)$ 只与空间距离有关。 注意到平稳高斯过程 $\mathcal{S}$ 的方差是一个常数，即 $\sigma^2 = \gamma(0)$， 然后可以定义自相关函数 $\rho(u) = \gamma(u)/\sigma^2$， 并且 $\rho(u)$ 满足关于空间距离的对称性， $\rho(u) = \rho(-u)$， 因为对 $\forall u, \mathrm{Corr}\{S(x),S(x-u)\} = \mathrm{Corr}\{S(x-u), S(x)\} = \mathrm{Corr}\{S(x),S(x+u)\}$， 这里的第二个等式是根据平稳性得来的， 根据协方差的定义不难验证。 在本论文中如果不特别说明， 平稳就指上述协方差意义下的平稳， 因为这种平稳性条件广泛应用于空间数据的统计建模。
+平稳空间高斯过程需要空间高斯过程满足平稳性条件：其一， $\mu(x) = \mu, \forall x \in \mathbb{R}^2$， 其二，自协方差函数 $\gamma(x_i,x_j) = \gamma(u),u=\|x_{i} - x_{j}\|$。 可见均值 $\mu$ 是一个常数， 而自协方差函数 $\gamma(x_i,x_j)$ 只与空间距离有关。 注意到平稳高斯过程 $\mathcal{S}$ 的方差是一个常数，即 $\sigma^2 = \gamma(0)$， 然后可以定义自相关函数 $\rho(u) = \gamma(u)/\sigma^2$， 并且 $\rho(u)$ 满足关于空间距离的对称性， $\rho(u) = \rho(-u)$， 因为对 $\forall u, \mathrm{Corr}\{S(x),S(x-u)\} = \mathrm{Corr}\{S(x-u), S(x)\} = \mathrm{Corr}\{S(x),S(x+u)\}$， 这里的第二个等式是根据平稳性得来的， 由协方差的定义不难验证。 在本论文中如果不特别说明， 平稳就指上述协方差意义下的平稳， 因为这种平稳性条件广泛应用于空间数据的统计建模。
 
 不失一般性，给出一维空间下随机过程 $S(x)$ 的均方连续性和可微性定义。
 
-```{definition, label="continuous", name="连续性", echo=TRUE}
+```{definition, label="continuous-differentiable", name="连续性和可微性", echo=TRUE}
 随机过程 $S(x)$ 满足
-
 \[ \lim_{h \to 0} \mathsf{E}\big[ \{S(x + h) - S(x)\}^{2} \big] = 0 \] 
-
-\noindent 则称 $S(x)$ 是均方连续(mean-square continuous)的。
-```
-
-```{definition, label="differentiable", name="可微性", echo=TRUE}
-随机过程 $S(x)$ 满足
-
+\noindent 则称 $S(x)$ 是均方连续(mean-square continuous)的。随机过程 $S(x)$ 满足
 \[ \lim_{h \to 0} \mathsf{E} \big[ \{ \frac{S(x+h) - S(x)}{h} - S'(x) \}^2 \big] = 0 \]
-
-\noindent 则称 $S(x)$ 是均方可微的，并且 $S'(x)$ 就是均方意义下的一阶导数。如果 $S'(x)$ 是均方可微的，则 $S(x)$ 是二次均方可微的，随机过程 $S(x)$ 的高阶均方可微性可类似定义。
+\noindent 则称 $S(x)$ 是均方可微(mean-square differentiable)的，并且 $S'(x)$ 就是均方意义下的一阶导数。如果 $S'(x)$ 是均方可微的，则 $S(x)$ 是二次均方可微的，随机过程 $S(x)$ 的高阶均方可微性可类似定义。M. S. Bartlett (1955 年) [@Bartlett1955] 得到如下重要结论
 ```
-
-Bartlett (1955 年) [@Bartlett1955] 得到如下结论
-
 ```{theorem, label="stationary-mean-square-properties", name="平稳随机过程的可微性", echo=TRUE}
-自相关函数为 $\rho(u)$ 的平稳随机过程是 $k$ 次均方可微 (mean-square differentiable) 的，当且仅当 $\rho(u)$ 在 $u = 0$ 处是 $2k$ 次可微的。
+自相关函数为 $\rho(u)$ 的平稳随机过程是 $k$ 次均方可微的，当且仅当 $\rho(u)$ 在 $u = 0$ 处是 $2k$ 次可微的。
 ```
 
 ## 修正的第二类贝塞尔函数 {#sec:modified-bessel-function}
@@ -235,7 +171,6 @@ I_{-\kappa}(u) & =  \sum_{m=0}^{\infty} \frac{1}{m!\Gamma(m + \kappa + 1)} \big(
 \end{equation}
 
 \noindent 其中 $u \geq 0$，$\kappa \in \mathbb{R}$，如果 $\kappa \in \mathbb{Z}$，则取该点的极限值，$\mathcal{K}_{\kappa}(u)$ 的值可由 R 内置的函数 `besselK` 计算 [@Campbell1980]。
-
 ```{r Bessel-function,fig.cap="贝塞尔函数图像"}
 knitr::include_graphics(path = "figures/bessel.png")
 ```
@@ -250,30 +185,18 @@ knitr::include_graphics(path = "figures/bessel.png")
 \noindent 因此，$f(x)$ 可以展开成有限项的和的形式
 \[ f(x) = x^2 = 2^2 + 2(2)(x-2) + \frac{2}{2}(x-2)^2 \]
 拉普拉斯近似本质上是用正态分布来近似任意分布 $g(x)$，用泰勒展开的前三项近似 $\log g(x)$，展开的位置是密度函数 $g(x)$ 的极值点 $\hat{x}$，则有
-
 \[ \log g(x) \approx \log g(\hat{x}) + \frac{\partial \log g(\hat{x})}{\partial x} (x - \hat{x}) + \frac{\partial^2 \log g(\hat{x})}{2\partial x^2} (x - \hat{x})^2 \]
-
 \noindent 由于是在函数 $g(x)$ 的极值点 $\hat{x}$ 展开， 所以 $x = \hat{x}$ 一阶导是 0，用曲率去估计方差是 $\hat{\sigma}^2 = -1/\frac{\partial^2 \log g(\hat{x})}{2\partial x^2}$，再重写上述近似
-
 \[ \log g(x) \approx \log g(\hat{x}) - \frac{1}{2\hat{\sigma}^2} (x - \hat{x})^2 \]
-
 \noindent 现在，用这个结果做正态近似，将上式两端先取指数，再积分，移去常数项
-
 \[ \int g(x) \mathrm{d}x = \int \exp[\log g(x)] \mathrm{d}x \approx \mathrm{constant} \int \exp[- \frac{(x - \hat{x})^2}{2\hat{\sigma}^2}] \mathrm{d}x \]
-
 \noindent 则拉普拉斯方法近似任意密度函数 $g(x)$ 得到的正态分布的均值为 $\hat{x}$， $\hat{x}$ 可以通过求解方程 $g'(x) = 0$ 获得，方差为 $\hat{\sigma}^2 = -1/g''(\hat{x})$。下面以卡方分布 $\chi^2$ 为例，由于
-
 \begin{align*}
-    f(x; k) & = \frac{ x^{k/2-1} \mathrm{e}^{-x/2} }{ 2^{k/2}\Gamma(k/2) }, x \geq 0 \\
-  \log f(x) & = (k/2 - 1) \log x - x/2 \\
- \log f'(x) & = (k/2-1)/x - 1/2 = 0 \\
-\log f''(x) & = -(k/2-1)/x^2
+    f(x; k) & = \frac{ x^{k/2-1} \mathrm{e}^{-x/2} }{ 2^{k/2}\Gamma(k/2) }, x \geq 0 \quad \log f(x) = (k/2 - 1) \log x - x/2 \\
+ \log f'(x) & = (k/2-1)/x - 1/2 = 0 \quad \log f''(x)  = -(k/2-1)/x^2
 \end{align*}
-
 \noindent 所以，卡方分布的拉普拉斯近似为
-
 \[ \chi_{k}^2 \overset{LA}{\sim}  N(\hat{x} = k-2, \hat{\sigma}^2 = 2(k-2)) \]
-
 \noindent 自由度越大，近似效果越好，对于多元分布的情况不难推广，使用多元泰勒展开和黑塞矩阵即可表示[@Tierney1986]。
 
 
@@ -318,19 +241,13 @@ p(\boldsymbol{\theta}|\mathbf{Y})  & =  & \displaystyle \frac{p(\boldsymbol{\the
 
 一般地，空间广义线性混合效应模型的统计推断总是不可避免的要面对高维积分，处理高维积分的方法一个是寻找近似方法避免求积分，一个是寻找有效的随机模拟方法直接求积分。这里，介绍蒙特卡罗方法求积分，以计算 $N$ 维超立方体的内切球的体积为例说明。
 
-假设我们有一个 $N$ 维超立方体，其中心在坐标 $\mathbf{0} = (0,\ldots,0)$。超立方体在点 $(\pm 1/2,\ldots,\pm 1/2)$，有 $2^{N}$ 个角落，超立方体边长是1，$1^{N}=1$，所以它的体积是1。
+假设我们有一个 $N$ 维超立方体，其中心在坐标 $\mathbf{0} = (0,\ldots,0)$。超立方体在点 $(\pm 1/2,\ldots,\pm 1/2)$，有 $2^{N}$ 个角落，超立方体边长是1，$1^{N}=1$，所以它的体积是1。如果 $N=1$，超立方体是一条从 $-\frac{1}{2}$ 到 $\frac{1}{2}$ 的单位长度的线，如果 $N=2$，超立方体是一个单位正方形，对角是 $\left( -\frac{1}{2}, -\frac{1}{2} \right)$ 和 $\left( \frac{1}{2}, \frac{1}{2} \right)$，如果 $N=3$，超立方体就是单位体积的立方体，对角是 $\left( -\frac{1}{2}, -\frac{1}{2}, -\frac{1}{2} \right)$ 和 $\left( \frac{1}{2}, \frac{1}{2}, \frac{1}{2} \right)$，依此类推，$N$ 维超立方体体积是1，对角是 $\left( -\frac{1}{2}, \ldots, -\frac{1}{2} \right)$ 和 $\left( \frac{1}{2}, \ldots, \frac{1}{2} \right)$。
 
-如果 $N=1$，超立方体是一条从 $-\frac{1}{2}$ 到 $\frac{1}{2}$ 的单位长度的线，如果 $N=2$，超立方体是一个单位正方形，对角是 $\left( -\frac{1}{2}, -\frac{1}{2} \right)$ 和 $\left( \frac{1}{2}, \frac{1}{2} \right)$，如果 $N=3$，超立方体就是单位体积的立方体，对角是 $\left( -\frac{1}{2}, -\frac{1}{2}, -\frac{1}{2} \right)$ 和 $\left( \frac{1}{2}, \frac{1}{2}, \frac{1}{2} \right)$，依此类推，$N$ 维超立方体体积是1，对角是 $\left( -\frac{1}{2}, \ldots, -\frac{1}{2} \right)$ 和 $\left( \frac{1}{2}, \ldots, \frac{1}{2} \right)$
+现在，考虑 $N$ 维超立方体的内切球，我们把它称为 $N$ 维超球，它的中心在原点，半径是 $\frac{1}{2}$。我们说点 $y$ 在超球内，意味着它到原点的距离小于半径，即 $\| y \| < \frac{1}{2}$。一维情形下，超球是从的线，包含了整个超立方体。二维情形下，超球是中心在原点，半径为 $\frac{1}{2}$ 的圆。三维情形下，超球是立方体的内切球。已知单位超立方体的体积是1，但是其内的内切球的体积是多少呢？我们已经学过如何去定义一个积分计算半径为 $r$ 的二维球（即圆）的体积（即面积）是 $\pi r^2$，三维情形下，内切球是 $\frac{4}{3}\pi r^3$。但是更高维的欧式空间里，内切球的体积是多少呢？
 
-现在，考虑 $N$ 维超立方体的内切球，我们把它称为 $N$ 维超球，它的中心在原点，半径是 $\frac{1}{2}$。我们说点 $y$ 在超球内，意味着它到原点的距离小于半径，即 $\| y \| < \frac{1}{2}$。
+在这种简单的体积积分设置下，当然可以去计算越来越复杂的多重积分，但是这里介绍采样的方法去计算积分，即所谓的蒙特卡罗方法，由乌拉姆 (S. Ulam)、冯$\cdot$诺依曼(J. von Neumann) 和梅特罗波利斯 (N. Metropolis) 等 在美国核武器研究实验室创立，当时正值二战期间，为了研制原子弹，出于保密的需要，与随机模拟相关的技术就代号蒙特卡罗。现在，蒙特卡罗方法占据现代统计计算的核心地位，特别是与贝叶斯相关的领域。
 
-一维情形下，超球是从的线，包含了整个超立方体。二维情形下，超球是中心在原点，半径为 $\frac{1}{2}$ 的圆。三维情形下，超球是立方体的内切球。
-
-我们知道单位超立方体的体积是1，但是其内的内切球的体积是多少呢？我们已经学过如何去定义一个积分计算半径为 $r$ 的二维球（即圆）的体积（即面积）是 $\pi r^2$，三维情形下，内切球是 $\frac{4}{3}\pi r^3$。但是更高维的欧式空间里，内切球的体积是多少呢？
-
-我们当然可以去计算越来越复杂的多重积分，但是这里我们介绍采样的方法去计算积分，即所谓的蒙特卡罗方法，由乌拉姆 (S. Ulam)、冯$\cdot$诺依曼(J. von Neumann) 和梅特罗波利斯 (N. Metropolis) 等 在美国核武器研究实验室创立，当时正值二战期间，为了研制原子弹，出于保密的需要，与随机模拟相关的技术就代号蒙特卡罗。现在，蒙特卡罗方法占据现代统计计算的核心地位，特别是与贝叶斯相关的领域。
-
-用蒙特卡罗方法去计算单位超立方体内的超球，首先我们需要在单位超立方体内产生随机点，然后计算落在超球内点的比例，即超球的体积。随着点的数目增加，估计的体积会收敛到真实的体积。因为这些点都独立同均匀分布，根据中心极限定理，误差下降的比率是 $\mathcal{O}\left( 1 / \sqrt{n} \right)$，这也意味着每增加一个小数点的准确度，样本量要增加 100 倍。
+用蒙特卡罗方法去计算单位超立方体内的超球，首先需要在单位超立方体内产生随机点，然后计算落在超球内点的比例，即超球的体积。随着点的数目增加，估计的体积会收敛到真实的体积。因为这些点都独立同均匀分布，根据中心极限定理，误差下降的比率是 $\mathcal{O}\left( 1 / \sqrt{n} \right)$，这也意味着每增加一个小数点的准确度，样本量要增加 100 倍。
 
 Table: (\#tab:calculate-volume-of-hyperball) 前 10 维单位超立方体内切球的体积，超立方体内随机模拟的点的个数是 100000（已经四舍五入保留小数点后三位）
 
@@ -364,7 +281,7 @@ Table: (\#tab:eight-high-schools) Eight Schools 数据集
 p(\mu,\tau) & \propto 1 \\
   \eta_i & \sim \mathcal{N}(0,1) \\
 \theta_i &  =   \mu + \tau \cdot \eta_i \\
-     y_i & \sim \mathcal{N}(\theta_i,\sigma^2_{i})
+     y_i & \sim \mathcal{N}(\theta_i,\sigma^2_{i}), i = 1,\ldots,8
 \end{aligned}
 (\#eq:hierarchical-normal-models)
 \end{equation}
@@ -375,8 +292,11 @@ p(\mu,\tau) & \propto 1 \\
 cat(readLines("code/8schools.stan"),sep = "\n")
 ```
 
-上述 Stan 代码的第一段提供数据：学校的数目 $J$，估计值 $y_1,\ldots,y_{J}$，标准差 $\sigma_1,\ldots,\sigma_{J}$，数据类型可以是整数、实数，结构可以是向量，或更一般的数组，还可以带约束，如在这个模型中 $J$ 限制为非负， $\sigma_{J}$ 必须是正的，另外两个反斜杠 // 表示注释。第二段代码声明参数：模型中的待估参数，学校总体的效应 $\theta_j$，均值 $\mu$，标准差 $\tau$，学校水平上的误差 $\eta$ 和效应 $\theta$。在这个模型中，用 $\mu,\tau,\eta$ 表示 $\theta$ 而不是直接声明 $\theta$ 作一个参数，通过这种参数化，采样器的运行效率会提高，还应该尽量使用向量化操作代替 for 循环语句。最后一段是模型：稍微注意的是，正文中正态分布 $N(\cdot,\cdot)$ 中后一个位置是方差，而 Stan 代码中使用的是标准差。`target += normal_lpdf(y | theta, sigma)`  和 `y ~ normal(theta, sigma)` 对模型的贡献是一样的，都使用正态分布的对数概率密度函数，只是后者扔掉了对数后验密度的常数项而已，这对于 Stan 的采样、近似或优化算法没有影响 [@Stan2017JSS]。算法运行的硬件环境是 16 核 32 线程主频 2.8 GHz 英特尔至强 E5-2680 处理器，系统环境 CentOS 7，R 软件版本 3.5.1，RStan 版本 2.17.3。算法参数设置了 4 条迭代链，每条链迭代 10000 次，为复现模型结果随机数种子设为 2018。
+上述 Stan 代码的第一段提供数据：学校的数目 $J$，估计值 $y_1,\ldots,y_{J}$，标准差 $\sigma_1,\ldots,\sigma_{J}$，数据类型可以是整数、实数，结构可以是向量，或更一般的数组，还可以带约束，如在这个模型中 $J$ 限制为非负， $\sigma_{J}$ 必须是正的，另外两个反斜杠 // 表示注释。第二段代码声明参数：模型中的待估参数，学校总体的效应 $\theta_j$，均值 $\mu$，标准差 $\tau$，学校水平上的误差 $\eta$ 和效应 $\theta$。在这个模型中，用 $\mu,\tau,\eta$ 表示 $\theta$ 而不是直接声明 $\theta$ 作一个参数，通过这种参数化，采样器的运行效率会提高，还应该尽量使用向量化操作代替 for 循环语句。最后一段是模型：稍微注意的是，正文中正态分布 $N(\cdot,\cdot)$ 中后一个位置是方差，而 Stan 代码中使用的是标准差。`target += normal_lpdf(y | theta, sigma)`  和 `y ~ normal(theta, sigma)` 对模型的贡献是一样的，都使用正态分布的对数概率密度函数，只是后者扔掉了对数后验密度的常数项而已，这对于 Stan 的采样、近似和优化算法没有影响 [@Stan2017JSS]。
 
+算法运行的硬件环境是 16 核 32 线程主频 2.8 GHz 英特尔至强 E5-2680 处理器，系统环境 CentOS 7，R 软件版本 3.5.1，RStan 版本 2.17.3。算法参数设置了 4 条迭代链，每条链迭代 10000 次，为复现模型结果随机数种子设为 2018。
+
+分层正态模型\@ref(eq:hierarchical-normal-models) 的参数 $\mu,\tau$，及其参数化引入的中间参数 $\eta_i,\theta_i,i=1,\ldots,8$，还有对数后验 $lp\_\_$ 的估计值见表 \@ref(tab:eight-schools-output)。
 ```{r run-8schools,eval=FALSE}
 # 安装依赖
 lapply(c(
