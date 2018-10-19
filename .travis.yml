@@ -71,4 +71,5 @@ script:
 after_success:
   - make pdf
   - ./_deploy.sh
-  - netlify deploy --dir _book
+  - netlify help
+  #- netlify deploy --dir _book
