@@ -68,7 +68,7 @@ script:
   - Rscript -e 'bookdown::render_book("index.Rmd")'
  # - Rscript -e 'bookdown::render_book("index.Rmd", config_file = "_bookdown_skeleton.yml")'
 
-#after_success:
- # - make pdf
- # - ./_deploy.sh
- # - netlify deploy -t $NETLIFY_PAT
+after_success:
+  - make pdf
+  - ./_deploy.sh
+  - netlify deploy --dir _book
