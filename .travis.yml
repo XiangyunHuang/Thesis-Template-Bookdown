@@ -29,7 +29,8 @@ addons:
   apt:
     sources:
       - sourceline: ppa:opencpu/imagemagick
-     # - ubuntu-toolchain-r-test
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-trusty-6.0
     packages:
       - ghostscript
       - imagemagick
@@ -40,13 +41,17 @@ addons:
       - libgdal-dev 
       - libgeos-dev 
       - libproj-dev
+      - clang-6.0
      # - clang-format-3.9
      # - gcc-8 
      # - g++-8
-
+env:
+  # - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
+  - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
+        
 before_install:
-#  - mkdir ~/.R
-#  - cp Makevars ~/.R # CXX14 conflict with readr
+  - mkdir ~/.R
+  - cp Makevars ~/.R # CXX14 conflict with readr
   - npm install netlify-cli -g
   - curl -fLo /tmp/tinytex.tar.gz https://travis-bin.yihui.name/tinytex.tar.gz
   - tar xzf /tmp/tinytex.tar.gz -C /$HOME
