@@ -19,13 +19,13 @@ y_{ij} = \tau_i + \epsilon_{ij}, \quad \boldsymbol{\epsilon} \sim \mathcal{N}(\m
 进一步，继续探索线性模型\@ref(eq:extended-linear-model)中的协方差 $\boldsymbol{\Lambda}$ 的结构，不妨先假定模型 \@ref(eq:extended-linear-model) 的随机误差是独立且方差齐性的，即 $\boldsymbol{\Lambda} = \boldsymbol{I}$ 。那么，可用如下一行命令拟合模型
 
 ```{r gls,eval=FALSE,echo=TRUE}
-m1 <- gls(yield ~ variety - 1, Wheat2)
+fit1 <- gls(yield ~ variety - 1, Wheat2)
 ```
 
 \noindent 接着，需要确认方差齐性的假设是否合适。那么，拟合残差图是一个有用又方便的判断工具，特别的，对于空间效应的探索，这里就使用拟合残差的变差图探索数据中存在的空间相关性，使用 **nlme** 包中的 `Variogram` 函数可以获得之前 `gls` 函数拟合方差齐性的线性模型的残差的变差图，即
 
 ```{r variogram,eval=FALSE,echo=TRUE}
-Variogram(m1, form = ~latitude + longitude)
+Variogram(fit1, form = ~latitude + longitude)
 ```
 
 图 \@ref(fig:yields-variogram) 显示样本变差随空间距离有明显的增长趋势，可见空间相关的结构明显，根据第\@ref(models)章第\@ref(subsec:covariance-function)小节，可以有理由地估计块金效应大约是 0.2，尺度参数 $\phi$ 可由样本变差为 1 对应的空间距离来初步估计，根据图\@ref(fig:yields-variogram)，该值大约是 31。 图中的平滑曲线是 局部多项式回归拟合的结果，也可以用局部加权回归拟合的平滑法来确定初值 [@Xie2008COS]。
@@ -37,20 +37,20 @@ knitr::include_graphics(path = "figures/Yields-Variogram.png")
 基于上述分析，这里先采用球性自协方差函数拟合这组数据中的空间结构，位置参数 $\phi$ 和块金效应的初始值可以从图 \@ref(fig:yields-variogram) 获取，其中 $\phi$ 是样本变差等于 1 时对应的空间距离 31。考虑空间效应后，可以这样拟合模型 \@ref(eq:extended-linear-model)
 
 ```{r update-gls,eval=FALSE,echo=TRUE}
-m2 <- update(m1, corr = corSpher(
+fit2 <- update(fit1, corr = corSpher(
   c(31, 0.2), form = ~latitude + longitude, nugget = TRUE
 ))
 ```
 
-\noindent 其中 `gls` 函数采用了限制极大似然法做广义最小二乘拟合，且支持不同类型的空间协方差函数，因此继续探索球型和二次有理型协方差函数对模型拟合效果的影响。值得注意的是，用限制极大似然法估计模型 \@ref(eq:extended-linear-model) 的参数时，对初始值很敏感，通过几番试错调整初值获得如表 \@ref(tab:yields-model-compare) 所示结果。根据表\@ref(tab:yields-model-compare)， 得出两个结论，其一选择合适的自相关函数可以取得更好的拟合效果，其二限制极大似然算法对初值很敏感，不断试错以选择合适的初值很重要。最后，再来观察使用空间线性混合效应模型拟合小麦数据后的标准化残差图，如图 \@ref(fig:model-check)，这个时候，残差中空间效应已经看不到了。
+\noindent 其中 `gls` 函数采用了限制极大似然法做广义最小二乘拟合，且支持不同类型的空间协方差函数，因此继续探索球型和二次有理型协方差函数对模型拟合效果的影响。值得注意的是，用限制极大似然法估计模型 \@ref(eq:extended-linear-model) 的参数时，对初始值很敏感，通过几番试错调整初值获得如表 \@ref(tab:yields-model-compare) 所示结果。根据表\@ref(tab:yields-model-compare)， 可以得出两个结论，其一选择合适的自相关函数可以取得更好的拟合效果，其二限制极大似然算法对初值很敏感，不断试错以选择合适的初值很重要。最后，再来观察使用空间线性混合效应模型拟合小麦数据后的标准化残差图，如图 \@ref(fig:model-check)，这个时候，残差中空间效应已经看不到了。
 
 Table: (\#tab:yields-model-compare) 基于小麦数据的空间线性混合效应模型的参数估计，比较不同初值和自协方差函数对模型拟合效果的影响
 
 |           | 自相关函数 |   $\hat{\phi}(\phi_0)$   |  $\hat{\tau}^2(\tau^2_{0})$|  $\hat{\sigma}^2(\sigma^2_{0})$ |   log-REML  |
 |:------| ----------:| --------------: | --------------:| -----:| :-------:|
-| 模型 I    |       球型 | $1.515\times 10^{5}(31)$ | $5.471\times 10^{-5}(0.2)$ |    466.785    |  -533.418   |
-| 模型 II   | 二次有理型 |             $13.461(13)$ |               $0.193(0.2)$ |      8.847    |  -532.639   |
-| 模型 III  |       球型 |             $27.457(28)$ |               $0.209(0.2)$ |      7.410    |  -533.931   |
+|  I    |       球型 | $1.515\times 10^{5}(31)$ | $5.471\times 10^{-5}(0.2)$ |    466.785    |  -533.418   |
+|  II   | 二次有理型 |             $13.461(13)$ |               $0.193(0.2)$ |      8.847    |  -532.639   |
+|  III  |       球型 |             $27.457(28)$ |               $0.209(0.2)$ |      7.410    |  -533.931   |
 
 ```{r model-check,fig.subcap=c("检查标准化拟合残差后的异方差性：横轴表示模型的拟合值，纵轴是标准化后的残差值","检查标准化拟合残差后的正态性：横轴表示标准化后的残差值，纵轴表示标准正态分布的分位数"),fig.cap="空间线性混合效应模型的拟合残差诊断",out.width="45%",fig.pos="!htb"}
 knitr::include_graphics(path = c("figures/heteroscedasticity.png","figures/normality.png"))
