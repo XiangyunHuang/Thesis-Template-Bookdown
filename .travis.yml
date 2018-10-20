@@ -37,10 +37,10 @@ addons:
       - optipng
       - fonts-inconsolata
       - libgit2-dev
-      - libudunits2-dev 
-      - libgdal-dev 
-      - libgeos-dev 
-      - libproj-dev
+      #- libudunits2-dev 
+      #- libgdal-dev 
+      #- libgeos-dev 
+      #- libproj-dev
       - clang-6.0
      # - clang-format-3.9
      # - gcc-8 
@@ -76,5 +76,4 @@ script:
 after_success:
   - make pdf
   - ./_deploy.sh
-  - netlify deploy --dir --help
-  #- netlify deploy --dir _book
+  - netlify deploy --dir _book

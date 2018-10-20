@@ -6,25 +6,17 @@ Depends:
     R (>= 3.5.0)
 Imports: 
   bookdown,
-  brms,
   colorspace (>= 1.4-0),
   desc,
   formatR,
   ggplot2,
   gridExtra,
-  kableExtra,
-  mcmc,
   rmarkdown,
   rstan,
-  rstanarm,
-  rstansim,
   sessioninfo,
-  sf,
   tibble
 Suggests: 
   svglite
 Remotes: 
   rstudio/rmarkdown,
-  rstudio/bookdown,
-  tidyverse/ggplot2,
-  tidyverse/readr
+  rstudio/bookdown
