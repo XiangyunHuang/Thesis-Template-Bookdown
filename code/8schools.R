@@ -19,9 +19,16 @@ dev.off()
 # pairs(fit, pars = c("mu", "tau", "lp__"), log = TRUE, las = 1) # tau will have logarithmic axes
 # dev.off()
 
-# stan_trace(fit,pars=c("mu", "tau"),inc_warmup = T)
+# 输出结果
+monitor(fit)
+
+library(shinystan)
+
+launch_shinystan_demo()
 
 # 迭代序列的诊断分析
+# mu tau 的迭代序列图
+stan_trace(fit,pars=c("mu", "tau"),inc_warmup = T)
 
 # trace plot 追踪迭代过程
 params <- as.data.frame(extract(fit, permuted=FALSE))
@@ -68,7 +75,7 @@ params$divergent <- divergent
 div_params_ncp <- params[params$divergent == 1,]
 nondiv_params_ncp <- params[params$divergent == 0,]
 
-# 图中发散的点用 蓝色标识
+# 图中发散的点用 橘黄色标识
 # par(mar = c(4, 4, 0.5, 0.5))
 plot(nondiv_params_ncp$mu, log(nondiv_params_ncp$tau),
   xlab = expression(mu), ylab = expression(log(tau)),

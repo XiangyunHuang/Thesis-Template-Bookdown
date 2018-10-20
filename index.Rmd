@@ -33,11 +33,7 @@ description: "Spatial generalized linear mixed models, Stationary Spatial Gaussi
 
 # 绪论 {#intro}
 
-空间统计的内容非常丰富，主要分为地质统计 (geostatistics)、 离散空间变差 (discrete spatial variation) 和空间点过程 (spatial point processes) 三大块 [@Cressie1993]。 地质统计这个术语最初来自南非的采矿业 [@Krige1951]， 并由 Georges Matheron 及其同事继承和发展，用以预测黄金的矿藏含量和质量。空间广义线性混合效应模型 (Spatial Generalized Linear Mixed Model，简称 SGLMM) 在空间数据建模中具有重要的地位，除了采矿业，还可应用于卫生统计、 气象统计和空间经济统计等领域，如分析地区范围内的疟疾分布，有限气象站点条件下，预测地区 PM2.5 污染物浓度分布等。
-
-## 研究意义 {#motivations}
-
-空间广义线性混合效应模型有着广泛的应用，如评估岩心样本石油含量，分析核污染物浓度的空间分布 [@Diggle1998]， 预测冈比亚儿童疟疾流行度的空间分布 [@Thomson1999;@Diggle2002Childhood]， 喀麦隆及其周边地区的热带眼线虫流行病的的空间分布 [@Diggle2007ATMP]，对热带疾病预防和控制项目提供决策支持 [@Schl2016Using]。 在热带地区，淋巴丝虫病和盘尾丝虫病是严峻的公共卫生问题， 据世界卫生组织统计， 在非洲撒哈拉以南、 阿拉伯半岛和南美洲的 34 个国家约 2000 \~ 4000 万人感染河盲病 [@Takougang2002Rapid]。 例如， 喀麦隆中部省份 Loa loa 是导致河盲病的寄生虫，它的感染强度与疾病流行度之间存在线性关系， 即 Loa loa 感染强度越大流行度越高 [@Boussinesq2001]。 1997 年，研究表明 Loa loa 流行度对应的高感染强度的临界值为 20\% [@Gardon1997Serious]， 而研究个体水平的感染情况与群体水平流行度之间的关系有助于大规模给药 [@Schl2016Using]，所以更加高效的算法和算法实现可以更快、更准、更有效地在大范围内做疾病预防和医疗资源分配。
+空间统计的内容非常丰富，主要分为地质统计 (geostatistics)、 离散空间变差 (discrete spatial variation) 和空间点过程 (spatial point processes) 三大块 [@Cressie1993]。 地质统计这个术语最初来自南非的采矿业 [@Krige1951]， 并由 Georges Matheron 及其同事继承和发展，用以预测黄金的矿藏含量和质量。空间广义线性混合效应模型 (Spatial Generalized Linear Mixed Model，简称 SGLMM) 在空间统计中有着广泛的应用，如评估岩心样本石油含量，分析核污染物浓度的空间分布 [@Diggle1998]， 预测冈比亚儿童疟疾流行度的空间分布 [@Diggle2002Childhood]， 喀麦隆及其周边地区的热带眼线虫流行病的的空间分布 [@Diggle2007ATMP]，对热带疾病预防和控制项目提供决策支持 [@Schl2016Using]。 在热带地区，淋巴丝虫病和盘尾丝虫病是严峻的公共卫生问题， 据世界卫生组织统计， 在非洲撒哈拉以南、 阿拉伯半岛和南美洲的 34 个国家约 2000 \~ 4000 万人感染河盲病 [@Takougang2002Rapid]。 例如， 喀麦隆中部省份 Loa loa 是导致河盲病的寄生虫，它的感染强度与疾病流行度之间存在线性关系， 即 Loa loa 感染强度越大流行度越高 [@Boussinesq2001]。 1997 年，研究表明 Loa loa 流行度对应的高感染强度的临界值为 20\% [@Gardon1997Serious]， 而研究个体水平的感染情况与群体水平流行度之间的关系有助于大规模给药 [@Schl2016Using]，所以更加高效的算法和算法实现可以更快、更准、更有效地在大范围内做疾病预防和医疗资源分配。
 
 ## 文献综述 {#reviews}
 
@@ -67,8 +63,7 @@ plot(bei, add = TRUE, pch = 16, cex = 0.3,axes = FALSE)
 
 ## 论文结构 {#stracture}
 
-在下面的章节中，第 \@ref(intro) 章介绍空间广义线性混合效应模型的相关背景和研究意义， 综述了目前广泛使用的贝叶斯 MCMC 算法、 MCML 算法研究现状。 第 \@ref(models) 章回顾了一般线性模型到 SGLMM 模型的结构， 指出了模型从简单到复杂的变化过程中的区别和联系， 尤其是指出了模型求解的不同方法和基于 R 实现的软件包。第 \@ref(algorithms) 章介绍了求解 SGLMM 模型的三类算法细节， 分别是 MCML 算法、 低秩近似算法和贝叶斯 MCMC 算法， 并在贝叶斯 MCMC 算法的基础上，提出基于 Stan 程序库实现的贝叶斯 MCMC 算法， 简记为贝叶斯 STAN-MCMC 方法。 此外， 还补充介绍了 Stan 程序及相关 R 包。 第 \@ref(simulations) 章详细介绍了模拟的过程， 比较了 MCML、 Low-Rank、 贝叶斯 MCMC 和贝叶斯 STAN-MCMC 算法的优劣， 如算法的准确度、效率， 还给出实际数据分析时的建议。 第 \@ref(applications) 章使用贝叶斯 STAN-MCMC 算法给出基于 SGLMM 模型的案例分析， 分别是喀麦隆周边地区人群感染 Loa loa 的流行度分析和冈比亚 5 岁以下儿童感染疟疾的流行度分析。 第 \@ref(summary) 章总结论文的主要工作和结论， 不足之处，以及有待研究的方向。
-
+第 \@ref(intro) 章绪论部分主要介绍了 SGLMM 模型的研究现状， 综述了 SGLMM 模型参数估计的贝叶斯 MCMC 和 MCML等 算法及其应用情况。 第 \@ref(prepare) 章基础知识介绍了指数族，最小二乘估计，极大似然估计，平稳高斯过程，拉普拉斯近似，先验和后验分布和蒙特卡罗积分等基础知识作为后续章节的相关知识准备。第 \@ref(models) 章回顾了一般线性模型到 SGLMM 模型的结构， 指出了模型从简单到复杂的变化过程中的区别和联系。第 \@ref(algorithms) 章介绍了目前估计 SGLMM 模型参数的算法，分别是拉普拉斯近似算法、蒙特卡罗极大似然算法、贝叶斯 MCMC 算法、低秩近似算法，并在贝叶斯 MCMC 算法的基础上，提出基于 Stan 程序库实现的贝叶斯 STAN-MCMC 算法。第 \@ref(simulations) 章首先介绍了一维和二维情形下平稳高斯过程的模拟，然后在二维情形下，做了响应变量分别服从二项分布和泊松分布的两组 SGLMM 模型的模拟实验，比较了贝叶斯 MCMC 算法和贝叶斯 STAN-MCMC 算法。 第 \@ref(applications) 章给出了两个案例分析，分别是基于空间线性混合效应模型的小麦数据分析和基于泊松型空间广义线性混合效应模型的核污染数据分析。第 \@ref(summary) 章总结论文的主要工作、相关结论和后续研究方向。
 
 [multi-bugs]: https://www.multibugs.org
 [JAGS]: http://mcmc-jags.sourceforge.net/

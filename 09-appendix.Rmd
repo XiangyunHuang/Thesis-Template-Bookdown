@@ -1,118 +1,4 @@
-```{r include=FALSE, cache=FALSE}
-library(methods)
-set.seed(2018)
-# 加载依赖
-library(ggplot2)
-library(StanHeaders)
-library(rstan)
-# 设置环境
-is_on_travis = identical(Sys.getenv("TRAVIS"), "true")
-is_online = curl::has_internet()
-
-options(mc.cores = if(is_on_travis) 4 else 2)
-rstan_options(auto_write = TRUE)
-
-library(tibble)
-knitr::opts_chunk$set(
-  comment = "#>",
-  collapse = TRUE,
-  echo = FALSE,
-  cache = TRUE,
-  size = "scriptsize",
-  out.width = "70%",
-  fig.align = "center",
-  fig.width = 6,
-  fig.asp = 0.618
-)
-
-doc_type <- function() knitr::opts_knit$get('rmarkdown.pandoc.to')
-
-knitr::knit_hooks$set(
-  optipng = knitr::hook_optipng,
-  pdfcrop = knitr::hook_pdfcrop,
-  small.mar = function(before, options, envir) {
-    if (before) par(mar = c(4.1, 4.1, 0.5, 0.5))  # smaller margin on top and right
-  }
-)
-# https://github.com/yihui/knitr-examples/blob/master/085-pdfcrop.Rnw
-
-options(
-  digits = 3,
-  citation.bibtex.max = 999,
-  bitmapType = "cairo",
-  stringsAsFactors = FALSE,
-  repos = "https://mirrors.tuna.tsinghua.edu.cn/CRAN/",
-  knitr.graphics.auto_pdf = FALSE,
-  tikzDefaultEngine = "xetex",
-  tikzXelatexPackages = c(
-    getOption("tikzXelatexPackages"),
-    "\\usepackage[colorlinks, breaklinks]{hyperref}",
-    "\\usepackage{color,tikz}",
-    "\\usepackage[active,tightpage,xetex]{preview}",
-    "\\PreviewEnvironment{pgfpicture}",
-    "\\usepackage{amsmath,amsfonts,mathrsfs}"
-  )
-)
-
-```
-```{r include=FALSE, cache=FALSE}
-library(methods)
-set.seed(2018)
-# 加载依赖
-library(ggplot2)
-library(StanHeaders)
-library(rstan)
-# 设置环境
-is_on_travis = identical(Sys.getenv("TRAVIS"), "true")
-is_online = curl::has_internet()
-
-options(mc.cores = if(is_on_travis) 4 else 2)
-rstan_options(auto_write = TRUE)
-
-library(tibble)
-knitr::opts_chunk$set(
-  comment = "#>",
-  collapse = TRUE,
-  echo = FALSE,
-  cache = TRUE,
-  size = "scriptsize",
-  out.width = "70%",
-  fig.align = "center",
-  fig.width = 6,
-  fig.asp = 0.618
-)
-
-doc_type <- function() knitr::opts_knit$get('rmarkdown.pandoc.to')
-
-knitr::knit_hooks$set(
-  optipng = knitr::hook_optipng,
-  pdfcrop = knitr::hook_pdfcrop,
-  small.mar = function(before, options, envir) {
-    if (before) par(mar = c(4.1, 4.1, 0.5, 0.5))  # smaller margin on top and right
-  }
-)
-# https://github.com/yihui/knitr-examples/blob/master/085-pdfcrop.Rnw
-
-options(
-  digits = 3,
-  citation.bibtex.max = 999,
-  bitmapType = "cairo",
-  stringsAsFactors = FALSE,
-  repos = "https://mirrors.tuna.tsinghua.edu.cn/CRAN/",
-  knitr.graphics.auto_pdf = FALSE,
-  tikzDefaultEngine = "xetex",
-  tikzXelatexPackages = c(
-    getOption("tikzXelatexPackages"),
-    "\\usepackage[colorlinks, breaklinks]{hyperref}",
-    "\\usepackage{color,tikz}",
-    "\\usepackage[active,tightpage,xetex]{preview}",
-    "\\PreviewEnvironment{pgfpicture}",
-    "\\usepackage{amsmath,amsfonts,mathrsfs}"
-  )
-)
-
-```
-\cleardoublepage 
+\cleardoublepage
 
 `r if (knitr::is_html_output()) '
 # 附录 {#appendix .unnumbered}
@@ -206,16 +92,20 @@ Table: (\#tab:HMC-Pois-SGLMM) 汉密尔顿蒙特卡罗算法，采样点 64 个�
 
 ## 图 {#simulate-plot .unnumbered}
 
-```{r rongelap-trace-plot,fig.cap="Langevin-Hastings 算法模拟条件分布 $[S(x\\_{i})|Y\\_{i}], i = 1,\\ldots,4$，第一列是迭代序列图，第二列是对应的密度分布"}
+```{r rongelap-trace-plot,fig.cap='(ref:rongelap-trace-plot)'}
 knitr::include_graphics(path = "figures/rongelap-mcml-diagnosis-trace-9.png")
 ```
-从图 \@ref(fig:rongelap-trace-plot) 可以看出迭代序列符合平稳性的特征
+从图 \@ref(fig:rongelap-trace-plot) 可以看出迭代序列符合平稳性的特征。
 
-```{r rongelap-acf-plot,fig.cap="条件分布 $[S(x\\_{i})|Y\\_{i}], i = 1,\\ldots,4$ 的采样序列的自相关图"}
+```{r rongelap-acf-plot,fig.cap='(ref:rongelap-acf-plot)'}
 knitr::include_graphics(path = "figures/rongelap-mcml-diagnosis-acf-9.png")
 ```
 
 从图 \@ref(fig:rongelap-acf-plot) 可以看出迭代序列满足马尔科夫性，没有明显的延迟相关性。
+
+(ref:rongelap-trace-plot) Langevin-Hastings 算法模拟条件分布 $[S(x_{i})|Y_{i}], i = 1,\ldots,4$，$[\cdot]$ 表示某某的分布，第一列是迭代序列图，第二列是对应的密度分布
+
+(ref:rongelap-acf-plot) 条件分布 $[S(x_{i})|Y_{i}], i = 1, \ldots, 4$ 的采样序列的自相关图
 
 ## 代码 {#simulate-code .unnumbered}
 

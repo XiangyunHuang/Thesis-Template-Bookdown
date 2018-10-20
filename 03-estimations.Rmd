@@ -304,7 +304,7 @@ S(x) \approx \sum_{i = 1}^r K(\|x-\tilde{x}_{i}\|; \phi, \kappa) U_{i} (\#eq:lr-
 
 <!-- ### STAN-MCMC 算法实现过程 {#STANMCMC} -->
 
-为了与本章第 \@ref(MCMC) 节提出的贝叶斯 MCMC 算法比较，我们基于它编写了程序。目前，我与 Paul Bürkner 一起开发了 **brms** 包 [@brms2017JSS]， 主要工作是修复程序调用和文档书写错误， 特别是与求解 SGLMM 模型相关的`gp`函数，相关细节见 **brms** 的 Github 开发仓库。
+为了与本章第 \@ref(MCMC) 节提出的贝叶斯 MCMC 算法比较，我们基于它编写了程序。目前，我与 Paul Bürkner 一起开发了 **brms** 包 [@brms2017JSS]， 主要工作是修复程序调用和文档书写错误， 特别是与求解 SGLMM 模型相关的 `gp` 函数，相关细节见 **brms** 的 Github 开发仓库。
 
 在 SGLMM 模型下，STAN-MCMC 算法，先从条件分布 $[S|\theta,\beta,Y]$ 抽样，然后是 $[\theta|S]$ ，最后是 $[\beta|S,Y]$，具体步骤如下：
 
