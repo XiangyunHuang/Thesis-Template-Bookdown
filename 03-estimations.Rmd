@@ -345,7 +345,7 @@ fit.binomal <- brm(formula = y | trials(units.m) ~
 
 ## 实现参数估计的 R 包 {#subsec:sglmm-with-r}
 
-R 语言作为免费自由的统计计算和绘图环境，因其更新快，社区庞大，扩展包更是超过了 13000 个，提供了大量前沿统计方法的代码实现。如 **spBayes** 包使用贝叶斯 MCMC 算法估计 SGLMM 模型的参数  [@spBayes2015]； **coda** 包诊断马尔科夫链的平稳性 [@coda2006]；**MCMCvis** 包分析和可视化贝叶斯 MCMC 算法的输出， 提取模型参数， 转化 JAGS、Stan 和 BUGS 软件的输出结果到 R 对象，以利后续分析；**geoR** 包 在空间线性混合效应模型上实现了贝叶斯 MCMC 算法 [@geoR2001]；**geoRglm** 包在 **geoR** 包的基础上将模型范围扩展到 SGLMM 模型 [@geoRglm2002]；**glmmBUGS** 包提供了 WinBUGS、 OpenBUGS 和 JAGS 软件的统一接口 [@glmmBUGS2010MCMC]。 目前，R 语言社区提供的求解 SGLMM 模型的 R 包和功能实现，见表 \@ref(tab:sglmm-packages)。
+R 语言作为免费自由的统计计算和绘图环境，因其更新快，社区庞大，扩展包更是超过了 13000 个，提供了大量前沿统计方法的代码实现。如 **spBayes** 包使用贝叶斯 MCMC 算法估计 SGLMM 模型的参数  [@spBayes2015]； **coda** 包诊断马尔科夫链的平稳性 [@coda2006]；**MCMCvis** 包分析和可视化贝叶斯 MCMC 算法的输出， 提取模型参数， 转化 JAGS、Stan 和 BUGS 软件的输出结果到 R 对象，以利后续分析；**geoR** 包 在空间线性混合效应模型上基于 Langevin-Hastings 实现了贝叶斯 MCMC 算法 [@geoR2001]；**geoRglm** 包在 **geoR** 包的基础上将模型范围扩展到 SGLMM 模型 [@geoRglm2002]；**glmmBUGS** 包提供了 WinBUGS、 OpenBUGS 和 JAGS 软件的统一接口 [@glmmBUGS2010MCMC]。 目前，R 语言社区提供的求解 SGLMM 模型的 R 包和功能实现，见表 \@ref(tab:sglmm-packages)。
 
 Table: (\#tab:sglmm-packages)  求解空间广义线性混合效应模型的 R 包功能比较：加号 + 表示可用，减号 - 表示不可用，星号 \* 标记的只在空间线性混合效应模型下可用
 
