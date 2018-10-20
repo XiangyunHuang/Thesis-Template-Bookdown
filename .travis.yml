@@ -50,15 +50,15 @@ env:
   - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
         
 before_install:
-  - mkdir ~/.R
-  - cp Makevars ~/.R # CXX14 conflict with readr
-  - echo "CXX = $CXX" >> ~/.R/Makevars 
-  - echo "CXX14 = $CXX" >> ~/.R/Makevars 
-  - echo "CXX14FLAGS = `R CMD config CXXFLAGS` -pedantic -g0 -fPIC" >> ~/.R/Makevars 
-  - export CLANG_EXTRA_ARG=""
-  - if [[ $CXX =~ clang.* ]] ;  then export CLANG_EXTRA_ARG=" -Qunused-arguments -fcolor-diagnostics " ; fi
-  - echo ${CXX} --version
-  - echo ${CLANG_EXTRA_ARG}  
+  #- mkdir ~/.R
+  #- cp Makevars ~/.R # CXX14 conflict with readr
+  #- echo "CXX = $CXX" >> ~/.R/Makevars 
+  #- echo "CXX14 = $CXX" >> ~/.R/Makevars 
+  #- echo "CXX14FLAGS = `R CMD config CXXFLAGS` -pedantic -g0 -fPIC" >> ~/.R/Makevars 
+  #- export CLANG_EXTRA_ARG=""
+  #- if [[ $CXX =~ clang.* ]] ;  then export CLANG_EXTRA_ARG=" -Qunused-arguments -fcolor-diagnostics " ; fi
+  #- echo ${CXX} --version
+  #- echo ${CLANG_EXTRA_ARG}  
   - npm install netlify-cli -g
   - curl -fLo /tmp/tinytex.tar.gz https://travis-bin.yihui.name/tinytex.tar.gz
   - tar xzf /tmp/tinytex.tar.gz -C /$HOME
