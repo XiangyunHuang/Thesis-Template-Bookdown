@@ -62,7 +62,7 @@ before_install:
   - du -h -d 1
 
 before_script:
-  - Rscript -e 'update.packages(lib.loc = .libPaths()[1], ask = FALSE)'
+  #- Rscript -e 'update.packages(lib.loc = .libPaths()[1], ask = FALSE)'
   - chmod +x ./_deploy.sh
 script:
   - Rscript -e 'bookdown::render_book("index.Rmd")'
@@ -71,5 +71,5 @@ script:
 after_success:
   - make pdf
   - ./_deploy.sh
-  - netlify help
+  - netlify deploy --dir --help
   #- netlify deploy --dir _book
