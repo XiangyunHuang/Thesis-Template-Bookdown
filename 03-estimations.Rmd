@@ -7,40 +7,34 @@
 ## 极大似然估计 {#sec:mle}
 
 设研究区域 $D \subseteq \mathbb{R}^2$， 对于第 $i$ 次观测， $s_i$ 表示区域 $D$ 内的位置，$Y(s_i)$ 表示响应变量，$\mathbf{x}(s_i), i = 1, \ldots, n$ 是一个 $p$ 维的固定效应，定义如下的 SGLMM 模型：
-
 \[ \mathrm{E}[Y(s_i)|u(s_i)] = g^{-1}[\mathbf{x}(s_i)'\boldsymbol{\beta} + \mathbf{u}(s_i)], \quad i = 1, \ldots, n \]
-
 \noindent 其中 $g(\cdot)$ 是实值可微的逆联系函数， $\beta$ 是 $p$ 维的回归参数，代表 SGLMM 模型的固定效应。$\{U(\mathbf{s}): \mathbf{s} \in D\}$ 是平稳的空间高斯过程，其均值为 $\mathbf{0}$， 自协方差函数 $\mathsf{Cov}(U(\mathbf{s}),U(\mathbf{s}')) = C(\mathbf{s} - \mathbf{s}'; \boldsymbol{\theta})$， $\boldsymbol{\theta}$ 是其中的参数向量。 $\mathbf{u} = (u(s_1),u(s_2),\ldots,u(s_n))'$ 是平稳空间高斯过程 $U(\cdot)$ 的一个实例。$Y(\cdot)|U(\cdot)$ 是独立随机过程，如给定 $\mathbf{u}$，观察值 $\mathbf{y} = (y(s_1),y(s_2),\ldots,y(s_n))'$ 是相互独立的。给定 $u_i = u(s_i), i = 1, \ldots, n$， $y_i = y(s_i)$ 的条件概率密度函数是 $$f(y_i|u_i;\boldsymbol{\beta}) = \exp[a(\mu_i)y_i - b(\mu_i)]c(y_i)$$ 这里 $\mu_i = Y_i|u_i$， $a(\cdot),b(\cdot)$ 和 $c(\cdot)$ 是特定的函数，具体的情况视所服从的分布而定，第\@ref(prepare)章第\@ref(sec:exp)节就不同的分布给出了不同函数形式。
 
 \noindent 则 SGLMM 模型的边际似然函数
-
 \begin{equation}
 L(\boldsymbol{\psi};\mathbf{y}) = \int \prod_{i=1}^{n} f(y_i|u_i;\boldsymbol{\beta})\phi_{n}(\mathbf{u};0,\Sigma_{\boldsymbol{\theta}})\mathrm{d}\mathbf{u} (\#eq:likelihood-function-1)
 \end{equation}
-
 \noindent 其中 $\boldsymbol{\psi} = (\boldsymbol{\beta},\boldsymbol{\theta})$ 是 SGLMM 模型的参数， $\phi_{n}(\cdot;0,\Sigma_{\boldsymbol{\theta}})$ 表示 $n$ 元正态密度函数，其均值为 $\mathbf{0}$， 协方差矩阵为 $\Sigma_{\boldsymbol{\theta}} = (c_{ij}) = (C(s_i - s_j; \boldsymbol{\theta})), i,j = 1, \ldots, n$。 边际似然函数 \@ref(eq:likelihood-function-1) 几乎总是卷入一个难以处理的积分，这是主要面临的问题，并且计算量随观测 $y_i$ 的数量增加，因为此积分的维数等于观测点的个数。
 
 再从贝叶斯方法的角度来看 SGLMM 模型， 令 $\mathbf{y} = (y(s_1),\ldots,y(s_n))'$ 表示观测值， $\pi(\boldsymbol{\psi})$ 表示模型参数的联合先验密度，那么联合后验密度为
-
 \begin{equation}
 \begin{aligned}
 \pi(\boldsymbol{\psi},\mathbf{u}|\mathbf{y}) &= \frac{f(\mathbf{y|\mathbf{u}, \boldsymbol{\psi}})\phi_{n}(\mathbf{u};0,\Sigma_{\boldsymbol{\theta}})\pi(\boldsymbol{\psi})}{m(\mathbf{y})} \\
 m(\mathbf{y}) &= \int f(\mathbf{y|\mathbf{u}, \boldsymbol{\psi}})\phi_{n}(\mathbf{u};0,\Sigma_{\boldsymbol{\theta}})\pi(\boldsymbol{\psi})\mathrm{d} \mathbf{u} \mathrm{d} \boldsymbol{\psi}
 \end{aligned}
 \end{equation}
-
 \noindent 同样遭遇难以处理的高维积分问题，所以 $m(\mathbf{y})$ 亦不会有显式表达式。特别地，若取 $\pi(\boldsymbol{\psi})$ 为扁平先验 (flat priors) ，如 $\pi(\boldsymbol{\psi}) \propto 1$， 后验分布将简化为似然函数 \@ref(eq:likelihood-function-1) 的常数倍。 如果导出的后验是合适的， MCMC 算法可以用来研究似然函数， 但是对很多 SGLMM 模型扁平先验 (flat priors) 会导出不合适的后验 (improper posteriors) [@Natarajan1995]， 所以选用模糊先验 (diffuse prior) 来导出合适的后验 (proper posteriors)，导出的后验能接近似然函数，并不要求后验模 (posterior mode) 完全是似然函数的极大似然估计 MLE [@Robert1996JASA]。
 
 ## 剖面似然估计 {#sec:profile-likelihood}
 
-极大似然估计是一种被广泛接受的参数估计方法，因其优良的大样本性质，在宽松的正则条件下，极大似然估计服从渐进正态分布，满足无偏性，而且是有效的估计。为了叙述方便，似然函数能有显式表达式，我们考虑空间线性混合效应模型，即响应变量服从正态分布的情况，以此来介绍剖面似然估计 (profile likelihood estimate)。
+极大似然估计是一种被广泛接受的参数估计方法，因其优良的大样本性质，在宽松的正则条件下，极大似然估计服从渐进正态分布，满足无偏性，而且是有效的估计。为了叙述方便，似然函数能有显式表达式，考虑空间线性混合效应模型，即响应变量服从正态分布的情况，以此来介绍剖面似然估计 (profile likelihood estimate)。
 
 \begin{equation}
-\mathbf{y} \sim N(D\beta,\sigma^2 R(\phi) + \tau^2\mathbf{I})
+\mathbf{y} \sim N(D\boldsymbol{\beta},\sigma^2 \mathbf{R}(\phi) + \tau^2\mathbf{I})
 (\#eq:gaussian-model)
 \end{equation}
 
-\noindent 其中， $D$ 是 $n \times p$ 的观测数据矩阵，$\boldsymbol{\beta}$ 是相应的回归参数向量，$R$ 依赖于 $\phi$ (不一定只代表一个参数)。模型 \@ref(eq:gaussian-model) 的对数似然函数
+\noindent 其中， $D$ 是 $n \times p$ 的观测数据矩阵，$\boldsymbol{\beta}$ 是相应的回归参数向量，$\mathbf{R}$ 依赖于 $\phi$，$\phi$ 可能含有多个参数。模型 \@ref(eq:gaussian-model) 的对数似然函数
 
 \begin{equation}
 \begin{aligned}
@@ -50,9 +44,9 @@ L(\boldsymbol{\beta},\tau^2,\sigma^2,\phi) = {}
 \end{aligned} (\#eq:gauss-log-lik)
 \end{equation}
 
-极大化 \@ref(eq:gauss-log-lik) 式就是求模型 \@ref(eq:gaussian-model) 参数的极大似然估计，我们把极大化对数似然的过程分步如下：
+\noindent 极大化 \@ref(eq:gauss-log-lik) 式就是求模型 \@ref(eq:gaussian-model) 参数的极大似然估计，极大化对数似然的过程分步如下：
 
-1. 重参数化 $\nu^2 = \tau^2/\sigma^2$，令 $V = \mathbf{R}(\phi) + \nu^2 \mathbf{I}$。
+1. 重参数化 $\nu^2 = \tau^2/\sigma^2$，令 $V = \mathbf{R}(\phi) + \nu^2 \mathbf{I}$；
 2. 给定 $V$，对数似然函数 \@ref(eq:gauss-log-lik) 在
    \begin{equation}
    \begin{aligned}
@@ -60,15 +54,14 @@ L(\boldsymbol{\beta},\tau^2,\sigma^2,\phi) = {}
       \hat{\sigma}^2(V)           & =  n^{-1} \{\mathbf{y} - D\hat{\boldsymbol{\beta}}(V)\}^{\top} V^{-1} \{\mathbf{y} - D\hat{\boldsymbol{\beta}}(V)\}
    \end{aligned} (\#eq:beta-sigma)
    \end{equation}
-  取得极大值。
+  取得极大值；
 3. 将 \@ref(eq:beta-sigma) 式代入对数似然函数 \@ref(eq:gauss-log-lik) 式，可获得一个简化的对数似然
    \begin{equation}
       L_{0}(\nu^2,\phi) = - 0.5\{ n\log(2\pi) + n\log \hat{\sigma}^2(V) + \log |V| + n \} (\#eq:reduced-gauss-log-lik)
    \end{equation}
+4. 关于参数 $\nu^2, \phi$ 极大化 \@ref(eq:reduced-gauss-log-lik) 式，获得参数 $\nu^2, \phi$ 的估计值，再将其回代 \@ref(eq:beta-sigma) 式，获得估计值 $\hat{\boldsymbol{\beta}}$ 和 $\hat{\sigma}^2$。
 
-\noindent 然后关于参数 $\nu^2, \phi$ 极大化 \@ref(eq:reduced-gauss-log-lik) 式，获得参数 $\nu^2, \phi$ 的估计值，再将其回代 \@ref(eq:beta-sigma) 式，获得估计值 $\hat{\boldsymbol{\beta}}$ 和 $\hat{\sigma}^2$。上述极大化似然函数的过程可能依赖平稳空间高斯过程的自协方差函数，如在使用 Matérn 型协方差函数的时候，形状参数(shape parameter) $\kappa$ 卷入到 $\phi$ 中，导致常常很难识别。因此，让 $\kappa$ 分别取 $0.5,1.5,2.5$，使得空间过程 $\mathcal{S}$ 覆盖到不同程度的均方可微性 [@Warnes1987]。
-
-原则上，极大似然估计的变化情况可以通过观察对数似然函数的曲面来分析^[SGLMM 模型的似然函数通常不止一个极值点]，但是，似然曲面的维数往往不允许直接观察。在这种情形下，另一个基于似然的想法是剖面似然 (profile likelihood)。一般地，假定我们有一个模型，其含有参数 $(\alpha,\phi)$，似然表示为 $L(\alpha,\phi)$。则关于 $\alpha$ 的剖面对数似然 (profile log-likelihood) 定义为
+在空间线性混合效应模型的设置下，上述极大化似然函数的过程可能与自协方差函数的类型有关，如在使用 Matérn 型自协方差函数的时，形状参数(shape parameter) $\kappa$ 也卷入到 $\phi$ 中，导致识别问题。因此，让 $\kappa$ 分别取 $0.5,1.5,2.5$，使得平稳空间高斯过程 $\mathcal{S}$ 覆盖到不同程度的均方可微性 [@Warnes1987]。原则上，极大似然估计的变化情况可以通过观察对数似然函数的曲面来分析^[SGLMM 模型的似然函数通常不止一个极值点]，但是，似然曲面的维数往往不允许直接观察。在这种情形下，另一个基于似然的想法是剖面似然 (profile likelihood)。一般地，假定我们有一个模型，其含有参数 $(\alpha,\phi)$，似然表示为 $L(\alpha,\phi)$。则关于 $\alpha$ 的剖面对数似然 (profile log-likelihood) 定义为
 
 \begin{equation}
 L_{p}(\alpha) = L(\alpha,\hat{\psi}(\alpha)) = \max_{\psi} (L(\alpha,\psi))
@@ -83,6 +76,7 @@ L_{p}(\alpha) = L(\alpha,\hat{\psi}(\alpha)) = \max_{\psi} (L(\alpha,\psi))
 ### 拉普拉斯近似算法 {#subsec:LA}
 
 为描述拉普拉斯近似算法，空间广义线性混合效应模型(简称 SGLMM)的结构重新表述如下
+
 \begin{equation}
 \begin{aligned}
 \mathbf{Y(x)} | S(\mathbf{x}) & \sim  f(\cdot;\boldsymbol{\mu(x)},\psi) \\
@@ -91,13 +85,14 @@ g(\boldsymbol{\mu(x)}) & =  D\boldsymbol{\beta} + S(\mathbf{x})
 S(\mathbf{x}) & \sim  N(\mathbf{0},\Sigma)
 \end{aligned} (\#eq:sglmm)
 \end{equation}
+
 \noindent SGLMM 模型假定在给定高斯空间过程 $S(\mathbf{x})$ 的条件下， $Y_1,Y_2,\ldots,Y_n$ 是独立的，并且服从分布 $f(\cdot;\boldsymbol{\mu(x)},\psi)$。此分布的参数有两个来源，其一是与联系函数 $g$ 关联的线性预测 $\boldsymbol{\mu(x)}$，其二是密度分布函数 $f$ 的发散参数 $\psi$，可以看作是似然函数中的附加参数。空间过程 $S(\mathbf{x})$ 分解为空间相关 $R(\mathbf{x};\phi)$ 和独立过程 $Z$，二者分别被参数 $\sigma$ 和 $\tau$ 归一化而具有单位方差。线性预测包含一组固定效应 $D\boldsymbol{\beta}$，空间相关的随机效应 $R(\mathbf{x};\phi)$，与空间不相关的随机效应 $\tau z \sim N(\mathbf{0},\tau^2\mathbf{I})$。$D$ 是根据协变量观测值得到的数据矩阵，$\boldsymbol{\beta}$ 是 $p \times 1$ 维的回归参数向量。$R(\mathbf{x};\phi)$ 是具有单位方差的平稳空间高斯过程，其自相关函数为 $\rho(u,\phi)$，这里 $u$ 表示一对空间位置之间的距离，$\phi$ 是刻画空间相关性的参数。自相关函数 $\rho(u,\phi) (\in \mathbb{R}^d)$ 是 $d$ 维空间到一维空间的映射函数，特别地，假定空间过程 $S(\mathbf{x})$的自相关函数仅仅依赖成对点之间的欧氏距离，即 $u =\|x_i - x_j\|$。常见的自相关函数有指数型、梅隆型和球型。线性预测的随机效应部分协方差矩阵 $\Sigma = \sigma^2 R(\mathbf{x};\phi) + \tau^2\mathbf{I}$。
 
 估计 SGLMM 模型 \@ref(eq:sglmm) 的参数 $\boldsymbol{\theta} = (\boldsymbol{\beta},\sigma^2,\tau^2,\phi,\psi)$ 需要极大化边际似然函数 
 \begin{equation}
 L(\boldsymbol{\theta};\mathbf{y}) = \int_{\mathbb{R}^n} [\mathbf{Y(x)}|S(\mathbf{x})][S(\mathbf{x})]\mathrm{d}S(\mathbf{x}) (\#eq:marginal-likelihood)
 \end{equation}
-\noindent 其中，符号 $[\cdot]$ 表示某某的分布，一般地，边际似然函数$L(\boldsymbol{\theta};\mathbf{y})$包含两个分布的乘积和随机效应的积分，并且这个积分无法显式的表示，第一个分布是观测变量 $\mathbf{Y}$ 的抽样分布，第二个分布是多元高斯分布。一个特殊的情况是 $\mathbf{Y}$ 也假设为高斯分布，这时积分有显式表达式。
+\noindent 其中，符号 $[\cdot]$ 表示某某的分布，一般地，边际似然函数$L(\boldsymbol{\theta};\mathbf{y})$包含两个分布的乘积和随机效应的积分，并且这个积分无法显式的表示，第一个分布是观测变量 $\mathbf{Y}$ 的抽样分布，第二个分布是多元高斯分布。一个特殊的情况是 $\mathbf{Y}$ 也假设服从多元高斯分布，这时积分有显式表达式。
 
 边际似然函数 \@ref(eq:marginal-likelihood) 卷入的数值积分是充满挑战的，因为积分的维数 $n$ 是观测值的数目，所以像二次、高斯--埃尔米特或适应性高斯--埃尔米特数值积分方式都是不可用的。Luke Tierney 和 Joseph B. Kadane (1986 年) 提出拉普拉斯近似方法 [@Tierney1986]，它在纵向数据分析中被大量采用 [@Diggle2002Analysis]。总之，对空间广义线性混合效应模型而言，拉普拉斯近似还可以继续采用，想法是近似边际似然函数中的高维 ($n > 3$) 积分，获得一个易于处理的表达式，有了积分的显式表达式，就可以用数值的方法求边际似然函数的极大值。拉普拉斯方法即用如下方式近似 \@ref(eq:marginal-likelihood) 中的积分
 \begin{equation}
@@ -132,8 +127,8 @@ Q(S(\mathbf{x})) ={} &  \mathbf{y}^{\top} (D \boldsymbol{\beta} + S(\mathbf{x}))
 \end{equation}
 \noindent 一直收敛到 $\hat{\mathbf{s}}$。在这个内迭代的过程中，将参数 $\boldsymbol{\theta}$ 当作已知的。$Q$ 函数的一阶和二阶导数如下
 \begin{align}
-Q'(\mathbf{s})& = & \{\mathbf{y} - b'(D\boldsymbol{\beta} + \mathbf{s}) \}^{\top} - \mathbf{s}^{\top}\Sigma^{-1} (\#eq:first-deriv) \\
-Q''(\mathbf{s})& = & -\mathrm{diag} \{b''(D\boldsymbol{\beta} + \mathbf{s}) \} - \Sigma^{-1} (\#eq:second-deriv)
+Q'(\mathbf{s})& =  \{\mathbf{y} - b'(D\boldsymbol{\beta} + \mathbf{s}) \}^{\top} - \mathbf{s}^{\top}\Sigma^{-1} (\#eq:first-deriv) \\
+Q''(\mathbf{s})& =  -\mathrm{diag} \{b''(D\boldsymbol{\beta} + \mathbf{s}) \} - \Sigma^{-1} (\#eq:second-deriv)
 \end{align}
 \noindent 用拉普拉斯方法近似的对数似然$\ell(\boldsymbol{\theta};\mathbf{y})$如下
 \begin{equation}

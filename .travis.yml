@@ -56,7 +56,7 @@ before_install:
   - curl -fLo /tmp/tinytex.tar.gz https://travis-bin.yihui.name/tinytex.tar.gz
   - tar xzf /tmp/tinytex.tar.gz -C /$HOME
   - export PATH=/$HOME/.TinyTeX/bin/x86_64-linux:$PATH
-  - Rscript -e 'tinytex::tlmgr_install(readLines("latex/TeXLive.pkgs"))'
+  - Rscript -e 'if(!require(tinytex)) install.packages("tinytex");tinytex::tlmgr_install(readLines("latex/TeXLive.pkgs"))'
 #  - tlmgr install $(cat latex/TeXLive.pkgs | tr '\n' ' ') || true
   - git clone https://github.com/XiangyunHuang/fonts.git winfonts 
   - mkdir -p /$HOME/.fonts
