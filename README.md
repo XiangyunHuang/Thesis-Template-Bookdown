@@ -43,7 +43,7 @@ The template is used for Master Thesis of China University of Mining and Technol
 git clone --depth=1 --branch=release https://github.com/XiangyunHuang/Thesis-Template-Bookdown.git
 ```
 
-2. 
+2. 用 RStudio 打开 `Thesis-Template-Bookdown.Rproj` 文件
 
 ---
 
