@@ -291,7 +291,7 @@ p(\mu,\tau) & \propto 1 \\
 根据公式组 \@ref(eq:hierarchical-normal-models) 指定的各参数的先验分布，分层正态模型可以在 Stan 中写成如下形式，我们在工作目录下把它保存为 `8schools.stan ` ，供后续编程使用。
 
 ```{r code-8schools,comment=NA}
-cat(readLines("code/8schools.stan"),sep = "\n")
+cat(readLines("code/stan/02-8schools.stan"),sep = "\n")
 ```
 
 上述 Stan 代码的第一段提供数据：学校的数目 $J$，估计值 $y_1,\ldots,y_{J}$，标准差 $\sigma_1,\ldots,\sigma_{J}$，数据类型可以是整数、实数，结构可以是向量，或更一般的数组，还可以带约束，如在这个模型中 $J$ 限制为非负， $\sigma_{J}$ 必须是正的，另外两个反斜杠 // 表示注释。第二段代码声明参数：模型中的待估参数，学校总体的效应 $\theta_j$，均值 $\mu$，标准差 $\tau$，学校水平上的误差 $\eta$ 和效应 $\theta$。在这个模型中，用 $\mu,\tau,\eta$ 表示 $\theta$ 而不是直接声明 $\theta$ 作一个参数，通过这种参数化，采样器的运行效率会提高，还应该尽量使用向量化操作代替 for 循环语句。最后一段是模型：稍微注意的是，正文中正态分布 $N(\cdot,\cdot)$ 中后一个位置是方差，而 Stan 代码中使用的是标准差。`target += normal_lpdf(y | theta, sigma)`  和 `y ~ normal(theta, sigma)` 对模型的贡献是一样的，都使用正态分布的对数概率密度函数，只是后者扔掉了对数后验密度的常数项而已，这对于 Stan 的采样、近似和优化算法没有影响 [@Stan2017JSS]。
@@ -322,7 +322,7 @@ schools_dat <- list(
 # 拟合模型
 fit <- stan(
   model_name = "8schools",
-  model_code = readLines("code/8schools.stan"),
+  model_code = readLines("code/stan/02-8schools.stan"),
   data = schools_dat, refresh = 0, verbose = FALSE,
   iter = 10000, warmup = 5000, chains = 4,
   seed = 2018
