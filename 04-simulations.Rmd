@@ -13,9 +13,9 @@
 \end{align}
 ```{r sim-one-gp, eval=FALSE, echo=FALSE}
 # 指数型协方差函数
-sim_one_gp_model_exp <- stan_model("code/sim_one_gp_exp.stan")
+sim_one_gp_model_exp <- stan_model("code/stan/05-sim_one_gp_exp.stan")
 # 幂二次指数型协方差函数
-sim_one_gp_model_exp_quad <- stan_model("code/sim_one_gp_exp_quad.stan")
+sim_one_gp_model_exp_quad <- stan_model("code/stan/05-sim_one_gp_exp_quad.stan")
 
 dat_list <- list(N = 2000, sigma = 1, phi = 0.15)
 set <- sample(1:dat_list$N, size = 36, replace = F) # 部分数据集
@@ -69,7 +69,7 @@ set.seed(2018)
 N <- 36
 phi <- 1
 sigma <- 1
-## 单位区域上采样
+## 单位区域的格点上采样
 d <- expand.grid(
   d1 = seq(0, 1, l = sqrt(N)),
   d2 = seq(0, 1, l = sqrt(N))

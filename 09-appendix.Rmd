@@ -115,7 +115,7 @@ knitr::include_graphics(path = "figures/rongelap-mcml-diagnosis-acf-9.png")
 # 一维指数型
 cat(readLines("code/stan/05-sim_one_gp_exp.stan"), sep = "\n")
 # 一维幂二次指数型
-cat(readLines("code/stan/05-sim_one_gp_exp_quad.stan"), sep = "\n")
+# cat(readLines("code/stan/05-sim_one_gp_exp_quad.stan"), sep = "\n")
 ```
 
 模拟空间广义线性模型

@@ -124,7 +124,7 @@ Table: (\#tab:common-characteristics) 指数族内常见的一元分布的共同
 ```{theorem, label="consistency", name="相合性", echo=TRUE}
 设 $x_{1}, \ldots, x_{n}$ 是来自概率密度函数 $p(x;\theta)$ 的一个样本，叙述简单起见，考虑单参数情形，参数空间 $\boldsymbol{\Theta}$ 是一个开区间，$l(\theta;x) = \sum_{i=1}^{n}\ln p(x_{i};\theta)$。
 
-若 $\ln (p;\theta)$ 在 $\boldsymbol{\Theta}$ 上可微，且 $p(x;\theta)$ 是可识别的（即 $\forall \theta_1 \neq \theta_2, \{x: p(x;\theta_1) \neq p(x; \theta_2)\}$ 不是零测集），则似然方程 \@ref(eq:likelihood-equations) 在 $n \to \infty$ 时，以概率 1 有解，且此解关于 $\theta$ 是相合的。
+若 $\ln (p;\theta)$ 在 $\boldsymbol{\Theta}$ 上可微，且 $p(x;\theta)$ 是可识别的（即 $\forall \theta_1 \neq \theta_2, \{x: p(x;\theta_1) \neq p(x; \theta_2)\}$ 不是零测集），则似然方程 \@ref(eq:likelihood-equations) 在 $n \to \infty$ 时，以概率 $1$ 有解，且此解关于 $\theta$ 是相合的。
 ```
 
 ```{theorem, label="asymptotic-normality", name="渐近正态性", echo=TRUE}
@@ -291,7 +291,7 @@ p(\mu,\tau) & \propto 1 \\
 根据公式组 \@ref(eq:hierarchical-normal-models) 指定的各参数的先验分布，分层正态模型可以在 Stan 中写成如下形式，我们在工作目录下把它保存为 `8schools.stan ` ，供后续编程使用。
 
 ```{r code-8schools,comment=NA}
-cat(readLines("code/stan/02-8schools.stan"),sep = "\n")
+cat(readLines("code/stan/02-8schools.stan"), sep = "\n")
 ```
 
 上述 Stan 代码的第一段提供数据：学校的数目 $J$，估计值 $y_1,\ldots,y_{J}$，标准差 $\sigma_1,\ldots,\sigma_{J}$，数据类型可以是整数、实数，结构可以是向量，或更一般的数组，还可以带约束，如在这个模型中 $J$ 限制为非负， $\sigma_{J}$ 必须是正的，另外两个反斜杠 // 表示注释。第二段代码声明参数：模型中的待估参数，学校总体的效应 $\theta_j$，均值 $\mu$，标准差 $\tau$，学校水平上的误差 $\eta$ 和效应 $\theta$。在这个模型中，用 $\mu,\tau,\eta$ 表示 $\theta$ 而不是直接声明 $\theta$ 作一个参数，通过这种参数化，采样器的运行效率会提高，还应该尽量使用向量化操作代替 for 循环语句。最后一段是模型：稍微注意的是，正文中正态分布 $N(\cdot,\cdot)$ 中后一个位置是方差，而 Stan 代码中使用的是标准差。`target += normal_lpdf(y | theta, sigma)`  和 `y ~ normal(theta, sigma)` 对模型的贡献是一样的，都使用正态分布的对数概率密度函数，只是后者扔掉了对数后验密度的常数项而已，这对于 Stan 的采样、近似和优化算法没有影响 [@Stan2017JSS]。
@@ -403,8 +403,10 @@ knitr::include_graphics(path = "figures/posterior_mu_tau.png")
 为了得到可靠的后验估计，做出合理的推断，诊断序列的平稳性是必不可少的部分，前 5000 次迭代作为 warm-up 阶段，后 5000 次迭代用作参数的推断，图 \@ref(fig:posterior-mu-tau) (a) 给出 $\mu$ 和 $\log(\tau)$ 的迭代序列图，其中橘黄色线分别是对应的后验均值(表 \@ref(tab:eight-schools-output)的第一列)，图 \@ref(fig:posterior-mu-tau) (b) 分别给出 $\log(\tau)$ 的蒙特卡罗误差，我们发现随着迭代次数增加，蒙特卡罗误差趋于稳定，说明参数 $\tau$ 的迭代序列达到平稳分布，即迭代点列可以看作服从参数的后验分布。
 
 ```{r diagnostic,fig.cap="诊断参数$\\mu,\\log(\\tau)$迭代序列的平稳性",fig.subcap=c("参数 $\\log(\\tau)$ 和 $\\mu$ 的迭代序列图(trace plot)","参数 $\\log(\\tau)$ 的蒙特卡罗均值误差随迭代次数的变化，右图参数 $\\log(\\tau),\\mu$ 的迭代点对的散点图，其中橘黄色点表示使迭代发散的点"),fig.ncol=1,fig.sep="\\\\",fig.pos='!htb'}
-knitr::include_graphics(path = c("figures/trace_mu_log_tau.png",
-                                 "figures/mcmc_mean_tau_div.png"))
+knitr::include_graphics(path = c(
+  "figures/trace_mu_log_tau.png",
+  "figures/mcmc_mean_tau_div.png"
+))
 ```
 
 为了评估链条之间和内部的混合效果， Andrew Gelman 等 [@Gelman2013R] 提出引入潜在尺度缩减因子 (potential scale reduction factor) $\hat{R}$ 描述链条的波动程度，类似一组数据的方差含义，方差越小波动性越小，数据越集中，这里意味着链条波动性小。一般地，对于每个待估的量 $\omega$，模拟产生 $m$ 条链，每条链有 $n$ 次迭代值 $\omega_{ij} (i = 1,\ldots,n;j=1,\ldots,m)$，用 $B$ 和 $W$ 分别表示链条之间（不妨看作组间方差）和内部的方差（组内方差）
