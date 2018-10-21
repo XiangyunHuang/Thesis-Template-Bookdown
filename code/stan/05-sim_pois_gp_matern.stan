@@ -81,9 +81,10 @@ model {
     f = L_K * eta;
   }
 
-  phi ~ inv_gamma(5, 5);
-  sigmasq ~ normal(0, 1);
-  alpha ~ normal(0, 1);
+  phi ~ inv_gamma(3, 0.5);
+  sigmasq ~ normal(2, 1);
+  alpha ~ normal(0.5, 1);
+  
   eta ~ normal(0, 1);
 
   y ~ poisson_log(alpha + f);

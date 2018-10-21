@@ -44,6 +44,10 @@ out.sim <- output.glm.control(sim.predict = TRUE)
 run.sim <- pois.krige.bayes(sim, locations = pred.grid, prior = prior.sim, 
                              mcmc.input = mcmc.sim, output = out.sim)
 
+true_value  <- c(0.5,0.2,2.0)
+
+mean(run.sim$posterior$beta$sample) - 
+
 df <- data.frame(
   beta = c(mean(run.sim$posterior$beta$sample), 
            var(run.sim$posterior$beta$sample), 
