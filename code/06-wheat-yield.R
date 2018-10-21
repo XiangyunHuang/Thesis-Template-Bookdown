@@ -1,5 +1,5 @@
 # 小麦产量实验 Yields from a randomized complete block design
-# 空间样本变差
+# 空间样本变差 page 276
 library(nlme)
 data(Wheat2) # Wheat Yield Trials
 head(Wheat2)
