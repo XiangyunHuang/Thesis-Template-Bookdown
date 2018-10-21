@@ -13,17 +13,18 @@ m1 <- gls(yield ~ variety - 1, data = Wheat2)
 
 Variogram(m1, form = ~latitude + longitude)
 
-pdf(file = "Yields-Variogram.pdf", width = 8, height = 6)
-plot(Variogram(m1,
-  form = ~latitude + longitude,
-  data = Wheat2, resType = "normalized"
-), sigma = 1
-)
+pdf(file = "Yields-Variogram.pdf", width = 4*1.2, height = 3*1.2)
+# plot(Variogram(m1,
+#   form = ~latitude + longitude,
+#   data = Wheat2, resType = "normalized"
+# ), sigma = 1
+# )
 
 plot(Variogram(m1,
                form = ~latitude + longitude,
                maxDist = 32, resType = "normalized"
-), xlim = c(0, 32), ylim = c(0.1,1.05),sigma = 1)
+), xlim = c(0, 32), ylim = c(0.1,1.05),sigma = 1, grid = TRUE)
+# abline(h=0.6,v=0)
 dev.off()
 
 # gls {nlme}  再考虑极大似然方法

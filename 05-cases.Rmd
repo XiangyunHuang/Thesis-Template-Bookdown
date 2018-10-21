@@ -14,23 +14,23 @@ knitr::include_graphics(path = "figures/Yields-Block.png")
 \begin{equation}
 y_{ij} = \tau_i + \epsilon_{ij}, \quad \boldsymbol{\epsilon} \sim \mathcal{N}(\mathbf{0},\sigma^2 \boldsymbol{\Lambda}) (\#eq:extended-linear-model)
 \end{equation}
-\noindent 其中，$y_{ij}$ 表示第 $i$ 种小麦在第 $j$ 块试验田里的产量，$i = 1,\ldots,56$，$j = 1,\ldots,4$。 $\tau_i$ 表示第 $i$ 种小麦的平均产量，$\epsilon_{ij}$ 是随机误差，假定服从均值为 0，协差阵为 $\sigma^2 \boldsymbol{\Lambda}$ 的正态分布。进一步，继续探索线性模型\@ref(eq:extended-linear-model)中的协方差 $\boldsymbol{\Lambda}$ 的结构，不妨先假定模型 \@ref(eq:extended-linear-model) 的随机误差是独立且方差齐性的，即 $\boldsymbol{\Lambda} = \boldsymbol{I}$ 。接着，需要确认方差齐性的假设是否合适，拟合残差散点图是一个有用又方便的判断工具。特别地，对于空间效应的探索，采用样本变差图探索数据中存在的空间相关性，可调用 **nlme** 包中的 `Variogram` 函数获得 `gls` 函数拟合方差齐性的线性模型的变差图\@ref(fig:yields-variogram)。
+\noindent 其中，$y_{ij}$ 表示第 $i$ 种小麦在第 $j$ 块试验田里的产量，$i = 1,\ldots,56$，$j = 1,\ldots,4$。 $\tau_i$ 表示第 $i$ 种小麦的平均产量，$\epsilon_{ij}$ 是随机误差，假定服从均值为 0，协差阵为 $\sigma^2 \boldsymbol{\Lambda}$ 的多元正态分布。进一步，继续探索线性模型\@ref(eq:extended-linear-model)中的协方差 $\boldsymbol{\Lambda}$ 的结构，不妨先假定模型 \@ref(eq:extended-linear-model) 的随机误差是独立且方差齐性的，即 $\boldsymbol{\Lambda} = \boldsymbol{I}$ 。接着，需要确认方差齐性的假设是否合适，拟合残差散点图是一个有用又方便的判断工具。特别地，对于空间效应的探索，采用样本变差图探索数据中存在的空间相关性，可调用 **nlme** 包中的 `Variogram` 函数获得 `gls` 函数拟合方差齐性的线性模型的变差图\@ref(fig:yields-variogram)。
 
-```{r yields-variogram,fig.cap="样本变差散点图，横坐标是小麦之间的欧氏距离，纵坐标是样本变差，图中的平滑线根据局部多项式拟合的方法添加，用以估计样本边变差的大致趋势"}
+```{r yields-variogram,fig.cap="样本变差散点图，横坐标是小麦之间的欧氏距离，纵坐标是样本变差，图中的平滑线根据局部多项式拟合的方法添加，用以估计样本变差的大致趋势"}
 knitr::include_graphics(path = "figures/Yields-Variogram.png")
 ```
 
 图 \@ref(fig:yields-variogram) 显示样本变差随空间距离有明显的增长趋势，可见空间随机效应明显，根据第\@ref(models)章第\@ref(subsec:covariance-function)小节，可以有理由地估计块金效应$\tau^2$大约是 0.2，参数 $\phi$ 可由样本变差为 1 对应的空间距离来初步估计，图\@ref(fig:yields-variogram)显示该值大约是 31。 图中的平滑曲线是 局部多项式回归拟合的结果，也可以用局部加权回归拟合的平滑法来确定初值 [@Xie2008COS]。上述图示分析，首先采用球性自协方差函数拟合这组数据中的空间结构。考虑空间效应后，采用 `gls` 函数提供的限制极大似然法 (Restricted Maximum Likelihood Estimation， 简称 REML) 拟合模型\@ref(eq:extended-linear-model)，与第\@ref(prepare)章第\@ref(sec:def-mle)节介绍的极大似然估计相比，它对方差分量的估计偏差更小一些[@Diggle2007]，适合估计线性混合效应模型的参数，`gls` 还支持不同类型的空间自协方差函数，因此继续探索球型和二次有理型协方差函数对模型拟合结果的影响。
 
-Table: (\#tab:yields-model-compare) 以小麦数据为例估计空间线性混合效应模型的参数，比较不同初值和自协方差函数对模型拟合效果的影响
+Table: (\#tab:yields-model-compare) 以小麦数据为例估计空间线性混合效应模型的参数，比较不同初值和自协方差函数对模型拟合效果的影响，表中$\phi_0,\tau^2_{0},\sigma^2_{0}$和$\hat{\phi},\hat{\tau}^2,\hat{\sigma}^2$分别是模型\@ref(eq:extended-linear-model)参数$\phi,\tau^2,\sigma^2$的初值和估计值
 
-|           | 自相关函数 |   $\hat{\phi}(\phi_0)$   |  $\hat{\tau}^2(\tau^2_{0})$|  $\hat{\sigma}^2(\sigma^2_{0})$ |   log-REML  |
-|:------| ----------:| --------------: | --------------:| -----:| :-------:|
+|       | 自相关函数 |   $\hat{\phi}(\phi_0)$   |  $\hat{\tau}^2(\tau^2_{0})$|  $\hat{\sigma}^2(\sigma^2_{0})$ |   log-REML  |
+|:-----:| ----------:| --------------: | --------------:| -----:| ---------:|
 |  I    |       球型 | $1.515\times 10^{5}(31)$ | $5.471\times 10^{-5}(0.2)$ |    466.785    |  -533.418   |
 |  II   | 二次有理型 |             $13.461(13)$ |               $0.193(0.2)$ |      8.847    |  -532.639   |
 |  III  |       球型 |             $27.457(28)$ |               $0.209(0.2)$ |      7.410    |  -533.931   |
 
-值得注意的是，用限制极大似然法估计模型 \@ref(eq:extended-linear-model) 的参数时，对初始值很敏感，通过几番试错调整初值获得如表 \@ref(tab:yields-model-compare) 所示结果。根据表\@ref(tab:yields-model-compare)， 可以得出两个结论，其一选择合适的自相关函数可以取得更好的拟合效果，其二限制极大似然算法对初值很敏感，不断试错以选择合适的初值很重要。最后，再来观察使用空间线性混合效应模型拟合小麦数据后的标准化残差图，如图 \@ref(fig:model-check)所示，残差中空间效应已经提取的很充分了。
+在使用二次有理型自协方差函数时，当距离 $u = \phi$ 时，变差等于 $(1+\tau)/2$，由图\@ref(fig:yields-variogram)可知 $\tau = 0.2$, 样本变差就等于 0.6 对应的距离，大约是 13，所以 $\phi=13$。值得注意的是，用限制极大似然法估计模型 \@ref(eq:extended-linear-model) 的参数时，对初始值很敏感，通过几番试错调整初值获得如表 \@ref(tab:yields-model-compare) 所示结果。根据表\@ref(tab:yields-model-compare)， 可以得出两个结论，其一选择合适的自相关函数可以取得更好的拟合效果，其二限制极大似然算法对初值很敏感，不断试错以选择合适的初值很重要。最后，再来观察使用空间线性混合效应模型拟合小麦数据后的标准化残差图，如图 \@ref(fig:model-check)所示，残差中空间效应已经提取的很充分了。
 
 ```{r model-check,fig.subcap=c("检查标准化拟合残差后的异方差性：横轴表示模型的拟合值，纵轴是标准化后的残差值","检查标准化拟合残差后的正态性：横轴表示标准化后的残差值，纵轴表示标准正态分布的分位数"),fig.cap="空间线性混合效应模型的拟合残差诊断",out.width="45%",fig.pos="!htb"}
 knitr::include_graphics(path = c("figures/heteroscedasticity.png","figures/normality.png"))
