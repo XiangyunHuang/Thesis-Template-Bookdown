@@ -171,9 +171,11 @@ I_{-\kappa}(u) & =  \sum_{m=0}^{\infty} \frac{1}{m!\Gamma(m + \kappa + 1)} \big(
 \end{equation}
 
 \noindent 其中 $u \geq 0$，$\kappa \in \mathbb{R}$，如果 $\kappa \in \mathbb{Z}$，则取该点的极限值，$\mathcal{K}_{\kappa}(u)$ 的值可由 R 内置的函数 `besselK` 计算 [@Campbell1980]。
-```{r Bessel-function,fig.cap="贝塞尔函数图像"}
+```{r bessel-function,fig.cap='(ref:bessel-function)'}
 knitr::include_graphics(path = "figures/bessel.png")
 ```
+
+(ref:bessel-function) 在 $\kappa$ 取不同值时的贝塞尔函数图像：横轴表示距离$u$，纵轴表示函数值$\mathcal{K}_{\kappa}(u)$
 
 
 ## 拉普拉斯近似 {#sec:Laplace-approximation}
@@ -390,22 +392,22 @@ Table: (\#tab:eight-schools-output) 对 Eight Schools 数据集建立分层正�
 |$\theta_8$|   8.42 |   0.06  |7.86   | -7.24 |  3.91 |  8.26 | 12.60 | 25.24 |16598  |  1   |
 |lp__      | -39.55 |   0.03  |2.64   |-45.41 |-41.15 |-39.31 |-37.67 |-35.12 | 6325  |  1   |
 
-表 \@ref(tab:eight-schools-output) 的列为后验量的估计值：依次是后验均值 $\mathsf{E}(\mu|Y)$、 蒙特卡罗标准误(Monte Carlo standard error)、后验标准差 (standard deviation) $\mathsf{E}(\sigma|Y)$ 、后验分布的 5 个分位点、有效样本数 $n_{eff}$ 和潜在尺度缩减因子 (potential scale reduction factor)，最后两个量 用来分析采样效率；最后一行表示每次迭代的未正则的对数后验密度 (unnormalized log-posterior density) $\hat{R}$，当链条都收敛到同一平稳分布的时候，$\hat{R}$ 接近 1。
+表 \@ref(tab:eight-schools-output) 的列为后验量的估计值：依次是后验均值 $\mathsf{E}(\mu|Y)$、 蒙特卡罗标准误(Monte Carlo standard error)、后验标准差 (standard deviation) $\mathsf{E}(\sigma|Y)$ 、后验分布的 5 个分位点、有效样本数 $n_{eff}$ 和潜在尺度缩减因子 (potential scale reduction factor)，最后两个量 用来分析采样效率和评估迭代序列的平稳性；最后一行表示每次迭代的未正则的对数后验密度 (unnormalized log-posterior density) $\hat{R}$，当链条都收敛到同一平稳分布的时候，$\hat{R}$ 接近 1。
 
-这里我们对 $\tau$ 采用的非信息先验分布是均匀先验，参数 $\tau$ 的 95\% 的置信区间是 (0.22,20.5)， 数据支持 $\tau$ 的范围低于 20.5。 
+这里对 $\tau$ 采用的非信息先验是均匀先验，参数 $\tau$ 的 95\% 的置信区间是 (0.22,20.5)， 数据支持 $\tau$ 的范围低于 20.5。 
 
 ```{r posterior-mu-tau,fig.cap="对 $\\mu,\\tau$ 给定均匀先验，后验均值 $\\mu$ 和标准差 $\\tau$ 的直方图"}
 knitr::include_graphics(path = "figures/posterior_mu_tau.png")
 ```
 
-为了得到可靠的后验估计，做出合理的推断，诊断序列的平稳性是必不可少的部分，前 5000 次迭代作为 warm-up 阶段，后 5000 次迭代用作参数的推断，图 \@ref(fig:posterior-mu-tau) (a) 给出 $\mu$ 和 $\log(\tau)$ 的迭代序列图，其中橘黄色线分别是对应的后验均值(表 \@ref(tab:eight-schools-output)的第一列)，图 \@ref(fig:posterior-mu-tau) (b) 分别给出 $\log(\tau)$ 的蒙特卡罗误差，我们发现随着迭代次数增加，误差趋于稳定，说明参数 $\tau$ 的迭代序列达到平稳分布，即迭代点列可以看作服从参数的后验分布。
+为了得到可靠的后验估计，做出合理的推断，诊断序列的平稳性是必不可少的部分，前 5000 次迭代作为 warm-up 阶段，后 5000 次迭代用作参数的推断，图 \@ref(fig:posterior-mu-tau) (a) 给出 $\mu$ 和 $\log(\tau)$ 的迭代序列图，其中橘黄色线分别是对应的后验均值(表 \@ref(tab:eight-schools-output)的第一列)，图 \@ref(fig:posterior-mu-tau) (b) 分别给出 $\log(\tau)$ 的蒙特卡罗误差，我们发现随着迭代次数增加，蒙特卡罗误差趋于稳定，说明参数 $\tau$ 的迭代序列达到平稳分布，即迭代点列可以看作服从参数的后验分布。
 
-```{r diagnostic,fig.cap="诊断序列的平稳性",fig.subcap=c("参数 $\\log(\\tau)$ 和 $\\mu$ 的迭代序列图(trace plot)","参数 $\\log(\\tau)$ 的蒙特卡罗均值误差随迭代次数的变化，右图参数 $\\log(\\tau),\\mu$ 的迭代点对的散点图，其中橘黄色点表示迭代发散的点"),fig.ncol=1,fig.sep="\\\\",fig.pos='!htb'}
+```{r diagnostic,fig.cap="诊断参数$\\mu,\\log(\\tau)$迭代序列的平稳性",fig.subcap=c("参数 $\\log(\\tau)$ 和 $\\mu$ 的迭代序列图(trace plot)","参数 $\\log(\\tau)$ 的蒙特卡罗均值误差随迭代次数的变化，右图参数 $\\log(\\tau),\\mu$ 的迭代点对的散点图，其中橘黄色点表示使迭代发散的点"),fig.ncol=1,fig.sep="\\\\",fig.pos='!htb'}
 knitr::include_graphics(path = c("figures/trace_mu_log_tau.png",
                                  "figures/mcmc_mean_tau_div.png"))
 ```
 
-为了评估链条之间和内部的混合效果， Andrew Gelman 等 [@Gelman2013R] 提出引入潜在尺度缩减因子 (potential scale reduction factor) $\hat{R}$，用以描述链条的波动程度，类似一组数据的方差含义，方差越小波动性越小，数据越集中，这里意味着链条波动性小。一般地，对于每个待估的量 $\omega$，模拟产生 $m$ 条链，每条链有 $n$ 次迭代值 $\omega_{ij} (i = 1,\ldots,n;j=1,\ldots,m)$，用 $B$ 和 $W$ 分别表示链条之间（不妨看作组间方差）和内部的方差（组内方差）
+为了评估链条之间和内部的混合效果， Andrew Gelman 等 [@Gelman2013R] 提出引入潜在尺度缩减因子 (potential scale reduction factor) $\hat{R}$ 描述链条的波动程度，类似一组数据的方差含义，方差越小波动性越小，数据越集中，这里意味着链条波动性小。一般地，对于每个待估的量 $\omega$，模拟产生 $m$ 条链，每条链有 $n$ 次迭代值 $\omega_{ij} (i = 1,\ldots,n;j=1,\ldots,m)$，用 $B$ 和 $W$ 分别表示链条之间（不妨看作组间方差）和内部的方差（组内方差）
 
 \begin{equation}
 \begin{aligned}
@@ -422,7 +424,7 @@ knitr::include_graphics(path = c("figures/trace_mu_log_tau.png",
 
 当初始分布发散 (overdispersed) 时，这个量会高估边际后验方差，但在链条平稳或 $n \to \infty$ 时，它是无偏的。同时，对任意有限的 $n$，组内方差 $W$ 应该会低估 $\mathsf{Var}(\omega|Y)$，因为单个链条没有时间覆盖目标分布；在 $n \to \infty$， $W$ 的期望会是 $\mathsf{Var}(\omega|Y)$。
 
-我们通过估计潜在尺度缩减因子 $\hat{R}$ 检测链条的收敛性
+通过迭代序列采集的样本估计 $\hat{R}$ 以检测链条的收敛性
 
 \begin{equation}
 \hat{R} = \sqrt{\frac{\widehat{\mathsf{Var}}^{+}(\omega|Y)}{W}}
