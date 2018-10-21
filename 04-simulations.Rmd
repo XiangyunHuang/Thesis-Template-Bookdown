@@ -131,7 +131,7 @@ text(sim$coords[, 1], sim$coords[, 2], format(sim$data, digits = 1), cex = 1.5)
 \end{equation}
 \noindent 且在区域 $[0,1] \times [0,1]$ 上也可以随机采点，如图 \@ref(fig:sim-two-gp) 的右子图所示。
 
-模拟平稳空间高斯过程的实现方法： Paulo J. Ribeiro Jr. 和 Peter J. Diggle 开发了 **geoR** 包 [@geoR2001]，提供的 `grf` 函数除了实现 Cholesky 分解，还实现了奇异值分解，特征值分解等算法分解协方差矩阵$G$。当采样点不太多时，Cholesky 分解已经足够好，下面的第 \@ref(sim-sglmm) 节对平稳空间高斯过程的数值模拟即采用此法，当采样点很多，为了加快模拟的速度，可以选用 Martin Schlather 等开发的 **RandomFields** 包 [@RandomFields2015]，内置的 `GaussRF` 函数实现了用高斯马尔科夫随机场近似平稳空间高斯过程的算法，此外，Håvard Rue 等 (2009年) [@Rue2009] 也实现了从平稳高斯过程到高斯马尔科夫随机场的近似算法，开发了比较高效的 INLA 程序库 [@INLA2015]，其内置的近似程序得到了广泛的应用 [@Blangiardo2015;@Faraway2018]。
+模拟平稳空间高斯过程的实现方法： Paulo J. Ribeiro Jr. 和 Peter J. Diggle 开发了 **geoR** 包 [@geoR2001]，提供的 `grf` 函数除了实现 Cholesky 分解，还实现了奇异值分解，特征值分解等算法分解协方差矩阵$G$。当采样点不太多时，Cholesky 分解已经足够好，下面的第 \@ref(sim-sglmm) 节对平稳空间高斯过程的数值模拟即采用此法，当采样点很多，为了加快模拟的速度，可以选用 Martin Schlather 等开发的 **RandomFields** 包 [@RandomFields2015]，内置的 `GaussRF` 函数实现了用高斯马尔科夫随机场近似平稳空间高斯过程的算法，此外，Håvard Rue 等 (2009年) [@Rue2009] 也实现了从平稳高斯过程到高斯马尔科夫随机场的近似算法，开发了比较高效的 INLA 程序库 [@INLA2015]，其内置的近似程序得到了一定的应用 [@Blangiardo2015;@Faraway2018]。
 
 
 ## 空间广义线性混合效应模型 {#sim-sglmm}
