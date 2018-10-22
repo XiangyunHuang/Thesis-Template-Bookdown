@@ -83,6 +83,7 @@ resultat <- krige.conv(data = emp.mean - lik.boxcox.1.expon.nugget$beta, coords 
                                                                cov.pars = lik.boxcox.1.expon.nugget$cov.pars, 
                                                                nugget = nug.value))
 rongelap.mean <- resultat$predict + lik.boxcox.1.expon.nugget$beta + 1
+
 d0 <- loccoords(coords = rongelap$coords, locations = grid)
 v0 <- ifelse(d0 > 1e-10, cov.spatial(obj = d0, cov.pars = lik.boxcox.1.expon.nugget$cov.pars), 
              lik.boxcox.1.expon.nugget$cov.pars[1] + nug.value)
