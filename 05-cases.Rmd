@@ -1,60 +1,3 @@
-```{r include=FALSE, cache=FALSE}
-library(methods)
-set.seed(2018)
-# 加载依赖
-# library(ggplot2)
-# library(StanHeaders)
-# library(rstan)
-# 设置环境
-is_on_travis = identical(Sys.getenv("TRAVIS"), "true")
-is_online = curl::has_internet()
-
-# options(mc.cores = if(is_on_travis) 4 else 2)
-# rstan_options(auto_write = TRUE)
-
-library(tibble)
-knitr::opts_chunk$set(
-  comment = "#>",
-  collapse = TRUE,
-  echo = FALSE,
-  cache = TRUE,
-  size = "scriptsize",
-  out.width = "70%",
-  fig.align = "center",
-  fig.width = 6,
-  fig.asp = 0.618
-)
-
-doc_type <- function() knitr::opts_knit$get('rmarkdown.pandoc.to')
-
-knitr::knit_hooks$set(
-  optipng = knitr::hook_optipng,
-  pdfcrop = knitr::hook_pdfcrop,
-  small.mar = function(before, options, envir) {
-    if (before) par(mar = c(4.1, 4.1, 0.5, 0.5))  # smaller margin on top and right
-  }
-)
-# https://github.com/yihui/knitr-examples/blob/master/085-pdfcrop.Rnw
-
-options(
-  digits = 3,
-  citation.bibtex.max = 999,
-  bitmapType = "cairo",
-  stringsAsFactors = FALSE,
-  repos = "https://mirrors.tuna.tsinghua.edu.cn/CRAN/",
-  knitr.graphics.auto_pdf = FALSE,
-  tikzDefaultEngine = "xetex",
-  tikzXelatexPackages = c(
-    getOption("tikzXelatexPackages"),
-    "\\usepackage[colorlinks, breaklinks]{hyperref}",
-    "\\usepackage{color,tikz}",
-    "\\usepackage[active,tightpage,xetex]{preview}",
-    "\\PreviewEnvironment{pgfpicture}",
-    "\\usepackage{amsmath,amsfonts,mathrsfs}"
-  )
-)
-
-```
 # 数据分析 {#applications}
 
 第\@ref(sec:spatial-random-effects)节基于小麦产量数据建立空间线性混合效应模型，以 R 软件和相关 R 包为工具，介绍空间统计建模分析的过程，特别是诊断和添加空间随机效应的分析方法和模型参数初值的确定方式。这个分析方法和初值的确定方式具有普适性，对于更复杂的空间广义线性混合效应模型也是适用的。第\@ref(case-rongelap)节建立响应变量服从泊松分布的空间广义线性混合效应模型分析一个真实数据集 rongelap。rongelap 数据集目前由 Ole F. Christensen  维护在 R 包 **geoRglm** 里，曾被 Peter J. Diggle 等 (1998年) [@Diggle1998] 和 Ole F Christensen (2004年) [@Christensen2004] 分析过，与他们不同的是，第\@ref(case-rongelap)节将基于蒙特卡罗极大似然算法估计该泊松型空间广义线性混合效应模型的参数。
@@ -116,17 +59,20 @@ knitr::include_graphics(path = "figures/rongelap-island.png")
 knitr::include_graphics(path = "figures/profile-phitausq.png")
 ```
 
-(ref:profile-phi-tausq) 关于 $\phi$ 和相对块金效应 $\tau^2_{rel} = \tau^2 / \sigma^2$ 的剖面似然函数曲面，平稳空间高斯过程的协方差函数选用指数型
+(ref:profile-phi-tausq) 关于 $\phi$ 和相对块金效应 $\tau^2_{rel} = \tau^2 / \sigma^2$ 的剖面似然函数曲面，平稳空间高斯过程的自协方差函数选用指数型
 
-Table: (\#tab:rangelap-mcml-result) 蒙特卡罗极大似然算法估计模型 \@ref(eq:rongelap-with-nugget-effect) 的参数，其中块金效应的估计值 $\hat{\tau}^2 = \hat{\sigma}^{2} \times \hat{\tau}^2_{rel} = 4.929$
+Table: (\#tab:rongelap-mcml-result) 蒙特卡罗极大似然算法估计模型 \@ref(eq:rongelap-with-nugget-effect) 的参数，其中块金效应的估计值 $\hat{\tau}^2 = \hat{\sigma}^{2} \times \hat{\tau}^2_{rel} = 4.929$
 
 | 参数    | $\hat{\beta}$ | $\hat{\sigma}^{2}$ | $\hat{\phi}$  | $\hat{\tau}^2_{rel}$ |  $\log L_{m}$          |
 | :------:| :-------------| :-------------     | :------------ | :------------------- |:---------------------  |
 | 初始值  |    6.200      |     2.400          |   340.000     |   2.074              |         -              |
 | 估计值  |    6.190      |     2.401          |   338.126     |   2.053              | $2.892 \times 10^{-3}$ |
 
-正如第\@ref(simulations)章第\@ref(sec:simulations)节对蒙特卡罗极大似然算法所指出的那样，必须提供足够接近真值的初值，才能获得好的参数估计。由图 \@ref(fig:profile-phi-tausq) 不难看出，关于 $\phi$ 和相对块金效应 $\tau^2_{rel}$ 的剖面似然函数曲面类似一个极其狭长的、坡度又平缓的山谷，基于似然的算法对这种类型的问题还没有好的解决办法，目前取多个不同参数初值进行迭代，用迭代值画出剖面似然函数曲面，通过观察获得最佳初值。
+由表 \@ref(tab:rongelap-mcml-result) 可知，正如第 \@ref(simulations) 章第 \@ref(sec:simulations) 节对蒙特卡罗极大似然算法所指出的那样，必须提供足够接近真值的初值，才能获得好的参数估计。由图 \@ref(fig:profile-phi-tausq) 不难看出，关于 $\phi$ 和相对块金效应 $\tau^2_{rel}$ 的剖面似然函数曲面类似一个极其狭长的、坡度又平缓的山谷，基于似然的算法对这种类型的问题还没有好的解决办法，目前取多个不同参数初值进行迭代，用迭代值画出剖面似然函数曲面，通过观察获得最佳初值。
 
 ## 本章小结 {#sec:cases}
 
 从小麦数据和核污染数据的似然分析中，可以清晰地看到模型参数初值对求似然函数极值点的重要性。借助变差图等可视化手段探索模型结构，确定初值是很有意义的，在小麦数据的分析过程中，并不是一步到位地给出空间线性混合效应模型，而是给出了模型从简单到复杂的建模过程，这对于实际应用有指导意义。对核残留数据集，建立了泊松型空间广义线性混合效应模型，其似然分析则借助了剖面似然估计的思想，将一个含有多个参数的未知似然函数降至只有两维的剖面似然函数曲面，再对似然曲面的分析获得最佳初始值的位置，最后根据蒙特卡罗最大似然算法获得了近似全局最优的参数估计值。
+
+
+

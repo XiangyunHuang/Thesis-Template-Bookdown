@@ -39,11 +39,11 @@ Table: (\#tab:gambia-without-nugget-effect) 模型 \@ref(eq:gambia-without-nugge
 | $\phi$                |     0.915789    |     10.20069    |    2.522294    |    1.422975       |
 | $\kappa$              |     0.079522    |     2.784646    |    1.084108    |    0.937436       |
 
-作为对比，在模型 \@ref(eq:gambia-without-nugget-effect) 的基础上添加块金效应 $U_{i}$，建立模型\@ref(eq:gambia-with-nugget-effect)
+作为对比，在模型 \@ref(eq:gambia-without-nugget-effect) 的基础上添加块金效应 $U_{i}$，建立模型\@ref(eq:gambia-with-nugget-effect)，其中 $U_{i} \sim \mathcal{N}(0,\nu^2)$，其它符号含义不变。
 \begin{equation}
 \log\{p_{ij}/(1-p_{ij})\} = \alpha + \boldsymbol{\beta}^{\top}z_{ij} + U_{i} + S(x_i) (\#eq:gambia-with-nugget-effect)
 \end{equation}
-再用 Stan 实现贝叶斯 MCMC 算法估计模型\@ref(eq:gambia-with-nugget-effect)中的各个参数值，计算结果见表 \@ref(tab:gambia-with-nugget-effect)。观察到块金效应占比 $\nu^2 = \tau^2/\sigma^2 = 0.000002$，是一个很小的值，在实际应用中应该可以忽略。与模型\@ref(eq:gambia-without-nugget-effect) 不同的是模型\@ref(eq:gambia-with-nugget-effect)的回归系数向量 $\boldsymbol{\beta}$ 不包含 $\beta_6,\ldots,\beta_9$四个回归系数，这是因为 **geoR** 包内的 gambia 数据集缺失与区域有关的标记信息，因此不能复现 Peter J. Diggle 等 (2002) [@Diggle2002Childhood] 的结果。
+再用 Stan 实现贝叶斯 MCMC 算法估计模型\@ref(eq:gambia-with-nugget-effect)中的各个参数值，计算结果见表 \@ref(tab:gambia-with-nugget-effect)。观察到块金效应占比 $\nu^2 = \tau^2/\sigma^2 = 0.000002$，是一个很小的值，在实际应用中应该可以忽略。与模型\@ref(eq:gambia-without-nugget-effect) 不同的是模型\@ref(eq:gambia-with-nugget-effect)的回归系数向量 $\boldsymbol{\beta}$ 不包含 $\beta_6,\ldots,\beta_9$四个回归系数，这是因为 **geoR** 包内的 gambia 数据集缺失与区域有关的标记信息，因此不能复现 Peter J. Diggle 等 (2002) [@Diggle2002Childhood] 的结果，但是这里考虑了块金效应。
 
 Table: (\#tab:gambia-with-nugget-effect) 模型 \@ref(eq:gambia-with-nugget-effect) 参数的贝叶斯估计值和 95\% 的置信区间，第1至4列依次是后验2.5\%、97.5\%分位点、后验均值以及后验中位数
 

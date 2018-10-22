@@ -12,7 +12,7 @@ options(mc.cores = if(is_on_travis) 4 else 2)
 rstan_options(auto_write = TRUE)
 
 data(rongelap,package="geoRglm")
-rongelap_pois_stan <- stan_model("code/rongelap.stan")
+rongelap_pois_stan <- stan_model("code/stan/06-rongelap_pois.stan")
 
 rongelap_pois_data <- list(
   N = 157, x = as.matrix(dist(rongelap$`coords`)),
@@ -20,7 +20,7 @@ rongelap_pois_data <- list(
 )
 
 rongelap_pois_fit <- sampling(rongelap_pois_stan,
-                              data = rongelap_pois_data, cores = 1, chains = 1,
+                              data = rongelap_pois_data, cores = 2, chains = 2,
                               iter = 2000, control = list(adapt_delta = 0.95, max_treedepth = 15)
 )
 

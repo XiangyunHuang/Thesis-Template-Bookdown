@@ -89,8 +89,10 @@ model {
   eta ~ normal(0, 1);
   {
     for(i in 1:N){
-     tmp[i] =  units[i] * (alpha + f)[i];
+     tmp[i] =  log(units[i]) * (alpha + f)[i];
     }
   }
+
   y ~ poisson_log(tmp);
+  // y ~ poisson_log(log(units) * (alpha + f));
 }
