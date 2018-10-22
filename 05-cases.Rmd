@@ -53,7 +53,7 @@ knitr::include_graphics(path = c("figures/heteroscedasticity.png","figures/norma
 knitr::include_graphics(path = "figures/rongelap-island.png")
 ```
 
-蒙特卡罗极大似然算法迭代的初值 $\beta_{0} = 6.2,\sigma^2_{0} = 2.40,\phi_{0} = 340,\tau^2_{rel} = 2.074$，模拟次数为 30000 次，前 10000 次迭代视为预热阶段 (warm-up)，其后每隔 20 次迭代采一个样本点，即存储模型各参数的迭代值，每个参数获得1000次迭代值。蒙特卡罗模拟平稳空间高斯过程 $S(x)$ 关于响应变量$Y$的条件分布 $[S(x_i)|Y_i]$ 时，使用了第\@ref(algorithms)章第\@ref(MCMC)节介绍的 Langevin-Hastings 算法 [@Omiros2003]，157 个站点意味着有 157 个条件分布需要模拟，共产生 157个迭代链，每条链需保持平稳才可用于模型参数的推断，因此需要先检验每条链的平稳性，可以采用自相关图和时序图来检验，篇幅所限，取部分站点展示，见附图\@ref(fig:rongelap-trace-plot) 和图 \@ref(fig:rongelap-acf-plot)，经观察157个站点处的$S_i$的迭代点列没有出现不平稳的现象。
+蒙特卡罗极大似然算法迭代的初值 $\beta_{0} = 6.2,\sigma^2_{0} = 2.40,\phi_{0} = 340,\tau^2_{rel} = 2.074$，模拟次数为 30000 次，前 10000 次迭代视为预热阶段 (warm-up)，其后每隔 20 次迭代采一个样本点，即存储模型各参数的迭代值，每个参数获得1000次迭代值。蒙特卡罗模拟平稳空间高斯过程 $S(x)$ 关于响应变量$Y$的条件分布 $[S(x_i)|Y_i]$ 时，使用了第\@ref(algorithms)章第\@ref(sec:MCMC)节介绍的 Langevin-Hastings 算法 [@Omiros2003]，157 个站点意味着有 157 个条件分布需要模拟，共产生 157个迭代链，每条链需保持平稳才可用于模型参数的推断，因此需要先检验每条链的平稳性，可以采用自相关图和时序图来检验，篇幅所限，取部分站点展示，见附图\@ref(fig:rongelap-trace-plot) 和图 \@ref(fig:rongelap-acf-plot)，经观察157个站点处的$S_i$的迭代点列没有出现不平稳的现象。
 
 ```{r profile-phi-tausq,fig.cap='(ref:profile-phi-tausq)'}
 knitr::include_graphics(path = "figures/profile-phitausq.png")

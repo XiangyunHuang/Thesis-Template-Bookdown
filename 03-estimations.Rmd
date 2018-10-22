@@ -2,7 +2,7 @@
 
 模型的参数估计是建模分析的重要步骤，鉴于空间广义线性混合效应模型(简称 SGLMM)的复杂性，文献中的参数估计方法，如最小二乘估计(简称 LSE)和极大似然估计(简称 MLE) 都没有显式的表达式，因此必须发展有效的算法。目前，文献中的出现的算法有低秩近似算法、蒙特卡罗极大似然算法和马尔科夫链蒙特卡罗算法，应用这些算法去估计 SGLMM 模型参数，特别提出了基于 Stan 实现的贝叶斯 MCMC 算法。
 
-第\@ref(sec:mle)节和第\@ref(sec:profile-likelihood)节分别介绍 SGLMM 模型的极大似然估计和空间线性混合模型下的剖面似然估计，由于模型的复杂性，文献中出现了三类算法，分别是第 \@ref(subsec:MCML) 小节介绍的蒙特卡罗极大似然算法(简称 MCML 算法)， 第 \@ref(LowRank) 小节介绍的低秩近似算法(简称 Low-Rank)， 第 \@ref(MCMC) 小节介绍的贝叶斯框架下的马尔科夫链蒙特卡罗算法 (简称贝叶斯 MCMC）。在贝叶斯 MCMC 算法的基础上提出 STAN-MCMC 算法，在第 \@ref(STAN-MCMC) 节予以详细介绍。
+第\@ref(sec:mle)节和第\@ref(sec:profile-likelihood)节分别介绍 SGLMM 模型的极大似然估计和空间线性混合模型下的剖面似然估计，由于模型的复杂性，文献中出现了三类算法，分别是第 \@ref(subsec:MCML) 小节介绍的蒙特卡罗极大似然算法(简称 MCML 算法)， 第 \@ref(LowRank) 小节介绍的低秩近似算法(简称 Low-Rank)， 第 \@ref(sec:MCMC) 小节介绍的贝叶斯框架下的马尔科夫链蒙特卡罗算法 (简称贝叶斯 MCMC）。在贝叶斯 MCMC 算法的基础上提出 STAN-MCMC 算法，在第 \@ref(sec:STAN-MCMC) 节予以详细介绍。
 
 ## 极大似然估计 {#sec:mle}
 
@@ -195,7 +195,7 @@ L_{m}(\beta,\boldsymbol{\theta})=\frac{1}{m}\sum_{i=1}^{n}\frac{N(t_{i};D\beta,\
 \noindent 既然给定的初始值 $\beta_{0},\boldsymbol{\theta}_{0}$ 必定与真实的极大似然估计值不同，第 $m$ 步迭代获得的似然函数值 $L_{m}(\hat{\beta}_{m}, \hat{\boldsymbol{\theta})}_{m}$ 与 1 的距离可以用来刻画蒙特卡罗近似的准确度。实际操作中，用 $\hat{\beta}_{m}$ 和 $\hat{\boldsymbol{\theta}}_{m}$ 表示最大化 $L_{m}(\beta, \boldsymbol{\theta})$ 获得的 MCML 估计，重复迭代 $\beta_{0} = \hat{\beta}_{m}$ 和 $\boldsymbol{\theta}_{0} = \hat{\boldsymbol{\theta}}_{m}$ 直到收敛。 求蒙特卡罗近似的对数似然 $l_{m}(\beta, \boldsymbol{\theta}) = \log L_{m}(\beta, \boldsymbol{\theta})$ 的极值，可以使用 **PrevMap** 包，迭代 $L_{m}(\beta, \boldsymbol{\theta})$ 的过程中，可以选择 BFGS 算法。 MCML 估计 $\boldsymbol{\theta}_{m}$ 的标准误差 (standard errors) 取似然函数 $l_{m}(\beta,\boldsymbol{\theta})$ 的负黑塞矩阵的逆的对角线元素的平方根。迭代次数足够多时，即 $m$ 充分大时，一般取到 10000 及以上，此时蒙特卡罗误差可忽略，即用方程 \@ref(eq:likelihood-approx) 近似 \@ref(eq:likelihood2) 的误差可忽略。
 
 
-### 贝叶斯 MCMC 算法 {#MCMC}
+### 贝叶斯 MCMC 算法 {#sec:MCMC}
 
 在贝叶斯框架里，$\beta, \boldsymbol{\theta}$ 的后验分布由贝叶斯定理和 $\beta, \boldsymbol{\theta}$ 的联合先验分布确定。假定 $\beta, \boldsymbol{\theta}$ 的先验分布如下：
 \[ \theta \sim  g(\cdot), \quad \beta | \sigma^2 \sim  N(\cdot; \xi, \sigma^2 \Omega) \]
@@ -291,7 +291,7 @@ S(x) \approx \sum_{i = 1}^r K(\|x-\tilde{x}_{i}\|; \phi, \kappa) U_{i} (\#eq:lr-
 \end{eqnarray*}
 \noindent 类似地，行列式运算的维数从 $n\times n$ 降到了 $r\times r$ [@Diggle2007]。
 
-## 贝叶斯 STAN-MCMC 算法 {#STAN-MCMC}
+## 贝叶斯 STAN-MCMC 算法 {#sec:STAN-MCMC}
 
 <!-- ### 算法提出的背景和意义 {#subsec:motivations} -->
 
@@ -299,7 +299,7 @@ S(x) \approx \sum_{i = 1}^r K(\|x-\tilde{x}_{i}\|; \phi, \kappa) U_{i} (\#eq:lr-
 
 <!-- ### STAN-MCMC 算法实现过程 {#STANMCMC} -->
 
-为了与本章第 \@ref(MCMC) 节提出的贝叶斯 MCMC 算法比较，我们基于它编写了程序。目前，我与 Paul Bürkner 一起开发了 **brms** 包 [@brms2017JSS]， 主要工作是修复程序调用和文档书写错误， 特别是与求解 SGLMM 模型相关的 `gp` 函数，相关细节见 **brms** 的 Github 开发仓库。
+为了与本章第 \@ref(sec:MCMC) 节提出的贝叶斯 MCMC 算法比较，我们基于它编写了程序。目前，我与 Paul Bürkner 一起开发了 **brms** 包 [@brms2017JSS]， 主要工作是修复程序调用和文档书写错误， 特别是与求解 SGLMM 模型相关的 `gp` 函数，相关细节见 **brms** 的 Github 开发仓库。
 
 在 SGLMM 模型下，STAN-MCMC 算法，先从条件分布 $[S|\theta,\beta,Y]$ 抽样，然后是 $[\theta|S]$ ，最后是 $[\beta|S,Y]$，具体步骤如下：
 
@@ -357,8 +357,9 @@ Table: (\#tab:sglmm-packages)  求解空间广义线性混合效应模型的 R �
 | 空间过程各向异性    |    -    |   +\* |    +    |     +\*   |     -    |    -    |
 | 非梅隆型协方差函数    |    -    |   +\* |    +    |     -     |     +    |    +    |
 
-<!-- ## 本章小结 {#sec:estimations} -->
+## 本章小结 {#sec:estimations}
 
+本章参数估计和算法实现是论文的主要内容之一，首先沿着极大似然估计的思路，尝试写出SGLMM模型参数的似然函数，但是因为空间随机效应导致的高维积分无法用显式表达式表示，进而出现了以拉普拉斯近似和蒙特卡罗模拟的两类基于似然的方法，前者走近似高维积分的路子，后者走模拟计算的路子，这两类方法在数据分析中，前者尤其需要指定合适的初值，且在数据量不太大的时候才能应用，后者需要指定合适的先验分布。第\@ref(sec:STAN-MCMC)节在第\@ref(sec:MCMC)小节的基础上提出基于Stan实现的MCMC算法。
 
 [stan-setup]: https://github.com/stan-dev/rstan/wiki
 [rtools]: https://cran.r-project.org/bin/windows/Rtools/
