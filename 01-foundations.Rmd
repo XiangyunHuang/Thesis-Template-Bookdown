@@ -242,11 +242,11 @@ p(\boldsymbol{\theta}|\mathbf{Y})  & =  & \displaystyle \frac{p(\boldsymbol{\the
 ## 常用贝叶斯估计 {#bayes-estimates}
 
 ```{theorem, label="bayes-estimate-square", name = "平方损失", echo=TRUE}
-在给定先验分布 $\pi(\theta)$ 和平方损失 $L(\theta,\delta) = (\delta - \theta)^2$ 下，$\theta$ 的贝叶斯估计 $\delta^{\pi}(x)$ 为后验分布 $\pi(\theta|x)$ 的均值，即 $\delta^{\pi}(x) = E(\theta|x)$。
+在给定先验分布 $\pi(\theta)$ 和平方损失 $L(\theta,\delta) = (\delta - \theta)^2$ 下，$\theta$ 的贝叶斯估计 $\delta^{\pi}(x)$ 为后验分布 $\pi(\theta|x)$ 的均值，即 $\delta^{\pi}(x) = \mathsf{E}(\theta|x)$。
 ```
 
-```{theorem, label="bayes-estimate-01", name="0 --- 1 损失", echo=TRUE}
-在给定先验分布 $\pi(\theta)$ 和 $0$ --- $1$ 损失函数
+```{theorem, label="bayes-estimate-01", name="0 - 1 损失", echo=TRUE}
+在给定先验分布 $\pi(\theta)$ 和 $0$ - $1$ 损失函数
 
 \begin{equation*}
 L(\theta,\delta) = 
@@ -256,7 +256,7 @@ L(\theta,\delta) =
 \end{cases}
 \end{equation*}
 
-当 $\epsilon$ 较小时，$\theta$ 的贝叶斯估计为后验分布 $\pi(\theta|x)$ 的众数。
+当 $\epsilon$ 较小时，$\theta$ 的贝叶斯估计$\delta^{\pi}(x)$为后验分布 $\pi(\theta|x)$ 的众数。
 ```
 
 ```{theorem, label="bayes-estimate-abs", name= "绝对值损失", echo=TRUE}
@@ -466,7 +466,7 @@ knitr::include_graphics(path = c(
 
 ## 本章小结 {#sec:foundations}
 
-本章第\@ref(sec:exp)节介绍了指数族的一般形式，指出基于样本点的对数似然函数和样本均值、样本方差的关系，以表格的形式列出了正态、泊松和二项分布的各个特征，为第\@ref(models)章统计模型和第\@ref(algorithms)章参数估计作铺垫。接着，第\@ref(sec:lse)节和第\@ref(sec:def-mle)节分别介绍了最小二乘估计和极大似然估计的定义、性质，给出了线性模型的最小二乘估计，极大似然估计的相合性和渐进正态性。第\@ref(sec:stationary-gaussian-process)节介绍了平稳高斯过程，给出了其均方连续性、可微性定义以及一个均方可微的判断定理，平稳高斯过程作为空间随机效应的实现，多次出现在后续章节中。第\@ref(sec:Laplace-approximation)节介绍了拉普拉斯近似的思想，具体以正态分布作为阐述，它是空间广义线性混合模型参数估计的重要部分，主要应用在第\@ref(algorithms)章第\@ref(subsec:LA)小节当中，用以近似似然函数中关于空间随机效应的高维积分。第\@ref(sec:bayes-prior)节至第\@ref(sec:stan-samplers)节分别是与贝叶斯相关的概念定义、参数估计、计算。
+本章第\@ref(sec:exp)节介绍了指数族的一般形式，指出基于样本点的对数似然函数和样本均值、样本方差的关系，以表格的形式列出了正态、泊松和二项分布的各个特征，为第\@ref(models)章统计模型和第\@ref(algorithms)章参数估计作铺垫。接着，第\@ref(sec:lse)节和第\@ref(sec:def-mle)节分别介绍了最小二乘估计和极大似然估计的定义、性质，给出了线性模型的最小二乘估计，极大似然估计的相合性和渐进正态性。第\@ref(sec:stationary-gaussian-process)节介绍了平稳高斯过程，给出了其均方连续性、可微性定义以及一个均方可微的判断定理，平稳高斯过程作为空间随机效应的实现，多次出现在后续章节中。第\@ref(sec:Laplace-approximation)节介绍了拉普拉斯近似的思想，具体以正态分布作为阐述，它是空间广义线性混合模型参数估计的重要部分，主要应用在第\@ref(algorithms)章第\@ref(subsec:LA)小节当中，用以近似似然函数中关于空间随机效应的高维积分。第\@ref(sec:bayes-prior)节至第\@ref(sec:stan-samplers)节分别是与贝叶斯相关的概念定义、参数估计、计算方法。
 
 [stan]: http://mc-stan.org/
 [stan-dev]: https://github.com/stan-dev/stan
