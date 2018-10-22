@@ -168,7 +168,7 @@ g(\mu_i) = T_{i} = d(x_i)'\beta + S(x_i) + Z_i (\#eq:again-SGLMM)
 \log\{\frac{p_i}{1-p_i}\} & = T_{i} = d(x_i)'\beta + S(x_i) + Z_i  (\#eq:BL-SGLMM)\\
 \log(\lambda_i)           & = T_{i} = d(x_i)'\beta + S(x_i) + Z_i  (\#eq:Poss-SGLMM)
 \end{align}
-\noindent 模型 \@ref(eq:BL-SGLMM) 中，响应变量 $Y_i$ 服从二项分布 $Y_i \sim \mathrm{Binomial}(m_i,p_i)$， 均值 $\mathrm{E}(Y_i|S(x_i),Z_i)=m_{i}p_{i}$， $m_i$ 表示在 $x_i$ 的位置抽取的样本量，总的样本量就是 $M=\sum_{i=1}^{N}m_i$，$N$ 表示采样点的个数。模型 \@ref(eq:Poss-SGLMM) 中， 响应变量 $Y_i$ 服从泊松分布 $Y_i \sim \mathrm{Possion}(\lambda_i)$。 在获取响应变量 $Y$ 的观测的过程中，与广义线性或广义线性混合效应模型 \@ref(eq:GLM) 和 \@ref(eq:GLMM) 不同的在于：在每个采样点 $x_i$，$Y_i$ 都服从参数不同但同类的分布。
+\noindent 模型 \@ref(eq:BL-SGLMM) 中，响应变量 $Y_i$ 服从二项分布 $Y_i \sim \mathrm{Binomial}(m_i,p_i)$， 均值 $\mathrm{E}(Y_i|S(x_i),Z_i)=m_{i}p_{i}$， $m_i$ 表示在 $x_i$ 的位置抽取的样本量，总的样本量就是 $M = \sum_{i=1}^{N}m_i$，$N$ 表示采样点的个数。模型 \@ref(eq:Poss-SGLMM) 中， 响应变量 $Y_i$ 服从泊松分布 $Y_i \sim \mathrm{Possion}(\lambda_i)$。 在获取响应变量 $Y$ 的观测的过程中，与广义线性或广义线性混合效应模型 \@ref(eq:GLM) 和 \@ref(eq:GLMM) 不同的在于：在每个采样点 $x_i$，$Y_i$ 都服从参数不同但同类的分布。
 
 模型 \@ref(eq:BL-SGLMM) 中参数 $\beta$ 和 $\boldsymbol{\theta}' = (\sigma^2,\phi,\tau^2)$ 的似然函数是通过对 $T_i$ 内的随机效应积分获得的。 用大写 $D$ 表示 $n\times p$ 的数据矩阵,  $y' = (y_1,y_2,\cdots,y_n)$ 表示各空间位置 $x_i$ 处响应变量的观测值，对应模型 \@ref(eq:BL-SGLMM) 中的 $Y_i \sim \mathrm{Binomial}(m_i,p_i)$， $T = (T_1,T_2,\ldots,T_n)$ 的边际分布是 $\mathcal{N}(D\beta, \Sigma(\boldsymbol{\theta}))$， 其中，协方差矩阵 $\Sigma(\boldsymbol{\theta})$ 的对角元是 $\sigma^2+\tau^2$， 非对角元是 $\sigma^2\rho(u_{ij})$， $u_{ij}$ 是位置 $x_i$ 与 $x_j$ 之间的距离。在给定 $T'=t'=(t_1,t_2,\cdots,t_n)$ 下， $Y'=(Y_1,\cdots,Y_n)$ 的条件分布是独立二项概率分布函数的乘积 $f(y|t)=\prod_{i=1}^{n}f(y_{i}|t_{i})$， 因此， $\beta$ 和 $\boldsymbol{\theta}$ 的似然函数可以写成
 \begin{equation}
@@ -183,7 +183,7 @@ L(\beta,\boldsymbol{\theta})
 &= E_{T|y}\left[\frac{\mathcal{N}(t; D\beta, \Sigma(\boldsymbol{\theta}))}{\mathcal{N}(t; D\beta_{0}, \Sigma(\boldsymbol{\theta}_{0}))}\right] 
 \end{aligned} (\#eq:likelihood2)
 \end{equation}
-\noindent 其中$\beta_{0},\boldsymbol{\theta}_{0}$ 作为迭代初始值预先给定，则 $Y$ 和 $T$ 的联合分布可以表示成 $f(y,t)=\mathcal{N}(t;D\beta_{0},\Sigma(\boldsymbol{\theta}_{0}))f(y|t)$。 再通过蒙特卡罗方法，用求和代替积分近似期望， 做法是从条件分布 $f(T|Y=y;\beta_0,\boldsymbol{\theta}_0)$ 抽取 $m$ 个样本 $t_{(i)}$， 那么，可以用方程 \@ref(eq:likelihood-approx) 近似方程 \@ref(eq:likelihood2)
+\noindent 其中 $\beta_{0},\boldsymbol{\theta}_{0}$ 作为迭代初始值预先给定，则 $Y$ 和 $T$ 的联合分布可以表示成 $f(y,t) = \mathcal{N}(t; D\beta_{0}, \Sigma(\boldsymbol{\theta}_{0})) f(y|t)$。 再通过蒙特卡罗方法，用求和代替积分近似期望， 做法是从条件分布 $f(T|Y=y; \beta_0, \boldsymbol{\theta}_0)$ 抽取 $m$ 个样本 $t_{(i)}$， 那么，可以用方程 \@ref(eq:likelihood-approx) 近似方程 \@ref(eq:likelihood2)
 \begin{equation}
 L_{m}(\beta,\boldsymbol{\theta})=\frac{1}{m}\sum_{i=1}^{n}\frac{\mathcal{N}(t_{i};D\beta,\Sigma(\boldsymbol{\theta}))}{\mathcal{N}(t_{i};D\beta_{0},\Sigma(\boldsymbol{\theta}_{0}))} (\#eq:likelihood-approx)
 \end{equation}
@@ -192,7 +192,7 @@ L_{m}(\beta,\boldsymbol{\theta})=\frac{1}{m}\sum_{i=1}^{n}\frac{\mathcal{N}(t_{i
 \[
 \max_{\beta,\boldsymbol{\theta}}L_{m}(\beta,\boldsymbol{\theta}) \rightarrow 1, m \rightarrow\infty
 \]
-\noindent 既然给定的初始值 $\beta_{0},\boldsymbol{\theta}_{0}$ 必定与真实的极大似然估计值不同，第 $m$ 步迭代获得的似然函数值 $L_{m}(\hat{\beta}_{m}, \hat{\boldsymbol{\theta})}_{m}$ 与 1 的距离可以用来刻画蒙特卡罗近似的准确度。实际操作中，用 $\hat{\beta}_{m}$ 和 $\hat{\boldsymbol{\theta}}_{m}$ 表示最大化 $L_{m}(\beta, \boldsymbol{\theta})$ 获得的 MCML 估计，重复迭代 $\beta_{0} = \hat{\beta}_{m}$ 和 $\boldsymbol{\theta}_{0} = \hat{\boldsymbol{\theta}}_{m}$ 直到收敛。 求蒙特卡罗近似的对数似然 $l_{m}(\beta, \boldsymbol{\theta}) = \log L_{m}(\beta, \boldsymbol{\theta})$ 的极值，可以使用 **PrevMap** 包，迭代 $L_{m}(\beta, \boldsymbol{\theta})$ 的过程中，可以选择 BFGS 算法。关于 $\boldsymbol{\psi}$ 的似然曲面是相当扁平的，为了更好的收敛到全局极大值，做一步重参数化，即令 $\boldsymbol{\psi} = \log(\boldsymbol{\theta})$，$L_{m}(\beta, \boldsymbol{\psi})$ 关于 $\beta$ 和 $\boldsymbol{\psi}$ 的一阶二阶导数传递给 **maxLik** 包的 `maxBFGS` 函数。
+\noindent 既然给定的初始值 $\beta_{0},\boldsymbol{\theta}_{0}$ 必定与真实的极大似然估计值不同，第 $m$ 步迭代获得的似然函数值 $L_{m}(\hat{\beta}_{m}, \hat{\boldsymbol{\theta})}_{m}$ 与 1 的距离可以用来刻画蒙特卡罗近似的准确度。实际操作中，用 $\hat{\beta}_{m}$ 和 $\hat{\boldsymbol{\theta}}_{m}$ 表示最大化 $L_{m}(\beta, \boldsymbol{\theta})$ 获得的 MCML 估计，重复迭代 $\beta_{0} = \hat{\beta}_{m}$ 和 $\boldsymbol{\theta}_{0} = \hat{\boldsymbol{\theta}}_{m}$ 直到收敛。 求蒙特卡罗近似的对数似然 $l_{m}(\beta, \boldsymbol{\theta}) = \log L_{m}(\beta, \boldsymbol{\theta})$ 的极值，可以使用 **PrevMap** 包，迭代 $L_{m}(\beta, \boldsymbol{\theta})$ 的过程中，可以选择 BFGS 算法。关于 $\boldsymbol{\psi}$ 的似然曲面是相当扁平的，为了更好的收敛到全局极大值，做一步重参数化，即令 $\boldsymbol{\psi} = \log(\boldsymbol{\theta})$，$L_{m}(\beta, \boldsymbol{\psi})$ 关于 $\beta$ 和 $\boldsymbol{\psi}$ 的一阶、二阶导数传递给 **maxLik** 包的 `maxBFGS` 函数。
 
 蒙特卡罗极大似然估计 $\boldsymbol{\theta}_{m}$ 的标准误差 (standard errors) 取似然函数 $l_{m}(\beta,\boldsymbol{\theta})$ 的负黑塞矩阵的逆的对角线元素的平方根。迭代次数足够多时，即 $m$ 充分大时，一般取到 10000 及以上，此时蒙特卡罗误差可忽略，即用方程 \@ref(eq:likelihood-approx) 近似 \@ref(eq:likelihood2) 的误差可忽略。
 
