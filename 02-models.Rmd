@@ -7,9 +7,9 @@
 
 简单线性模型的一般形式为
 \begin{equation}
-Y = X^{\top}\beta + \epsilon, \mathrm{E}(\epsilon) = 0, \mathrm{Cov}(\epsilon) = \sigma^2\mathbf{I}  (\#eq:LM)
+Y = X^{\top}\beta + \epsilon, \mathsf{E}(\epsilon) = 0, \mathsf{Cov}(\epsilon) = \sigma^2\mathbf{I}  (\#eq:LM)
 \end{equation}
-\noindent 其中，$Y = (y_1,y_2,\ldots,y_n)^{\top}$ 是 $n$ 维列向量，代表对响应变量 $Y$ 的 $n$ 次观测； $\beta = (\beta_0,\beta_1,\ldots,\beta_{p-1})^{\top}$ 是 $p$ 维列向量， 代表模型 \@ref(eq:LM) 的协变量 $X$ 的系数，$\beta_0$ 是截距项； $X^{\top} = (1_{(1\times n)}^{\top},X_{(1)}^{\top},X_{(2)}^{\top},\ldots,X_{(p-1)}^{\top})$， $1_{(1\times n)}^{\top}$ 是全 1 的 $n$ 维列向量，而 $X_{(i)}^{\top} = (x_{1i},x_{2i},\ldots,x_{ni})^{\top}$ 代表对第 $i$ 个自变量的 $n$ 次观测； $\epsilon = (\epsilon_1,\epsilon_2,\ldots,\epsilon_n)^{\top}$ 是 $n$ 维列向量，代表模型的随机误差，并且假定 $\mathrm{E}(\epsilon_i \epsilon_j) = 0, i \ne j$， 即模型误差项之间线性无关，且方差齐性，都是 $\sigma^2(>0)$。 估计模型 \@ref(eq:LM) 的参数常用最小二乘和最大似然方法， 求解线性模型 \@ref(eq:LM) 的参数可以用 R 函数 `lm`。
+\noindent 其中，$Y = (y_1,y_2,\ldots,y_n)^{\top}$ 是 $n$ 维列向量，代表对响应变量 $Y$ 的 $n$ 次观测； $\beta = (\beta_0,\beta_1,\ldots,\beta_{p-1})^{\top}$ 是 $p$ 维列向量， 代表模型 \@ref(eq:LM) 的协变量 $X$ 的系数，$\beta_0$ 是截距项； $X^{\top} = (1_{(1\times n)}^{\top},X_{(1)}^{\top},X_{(2)}^{\top},\ldots,X_{(p-1)}^{\top})$， $1_{(1\times n)}^{\top}$ 是全 1 的 $n$ 维列向量，而 $X_{(i)}^{\top} = (x_{1i},x_{2i},\ldots,x_{ni})^{\top}$ 代表对第 $i$ 个自变量的 $n$ 次观测； $\epsilon = (\epsilon_1,\epsilon_2,\ldots,\epsilon_n)^{\top}$ 是 $n$ 维列向量，代表模型的随机误差，并且假定 $\mathsf{E}(\epsilon_i \epsilon_j) = 0, i \ne j$， 即模型误差项之间线性无关，且方差齐性，都是 $\sigma^2(>0)$。 估计模型 \@ref(eq:LM) 的参数常用最小二乘和最大似然方法， 求解线性模型 \@ref(eq:LM) 的参数可以用 R 函数 `lm`。
 
 
 ## 广义线性模型 {#sec:Generalized-Linear-Models}
@@ -18,7 +18,7 @@ Y = X^{\top}\beta + \epsilon, \mathrm{E}(\epsilon) = 0, \mathrm{Cov}(\epsilon) =
 \begin{equation}
 g(\mu) = X^{\top}\beta  (\#eq:GLM)
 \end{equation}
-\noindent 其中，$\mu \equiv \mathrm{E}(Y)$， $g$ 代表联系函数，特别地，当 $Y \sim N(\mu,\sigma^2)$ 时，联系函数 $g(x) = x$，模型 \@ref(eq:GLM) 变为一般线性模型 \@ref(eq:LM)。当 $Y \sim \mathrm{Binomial}(n,p)$ 时，响应变量 $Y$ 的期望 $\mu =\mathrm{E}(Y) = np$， 联系函数 $g(x)=\ln(\frac{x}{1-x})$，模型 \@ref(eq:GLM) 变为$\log(\frac{p}{1-p})=X^{\top}\beta$。 当 $Y \sim \mathrm{Possion}(\lambda)$ 时，响应变量 $Y$ 的期望 $\mu =\mathrm{E}(Y) = \lambda$， 联系函数$g(x) = \ln(x)$， 模型 \@ref(eq:GLM) 变为 $\log(\lambda) = X^{\top}\beta$。 指数族下其余分布对应的联系函数此处不一一列举， 完整列表可以参看 1989 年 McCullagh 和 Nelder 所著的《广义线性模型》 [@McCullagh1989]。 模型 \@ref(eq:GLM) 最早由 Nelder 和 Wedderburn 在1972年提出[@Nelder1972]，它弥补了模型 \@ref(eq:LM) 的两个重要缺点： 一是因变量只能取连续值的情况， 二是期望与自变量只能用线性关系联系 [@Chen2011]。 求解广义线性模型 \@ref(eq:GLM) 的 R 函数是 `glm`， 常用拟似然法去估计模型 \@ref(eq:GLM) 的参数。
+\noindent 其中，$\mu \equiv \mathsf{E}(Y)$， $g$ 代表联系函数，特别地，当 $Y \sim \mathcal{N}(\mu,\sigma^2)$ 时，联系函数 $g(x) = x$，模型 \@ref(eq:GLM) 变为一般线性模型 \@ref(eq:LM)。当 $Y \sim \mathrm{Binomial}(n,p)$ 时，响应变量 $Y$ 的期望 $\mu =\mathsf{E}(Y) = np$， 联系函数 $g(x)=\ln(\frac{x}{1-x})$，模型 \@ref(eq:GLM) 变为$\log(\frac{p}{1-p})=X^{\top}\beta$。 当 $Y \sim \mathrm{Possion}(\lambda)$ 时，响应变量 $Y$ 的期望 $\mu =\mathsf{E}(Y) = \lambda$， 联系函数$g(x) = \ln(x)$， 模型 \@ref(eq:GLM) 变为 $\log(\lambda) = X^{\top}\beta$。 指数族下其余分布对应的联系函数此处不一一列举， 完整列表可以参看 1989 年 McCullagh 和 Nelder 所著的《广义线性模型》 [@McCullagh1989]。 模型 \@ref(eq:GLM) 最早由 Nelder 和 Wedderburn 在1972年提出[@Nelder1972]，它弥补了模型 \@ref(eq:LM) 的两个重要缺点： 一是因变量只能取连续值的情况， 二是期望与自变量只能用线性关系联系 [@Chen2011]。 求解广义线性模型 \@ref(eq:GLM) 的 R 函数是 `glm`， 常用拟似然法去估计模型 \@ref(eq:GLM) 的参数。
 
 ## 广义线性混合效应模型 {#sec:Generalized-Linear-Mixed-Effects-Models}
 
@@ -36,7 +36,7 @@ g(\mu) = X^{\top}\boldsymbol{\beta} + Z^{\top}\mathbf{b}  (\#eq:GLMM)
 \begin{equation}
 g(\mu_i) = d(x_i)^{\top}\beta + S(x_i) + Z_i (\#eq:SGLMM)
 \end{equation}
-\noindent 其中，$d^{\top}(x_i)$ 表示协变量对应的观测数据向量，即 $p$ 个协变量在第 $i$ 个位置 $x_i$ 的观察值。 此外， 假定 $\mathcal{S} = \{S(x): x \in \mathbb{R}^2\}$ 是均值为0， 方差为 $\sigma^2$，平稳且各向同性的空间高斯过程， $\rho(x,x') = \mathrm{Corr}\{S(x),S(x')\} \equiv \rho(\|x,x'\|)$， $\|\cdot\|$ 表示距离， 样本之间的位置间隔不大就用欧氏距离， 间隔很大可以考虑用球面距离； $S(x_i)$ 代表了与空间位置 $x_i$ 相关的随机效应， 简称空间效应； 这里， $Z_i \stackrel{i.i.d}{\sim} N(0,\tau^2)$ 的非空间随机效应， 也称块金效应 (nugget effect)， 一般解释为测量误差 (measurement error) 或微观变化 (micro-scale variation) [@Christensen2004]， 即 $\tau^2=\mathrm{Var}(Y_{i}|S(x_{i})),\forall i = 1,2, \ldots, N$， $N$ 是采样点的数目， 其它符号含义不变。
+\noindent 其中，$d^{\top}(x_i)$ 表示协变量对应的观测数据向量，即 $p$ 个协变量在第 $i$ 个位置 $x_i$ 的观察值。 此外， 假定 $\mathcal{S} = \{S(x): x \in \mathbb{R}^2\}$ 是均值为0， 方差为 $\sigma^2$，平稳且各向同性的空间高斯过程， $\rho(x,x') = \mathsf{Corr}\{S(x),S(x')\} \equiv \rho(\|x,x'\|)$， $\|\cdot\|$ 表示距离， 样本之间的位置间隔不大就用欧氏距离， 间隔很大可以考虑用球面距离； $S(x_i)$ 代表了与空间位置 $x_i$ 相关的随机效应， 简称空间效应； 这里， $Z_i \stackrel{i.i.d}{\sim} \mathcal{N}(0,\tau^2)$ 的非空间随机效应， 也称块金效应 (nugget effect)， 一般解释为测量误差 (measurement error) 或微观变化 (micro-scale variation) [@Christensen2004]， 即 $\tau^2=\mathsf{Var}(Y_{i}|S(x_{i})),\forall i = 1,2, \ldots, N$， $N$ 是采样点的数目， 其它符号含义不变。
 
 
 ### 自协方差函数 {#subsec:covariance-function}
@@ -45,20 +45,20 @@ g(\mu_i) = d(x_i)^{\top}\beta + S(x_i) + Z_i (\#eq:SGLMM)
 \begin{equation}
 \begin{aligned}
 V(x,x') 
-      &= \frac{1}{2}\mathrm{Var}\{S(x)-S(x')\}\\
-      &= \frac{1}{2}\mathrm{Cov}(S(x)-S(x'),S(x)-S(x'))\\
-      &= \frac{1}{2}\{E[S(x)-S(x')][S(x)-S(x')]-[E(S(x)-S(x'))]^2\}\\
-      &= \sigma^2-\mathrm{Cov}(S(x),S(x'))=\sigma^2\{1-\rho(u)\}\\
+      &= \frac{1}{2}\mathsf{Var}\{S(x)-S(x')\}\\
+      &= \frac{1}{2}\mathsf{Cov}(S(x)-S(x'),S(x)-S(x'))\\
+      &= \frac{1}{2}\{\mathsf{E}[S(x)-S(x')][S(x)-S(x')]-[\mathsf{E}(S(x)-S(x'))]^2\}\\
+      &= \sigma^2-\mathsf{Cov}(S(x),S(x'))=\sigma^2\{1-\rho(u)\}\\
 V_{T}(u_{ij})
-      &= \frac{1}{2}\mathrm{Var}\{T_{i}(x)-T_{j}(x)\} \\
-      &= \frac{1}{2}\mathrm{E}[(T_{i}-T_{j})^2]=\tau^2+\sigma^2(1-\rho(u_{ij})) 
+      &= \frac{1}{2}\mathsf{Var}\{T_{i}(x)-T_{j}(x)\} \\
+      &= \frac{1}{2}\mathsf{E}[(T_{i}-T_{j})^2]=\tau^2+\sigma^2(1-\rho(u_{ij})) 
 \end{aligned} (\#eq:variograms)
 \end{equation}
 \noindent 从方程 \@ref(eq:variograms) 不难看出系数 $\frac{1}{2}$ 的化简作用，类似地，根据协方差定义可推知随机向量 $T = (T_1,T_2,\ldots,T_n)$ 的协方差矩阵如下：
 \begin{equation}
 \begin{aligned}
-\mathrm{Cov}(T_{i}(x),T_{i}(x)) &= \mathrm{E}[S(x_i)]^2 + \mathrm{E}Z_{i}^{2}= \sigma^2+\tau^2 \\
-\mathrm{Cov}(T_{i}(x),T_{j}(x)) &= \mathrm{E}[S(x_i)S(x_j)]  = \sigma^2\rho(u_{ij})
+\mathsf{Cov}(T_{i}(x),T_{i}(x)) &= \mathsf{E}[S(x_i)]^2 + \mathsf{E}Z_{i}^{2}= \sigma^2+\tau^2 \\
+\mathsf{Cov}(T_{i}(x),T_{j}(x)) &= \mathsf{E}[S(x_i)S(x_j)]  = \sigma^2\rho(u_{ij})
 \end{aligned}
 \end{equation}
 \noindent 相关函数 $\rho(u)$ 的作用和地位就显而易见了，它是既决定理论变差又决定协方差矩阵的结构。图 \@ref(fig:semi-variance) 给出一般变差函数的示意图，作为粗略估计，纵截距可以看作是块金效应参数 $\tau^2$，而图中的变差函数基台值，即变差函数 $V_{T}(u_{ij})$ 趋于稳定的函数值，它是块金效应和空间效应的和，作为空间效应参数 $\sigma^2$ 的粗略估计，我们用它减去块金效应即得。基于样本变差函数图 \@ref(fig:semi-variance) 我们可以获得随机效应方差分量的初始估计，其使用案列见第 \@ref(applications) 章第 \@ref(sec:spatial-random-effects) 节。
@@ -78,7 +78,7 @@ knitr::include_graphics("figures/semi-variance.png")
 \noindent 其中，$\mathcal{K}_{\kappa}(\cdot)$ 是阶数为 $\kappa$ 的第二类修正的贝塞尔函数(详见第 \@ref(prepare) 章第\@ref(sec:modified-bessel-function) 节)， $\kappa(>0)$ 是平滑参数，满足这些条件的空间过程 $\mathcal{S}$ 是 $\lceil\kappa\rceil-1$ 次均方可微的。值得注意的是 Matérn 族其实包含幂指数族
 \noindent 当 $\kappa = 0.5$时，$\rho_{0}(u) = \exp(-u)$， $S(x)$ 均方连续但是不可微，当 $\kappa \to \infty$ 时， $\rho_{0}(u) = \exp(-u^2)$， $S(x)$ 无限次均方可微。
 
-在实际数据分析中，估计 $\kappa$ 时，为了节省计算，又不失一般性，经验做法是取离散的 $\kappa$ 值，如 $\kappa = 0.5, 1.5, 2.5$， 这样，平稳空间高斯过程就分别具有 $S(x)$ 均方连续不可微、一次可微和二次可微三种不同程度的光滑性。根据第 \@ref(prepare) 章第 \@ref(sec:stationary-gaussian-process) 节定理 \@ref(thm:stationary-mean-square-properties)，自相关函数 $\rho(u)$ 的可微性表示了空间过程 $\mathcal{S}$ 的曲面平滑程度。为更加直观地观察 $\rho(u)$，作图 \@ref(fig:matern-2d) 和图 \@ref(fig:matern-3d)。
+在实际数据分析中，估计 $\kappa$ 时，为了节省计算，又不失一般性，经验做法是取离散的 $\kappa$ 值，如 $\kappa = 0.5, 1.5, 2.5$， 这样，平稳空间高斯过程就分别具有均方连续不可微、一次可微和二次可微三种不同程度的光滑性。根据第 \@ref(prepare) 章第 \@ref(sec:stationary-gaussian-process) 节定理 \@ref(thm:stationary-mean-square-properties)，自相关函数 $\rho(u)$ 的可微性表示了空间过程 $\mathcal{S}$ 的曲面平滑程度。为更加直观地观察 $\rho(u)$，作图 \@ref(fig:matern-2d) 和图 \@ref(fig:matern-3d)。
 
 ```{r matern-2d,fig.cap="左图：固定尺度参数 $\\phi$，自相关函数 $\\rho(u)$ 随空间距离 $u$ 的变化；右图：固定贝塞尔函数的阶 $\\kappa$，自相关函数$\\rho(u)$ 随空间距离 $u$ 的变化",out.width="80%"}
 knitr::include_graphics(path = "figures/matern.png")
@@ -103,7 +103,7 @@ g(\mu_i) = d(x_i)^{\top}\beta + S(x_i) (\#eq:no-nugget-SGLMM)
 \sigma^2\rho(u_{ij})/(\sigma^2+\tau^2) & : x_{i} \neq x_{j}
 \end{cases} (\#eq:corr-nugget-function)
 \end{equation}
-\noindent 在原点不连续，只有当 $\tau^2 = \mathrm{Var}(Y_i|S(x_i))$ 已知或者在同一位置可以用重复测量的方法直接获得时，参数 $\tau^2, \sigma^2, \phi$ 是可识别的 [@Diggle2002Childhood; @Diggle2007]。如果通过探索性数据分析观察到不可忽略的非空间效应 $\tau^2$ 时，Ole F Christensen (2004年) [@Christensen2004] 建议使用样本变差函数对 $\tau^2$ 作初步估计，然后计算关于 $\tau^2$ 的剖面似然函数曲线，或者协方差参数 $\phi,\tau^2$一起确定最佳的值，第 \@ref(applications) 章第 \@ref(case-rongelap) 节将用剖面似然函数曲面的方法获取真实数据场景中的参数估计值。
+\noindent 在原点不连续，只有当 $\tau^2 = \mathsf{Var}(Y_i|S(x_i))$ 已知或者在同一位置可以用重复测量的方法直接获得时，参数 $\tau^2, \sigma^2, \phi$ 是可识别的 [@Diggle2002Childhood; @Diggle2007]。如果通过探索性数据分析观察到不可忽略的非空间效应 $\tau^2$ 时，Ole F Christensen (2004年) [@Christensen2004] 建议使用样本变差函数对 $\tau^2$ 作初步估计，然后计算关于 $\tau^2$ 的剖面似然函数曲线，或者协方差参数 $\phi,\tau^2$一起确定最佳的值，第 \@ref(applications) 章第 \@ref(case-rongelap) 节将用剖面似然函数曲面的方法获取真实数据场景中的参数估计值。
 
 ### 先验分布 {#subsec:prior-sglmm}
 
