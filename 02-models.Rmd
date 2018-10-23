@@ -18,7 +18,7 @@ Y = X^{\top}\beta + \epsilon, \mathsf{E}(\epsilon) = 0, \mathsf{Cov}(\epsilon) =
 \begin{equation}
 g(\mu) = X^{\top}\beta  (\#eq:GLM)
 \end{equation}
-\noindent 其中，$\mu \equiv \mathsf{E}(Y)$， $g$ 代表联系函数，特别地，当 $Y \sim \mathcal{N}(\mu,\sigma^2)$ 时，联系函数 $g(x) = x$，模型 \@ref(eq:GLM) 变为一般线性模型 \@ref(eq:LM)。当 $Y \sim \mathrm{Binomial}(n,p)$ 时，响应变量 $Y$ 的期望 $\mu =\mathsf{E}(Y) = np$， 联系函数 $g(x)=\ln(\frac{x}{1-x})$，模型 \@ref(eq:GLM) 变为$\log(\frac{p}{1-p})=X^{\top}\beta$。 当 $Y \sim \mathrm{Possion}(\lambda)$ 时，响应变量 $Y$ 的期望 $\mu =\mathsf{E}(Y) = \lambda$， 联系函数$g(x) = \ln(x)$， 模型 \@ref(eq:GLM) 变为 $\log(\lambda) = X^{\top}\beta$。 指数族下其余分布对应的联系函数此处不一一列举， 完整列表可以参看 1989 年 McCullagh 和 Nelder 所著的《广义线性模型》 [@McCullagh1989]。 模型 \@ref(eq:GLM) 最早由 Nelder 和 Wedderburn 在1972年提出[@Nelder1972]，它弥补了模型 \@ref(eq:LM) 的两个重要缺点： 一是因变量只能取连续值的情况， 二是期望与自变量只能用线性关系联系 [@Chen2011]。 求解广义线性模型 \@ref(eq:GLM) 的 R 函数是 `glm`， 常用拟似然法去估计模型 \@ref(eq:GLM) 的参数。
+\noindent 其中，$\mu \equiv \mathsf{E}(Y)$， $g$ 代表联系函数，特别地，当 $Y \sim \mathcal{N}(\mu,\sigma^2)$ 时，联系函数 $g(x) = x$，模型 \@ref(eq:GLM) 变为一般线性模型 \@ref(eq:LM)。当 $Y \sim \mathrm{Binomial}(n,p)$ 时，响应变量 $Y$ 的期望 $\mu =\mathsf{E}(Y) = np$， 联系函数 $g(x)=\ln(\frac{x}{1-x})$，模型 \@ref(eq:GLM) 变为$\log(\frac{p}{1-p})=X^{\top}\beta$。 当 $Y \sim \mathrm{Poisson}(\lambda)$ 时，响应变量 $Y$ 的期望 $\mu =\mathsf{E}(Y) = \lambda$， 联系函数$g(x) = \ln(x)$， 模型 \@ref(eq:GLM) 变为 $\log(\lambda) = X^{\top}\beta$。 指数族下其余分布对应的联系函数此处不一一列举， 完整列表可以参看 1989 年 McCullagh 和 Nelder 所著的《广义线性模型》 [@McCullagh1989]。 模型 \@ref(eq:GLM) 最早由 Nelder 和 Wedderburn 在1972年提出[@Nelder1972]，它弥补了模型 \@ref(eq:LM) 的两个重要缺点： 一是因变量只能取连续值的情况， 二是期望与自变量只能用线性关系联系 [@Chen2011]。 求解广义线性模型 \@ref(eq:GLM) 的 R 函数是 `glm`， 常用拟似然法去估计模型 \@ref(eq:GLM) 的参数。
 
 ## 广义线性混合效应模型 {#sec:Generalized-Linear-Mixed-Effects-Models}
 
@@ -76,7 +76,7 @@ knitr::include_graphics("figures/semi-variance.png")
 \rho_{0}(u)=\{2^{\kappa -1}\Gamma(\kappa)\}^{-1}(u)^{\kappa}\mathcal{K}_{\kappa}(u),u > 0 (\#eq:matern2)
 \end{equation}
 \noindent 其中，$\mathcal{K}_{\kappa}(\cdot)$ 是阶数为 $\kappa$ 的第二类修正的贝塞尔函数(详见第 \@ref(prepare) 章第\@ref(sec:modified-bessel-function) 节)， $\kappa(>0)$ 是平滑参数，满足这些条件的空间过程 $\mathcal{S}$ 是 $\lceil\kappa\rceil-1$ 次均方可微的。值得注意的是 Matérn 族其实包含幂指数族
-\noindent 当 $\kappa = 0.5$时，$\rho_{0}(u) = \exp(-u)$， $S(x)$ 均方连续但是不可微，当 $\kappa \to \infty$ 时， $\rho_{0}(u) = \exp(-u^2)$， $S(x)$ 无限次均方可微。
+\noindent 当 $\kappa = 0.5$时，$\rho_{0}(u) = \exp(-u)$， $S(x)$ 均方连续但是不可微，当 $\kappa \to \infty$ 时， $\rho_{0}(u) = \exp(-u^2)$， $S(x)$ 无限次均方可微[@Diggle2007]。
 
 在实际数据分析中，估计 $\kappa$ 时，为了节省计算，又不失一般性，经验做法是取离散的 $\kappa$ 值，如 $\kappa = 0.5, 1.5, 2.5$， 这样，平稳空间高斯过程就分别具有均方连续不可微、一次可微和二次可微三种不同程度的光滑性。根据第 \@ref(prepare) 章第 \@ref(sec:stationary-gaussian-process) 节定理 \@ref(thm:stationary-mean-square-properties)，自相关函数 $\rho(u)$ 的可微性表示了空间过程 $\mathcal{S}$ 的曲面平滑程度。为更加直观地观察 $\rho(u)$，作图 \@ref(fig:matern-2d) 和图 \@ref(fig:matern-3d)。
 
@@ -87,7 +87,7 @@ knitr::include_graphics(path = "figures/matern.png")
 knitr::include_graphics(path = "figures/matern-3d.png")
 ```
 
-从图上可以看出，相比于贝塞尔函数的阶 $\kappa$， 尺度参数 $\phi$ 对相关函数的影响大些，所以在实际应用中，先固定下 $\kappa$ 是可以接受的，所以为简化编程和描述，Peter J. Diggle 等 (1998年) [@Diggle1998] 在真实数据分析中使用幂指数型自相关函数 $\rho_{0}(u) = \exp(-(\alpha u)^{\delta}), \alpha > 0, 0 < \delta \leq 2$。 虽然其形式大大简化， 但函数图像和性质却与梅隆型有相似之处， 即当 $0 < \delta < 2$ 时， $S(x)$ 均方连续但不可微，当 $\delta = 2$ 时， $S(x)$ 无限次可微。
+从图\@ref(fig:matern-2d)可以看出，相比于贝塞尔函数的阶 $\kappa$， 尺度参数 $\phi$ 对相关函数的影响大些，由图\@ref(fig:matern-2d)看出随着空间距离的增加，相关性减弱地特别快。在实际应用中，先固定下 $\kappa$ 是可以接受的，为简化编程和表述，Peter J. Diggle 等 (1998年) [@Diggle1998] 在真实数据分析中使用幂指数型自相关函数 $\rho_{0}(u) = \exp(-(\alpha u)^{\delta}), \alpha > 0, 0 < \delta \leq 2$。 虽然其形式大大简化， 但函数图像和性质却与梅隆型有相似之处， 即当 $0 < \delta < 2$ 时， $S(x)$ 均方连续但不可微，当 $\delta = 2$ 时， $S(x)$ 无限次可微。
 
 ### 模型识别 {#subsec:identify}
 
