@@ -61,7 +61,7 @@ Table: (\#tab:common-characteristics) 指数族内常见的一元分布的共同
 
 |                   |      正态分布      |      泊松分布      |      二项分布      |
 | :---------------- | :----------------: | :----------------: | :----------------: | 
-|  记号             | $\mathcal{N}(\mu,\sigma^2)$  |       $\mathrm{Poisson}(\mu)$     |     $B(m,\pi)/m$   |
+|  记号             | $\mathcal{N}(\mu,\sigma^2)$  |       $\mathrm{Poisson}(\mu)$     |     $\mathrm{Binomial}(m,\pi)/m$   |
 |  $y$ 取值范围     | $(-\infty,\infty)$ |     $0(1)\infty$   |  $\frac{0(1)m}{m}$ |
 |  $\phi$           | $\phi = \sigma^2$  |         $1$        |        $1/m$       |
 |  $b(\theta)$      | $\theta^2/2$       |  $\exp(\theta)$    |$\log(1+e^{\theta})$|
