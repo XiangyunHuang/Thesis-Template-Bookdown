@@ -83,4 +83,4 @@ script:
 after_success:
   - make pdf
   - ./_deploy.sh
-  - netlify deploy --dir _book
+  - netlify deploy --prod --dir _book
