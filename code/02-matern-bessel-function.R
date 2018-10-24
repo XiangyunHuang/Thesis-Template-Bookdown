@@ -87,51 +87,53 @@ library(ggplot2)
 library(gridExtra)
 p1 <- ggplot(dat, aes(phi, kappa)) +
   geom_raster(aes(fill = value1)) +
-  scale_fill_distiller(palette = "Greys", guide = FALSE) +
-  labs(x = quote(bold(u) == 0.1), y = "")
+  scale_fill_distiller(palette = "Spectral", guide = FALSE) +
+  labs(x = quote(plain(u) == 0.1), y = "")
 
 p2 <- ggplot(dat, aes(phi, kappa)) +
   geom_raster(aes(fill = value2)) +
-  scale_fill_distiller(palette = "Greys", guide = FALSE) +
-  labs(x = quote(bold(u) == 0.5), y = "")
+  scale_fill_distiller(palette = "Spectral", guide = FALSE) +
+  labs(x = quote(plain(u) == 0.5), y = "")
 
 p3 <- ggplot(dat, aes(phi, kappa)) +
   geom_raster(aes(fill = value3)) +
-  scale_fill_distiller(palette = "Greys", guide = FALSE) +
-  labs(x = quote(bold(u) == 1.0), y = "")
+  scale_fill_distiller(palette = "Spectral", guide = FALSE) +
+  labs(x = quote(plain(u) == 1.0), y = "")
 
 p4 <- ggplot(dat, aes(phi, kappa)) +
   geom_raster(aes(fill = value4)) +
-  scale_fill_distiller(palette = "Greys", guide = FALSE) +
-  labs(x = quote(bold(u) == 1.5), y = "")
+  scale_fill_distiller(palette = "Spectral", guide = FALSE) +
+  labs(x = quote(plain(u) == 1.5), y = "")
 
 p5 <- ggplot(dat, aes(phi, kappa)) +
   geom_raster(aes(fill = value5)) +
-  scale_fill_distiller(palette = "Greys", guide = FALSE) +
-  labs(x = quote(bold(u) == 2.0), y = "")
+  scale_fill_distiller(palette = "Spectral", guide = FALSE) +
+  labs(x = quote(plain(u) == 2.0), y = "")
 
 p6 <- ggplot(dat, aes(phi, kappa)) +
   geom_raster(aes(fill = value6)) +
-  scale_fill_distiller(palette = "Greys", guide = FALSE) +
-  labs(x = quote(bold(u) == 2.5), y = "")
+  scale_fill_distiller(palette = "Spectral", guide = FALSE) +
+  labs(x = quote(plain(u) == 2.5), y = "")
 
 p7 <- ggplot(dat, aes(phi, kappa)) +
   geom_raster(aes(fill = value7)) +
-  scale_fill_distiller(palette = "Greys", guide = FALSE) +
-  labs(x = quote(bold(u) == 3.0), y = "")
+  scale_fill_distiller(palette = "Spectral", guide = FALSE) +
+  labs(x = quote(plain(u) == 3.0), y = "")
 
 p8 <- ggplot(dat, aes(phi, kappa)) +
   geom_raster(aes(fill = value8)) +
-  scale_fill_distiller(palette = "Greys", guide = FALSE) +
-  labs(x = quote(bold(u) == 3.5), y = "")
+  scale_fill_distiller(palette = "Spectral", guide = FALSE) +
+  labs(x = quote(plain(u) == 3.5), y = "")
 
 p9 <- ggplot(dat, aes(phi, kappa)) +
   geom_raster(aes(fill = value9)) +
-  scale_fill_distiller(palette = "Greys", guide = FALSE) +
-  labs(x = quote(bold(u) == 4.0), y = "")
+  scale_fill_distiller(palette = "Spectral", guide = FALSE) +
+  labs(x = quote(plain(u) == 4.0), y = "")
 # 默认按行排列
-grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, p9, nrow = 3, ncol = 3)
 
+pdf(file = "matern-3d.pdf",width = 6,height = 6)
+grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, p9, nrow = 3, ncol = 3)
+dev.off()
 
 
 #########################################################

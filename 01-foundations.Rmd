@@ -1,6 +1,6 @@
 # 基础知识 {#prepare}
 
-作为第 \@ref(models) 章统计模型和第 \@ref(algorithms) 章参数估计的知识准备，本章给出主要的知识点。第 \@ref(sec:exp) 节首先介绍指数族的一般形式，包含各成分的定义，特别给出正态分布、二项分布和泊松分布情形下均值函数、联系函数和方差函数等特征量。第 \@ref(sec:lse) 节给出线性模型下，设计矩阵保持正定时的最小二乘估计和加权最小二乘估计。第 \@ref(sec:def-mle) 节给出一般的极大似然估计的定义，相合性，以及在一定条件下的渐进正态性。第 \@ref(sec:stationary-gaussian-process) 节给出平稳高斯过程的定义，均方连续性和可微性的定义，以及判断可微性的一个充要条件。第 \@ref(sec:Laplace-approximation) 节介绍了拉普拉斯近似的一般方法。第 \@ref(sec:bayes-prior) 介绍了先验、后验分布和 Jeffreys 无信息先验分布。第 \@ref(sec:stan-samplers) 节首先从 Stan 的发展、内置算法设置以及与同类软件的比较等三方面介绍，然后以数据集 Eight Schools 为例子介绍 Stan 的使用，为空间广义线性混合效应模型的 Stan 实现作铺垫。
+作为第 \@ref(models) 章统计模型和第 \@ref(algorithms) 章参数估计的知识准备，本章给出主要的知识点。第 \@ref(sec:exp) 节首先介绍指数族的一般形式，包含各成分的定义，特别给出正态分布、二项分布和泊松分布情形下均值函数、联系函数和方差函数等特征量。第 \@ref(sec:lse) 节给出线性模型下，设计矩阵保持正定时的最小二乘估计和加权最小二乘估计。第 \@ref(sec:def-mle) 节给出极大似然估计的定义，相合性，以及在一定条件下的渐近正态性。第 \@ref(sec:stationary-gaussian-process) 节给出平稳高斯过程的定义，均方连续性和可微性的定义，以及判断可微性的一个充要条件。第 \@ref(sec:Laplace-approximation) 节介绍了拉普拉斯近似的一般方法。第 \@ref(sec:bayes-prior) 介绍了先验、后验分布和 Jeffreys 无信息先验分布。第 \@ref(sec:stan-samplers) 节首先从 Stan 的发展、内置算法设置以及与同类软件的比较等三方面介绍，然后以数据集 Eight Schools 为例子介绍 Stan 的使用，为空间广义线性混合效应模型的 Stan 实现作铺垫。
 
 ## 指数族 {#sec:exp}
 
@@ -49,9 +49,7 @@ a(\phi) = \phi, \quad b(\theta) = \theta^2/2, \quad c(y,\phi) = - \frac{1}{2}\{ 
 \[ 0 = - \frac{b''(\theta)}{a(\phi)} + \frac{\mathsf{Var}(Y)}{a^2(\phi)} \]
 \noindent 所以
 \[ \mathsf{Var}(Y) = b''(\theta)a(\phi) \]
-可见，$Y$ 的方差是两个函数的乘积，一个是 $b''(\theta)$， 它仅仅依赖典则参数，叫做方差函数，另一个是 $a(\phi)$，它独立于 $\theta$，仅仅依赖 $\phi$，方差函数可以看作是 $\mu$ 的函数，记作 $V(\mu)$。
-
-函数 $a(\phi)$ 通常形如
+可见，$Y$ 的方差是两个函数的乘积，一个是 $b''(\theta)$， 它仅仅依赖典则参数，叫做方差函数，方差函数可以看作是 $\mu$ 的函数，记作 $V(\mu)$。另一个是 $a(\phi)$，它独立于 $\theta$，仅仅依赖 $\phi$，函数 $a(\phi)$ 通常形如
 \[ a(\phi) = \phi/w \]
 \noindent 其中 $\phi$ 可由 $\sigma^2$ 表示，故而也叫做发散参数 （dispersion parameter），是一个与样本观察值相关的常数，$w$ 是已知的权重，随样本观察值变化。对正态分布模型而言，$w$ 的分量是 $m$ 个相互独立的样本观察值的均值，有 $a(\phi) = \sigma^2/m$，所以，$w = m$。
 
@@ -62,7 +60,7 @@ Table: (\#tab:common-characteristics) 指数族内常见的一元分布的共同
 |                   |      正态分布      |      泊松分布      |      二项分布      |
 | :---------------- | :----------------: | :----------------: | :----------------: | 
 |  记号             | $\mathcal{N}(\mu,\sigma^2)$  |       $\mathrm{Poisson}(\mu)$     |     $\mathrm{Binomial}(m,\pi)/m$   |
-|  $y$ 取值范围     | $(-\infty,\infty)$ |     $0(1)\infty$   |  $\frac{0(1)m}{m}$ |
+|  $y$ 取值范围     | $(-\infty,\infty)$ |     $0(1)\infty$   |  $0(1)m$ |
 |  $\phi$           | $\phi = \sigma^2$  |         $1$        |        $1/m$       |
 |  $b(\theta)$      | $\theta^2/2$       |  $\exp(\theta)$    |$\log(1+e^{\theta})$|
 | $c(y;\theta)$     | $-\frac{1}{2}\big( \frac{y^2}{\phi} + \log(2\pi\phi) \big)$  |   $-\log(y!)$    | $\log\binom{m}{my}$ |   
@@ -78,13 +76,13 @@ Table: (\#tab:common-characteristics) 指数族内常见的一元分布的共同
 \begin{equation}
 \mathsf{E}\mathbf{Y} = \mathbf{X}\boldsymbol{\beta}; \mathsf{Var}(\mathbf{Y}) = \sigma^2 \mathbf{I}_{n} (\#eq:linear-models)
 \end{equation}
-\noindent 其中， $\mathbf{Y}$ 为 $n \times 1$ 维观测向量， $\mathbf{X}$ 为已知的 $n \times p (p \leq n)$ 阶设计矩阵，$\boldsymbol{\beta}$ 为 $p \times 1$ 维未知参数，$\sigma^2$ 未知，$\mathbf{I}_{n}$ 为 $n$ 阶单位阵。
+\noindent 其中， $\mathbf{Y}$ 为 $n \times 1$ 维观测向量， $\mathbf{X}$ 为已知的 $n \times p (p \leq n)$ 维设计矩阵，$\boldsymbol{\beta}$ 为 $p \times 1$ 维未知参数，$\sigma^2$ 未知，$\mathbf{I}_{n}$ 为 $n$ 阶单位阵。
 ```{definition, label="least-squares-estimate", name="最小二乘估计", echo=TRUE}
 在模型 \@ref(eq:linear-models) 中，如果
 \begin{equation}
 (\mathbf{Y} - \mathbf{X}\hat{\boldsymbol{\beta}})^{\top}(\mathbf{Y} - \mathbf{X}\hat{\boldsymbol{\beta}}) = \min_{\beta}(\mathbf{Y} - \mathbf{X}\boldsymbol{\beta})^{\top}(\mathbf{Y} - \mathbf{X}\boldsymbol{\beta}) (\#eq:least-squares)
 \end{equation}
-\noindent 则称 $\hat{\boldsymbol{\beta}}$ 为 $\boldsymbol{\beta}$ 的最小二乘估计(简称 LSE)。
+\noindent 则称 $\hat{\boldsymbol{\beta}}$ 为 $\boldsymbol{\beta}$ 的最小二乘估计(简称 LSE)[@wang2004]。
 ```
 ```{theorem, label="unbiased", name="最小二乘估计", echo=TRUE}
 若模型  \@ref(eq:linear-models) 中的 $\mathbf{X}$ 是列满秩的矩阵，则 $\boldsymbol{\beta}$ 的最小二乘估计为
@@ -95,11 +93,11 @@ Table: (\#tab:common-characteristics) 指数族内常见的一元分布的共同
 \[
 \hat{\sigma^2}_{LS} = (\mathbf{Y} - \mathbf{X}\hat{\boldsymbol{\beta}}_{LS})^{\top}(\mathbf{Y} - \mathbf{X}\hat{\boldsymbol{\beta}}_{LS})/(n - p)
 \]
-若将模型  \@ref(eq:linear-models) 的条件 $\mathsf{Var}(\mathbf{Y}) = \sigma^2 \mathbf{I}_{n}$ 改为 $\mathsf{Var}(\mathbf{Y}) = \sigma^2 \mathbf{G}$， $G(>0)$ 为已知正定阵，则$\boldsymbol{\beta}$ 的最小二乘估计为
+若将模型  \@ref(eq:linear-models) 的条件 $\mathsf{Var}(\mathbf{Y}) = \sigma^2 \mathbf{I}_{n}$ 改为 $\mathsf{Var}(\mathbf{Y}) = \sigma^2 \mathbf{G}$， $\mathbf{G}(>0)$ 为已知正定阵，则$\boldsymbol{\beta}$ 的最小二乘估计为
 \[
-\tilde{\boldsymbol{\beta}}_{LS} = ( \mathbf{X}^{\top} G^{-1} \mathbf{X})^{-1} \mathbf{X}^{\top} G^{-1} \mathbf{Y} 
+\tilde{\boldsymbol{\beta}}_{LS} = ( \mathbf{X}^{\top} \mathbf{G}^{-1} \mathbf{X})^{-1} \mathbf{X}^{\top} \mathbf{G}^{-1} \mathbf{Y} 
 \]
-\noindent 称 $\tilde{\boldsymbol{\beta}}_{LS}$ 为广义最小二乘估计，特别地，当 $G = \mathrm{diag}(\sigma^2_{1},\ldots,\sigma^2_{n})$，$\sigma^2_{i},i = 1,\ldots,n$ 已知时，称 $\tilde{\boldsymbol{\beta}}_{LS}$ 为加权最小二乘估计。[@wang2004]
+\noindent 称 $\tilde{\boldsymbol{\beta}}_{LS}$ 为广义最小二乘估计，特别地，当 $\mathbf{G} = \mathrm{diag}(\sigma^2_{1},\ldots,\sigma^2_{n})$，$\sigma^2_{i},i = 1,\ldots,n$ 已知时，称 $\tilde{\boldsymbol{\beta}}_{LS}$ 为加权最小二乘估计。
 ```
 
 
@@ -110,7 +108,7 @@ Table: (\#tab:common-characteristics) 指数族内常见的一元分布的共同
 \[ L(\boldsymbol{\theta};\mathbf{x}) = kp(\mathbf{x};\boldsymbol{\theta}) \]
 \noindent 为 $\boldsymbol{\theta}$ 的似然函数，其中 $k > 0$ 是不依赖于 $\boldsymbol{\theta}$ 的量，常取 $k=1$。进一步，若存在 $(\mathbb{R}^n,\mathscr{P}_{\mathbb{R}^n})$ 到 $(\boldsymbol{\Theta},\mathscr{P}_{\boldsymbol{\Theta}})$ 的统计量 $\hat{\boldsymbol{\theta}}(\mathbf{x})$ 使
 \[ L(\hat{\boldsymbol{\theta}}(\mathbf{x});\mathbf{x}) = \sup_{\boldsymbol{\theta}} L(\boldsymbol{\theta};\mathbf{x}) \]
-\noindent 则 $\hat{\boldsymbol{\theta}}(\mathbf{x})$ 称为 $\boldsymbol{\theta}$ 的一个极大似然估计（简称 MLE）。
+\noindent 则 $\hat{\boldsymbol{\theta}}(\mathbf{x})$ 称为 $\boldsymbol{\theta}$ 的一个极大似然估计（简称 MLE）[@mao2006]。
 ```
 
 概率密度函数很多可以写成具有指数函数的形式，如指数族，采用似然函数的对数通常更为简便。称
@@ -122,22 +120,22 @@ Table: (\#tab:common-characteristics) 指数族内常见的一元分布的共同
 \noindent 的解。$p(\mathbf{x};\boldsymbol{\theta})$ 属于指数族时，似然方程组 \@ref(eq:likelihood-equations) 的解唯一。
 
 ```{theorem, label="consistency", name="相合性", echo=TRUE}
-设 $x_{1}, \ldots, x_{n}$ 是来自概率密度函数 $p(x;\theta)$ 的一个样本，叙述简单起见，考虑单参数情形，参数空间 $\boldsymbol{\Theta}$ 是一个开区间，$l(\theta;x) = \sum_{i=1}^{n}\ln p(x_{i};\theta)$。
+设 $x_{1}, \ldots, x_{n}$ 是来自概率密度函数 $p(\mathbf{x};\boldsymbol{\theta})$ 的一个样本，叙述简单起见，考虑单参数情形，参数空间 $\boldsymbol{\Theta}$ 是一个开区间，$l(\boldsymbol{\theta};\mathbf{x}) = \sum_{i=1}^{n}\ln p(x_{i};\boldsymbol{\theta})$。
 
-若 $\ln (p;\theta)$ 在 $\boldsymbol{\Theta}$ 上可微，且 $p(x;\theta)$ 是可识别的（即 $\forall \theta_1 \neq \theta_2, \{x: p(x;\theta_1) \neq p(x; \theta_2)\}$ 不是零测集），则似然方程 \@ref(eq:likelihood-equations) 在 $n \to \infty$ 时，以概率 $1$ 有解，且此解关于 $\theta$ 是相合的。
+若 $\ln (p;\boldsymbol{\theta})$ 在 $\boldsymbol{\Theta}$ 上可微，且 $p(\mathbf{x};\boldsymbol{\theta})$ 是可识别的（即 $\forall \boldsymbol{\theta}_1 \neq \boldsymbol{\theta}_2, \{\mathbf{x}: p(\mathbf{x};\boldsymbol{\theta}_1) \neq p(\mathbf{x}; \boldsymbol{\theta}_2)\}$ 不是零测集），则似然方程 \@ref(eq:likelihood-equations) 在 $n \to \infty$ 时，以概率 $1$ 有解，且此解关于 $\boldsymbol{\theta}$ 是相合的。
 ```
 
 ```{theorem, label="asymptotic-normality", name="渐近正态性", echo=TRUE}
-假设 $\boldsymbol{\Theta}$ 为开区间，概率密度函数 $p(x;\theta), \theta \in \boldsymbol{\Theta}$ 满足
+假设 $\boldsymbol{\Theta}$ 为开区间，概率密度函数 $p(\mathbf{x};\boldsymbol{\theta}), \boldsymbol{\theta} \in \boldsymbol{\Theta}$ 满足
 
-1. 在参数真值 $\theta_{0}$ 的邻域内，$\partial \ln p/\partial \theta, \partial^2 \ln p/\partial \theta^2, \partial^3 \ln p/\partial \theta^3$ 对所有的 $x$ 都存在；
-2. 在参数真值 $\theta_{0}$ 的邻域内，$| \partial^3 \ln p/\partial \theta^3 | \leq H(x)$，且 $\mathsf{E}H(x) < \infty$；
-3. 在参数真值 $\theta_{0}$ 处，
+1. 在参数真值 $\boldsymbol{\theta}_{0}$ 的邻域内，$\partial \ln p/\partial \boldsymbol{\theta}, \partial^2 \ln p/\partial \boldsymbol{\theta}^2, \partial^3 \ln p/\partial \boldsymbol{\theta}^3$ 对所有的 $\mathbf{x}$ 都存在；
+2. 在参数真值 $\boldsymbol{\theta}_{0}$ 的邻域内，$| \partial^3 \ln p/\partial \boldsymbol{\theta}^3 | \leq H(\mathbf{x})$，且 $\mathsf{E}H(\mathbf{x}) < \infty$；
+3. 在参数真值 $\boldsymbol{\theta}_{0}$ 处，
 
-$$\mathsf{E}_{\theta_{0}} \big[ \frac{ p'(x,\theta_{0}) }{ p(x,\theta_{0}) } \big] = 0, \quad
-\mathsf{E}_{\theta_{0}} \big[ \frac{ p''(x,\theta_{0}) }{ p(x,\theta_{0}) } \big] = 0, \quad
-I(\theta_{0}) = \mathsf{E}_{\theta_{0}} \big[ \frac{ p'(x,\theta_{0}) }{ p(x,\theta_{0}) } \big]^{2} > 0$$
-\noindent 其中撇号表示对 $\theta$ 的微分。记 $\hat{\theta}_{n}$ 为 $n \to \infty$ 时，似然方程组的相合解，则$\sqrt{n}(\hat{\theta}_{n} - \theta_{0}) \longrightarrow  \mathcal{N}(\mathbf{0},I^{-1}(\theta))$。
+$$\mathsf{E}_{\boldsymbol{\theta}_{0}} \big[ \frac{ p'(\mathbf{x},\boldsymbol{\theta}_{0}) }{ p(\mathbf{x},\boldsymbol{\theta}_{0}) } \big] = 0, \quad
+\mathsf{E}_{\boldsymbol{\theta}_{0}} \big[ \frac{ p''(\mathbf{x},\boldsymbol{\theta}_{0}) }{ p(\mathbf{x},\boldsymbol{\theta}_{0}) } \big] = 0, \quad
+I(\boldsymbol{\theta}_{0}) = \mathsf{E}_{\boldsymbol{\theta}_{0}} \big[ \frac{ p'(\mathbf{x},\boldsymbol{\theta}_{0}) }{ p(\mathbf{x},\boldsymbol{\theta}_{0}) } \big]^{2} > 0$$
+\noindent 其中撇号表示对 $\boldsymbol{\theta}$ 的微分。记 $\hat{\boldsymbol{\theta}}_{n}$ 为 $n \to \infty$ 时，似然方程组的相合解，则$\sqrt{n}(\hat{\boldsymbol{\theta}}_{n} - \boldsymbol{\theta}_{0}) \longrightarrow  \mathcal{N}(\mathbf{0},I^{-1}(\boldsymbol{\theta}))$。
 ```
 
 ## 平稳高斯过程 {#sec:stationary-gaussian-process}
@@ -153,7 +151,7 @@ I(\theta_{0}) = \mathsf{E}_{\theta_{0}} \big[ \frac{ p'(x,\theta_{0}) }{ p(x,\th
 \[ \lim_{h \to 0} \mathsf{E}\big[ \{S(x + h) - S(x)\}^{2} \big] = 0 \] 
 \noindent 则称 $S(x)$ 是均方连续（mean-square continuous）的。随机过程 $S(x)$ 满足
 \[ \lim_{h \to 0} \mathsf{E} \big[ \{ \frac{S(x+h) - S(x)}{h} - S'(x) \}^2 \big] = 0 \]
-\noindent 则称 $S(x)$ 是均方可微（mean-square differentiable）的，并且 $S'(x)$ 就是均方意义下的一阶导数。如果 $S'(x)$ 是均方可微的，则 $S(x)$ 是二次均方可微的，随机过程 $S(x)$ 的高阶均方可微性可类似定义。Bartlett （1955 年） [@Bartlett1955] 得到如下重要结论
+\noindent 则称 $S(x)$ 是均方可微（mean-square differentiable）的，并且 $S'(x)$ 就是均方意义下的一阶导数。如果 $S'(x)$ 是均方可微的，则 $S(x)$ 是二次均方可微的，随机过程 $S(x)$ 的高阶均方可微性可类似定义[@Diggle2007]。Bartlett （1955 年） [@Bartlett1955] 得到如下重要结论
 ```
 ```{theorem, label="stationary-mean-square-properties", name="平稳随机过程的可微性", echo=TRUE}
 自相关函数为 $\rho(u)$ 的平稳随机过程是 $k$ 次均方可微的，当且仅当 $\rho(u)$ 在 $u = 0$ 处是 $2k$ 次可微的。
@@ -204,7 +202,7 @@ knitr::include_graphics(path = "figures/bessel.png")
 
 ## 先验和后验分布 {#sec:bayes-prior}
 
-贝叶斯推断中，常涉及模型参数的先验、后验分布，以及一种特殊的无信息先验分布 --- Jeffreys 先验，下面分别给出它们的概念定义。
+贝叶斯推断中，常涉及模型参数的先验、后验分布，以及一种特殊的无信息先验分布 --- Jeffreys 先验，下面分别给出它们的概念定义[@mao2006]。
 
 ```{definition, label="prior-distribution", name="先验分布", echo=TRUE}
 参数空间 $\Theta$ 上的任一概率分布都称作先验分布 （prior distribution）。
@@ -233,41 +231,41 @@ p(\boldsymbol{\theta}|\mathbf{Y})  & =  & \displaystyle \frac{p(\boldsymbol{\the
 ```
 
 ```{definition, label="Jeffreys-prior-distribution", name="Jeffreys 先验分布", echo=TRUE}
-设 $\mathbf{x} = (x_1,\ldots,x_n)$ 是来自密度函数 $p(x|\theta)$ 的一个样本，其中 $\boldsymbol{\theta} = (\theta_1,\ldots,\theta_p)$ 是 $p$ 维参数向量。在对 $\boldsymbol{\theta}$ 无任何先验信息可用时， Jeffreys （1961年）利用变换群和 Harr 测度导出 $\boldsymbol{\theta}$ 的无信息先验分布可用 Fisher 信息阵的行列式的平方根表示。这种无信息先验分布常称为 Jeffreys 先验分布。其求取步骤如下：
+设 $\mathbf{x} = (x_1,\ldots,x_n)$ 是来自密度函数 $p(x|\boldsymbol{\theta})$ 的一个样本，其中 $\boldsymbol{\theta} = (\theta_1,\ldots,\theta_p)$ 是 $p$ 维参数向量。在对 $\boldsymbol{\theta}$ 无任何先验信息可用时， Jeffreys （1961年）利用变换群和 Harr 测度导出 $\boldsymbol{\theta}$ 的无信息先验分布可用 Fisher 信息阵的行列式的平方根表示。这种无信息先验分布常称为 Jeffreys 先验分布。其求取步骤如下：
 ```
-1. 写出样本的对数似然函数 $l(\boldsymbol{\theta}|x) = \sum_{i=1}^{n}\ln p(x_i | \theta)$； 
+1. 写出样本的对数似然函数 $l(\boldsymbol{\theta}|x) = \sum_{i=1}^{n}\ln p(x_i | \boldsymbol{\theta})$； 
 2. 算出参数 $\boldsymbol{\theta}$ 的 Fisher 信息阵 $$\mathbf{I}(\boldsymbol{\theta}) = \mathsf{E}_{x|\theta} \big( - \frac{\partial^2 l}{\partial \theta_i \partial \theta_j} \big)_{i,j=1,\ldots,p}$$ 在单参数场合， $\mathbf{I}(\theta) = \mathsf{E}_{x|\theta} \big( - \frac{\partial^2 l}{\partial \theta^2} \big)$；
-3. $\boldsymbol{\theta}$ 的无信息先验密度函数为 $\pi(\boldsymbol{\theta}) = [\det \mathbf{I}(\theta) ]^{1/2}$，在单参数场合， $\pi(\theta) = [\mathbf{I}(\theta) ]^{1/2}$。
+3. $\boldsymbol{\theta}$ 的无信息先验密度函数为 $\pi(\boldsymbol{\theta}) = [\det \mathbf{I}(\theta) ]^{1/2}$，在单参数场合， $\pi(\boldsymbol{\theta}) = [\mathbf{I}(\theta) ]^{1/2}$。
 
 ## 常用贝叶斯估计 {#bayes-estimates}
 
 ```{theorem, label="bayes-estimate-square", name = "平方损失", echo=TRUE}
-在给定先验分布 $\pi(\theta)$ 和平方损失 $L(\theta,\delta) = (\delta - \theta)^2$ 下，$\theta$ 的贝叶斯估计 $\delta^{\pi}(x)$ 为后验分布 $\pi(\theta|x)$ 的均值，即 $\delta^{\pi}(x) = \mathsf{E}(\theta|x)$。
+在给定先验分布 $\pi(\boldsymbol{\theta})$ 和平方损失 $L(\boldsymbol{\theta},\boldsymbol{\delta}) = (\boldsymbol{\delta} - \boldsymbol{\theta})^2$ 下，$\boldsymbol{\theta}$ 的贝叶斯估计 $\boldsymbol{\delta}^{\pi}(x)$ 为后验分布 $\pi(\boldsymbol{\theta}|x)$ 的均值，即 $\boldsymbol{\delta}^{\pi}(x) = \mathsf{E}(\boldsymbol{\theta}|x)$。
 ```
 
 ```{theorem, label="bayes-estimate-01", name="0 - 1 损失", echo=TRUE}
-在给定先验分布 $\pi(\theta)$ 和 $0$ - $1$ 损失函数
+在给定先验分布 $\pi(\boldsymbol{\theta})$ 和 $0$ - $1$ 损失函数
 
 \begin{equation*}
-L(\theta,\delta) = 
+L(\boldsymbol{\theta},\boldsymbol{\delta}) = 
 \begin{cases}
-1, & | \delta - \theta| \leq \epsilon \\
-0, & | \delta - \theta| > \epsilon
+1, & | \boldsymbol{\delta} - \boldsymbol{\theta}| \leq \epsilon \\
+0, & | \boldsymbol{\delta} - \boldsymbol{\theta}| > \epsilon
 \end{cases}
 \end{equation*}
 
-当 $\epsilon$ 较小时，$\theta$ 的贝叶斯估计$\delta^{\pi}(x)$为后验分布 $\pi(\theta|x)$ 的众数。
+当 $\epsilon$ 较小时，$\boldsymbol{\theta}$ 的贝叶斯估计$\boldsymbol{\delta}^{\pi}(x)$为后验分布 $\pi(\boldsymbol{\theta}|x)$ 的众数。
 ```
 
 ```{theorem, label="bayes-estimate-abs", name= "绝对值损失", echo=TRUE}
-在给定先验分布 $\pi(\theta)$ 和绝对损失函数 $L(\theta,\delta) = |\delta - \theta|$ 下，$\theta$ 的贝叶斯估计 $\delta^{\pi}(x)$ 为后验分布 $\pi(\theta|x)$ 的中位数。
+在给定先验分布 $\pi(\boldsymbol{\theta})$ 和绝对损失函数 $L(\boldsymbol{\theta},\boldsymbol{\delta}) = |\boldsymbol{\delta} - \boldsymbol{\theta}|$ 下，$\boldsymbol{\theta}$ 的贝叶斯估计 $\boldsymbol{\delta}^{\pi}(x)$ 为后验分布 $\pi(\boldsymbol{\theta}|x)$ 的中位数。
 ```
 
-评价贝叶斯估计 $\delta^{\pi}(x)$ 的精度常用后验均方误差
-$$\mathsf{MSE}(\delta^{\pi}|x) = \mathsf{E}_{\theta|x}(\delta^{\pi} - \theta)^2$$
-表示，或用其平方根$[\mathsf{MSE}(\delta^{\pi}|x)]^{1/2}$ （称为标准误）表示。容易算得
-$$\mathsf{MSE}(\delta^{\pi}|x) = \mathsf{Var}(\delta^{\pi}|x) + [\delta^{\pi}(x) - \mathsf{E}(\theta|x)]^2$$
-可见，当贝叶斯估计$\delta^{\pi}(x)$为后验均值时，贝叶斯估计的精度就用$\delta^{\pi}$的后验方差$\mathsf{Var}(\delta^{\pi}|x)$ 表示，或用后验标准差 $[\mathsf{Var}(\delta^{\pi}|x)]^{1/2}$ 表示 [@mao2006]。
+评价贝叶斯估计 $\boldsymbol{\delta}^{\pi}(x)$ 的精度常用后验均方误差
+$$\mathsf{MSE}(\boldsymbol{\delta}^{\pi}|x) = \mathsf{E}_{\boldsymbol{\theta}|x}(\boldsymbol{\delta}^{\pi} - \boldsymbol{\theta})^2$$
+表示，或用其平方根$[\mathsf{MSE}(\boldsymbol{\delta}^{\pi}|x)]^{1/2}$ （称为标准误）表示。容易算得
+$$\mathsf{MSE}(\boldsymbol{\delta}^{\pi}|x) = \mathsf{Var}(\boldsymbol{\delta}^{\pi}|x) + [\boldsymbol{\delta}^{\pi}(x) - \mathsf{E}(\boldsymbol{\theta}|x)]^2$$
+可见，当贝叶斯估计$\boldsymbol{\delta}^{\pi}(x)$为后验均值时，贝叶斯估计的精度就用$\boldsymbol{\delta}^{\pi}$的后验方差$\mathsf{Var}(\boldsymbol{\delta}^{\pi}|x)$ 表示，或用后验标准差 $[\mathsf{Var}(\boldsymbol{\delta}^{\pi}|x)]^{1/2}$ 表示 [@mao2006]。
 
 ## 蒙特卡罗积分 {#Curse-of-Dimensionality}
 
@@ -277,7 +275,7 @@ $$\mathsf{MSE}(\delta^{\pi}|x) = \mathsf{Var}(\delta^{\pi}|x) + [\delta^{\pi}(x)
 
 现在，考虑 $N$ 维超立方体的内切球，我们把它称为 $N$ 维超球，它的中心在原点，半径是 $\frac{1}{2}$。我们说点 $y$ 在超球内，意味着它到原点的距离小于半径，即 $\| y \| < \frac{1}{2}$。一维情形下，超球是从的线，包含了整个超立方体。二维情形下，超球是中心在原点，半径为 $\frac{1}{2}$ 的圆。三维情形下，超球是立方体的内切球。已知单位超立方体的体积是1，但是其内的内切球的体积是多少呢？我们已经学过如何去定义一个积分计算半径为 $r$ 的二维球（即圆）的体积（即面积）是 $\pi r^2$，三维情形下，内切球是 $\frac{4}{3}\pi r^3$。但是更高维的欧式空间里，内切球的体积是多少呢？
 
-在这种简单的体积积分设置下，当然可以去计算越来越复杂的多重积分，但是这里介绍采样的方法去计算积分，即所谓的蒙特卡罗方法，由梅特罗波利斯 （Nicholas Metropolis），冯$\cdot$诺依曼 （John von Neumann） 和乌拉姆 （Stanislaw Ulam） 等在美国核武器研究实验室创立，当时正值二战期间，为了研制原子弹，出于保密的需要，与随机模拟相关的技术就代号蒙特卡罗。现在，蒙特卡罗方法占据现代统计计算的核心地位，特别是与贝叶斯相关的领域。
+在这种简单的体积积分设置下，当然可以去计算越来越复杂的多重积分，但是这里介绍采样的方法去计算积分，即所谓的蒙特卡罗方法，由梅特罗波利斯，冯$\cdot$诺依曼和乌拉姆等在美国核武器研究实验室创立，当时正值二战期间，为了研制原子弹，出于保密的需要，与随机模拟相关的技术就代号蒙特卡罗。现在，蒙特卡罗方法占据现代统计计算的核心地位，特别是与贝叶斯相关的领域。
 
 用蒙特卡罗方法去计算单位超立方体内的超球，首先需要在单位超立方体内产生随机点，然后计算落在超球内的点的比例，即超球的体积。随着点的数目增加，估计的体积会收敛到真实的体积。因为这些点都独立同均匀分布，根据中心极限定理，误差下降的比率是 $\mathcal{O}\left( 1 / \sqrt{n} \right)$，这也意味着每增加一个小数点的准确度，样本量要增加 100 倍。
 
@@ -291,7 +289,7 @@ Table: (\#tab:calculate-volume-of-hyperball) 前 10 维单位超立方体内切�
 
 ## Stan 简介  {#sec:stan-samplers}
 
-在上世纪 40\~50 年代，由梅特罗波利斯 （Nicholas Metropolis），冯$\cdot$诺依曼 （John von Neumann） 和乌拉姆 （Stanislaw Ulam） 创立蒙特卡罗方法，为了纪念乌拉姆，Stan 就以他的名字命名。Stan 是一门基于 C++ 的概率编程语言，主要用于贝叶斯推断，它的代码完全[开源][stan]的，托管在 [Github][stan-dev] 上，自 2012 年 8 月 30 日发布第一个 1.0 版本以来，截至写作时间已发布 33 个版本，目前最新版本是 2.18.0。使用 Stan，用户需提供数据、Stan 代码写的脚本模型，编译 Stan 写的程序，然后与数据一起运行，模型参数的后验模拟过程是自动实现的。除了可以在命令行环境下编译运行 Stan 脚本中写模型外，Stan 还提供其他编程语言的接口，如 R、Python、Matlab、Mathematica、Julia 等等，这使得熟悉其他编程语言的用户可以方便地调用和分析数据。但是，与 Python、R等 这类解释型编程语言不同， Stan 代码需要先翻译成 C++ 代码，然后使用系统编译器 （如 GCC） 编译，若使用 R 语言接口，编译后的动态链接库可以载入 R 内存中，再被其他 R 函数调用执行。
+在上世纪 40\~50 年代，由梅特罗波利斯，冯$\cdot$诺依曼和乌拉姆 （Stanislaw Ulam） 创立蒙特卡罗方法，为了纪念乌拉姆，Stan 就以他的名字命名。Stan 是一门基于 C++ 的概率编程语言，主要用于贝叶斯推断，它的代码完全[开源][stan]的，托管在 [Github][stan-dev] 上，自 2012 年 8 月 30 日发布第一个 1.0 版本以来，截至写作时间已发布 33 个版本，目前最新版本是 2.18.0。使用 Stan，用户需提供数据、Stan 代码写的脚本模型，编译 Stan 写的程序，然后与数据一起运行，模型参数的后验模拟过程是自动实现的。除了可以在命令行环境下编译运行 Stan 脚本中写模型外，Stan 还提供其他编程语言的接口，如 R、Python、Matlab、Mathematica、Julia 等等，这使得熟悉其他编程语言的用户可以方便地调用和分析数据。但是，与 Python、R等 这类解释型编程语言不同， Stan 代码需要先翻译成 C++ 代码，然后使用系统编译器 （如 GCC） 编译，若使用 R 语言接口，编译后的动态链接库可以载入 R 内存中，再被其他 R 函数调用执行。
 
 随机模拟的前提是有能产生高质量高效的伪随机数发生器，只有周期长，生成速度快，能通过一系列统计检验的伪随机数才能用作统计模拟，Stan 内置了 Mersenne-Twister 发生器，它的周期长达 \(2^{19937}-1\)，通过了一系列严格的检验，被广泛采用到现代软件中，如 Octave 和 Matlab 等 [@Huang2017COS]。除了 Mersenne Twister 随机数发生器，Stan 还使用了 [Boost C++][boost-cpp] 和 [Eigen C++][eigen-cpp] 等模版库用于线性代数计算，这样的底层设计路线使得 Stan 的运算效率很高。 
 

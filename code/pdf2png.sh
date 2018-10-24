@@ -1,5 +1,5 @@
 # PDF 转 PNG 格式
-convert -quality 100 -density 300x300 figures/matern.pdf figures/matern.png
+convert -quality 100 -density 300x300 figures/matern-3d.pdf figures/matern-3d.png
 convert -quality 100 -density 300x300 figures/map-loaloa.pdf figures/map-loaloa.png
 
 convert -quality 100 -density 300x300 figures/bessel.pdf figures/bessel.png

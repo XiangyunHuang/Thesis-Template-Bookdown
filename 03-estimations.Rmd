@@ -14,7 +14,7 @@
 \begin{equation}
 L(\boldsymbol{\psi};\mathbf{y}) = \int \prod_{i=1}^{n} f(y_i|u_i;\boldsymbol{\beta})\phi_{n}(\mathbf{u};0,\Sigma_{\boldsymbol{\theta}})\mathrm{d}\mathbf{u} (\#eq:likelihood-function-1)
 \end{equation}
-\noindent 其中 $\boldsymbol{\psi} = (\boldsymbol{\beta},\boldsymbol{\theta})$ 是 SGLMM 模型的参数， $\phi_{n}(\cdot;0,\Sigma_{\boldsymbol{\theta}})$ 表示 $n$ 元正态密度函数，其均值为 $\mathbf{0}$， 协方差矩阵为 $\Sigma_{\boldsymbol{\theta}} = (c_{ij}) = (C(s_i - s_j; \boldsymbol{\theta})), i,j = 1, \ldots, n$。 边际似然函数 \@ref(eq:likelihood-function-1) 几乎总是卷入一个难以处理的积分，这是主要面临的问题，并且计算量随观测 $y_i$ 的数量增加，因为此积分的维数等于观测点的个数。
+\noindent 其中 $\boldsymbol{\psi} = (\boldsymbol{\beta},\boldsymbol{\theta})$ 是 SGLMM 模型的参数， $\phi_{n}(\cdot;0,\Sigma_{\boldsymbol{\theta}})$ 表示 $n$ 元正态密度函数，其均值为 $\mathbf{0}$， 协方差矩阵为 $\Sigma_{\boldsymbol{\theta}} = (c_{ij}) = (C(s_i - s_j; \boldsymbol{\theta})), i,j = 1, \ldots, n$。 边际似然函数 \@ref(eq:likelihood-function-1) 几乎总是卷入一个难以处理的积分，这是主要面临的问题，并且计算量随观测 $y_i$ 的数量增加，因为此积分的维数等于观测点的个数[@Diggle2007]。
 
 再从贝叶斯方法的角度来看 SGLMM 模型， 令 $\mathbf{y} = (y(s_1),\ldots,y(s_n))'$ 表示观测值， $\pi(\boldsymbol{\psi})$ 表示模型参数的联合先验密度，那么联合后验密度为
 \begin{equation}
@@ -27,9 +27,9 @@ m(\mathbf{y}) &= \int f(\mathbf{y|\mathbf{u}, \boldsymbol{\psi}})\phi_{n}(\mathb
 
 ## 剖面似然估计 {#sec:profile-likelihood}
 
-极大似然估计是一种被广泛接受的参数估计方法，因其优良的大样本性质，在宽松的正则条件下，极大似然估计服从渐进正态分布，满足无偏性，而且是有效的估计。为了叙述方便，似然函数能有显式表达式，考虑空间线性混合效应模型，即响应变量服从正态分布的情况，以此来介绍剖面似然估计 （profile likelihood estimate）。
+极大似然估计是一种被广泛接受的参数估计方法，因其优良的大样本性质，在宽松的正则条件下，极大似然估计服从渐近正态分布，满足无偏性，而且是有效的估计。为了叙述方便，似然函数能有显式表达式，考虑空间线性混合效应模型，即响应变量服从正态分布的情况，以此来介绍剖面似然估计 （profile likelihood estimate）[@Diggle2007]。
 \begin{equation}
-\mathbf{y} \sim \mathcal{N}(D\boldsymbol{\beta},\sigma^2 \mathbf{R}(\phi) + \tau^2\mathbf{I})
+\mathbf{Y} \sim \mathcal{N}(D\boldsymbol{\beta},\sigma^2 \mathbf{R}(\phi) + \tau^2\mathbf{I})
 (\#eq:gaussian-model)
 \end{equation}
 \noindent 其中， $D$ 是 $n \times p$ 的观测数据矩阵，$\boldsymbol{\beta}$ 是相应的回归参数向量，$\mathbf{R}$ 依赖于 $\phi$，$\phi$ 可能含有多个参数。模型 \@ref(eq:gaussian-model) 的对数似然函数
@@ -37,7 +37,7 @@ m(\mathbf{y}) &= \int f(\mathbf{y|\mathbf{u}, \boldsymbol{\psi}})\phi_{n}(\mathb
 \begin{aligned}
 L(\boldsymbol{\beta},\tau^2,\sigma^2,\phi) = {} 
  & - 0.5\{ n\log(2\pi) + \log\{|(\sigma^2\mathbf{R}(\phi)+\tau^2\mathbf{I})|\} \\
- & + (\mathbf{y} - D\boldsymbol{\beta})^{\top}(\sigma^2\mathbf{R}(\phi)+\tau^2\mathbf{I})^{-1}(\mathbf{y} - D\boldsymbol{\beta}) \}  
+ & + (\mathbf{Y} - D\boldsymbol{\beta})^{\top}(\sigma^2\mathbf{R}(\phi)+\tau^2\mathbf{I})^{-1}(\mathbf{Y} - D\boldsymbol{\beta}) \}  
 \end{aligned} (\#eq:gauss-log-lik)
 \end{equation}
 \noindent 极大化 \@ref(eq:gauss-log-lik) 式就是求模型 \@ref(eq:gaussian-model) 参数的极大似然估计，极大化对数似然的过程分步如下：
@@ -46,8 +46,8 @@ L(\boldsymbol{\beta},\tau^2,\sigma^2,\phi) = {}
 2. 给定 $V$，对数似然函数 \@ref(eq:gauss-log-lik) 在
    \begin{equation}
    \begin{aligned}
-      \hat{\boldsymbol{\beta}}(V) & =  (D^{\top} V^{-1} D)^{-1} D^{\top} V^{-1}\mathbf{y} \\
-      \hat{\sigma}^2(V)           & =  n^{-1} \{\mathbf{y} - D\hat{\boldsymbol{\beta}}(V)\}^{\top} V^{-1} \{\mathbf{y} - D\hat{\boldsymbol{\beta}}(V)\}
+      \hat{\boldsymbol{\beta}}(V) & =  (D^{\top} V^{-1} D)^{-1} D^{\top} V^{-1}\mathbf{Y} \\
+      \hat{\sigma}^2(V)           & =  n^{-1} \{\mathbf{Y} - D\hat{\boldsymbol{\beta}}(V)\}^{\top} V^{-1} \{\mathbf{Y} - D\hat{\boldsymbol{\beta}}(V)\}
    \end{aligned} (\#eq:beta-sigma)
    \end{equation}
   取得极大值；
@@ -87,9 +87,9 @@ $R(\mathbf{x};\phi)$ 是具有单位方差的平稳空间高斯过程，其自�
 \begin{equation}
 L(\boldsymbol{\theta};\mathbf{y}) = \int_{\mathbb{R}^n} [\mathbf{Y(x)}|S(\mathbf{x})][S(\mathbf{x})]\mathrm{d}S(\mathbf{x}) (\#eq:marginal-likelihood)
 \end{equation}
-\noindent 其中，符号 $[\cdot]$ 表示某某的分布，一般地，边际似然函数$L(\boldsymbol{\theta};\mathbf{y})$包含两个分布的乘积和随机效应的积分，并且这个积分无法显式的表示，第一个分布是观测变量 $\mathbf{Y}$ 的抽样分布，第二个分布是多元高斯分布。一个特殊的情况是 $\mathbf{Y}$ 也假设服从多元高斯分布，这时积分有显式表达式。
+\noindent 其中，符号 $[\cdot]$ 表示随机变（向）量的分布，一般地，边际似然函数$L(\boldsymbol{\theta};\mathbf{y})$包含两个分布的乘积和随机效应的积分，并且这个积分无法显式的表示，第一个分布是观测变量 $\mathbf{Y}$ 的抽样分布，第二个分布是多元高斯分布。一个特殊的情况是 $\mathbf{Y}$ 也假设服从多元高斯分布，这时积分有显式表达式。
 
-边际似然函数 \@ref(eq:marginal-likelihood) 卷入的数值积分是充满挑战的，因为积分的维数 $n$ 是观测值的数目，所以像二次、高斯--埃尔米特或适应性高斯--埃尔米特数值积分方式都是不可用的。Tierney 和 Kadane （1986 年）提出拉普拉斯近似方法 [@Tierney1986]，它在纵向数据分析中被大量采用 [@Diggle2002Analysis]。总之，对空间广义线性混合效应模型而言，拉普拉斯近似还可以继续采用，想法是近似边际似然函数中的高维 $(n > 3)$ 积分，获得一个易于处理的表达式，有了积分的显式表达式，就可以用数值的方法求边际似然函数的极大值。拉普拉斯方法即用如下方式近似 \@ref(eq:marginal-likelihood) 中的积分
+边际似然函数 \@ref(eq:marginal-likelihood) 卷入的数值积分是充满挑战的，因为积分的维数 $n$ 是观测值的数目，所以像二次、高斯-埃尔米特或适应性高斯-埃尔米特数值积分方式都是不可用的，Tierney 和 Kadane （1986 年）提出拉普拉斯近似方法 [@Tierney1986]，它在纵向数据分析中被大量采用 [@Diggle2002Analysis]。总之，对空间广义线性混合效应模型而言，拉普拉斯近似还可以继续采用，想法是近似边际似然函数中的高维 $(n > 3)$ 积分，获得一个易于处理的表达式，有了积分的显式表达式，就可以用数值的方法求边际似然函数的极大值。拉普拉斯方法即用如下方式近似 \@ref(eq:marginal-likelihood) 中的积分
 \begin{equation}
 I   =  \int_{\mathbb{R}^n} \exp\{Q(\mathbf{s})\}\mathrm{d}\mathbf{s} 
   \approx  (2\pi)^{n/2} |-Q''(\hat{\mathbf{s}})|^{-1/2}\exp\{Q(\hat{\mathbf{s}})\} (\#eq:laplace-approximate)
@@ -125,7 +125,7 @@ Q(S(\mathbf{x})) ={} &  \mathbf{y}^{\top} (D \boldsymbol{\beta} + S(\mathbf{x}))
 Q'(\mathbf{s})& =  \{\mathbf{y} - b'(D\boldsymbol{\beta} + \mathbf{s}) \}^{\top} - \mathbf{s}^{\top}\Sigma^{-1} (\#eq:first-deriv) \\
 Q''(\mathbf{s})& =  -\mathrm{diag} \{b''(D\boldsymbol{\beta} + \mathbf{s}) \} - \Sigma^{-1} (\#eq:second-deriv)
 \end{align}
-\noindent 用拉普拉斯方法近似的对数似然$\ell(\boldsymbol{\theta};\mathbf{y})$如下
+\noindent 用拉普拉斯方法近似的对数似然$\ell(\boldsymbol{\theta};\mathbf{y})$
 \begin{equation}
 \begin{aligned}
 \ell(\boldsymbol{\theta};\mathbf{y}) = {} & \frac{n}{2}\log (2\pi) -\frac{1}{2}\log | -\mathrm{diag} \{b''(D\boldsymbol{\beta} + \mathbf{s}) \} - \Sigma^{-1} |  \\
