@@ -26,7 +26,7 @@ g(\mu) = X^{\top}\beta  (\#eq:GLM)
 \begin{equation}
 g(\mu) = X^{\top}\boldsymbol{\beta} + Z^{\top}\mathbf{b}  (\#eq:GLMM)
 \end{equation}
-\noindent 其中， $Z^{\top}$ 是 $q$ 维随机效应 $\mathbf{b}$ 的 $n \times q$ 的数据矩阵，其它符号含义如前所述。广义线性混合效应模型中既包含固定效应 $\boldsymbol{\beta}$ 又包含随机效应 $\mathbf{b}$ 。 线性模型 \@ref(eq:LM) 和广义线性模型 \@ref(eq:GLM) 中的协变量都是固定效应， 而随机效应是那些不能直接观察到的潜效应， 但是对响应变量却产生显著影响。 特别是在基因变异位点与表现型的关系研究中， 除了用最新科技做全基因组扫描获取显著的基因位点， 还应该把那些看似不显著， 联合在一起却显著的位点作为随机效应去考虑 [@Yang2010Common]。求解模型 \@ref(eq:GLMM)的 R 包有 **nlme** ，**mgcv**  和 **lme4**， 参数估计的方法一般有限制极大似然法。 除了求解模型 \@ref(eq:GLMM) 外， **nlme** 可以拟合一些非线性混合效应模型， **mgcv** 可以拟合广义可加混合效应模型， **lme4** 使用了高性能的 Eigen 数值代数库，可以加快模型的求解过程。
+\noindent 其中， $Z^{\top}$ 是 $q$ 维随机效应 $\mathbf{b}$ 的 $n \times q$ 的数据矩阵，其它符号含义如前所述。广义线性混合效应模型中既包含固定效应 $\boldsymbol{\beta}$ 又包含随机效应 $\mathbf{b}$ 。 线性模型 \@ref(eq:LM) 和广义线性模型 \@ref(eq:GLM) 中的协变量都是固定效应， 而随机效应是那些不能直接观察到的潜效应， 但是对响应变量却产生显著影响。 特别是在基因变异位点与表现型的关系研究中， 除了用最新科技做全基因组扫描获取显著的基因位点， 还应该把那些看似不显著， 联合在一起却显著的位点作为随机效应去考虑 [@Yang2010Common]。求解模型 \@ref(eq:GLMM)的 R 包有 nlme ，mgcv  和 lme4， 参数估计的方法一般有限制极大似然法。 除了求解模型 \@ref(eq:GLMM) 外， nlme 可以拟合一些非线性混合效应模型， mgcv 可以拟合广义可加混合效应模型， lme4 使用了高性能的 Eigen 数值代数库，可以加快模型的求解过程。
 
 ## 空间广义线性混合效应模型 {#sec:Spatial-Generalized-linear-mixed-effects-models}
 
