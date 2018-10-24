@@ -1,6 +1,6 @@
 # 数值模拟 {#simulations}
 
-空间广义线性混合效应模型在广义线性混合效应模型基础上添加了与空间位置相关的随机效应，这种随机效应在文献中常称为空间效应 [@Diggle1998]。 它与采样点的位置、数量都有关系， 其中采样点的位置决定空间过程的协方差结构， 而采样点的数量决定空间效应的维度，从而导致空间广义线性混合效应模型比普通的广义线性混合效应模型复杂。作为过渡，我们在第 \@ref(sim-one-gp) 和 \@ref(sim-two-gp) 节模拟了一维和二维平稳高斯过程。 第 \@ref(sim-sglmm) 节模拟 SGLMM 模型， 分两个小节展开叙述，第 \@ref(sim-binomal-sglmm) 小节模拟响应变量服从二项分布的情形，  第 \@ref(possion-sglmm) 小节模拟响应变量服从泊松分布的情形，在这两个小节里，比较了贝叶斯 MCMC 算法和贝叶斯 STAN-MCMC 算法的表现，前者基于 R 包 **geoRglm** 内置的 Langevin-Hastings 算法实现，后者基于 Stan 内置的 HMC 算法实现，贝叶斯 STAN-MCMC 算法相当于是一次适应于 SGLMM 模型的二次开发，并且基于 Stan 平台。
+空间广义线性混合效应模型在广义线性混合效应模型基础上添加了与空间位置相关的随机效应，这种随机效应在文献中常称为空间效应 [@Diggle1998]。 它与采样点的位置、数量都有关系， 其中采样点的位置决定空间过程的协方差结构， 而采样点的数量决定空间效应的维度，从而导致空间广义线性混合效应模型比普通的广义线性混合效应模型复杂。作为过渡，我们在第 \@ref(sim-one-gp) 和 \@ref(sim-two-gp) 节模拟了一维和二维平稳高斯过程。 第 \@ref(sim-sglmm) 节模拟 SGLMM 模型， 分两个小节展开叙述，第 \@ref(sim-binomal-sglmm) 小节模拟响应变量服从二项分布的情形，  第 \@ref(possion-sglmm) 小节模拟响应变量服从泊松分布的情形，在这两个小节里，比较了贝叶斯 MCMC 算法和贝叶斯 STAN-MCMC 算法的表现，前者基于 R 包 geoRglm 内置的 Langevin-Hastings 算法实现，后者基于 Stan 内置的 HMC 算法实现，贝叶斯 STAN-MCMC 算法相当于是一次适应于 SGLMM 模型的二次开发，并且基于 Stan 平台。
 
 ## 平稳空间高斯过程 {#spatial-gaussian-processes}
 
@@ -62,7 +62,7 @@ knitr::include_graphics(path = c(
 
 二维情形下，在规则平面上模拟平稳高斯过程 $\mathcal{S} = S(x), x \in \mathbb{R}^2$， 其均值向量为零向量 $\mathbf{0}$， 协方差函数为指数型，见公式 \@ref(eq:cov-exp)，协方差参数 $\phi = 1, \sigma^2 = 1$。在单位平面区域为 $[0,1] \times [0,1]$ 模拟服从上述二维平稳空间高斯过程，不妨将此区域划分为 $6 \times 6$ 的小网格，而每个格点作为采样的位置，共计 36个采样点，在这些采样点上的观察值即为目标值 $S(x)$。 
 
-类似本章第 \@ref(sim-one-gp) 节模拟一维平稳空间过程的步骤， 首先根据采样点位置坐标和协方差函数 \@ref(eq:cov-exp) 计算得目标空间过程的 $\mathcal{S}$ 协方差矩阵 $G$，然后使用 R 包 **MASS** 提供的 `mvrnorm` 函数产生多元正态分布随机数，与 \@ref(sim-one-gp) 节不同的是这里采用特征值分解，即 $G = L\Lambda L^{\top}$，与 Cholesky 分解相比，特征值分解更稳定些，但是 Cholesky 分解更快，Stan 即采用此法，后续过程与一维模拟一致。模拟获得的随机数用图 \@ref(fig:sim-two-gp) 表示， 格点上的值即为平稳空间高斯过程在该点的取值 (为方便显示，已四舍五入保留两位小数)。
+类似本章第 \@ref(sim-one-gp) 节模拟一维平稳空间过程的步骤， 首先根据采样点位置坐标和协方差函数 \@ref(eq:cov-exp) 计算得目标空间过程的 $\mathcal{S}$ 协方差矩阵 $G$，然后使用 R 包 MASS 提供的 `mvrnorm` 函数产生多元正态分布随机数，与 \@ref(sim-one-gp) 节不同的是这里采用特征值分解，即 $G = L\Lambda L^{\top}$，与 Cholesky 分解相比，特征值分解更稳定些，但是 Cholesky 分解更快，Stan 即采用此法，后续过程与一维模拟一致。模拟获得的随机数用图 \@ref(fig:sim-two-gp) 表示， 格点上的值即为平稳空间高斯过程在该点的取值 (为方便显示，已四舍五入保留两位小数)。
 
 ```{r sim-two-gp,fig.cap="模拟二维平稳空间高斯过程，自相关函数为指数形式，水平方向为横坐标，垂直方向为纵坐标，图中的橘黄色点是采样的位置，其上的数字是目标值 $S(x)$",fig.subcap=c("在单位区域的网格点上采样","在单位区域上随机采样"), small.mar=TRUE,out.width="45%",fig.show='hold',fig.asp=1,fig.width=4.5}
 set.seed(2018)
@@ -131,7 +131,7 @@ text(sim$coords[, 1], sim$coords[, 2], format(sim$data, digits = 1), cex = 1.5)
 \end{equation}
 \noindent 且在区域 $[0,1] \times [0,1]$ 上也可以随机采点，如图 \@ref(fig:sim-two-gp) 的右子图所示。
 
-模拟平稳空间高斯过程的实现方法： Paulo J. Ribeiro Jr. 和 Peter J. Diggle 开发了 **geoR** 包 [@geoR2001]，提供的 `grf` 函数除了实现 Cholesky 分解，还实现了奇异值分解，特征值分解等算法分解协方差矩阵$G$。当采样点不太多时，Cholesky 分解已经足够好，下面的第 \@ref(sim-sglmm) 节对平稳空间高斯过程的数值模拟即采用此法，当采样点很多，为了加快模拟的速度，可以选用 Martin Schlather 等开发的 **RandomFields** 包 [@RandomFields2015]，内置的 `GaussRF` 函数实现了用高斯马尔科夫随机场近似平稳空间高斯过程的算法，此外，Håvard Rue 等 (2009年) [@Rue2009] 也实现了从平稳高斯过程到高斯马尔科夫随机场的近似算法，开发了比较高效的 INLA 程序库 [@INLA2015]，其内置的近似程序得到了一定的应用 [@Blangiardo2015;@Faraway2018]。
+模拟平稳空间高斯过程的实现方法： Paulo J. Ribeiro Jr. 和 Peter J. Diggle 开发了 geoR 包 [@geoR2001]，提供的 `grf` 函数除了实现 Cholesky 分解，还实现了奇异值分解，特征值分解等算法分解协方差矩阵$G$。当采样点不太多时，Cholesky 分解已经足够好，下面的第 \@ref(sim-sglmm) 节对平稳空间高斯过程的数值模拟即采用此法，当采样点很多，为了加快模拟的速度，可以选用 Martin Schlather 等开发的 RandomFields 包 [@RandomFields2015]，内置的 `GaussRF` 函数实现了用高斯马尔科夫随机场近似平稳空间高斯过程的算法，此外，Håvard Rue 等 (2009年) [@Rue2009] 也实现了从平稳高斯过程到高斯马尔科夫随机场的近似算法，开发了比较高效的 INLA 程序库 [@INLA2015]，其内置的近似程序得到了一定的应用 [@Blangiardo2015;@Faraway2018]。
 
 
 ## 空间广义线性混合效应模型 {#sim-sglmm}
@@ -142,7 +142,7 @@ text(sim$coords[, 1], sim$coords[, 2], format(sim$data, digits = 1), cex = 1.5)
 \begin{equation}
 g(\mu_i) = \log\big\{\frac{p(x_i)}{1-p(x_i)}\big\} = \alpha + S(x_i) (\#eq:binom-SGLMM)
 \end{equation}
-固定效应参数 $\alpha = 0$，协方差参数记为 $\boldsymbol{\theta} = (\sigma^2, \phi) = (0.5, 0.2)$，采样点数目为 $N = 64$，每个采样点抽取的样本数 $m_i = 4, i = 1, 2, \ldots, 64$，则 $Y_i$ 的取值范围为 $0, 1, 2, 3, 4$。首先模拟平稳空间高斯过程 $S(x)$，在单位区域 $[0,1] \times [0,1]$ 划分为 $8 \times 8$ 的网格，格点选为采样位置，用 **geoR** 包提供的 `grf` 函数产生协方差参数为 $\boldsymbol{\theta} = (\sigma^2,\phi) = (0.5, 0.2)$ 的平稳空间高斯过程，由公式 \@ref(eq:binom-SGLMM) 可知 $p(x_i) = \exp[\alpha + S(x_i)]/\{1 + \exp[\alpha + S(x_i)]\}$， 即每个格点处二项分布的概率值，然后依此概率，由 `rbinom` 函数产生服从二项分布的观察值 $Y_i$，模拟的数据集可以用图 \@ref(fig:binom-without-nugget-geoRglm) 直观表示。
+固定效应参数 $\alpha = 0$，协方差参数记为 $\boldsymbol{\theta} = (\sigma^2, \phi) = (0.5, 0.2)$，采样点数目为 $N = 64$，每个采样点抽取的样本数 $m_i = 4, i = 1, 2, \ldots, 64$，则 $Y_i$ 的取值范围为 $0, 1, 2, 3, 4$。首先模拟平稳空间高斯过程 $S(x)$，在单位区域 $[0,1] \times [0,1]$ 划分为 $8 \times 8$ 的网格，格点选为采样位置，用 geoR 包提供的 `grf` 函数产生协方差参数为 $\boldsymbol{\theta} = (\sigma^2,\phi) = (0.5, 0.2)$ 的平稳空间高斯过程，由公式 \@ref(eq:binom-SGLMM) 可知 $p(x_i) = \exp[\alpha + S(x_i)]/\{1 + \exp[\alpha + S(x_i)]\}$， 即每个格点处二项分布的概率值，然后依此概率，由 `rbinom` 函数产生服从二项分布的观察值 $Y_i$，模拟的数据集可以用图 \@ref(fig:binom-without-nugget-geoRglm) 直观表示。
 
 ```{r binom-without-nugget-geoRglm,fig.cap="左图表示二维规则平面上的平稳空间高斯过程，格点是采样点的位置，其上的数字是 $p(x)$ 的值，已经四舍五入保留两位小数，右图表示观察值 $Y$ 随空间位置的变化，格点上的值即为观察值 $Y$，图中的两个圈分别是第1个(左下)和第29个(右上)采样点",out.width="90%"}
 knitr::include_graphics(path = "figures/binom-without-nugget-geoRglm.png")
@@ -154,7 +154,7 @@ knitr::include_graphics(path = "figures/binom-without-nugget-geoRglm.png")
 \end{equation}
 参数 $\alpha,\phi,\sigma^2$ 的贝叶斯估计没有显式表达式，通常以 MCMC 算法获得后验分布的样本均值作为参数的估计。贝叶斯估计的定义是使得估计的均方误差达到最小时的估计，因此贝叶斯估计的精度或者说好坏常用后验分布的方差衡量，因为均方误差在参数估计取后验均值时是后验方差，故而表 \@ref(tab:MCLH-vs-NUTS) 不再提供估计的均方误差值，而是提供了 5 个后验分布的分位点，在 95\% 的置信水平下，样本分位点 0.025 和 0.975 的值组成了置信区间的上下界。除了获得各参数的估计值外，还获得 64 个采样点处 $p(x_i), i = 1, \ldots, 64$ 的后验均值、方差、标准差和 5个分位点，详见附表 \@ref(tab:LH-binom-SGLMM)。
 
-Table: (\#tab:MCLH-vs-NUTS)  Langevin-Hastings 算法与 HMC 算法的数值模拟比较，前者在R软件里基于 **geoRglm** 包实现，后者基于 Stan 实现。表格中的列依次是模型参数 $\alpha,\phi,\sigma^2$ 的真值、后验均值、后验方差、后验的 5个分位点和样本量$N$。采样点数目分别考虑了 $N = 36, 64, 81$ 的情况，对于每组参数设置，重复模拟了100 次，表格前半部分是 Langevin-Hastings 算法得到的结果，后半部分是 HMC 算法得到的结果
+Table: (\#tab:MCLH-vs-NUTS)  Langevin-Hastings 算法与 HMC 算法的数值模拟比较，前者在R软件里基于 geoRglm 包实现，后者基于 Stan 实现。表格中的列依次是模型参数 $\alpha,\phi,\sigma^2$ 的真值、后验均值、后验方差、后验的 5个分位点和样本量$N$。采样点数目分别考虑了 $N = 36, 64, 81$ 的情况，对于每组参数设置，重复模拟了100 次，表格前半部分是 Langevin-Hastings 算法得到的结果，后半部分是 HMC 算法得到的结果
 
 |        |  true|  mean|   var|   2.5\%|    25\%|   50\%|   75\%| 97.5\%|   N  |
 |:-------|-----:|-----:|-------:|-------:|------:|------:|------:|-----:|-----:|
@@ -221,7 +221,7 @@ Table: (\#tab:Pois-MCLV-vs-NUTS) 在模型\@ref(eq:pois-SGLMM)的设置下，Lan
 
 ## 本章小结 {#sec:simulations}
 
-**geoRglm** 包实现的 Langevin-Hastings 算法，相比较而言，收敛速度慢，迭代序列自相关性表现拖尾，因此在上述模拟实验中，为了降低相关性，采样间隔取100，这就直接要求增加总的迭代次数，以达到足够的后验样本量，才能用于后验量的计算，此外，在调参数的过程中面临不收敛的情况是常有的，而这个不收敛的原因至少有两个，其一是参数初值不合适，其二是总迭代次数不够，因此我也遭遇了 Ole F. Christensen 迭代上百万次的[情形][geoRglm-feq]，不过为了尽量保持统一的参数设置下，这里采用继续调整参数初值的方式，而保持总迭代次数110000次不变。为了在每组模型设置下，都获得最佳的参数，这是一件十分耗时的工作，因为该算法的参数只有不断试错才能获得更加合适的参数设置，特别地，在已经收敛的情形下，再去调参数，这个过程会更加漫长。
+geoRglm 包实现的 Langevin-Hastings 算法，相比较而言，收敛速度慢，迭代序列自相关性表现拖尾，因此在上述模拟实验中，为了降低相关性，采样间隔取100，这就直接要求增加总的迭代次数，以达到足够的后验样本量，才能用于后验量的计算，此外，在调参数的过程中面临不收敛的情况是常有的，而这个不收敛的原因至少有两个，其一是参数初值不合适，其二是总迭代次数不够，因此我也遭遇了 Ole F. Christensen 迭代上百万次的[情形][geoRglm-feq]，不过为了尽量保持统一的参数设置下，这里采用继续调整参数初值的方式，而保持总迭代次数110000次不变。为了在每组模型设置下，都获得最佳的参数，这是一件十分耗时的工作，因为该算法的参数只有不断试错才能获得更加合适的参数设置，特别地，在已经收敛的情形下，再去调参数，这个过程会更加漫长。
 
 基于 Stan 实现的贝叶斯 STAN-MCMC 算法，其内置的 HMC 算法是结合了 NUTS 采样器[@hoffman2014]，搜索模型参数的策略更加友好，不需要手动调参数，只需要指定合适的参数先验，使得迭代序列保持收敛即可，编程过程中，模型参数的重参数化(reparameterization)对迭代进程和结果会产生一定影响，如第\@ref(prepare)章第\@ref(sec:stan-samplers)节基于 Eight Schools 数据集介绍分层正态模型就对参数 $\mu$ 和 $\sigma$ 做了重参数化。
 

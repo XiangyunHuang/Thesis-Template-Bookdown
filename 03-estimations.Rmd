@@ -242,7 +242,7 @@ L_{m}(\beta,\boldsymbol{\theta})=\frac{1}{m}\sum_{i=1}^{n}\frac{\mathcal{N}(t_{i
 
 \noindent 这样做的依据是不管样本序列 $t_{(i)}$ 是否相关， $L_{m}(\beta,\boldsymbol{\theta})$ 都是 $L_{m}(\beta,\boldsymbol{\theta})$ 的一致估计 (consistent estimator)[@PrevMap2017JSS]。 最优的 $\beta_0,\boldsymbol{\theta}_0$ 是 $\beta,\boldsymbol{\theta}$ 的极大似然估计，即$\max_{\beta,\boldsymbol{\theta}}L_{m}(\beta,\boldsymbol{\theta}) \rightarrow 1, m \rightarrow\infty$。
 
-既然给定的初始值 $\beta_{0},\boldsymbol{\theta}_{0}$ 必定与真实的极大似然估计值不同，第 $m$ 步迭代获得的似然函数值 $L_{m}(\hat{\beta}_{m}, \hat{\boldsymbol{\theta})}_{m}$ 与 1 的距离可以用来刻画蒙特卡罗近似的准确度。实际操作中，用 $\hat{\beta}_{m}$ 和 $\hat{\boldsymbol{\theta}}_{m}$ 表示最大化 $L_{m}(\beta, \boldsymbol{\theta})$ 获得的 MCML 估计，重复迭代 $\beta_{0} = \hat{\beta}_{m}$ 和 $\boldsymbol{\theta}_{0} = \hat{\boldsymbol{\theta}}_{m}$ 直到收敛。 求蒙特卡罗近似的对数似然 $l_{m}(\beta, \boldsymbol{\theta}) = \log L_{m}(\beta, \boldsymbol{\theta})$ 的极值，可以使用 **PrevMap** 包，迭代 $L_{m}(\beta, \boldsymbol{\theta})$ 的过程中，可以选择 BFGS 算法。关于 $\boldsymbol{\psi}$ 的似然曲面是相当扁平的，为了更好的收敛到全局极大值，做一步重参数化，即令 $\boldsymbol{\psi} = \log(\boldsymbol{\theta})$，$L_{m}(\beta, \boldsymbol{\psi})$ 关于 $\beta$ 和 $\boldsymbol{\psi}$ 的一阶、二阶导数传递给 **maxLik** 包的 `maxBFGS` 函数。
+既然给定的初始值 $\beta_{0},\boldsymbol{\theta}_{0}$ 必定与真实的极大似然估计值不同，第 $m$ 步迭代获得的似然函数值 $L_{m}(\hat{\beta}_{m}, \hat{\boldsymbol{\theta})}_{m}$ 与 1 的距离可以用来刻画蒙特卡罗近似的准确度。实际操作中，用 $\hat{\beta}_{m}$ 和 $\hat{\boldsymbol{\theta}}_{m}$ 表示最大化 $L_{m}(\beta, \boldsymbol{\theta})$ 获得的 MCML 估计，重复迭代 $\beta_{0} = \hat{\beta}_{m}$ 和 $\boldsymbol{\theta}_{0} = \hat{\boldsymbol{\theta}}_{m}$ 直到收敛。 求蒙特卡罗近似的对数似然 $l_{m}(\beta, \boldsymbol{\theta}) = \log L_{m}(\beta, \boldsymbol{\theta})$ 的极值，可以使用 PrevMap 包，迭代 $L_{m}(\beta, \boldsymbol{\theta})$ 的过程中，可以选择 BFGS 算法。关于 $\boldsymbol{\psi}$ 的似然曲面是相当扁平的，为了更好的收敛到全局极大值，做一步重参数化，即令 $\boldsymbol{\psi} = \log(\boldsymbol{\theta})$，$L_{m}(\beta, \boldsymbol{\psi})$ 关于 $\beta$ 和 $\boldsymbol{\psi}$ 的一阶、二阶导数传递给 maxLik 包的 `maxBFGS` 函数。
 
 蒙特卡罗极大似然估计 $\boldsymbol{\theta}_{m}$ 的标准误差 (standard errors) 取似然函数 $l_{m}(\beta,\boldsymbol{\theta})$ 的负黑塞矩阵的逆的对角线元素的平方根。迭代次数足够多时，即 $m$ 充分大时，一般取到 10000 及以上，此时蒙特卡罗误差可忽略，即用方程 \@ref(eq:likelihood-approx) 近似 \@ref(eq:likelihood2) 的误差可忽略。
 
@@ -255,7 +255,7 @@ L_{m}(\beta,\boldsymbol{\theta})=\frac{1}{m}\sum_{i=1}^{n}\frac{\mathcal{N}(t_{i
 \begin{equation}
 \pi(\beta, \theta, t | y) \propto g(\theta)\mathcal{N}(\beta; \xi, \sigma^2 \Omega)\mathcal{N}(t; D\beta, \Sigma(\theta))f(y|t) (\#eq:posterior)
 \end{equation}
-\noindent R 包 **PrevMap** 内的函数 `binomial.logistic.Bayes` 可以从上述后验分布中抽得样本，这个抽样的过程使用了 MCMC 算法， $\theta, \beta$ 和 $T$ 轮流迭代的过程如下：
+\noindent R 包 PrevMap 内的函数 `binomial.logistic.Bayes` 可以从上述后验分布中抽得样本，这个抽样的过程使用了 MCMC 算法， $\theta, \beta$ 和 $T$ 轮流迭代的过程如下：
 
 1. 初始化$\beta, \theta$ 和$T$；
 2. 对协方差$\Sigma(\theta)$中的参数做如下变换 [@Christensen2006] $$(\tilde{\theta}_{1}, \tilde{\theta}_{2}, \tilde{\theta}_{3}) = (\log \sigma, \log (\sigma^2/\phi^{2\kappa}), \log \tau^2)$$
@@ -342,11 +342,11 @@ S(x) \approx \sum_{i = 1}^r K(\|x-\tilde{x}_{i}\|; \phi, \kappa) U_{i} (\#eq:lr-
 
 <!-- ### 算法提出的背景和意义 {#subsec:motivations} -->
 
-贝叶斯 MCMC 算法是一个计算密集型的算法，高效的实现对理论和应用都有非常重要的意义。因此，早在 1989 年剑桥大学研究人员开发出了 Windows 上的应用程序 WinBUGS，并被广泛使用。随着个人电脑的普及、Linux 和 MacOS 系统的蓬勃发展， 只能运行于 Windows 系统上的 WinBUGS 逐渐落后于时代，并在 2008 年宣布停止开发。 随后， OpenBUGS 以开源的开发方式重现了 WinBUGS 的功能，还可跨平台运行，弥补了 WinBUGS 的一些不足，而后又出现了同类的开源软件 JAGS。 无论是 OpenBUGS 还是 JAGS 都无法适应当代计算机硬件的迅猛发展， 它们的设计由于历史局限性， 已经无法满足在兼容性、 扩展性和高效性方面的要求。 所以， 哥伦比亚大学的统计系以开源的方式开发了新一代贝叶斯推断子程序库 Stan， 它与前辈们最明显的最直观的不同在于，它不是一个像 WinBUGS/OpenBUGS/JAGS 那样的软件有菜单窗口或软件内的命令行环境， [Stan](http://mc-stan.org/) 是一种概率编程语言 [@Stan2017JSS]， 可以替代 BUGS ( **B**ayesian inference **U**sing **G**ibbs **S**ampling )  [@BUGS2009] 作为 MCMC 算法的高效实现。相比较于同类软件，Stan 的优势有：底层完全基于 C++ 实现；拥有活跃和快速发展的社区；支持在CPU/GPU上大规模并行计算；独立于系统和硬件平台；提供多种编程语言的接口，如 PyStan、 RStan 等等。 在大数据的背景下， 拥有数千台服务器的企业越来越多， 计算机资源达到前所未有的规模， 这为 Stan 的广泛应用打下了基础。
+贝叶斯 MCMC 算法是一个计算密集型的算法，高效的实现对理论和应用都有非常重要的意义。因此，早在 1989 年剑桥大学研究人员开发出了 Windows 上的应用程序 WinBUGS，并被广泛使用。随着个人电脑的普及、Linux 和 MacOS 系统的蓬勃发展， 只能运行于 Windows 系统上的 WinBUGS 逐渐落后于时代，并在 2008 年宣布停止开发。 随后， OpenBUGS 以开源的开发方式重现了 WinBUGS 的功能，还可跨平台运行，弥补了 WinBUGS 的一些不足，而后又出现了同类的开源软件 JAGS。 无论是 OpenBUGS 还是 JAGS 都无法适应当代计算机硬件的迅猛发展， 它们的设计由于历史局限性， 已经无法满足在兼容性、 扩展性和高效性方面的要求。 所以， 哥伦比亚大学的统计系以开源的方式开发了新一代贝叶斯推断子程序库 Stan， 它与前辈们最明显的最直观的不同在于，它不是一个像 WinBUGS/OpenBUGS/JAGS 那样的软件有菜单窗口或软件内的命令行环境， [Stan](http://mc-stan.org/) 是一种概率编程语言 [@Stan2017JSS]， 可以替代 BUGS ( Bayesian inference Using Gibbs Sampling )  [@BUGS2009] 作为 MCMC 算法的高效实现。相比较于同类软件，Stan 的优势有：底层完全基于 C++ 实现；拥有活跃和快速发展的社区；支持在CPU/GPU上大规模并行计算；独立于系统和硬件平台；提供多种编程语言的接口，如 PyStan、 RStan 等等。 在大数据的背景下， 拥有数千台服务器的企业越来越多， 计算机资源达到前所未有的规模， 这为 Stan 的广泛应用打下了基础。
 
 <!-- ### STAN-MCMC 算法实现过程 {#STANMCMC} -->
 
-为了与本章第 \@ref(sec:MCMC) 节提出的贝叶斯 MCMC 算法比较，我们基于 Stan 实现求解 SGLMM 模型的贝叶斯 MCMC 算法(简称 STAN-MCMC)。目前，我与 Paul Bürkner 一起开发了 **brms** 包 [@brms2017JSS]， 主要工作是修复程序调用和文档书写错误， 特别是与求解 SGLMM 模型相关的 `gp` 函数，相关细节见 **brms** 的 Github 开发仓库。
+为了与本章第 \@ref(sec:MCMC) 节提出的贝叶斯 MCMC 算法比较，我们基于 Stan 实现求解 SGLMM 模型的贝叶斯 MCMC 算法(简称 STAN-MCMC)。目前，我与 Paul Bürkner 一起开发了 brms 包 [@brms2017JSS]， 主要工作是修复程序调用和文档书写错误， 特别是与求解 SGLMM 模型相关的 `gp` 函数，相关细节见 brms 的 Github 开发仓库。
 
 在 SGLMM 模型下，STAN-MCMC 算法，先从条件分布 $[S|\theta,\beta,Y]$ 抽样，然后是 $[\theta|S]$ ，最后是 $[\beta|S,Y]$，具体步骤如下：
 
@@ -356,7 +356,7 @@ S(x) \approx \sum_{i = 1}^r K(\|x-\tilde{x}_{i}\|; \phi, \kappa) U_{i} (\#eq:lr-
 4. 更新模型系数 $\beta$ ：从条件密度 $p(\beta'|\beta)$ 以概率 $$\Delta = \min \big\{ \frac{\prod_{j=1}^{n}p(y_i|s_{i},\beta')p(\beta|\beta')}{\prod_{j=1}^{n}p(y_i|s_{i},\beta)p(\beta'|\beta)},1  \big\}$$ 接受 $\beta'$，否则不改变$\beta$。
 5. 重复步骤2，3，4 既定的次数，获得参数 $\beta,\theta$ 的迭代序列。
 
-\noindent 直到参数的迭代序列平稳，然后根据后续的平稳序列采样，获得各参数后验分布的样本，再根据样本估计参数值。程序实现的主要步骤(以 R 语言接口 **rstan** 和 **brms** 为例说明)：首先安装 C++ 编译工具，如果在 Windows 平台上，就从 R 官网下载安装 [RTools][rtools]， 它包含一套完整的 C++ 开发工具。 然后添加 gcc/g++ 编译器的路径到系统环境变量。 如果在 Linux 系统上， 这些工具都是自带的， 环境变量也不用配置， 减少了很多麻烦，但是在 Linux 系统上可以获得更好的算法性能。其它配置细节见 Stan 开发[官网][stan-setup]。其次，在 R 软件控制台，安装 **rstan** 和 **brms** 包以及相关依赖包。然后，加载 **rstan** 和 **brms** 包，配置参数如下：
+\noindent 直到参数的迭代序列平稳，然后根据后续的平稳序列采样，获得各参数后验分布的样本，再根据样本估计参数值。程序实现的主要步骤(以 R 语言接口 rstan 和 brms 为例说明)：首先安装 C++ 编译工具，如果在 Windows 平台上，就从 R 官网下载安装 [RTools][rtools]， 它包含一套完整的 C++ 开发工具。 然后添加 gcc/g++ 编译器的路径到系统环境变量。 如果在 Linux 系统上， 这些工具都是自带的， 环境变量也不用配置， 减少了很多麻烦，但是在 Linux 系统上可以获得更好的算法性能。其它配置细节见 Stan 开发[官网][stan-setup]。其次，在 R 软件控制台，安装 rstan 和 brms 包以及相关依赖包。然后，加载 rstan 和 brms 包，配置参数如下：
 ```{r,echo=TRUE,eval=FALSE}
 # 加载程序包
 library(rstan)
@@ -366,7 +366,7 @@ options(mc.cores = parallel::detectCores())
 # 将编译后的模型写入磁盘，可防止重新编译
 rstan_options(auto_write = TRUE)
 ```
-\noindent 接着调用 **brms** 包的 `brm` 函数
+\noindent 接着调用 brms 包的 `brm` 函数
 ```{r,echo=TRUE,eval=FALSE}
 fit.binomal <- brm(formula = y | trials(units.m) ~ 
   0 + intercept + x1 + x2 + gp(d1, d2), 
@@ -387,7 +387,7 @@ fit.binomal <- brm(formula = y | trials(units.m) ~
 
 ## 实现参数估计的 R 包 {#subsec:sglmm-with-r}
 
-R 语言作为免费自由的统计计算和绘图环境，因其更新快，社区庞大，扩展包更是超过了 13000 个，提供了大量前沿统计方法的代码实现。如 **spBayes** 包使用贝叶斯 MCMC 算法估计 SGLMM 模型的参数  [@spBayes2015]； **coda** 包诊断马尔科夫链的平稳性 [@coda2006]；**MCMCvis** 包分析和可视化贝叶斯 MCMC 算法的输出， 提取模型参数， 转化 JAGS、Stan 和 BUGS 软件的输出结果到 R 对象，以利后续分析；**geoR** 包 在空间线性混合效应模型上基于 Langevin-Hastings 实现了贝叶斯 MCMC 算法 [@geoR2001]；**geoRglm** 包在 **geoR** 包的基础上将模型范围扩展到 SGLMM 模型 [@geoRglm2002]；**glmmBUGS** 包提供了 WinBUGS、 OpenBUGS 和 JAGS 软件的统一接口 [@glmmBUGS2010MCMC]。 目前，R 语言社区提供的求解 SGLMM 模型的 R 包和功能实现，见表 \@ref(tab:sglmm-packages)。
+R 语言作为免费自由的统计计算和绘图环境，因其更新快，社区庞大，扩展包更是超过了 13000 个，提供了大量前沿统计方法的代码实现。如 spBayes 包使用贝叶斯 MCMC 算法估计 SGLMM 模型的参数  [@spBayes2015]； coda 包诊断马尔科夫链的平稳性 [@coda2006]；MCMCvis 包分析和可视化贝叶斯 MCMC 算法的输出， 提取模型参数， 转化 JAGS、Stan 和 BUGS 软件的输出结果到 R 对象，以利后续分析；geoR 包 在空间线性混合效应模型上基于 Langevin-Hastings 实现了贝叶斯 MCMC 算法 [@geoR2001]；geoRglm 包在 geoR 包的基础上将模型范围扩展到 SGLMM 模型 [@geoRglm2002]；glmmBUGS 包提供了 WinBUGS、 OpenBUGS 和 JAGS 软件的统一接口 [@glmmBUGS2010MCMC]。 目前，R 语言社区提供的求解 SGLMM 模型的 R 包和功能实现，见表 \@ref(tab:sglmm-packages)。
 
 Table: (\#tab:sglmm-packages)  求解空间广义线性混合效应模型的 R 包功能比较：加号 + 表示可用，减号 - 表示不可用，星号 \* 标记的只在空间线性混合效应模型下可用
 
