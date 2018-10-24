@@ -183,13 +183,13 @@ Table: (\#tab:MCLH-vs-NUTS)  Langevin-Hastings 算法与 HMC 算法的数值模�
 
 ### 响应变量服从泊松分布 {#possion-sglmm}
 
-模拟响应变量 $Y$ 服从泊松分布，即 $Y_i \sim \mathrm{Possion}(\lambda(x_{i}))$ 的泊松型空间广义线性混合效应模型
+模拟响应变量 $Y$ 服从泊松分布，即 $Y_i \sim \mathrm{Poisson}(\lambda(x_{i}))$ 的泊松型空间广义线性混合效应模型
 \begin{equation}
 g(\mu_i) = \log[\lambda(x_i)] = \alpha + S(x_i) (\#eq:pois-SGLMM)
 \end{equation}
 \noindent 其中，$S(x)$ 是平稳空间高斯过程，其均值为 $\mathbf{0}$，协方差函数为 $\mathrm{Cov}(S(x_i),S(x_j)) = \sigma^2 \big\{2^{\kappa-1}\Gamma(\kappa)\big\}^{-1}(u/\phi)^{\kappa}K_{\kappa}(u/\phi)$，联系函数 $g(\mu_i) = \log[\lambda(x_{i})]$。
 
-类似 \@ref(sim-binomal-sglmm) 小节，首先产生服从平稳空间高斯过程 $S(x)$ 的随机数 $S(x_i),i=1,\ldots,N$，然后由 \@ref(eq:pois-SGLMM) 式可得 $\lambda(x_i) = \exp(\alpha + S(x_i))$，且响应变量 $Y_i \sim \mathrm{Possion}(\lambda(x_{i}))$，根据 R 内置函数 `rpois` 即可 产生服从参数为 $\lambda(x_i)$ 的泊松分布的随机数。Langevin-Hastings 算法和 HMC 算法模拟的结果见表 \@ref(tab:Pois-MCLV-vs-NUTS)。HMC 算法包含有效样本数 $n_{eff}$、 潜在尺度缩减因子 $\hat{R}$ 和蒙特卡罗均值误差 se\_mean 的完整表格见附表 \@ref(tab:HMC-Pois-SGLMM)，参数迭代序列的收敛性分析已在第\@ref(prepare) 章第\@ref(sec:stan-samplers)节给出，这里不再赘述，所有的模拟实验都是在完成收敛性分析后给出的。
+类似 \@ref(sim-binomal-sglmm) 小节，首先产生服从平稳空间高斯过程 $S(x)$ 的随机数 $S(x_i),i=1,\ldots,N$，然后由 \@ref(eq:pois-SGLMM) 式可得 $\lambda(x_i) = \exp(\alpha + S(x_i))$，且响应变量 $Y_i \sim \mathrm{Poisson}(\lambda(x_{i}))$，根据 R 内置函数 `rpois` 即可 产生服从参数为 $\lambda(x_i)$ 的泊松分布的随机数。Langevin-Hastings 算法和 HMC 算法模拟的结果见表 \@ref(tab:Pois-MCLV-vs-NUTS)。HMC 算法包含有效样本数 $n_{eff}$、 潜在尺度缩减因子 $\hat{R}$ 和蒙特卡罗均值误差 se\_mean 的完整表格见附表 \@ref(tab:HMC-Pois-SGLMM)，参数迭代序列的收敛性分析已在第\@ref(prepare) 章第\@ref(sec:stan-samplers)节给出，这里不再赘述，所有的模拟实验都是在完成收敛性分析后给出的。
 
 Table: (\#tab:Pois-MCLV-vs-NUTS) 在模型\@ref(eq:pois-SGLMM)的设置下，Langevin-Hastings 算法和 HMC 算法的比较，模型参数真值设置为 $\alpha = 0.5, \phi = 0.2, \sigma^2 = 2.0, \kappa = 1.5$，采样点数目分别为 $N=36,64,100$，对于每组参数设置，重复模拟了100次。表格各列依次是参数的真值、后验均值、后验方差、后验五个分位点和样本量。表格前半部分是 Langevin-Hastings 算法实现的结果，后半部分是 Stan 实现的结果
 
