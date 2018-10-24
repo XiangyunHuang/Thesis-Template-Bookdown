@@ -57,7 +57,7 @@ options(
 ```
 # 参数估计 {#algorithms}
 
-模型的参数估计是建模分析的重要步骤，鉴于空间广义线性混合效应模型(简称 SGLMM)的复杂性，文献中的参数估计方法，如最小二乘估计(简称 LSE)和极大似然估计(简称 MLE) 都没有显式的表达式，因此必须发展有效的算法。目前，文献中的出现的算法有拉普拉斯近似算法、蒙特卡罗极大似然算法、贝叶斯马尔科夫链蒙特卡罗算法和低秩近似算法，应用这些算法去估计 SGLMM 模型参数，此外，特别提出了基于 Stan 实现的贝叶斯 MCMC 算法。第\@ref(sec:mle)节和第\@ref(sec:profile-likelihood)节分别介绍 SGLMM 模型的极大似然估计和空间线性混合模型下的剖面似然估计，由于估计中空间随机效应带来的高维积分问题，文献中出现了三类估计模型参数的算法，分别是第 \@ref(subsec:LA) 小节介绍的拉普拉斯近似算法、第 \@ref(subsec:MCML) 小节介绍的蒙特卡罗极大似然算法(简称 MCML)， 第 \@ref(sec:MCMC) 小节介绍的贝叶斯框架下的马尔科夫链蒙特卡罗算法 (简称贝叶斯 MCMC)，第 \@ref(LowRank) 小节介绍的低秩近似算法(简称 Low-Rank)，在第 \@ref(sec:STAN-MCMC) 节详细介绍在贝叶斯 MCMC 算法的基础上提出的 STAN-MCMC 算法。
+模型的参数估计是建模分析的重要步骤，鉴于空间广义线性混合效应模型（简称 SGLMM）的复杂性，文献中的参数估计方法，如最小二乘估计（简称 LSE）和极大似然估计（简称 MLE） 都没有显式的表达式，因此必须发展有效的算法。目前，文献中的出现的算法有拉普拉斯近似算法、蒙特卡罗极大似然算法、贝叶斯马尔科夫链蒙特卡罗算法和低秩近似算法，应用这些算法去估计 SGLMM 模型参数，此外，特别提出了基于 Stan 实现的贝叶斯 MCMC 算法。第\@ref(sec:mle)节和第\@ref(sec:profile-likelihood)节分别介绍 SGLMM 模型的极大似然估计和空间线性混合模型下的剖面似然估计，由于估计中空间随机效应带来的高维积分问题，文献中出现了三类估计模型参数的算法，分别是第 \@ref(subsec:LA) 小节介绍的拉普拉斯近似算法、第 \@ref(subsec:MCML) 小节介绍的蒙特卡罗极大似然算法（简称 MCML）， 第 \@ref(sec:MCMC) 小节介绍的贝叶斯框架下的马尔科夫链蒙特卡罗算法 （简称贝叶斯 MCMC），第 \@ref(LowRank) 小节介绍的低秩近似算法（简称 Low-Rank），在第 \@ref(sec:STAN-MCMC) 节详细介绍在贝叶斯 MCMC 算法的基础上提出的 STAN-MCMC 算法。
 
 ## 极大似然估计 {#sec:mle}
 
@@ -80,11 +80,11 @@ L(\boldsymbol{\psi};\mathbf{y}) = \int \prod_{i=1}^{n} f(y_i|u_i;\boldsymbol{\be
 m(\mathbf{y}) &= \int f(\mathbf{y|\mathbf{u}, \boldsymbol{\psi}})\phi_{n}(\mathbf{u};0,\Sigma_{\boldsymbol{\theta}})\pi(\boldsymbol{\psi})\mathrm{d} \mathbf{u} \mathrm{d} \boldsymbol{\psi}
 \end{aligned}
 \end{equation}
-\noindent 同样遭遇难以处理的高维积分问题，所以 $m(\mathbf{y})$ 亦不会有显式表达式。特别地，若取 $\pi(\boldsymbol{\psi})$ 为扁平先验 (flat priors) ，如 $\pi(\boldsymbol{\psi}) \propto 1$， 后验分布将简化为似然函数 \@ref(eq:likelihood-function-1) 的常数倍。 如果导出的后验是合适的， MCMC 算法可以用来研究似然函数， 但是对很多 SGLMM 模型扁平先验 (flat priors) 会导出不合适的后验 (improper posteriors) [@Natarajan1995]， 所以选用模糊先验 (diffuse prior) 来导出合适的后验 (proper posteriors)，导出的后验能接近似然函数，并不要求后验模 (posterior mode) 完全是似然函数的极大似然估计 MLE [@Robert1996JASA]。
+\noindent 同样遭遇难以处理的高维积分问题，所以 $m(\mathbf{y})$ 亦不会有显式表达式。特别地，若取 $\pi(\boldsymbol{\psi})$ 为扁平先验 （flat priors） ，如 $\pi(\boldsymbol{\psi}) \propto 1$， 后验分布将简化为似然函数 \@ref(eq:likelihood-function-1) 的常数倍。 如果导出的后验是合适的， MCMC 算法可以用来研究似然函数， 但是对很多 SGLMM 模型扁平先验会导出不合适的后验 （improper posteriors） [@Natarajan1995]， 所以选用模糊先验 （diffuse prior）来导出合适的后验 （proper posteriors），导出的后验能接近似然函数，并不要求后验模 （posterior mode） 完全是似然函数的极大似然估计 MLE [@Robert1996JASA]。
 
 ## 剖面似然估计 {#sec:profile-likelihood}
 
-极大似然估计是一种被广泛接受的参数估计方法，因其优良的大样本性质，在宽松的正则条件下，极大似然估计服从渐进正态分布，满足无偏性，而且是有效的估计。为了叙述方便，似然函数能有显式表达式，考虑空间线性混合效应模型，即响应变量服从正态分布的情况，以此来介绍剖面似然估计 (profile likelihood estimate)。
+极大似然估计是一种被广泛接受的参数估计方法，因其优良的大样本性质，在宽松的正则条件下，极大似然估计服从渐进正态分布，满足无偏性，而且是有效的估计。为了叙述方便，似然函数能有显式表达式，考虑空间线性混合效应模型，即响应变量服从正态分布的情况，以此来介绍剖面似然估计 （profile likelihood estimate）。
 \begin{equation}
 \mathbf{y} \sim \mathcal{N}(D\boldsymbol{\beta},\sigma^2 \mathbf{R}(\phi) + \tau^2\mathbf{I})
 (\#eq:gaussian-model)
@@ -114,19 +114,19 @@ L(\boldsymbol{\beta},\tau^2,\sigma^2,\phi) = {}
    \end{equation}
 4. 关于参数 $\nu^2, \phi$ 极大化 \@ref(eq:reduced-gauss-log-lik) 式，获得参数 $\nu^2, \phi$ 的估计值，再将其回代 \@ref(eq:beta-sigma) 式，获得估计值 $\hat{\boldsymbol{\beta}}$ 和 $\hat{\sigma}^2$。
 
-在空间线性混合效应模型的设置下，上述极大化似然函数的过程可能与自协方差函数的类型有关，如在使用 Matérn 型自协方差函数的时，形状参数(shape parameter) $\kappa$ 也卷入到 $\phi$ 中，导致识别问题。因此，让 $\kappa$ 分别取 $0.5,1.5,2.5$，使得平稳空间高斯过程 $\mathcal{S}$ 覆盖到不同程度的均方可微性 [@Warnes1987]。原则上，极大似然估计的变化情况可以通过观察对数似然函数的曲面来分析^[SGLMM 模型的似然函数通常不止一个极值点]，但是，似然曲面的维数往往不允许直接观察。在这种情形下，另一个基于似然的想法是剖面似然 (profile likelihood)。一般地，假定我们有一个模型，其含有参数 $(\alpha,\phi)$，似然表示为 $L(\alpha,\phi)$。则关于 $\alpha$ 的剖面对数似然 (profile log-likelihood) 定义为
+在空间线性混合效应模型的设置下，上述极大化似然函数的过程可能与自协方差函数的类型有关，如在使用 Matérn 型自协方差函数的时，形状参数（shape parameter） $\kappa$ 也卷入到 $\phi$ 中，导致识别问题。因此，让 $\kappa$ 分别取 $0.5,1.5,2.5$，使得平稳空间高斯过程 $\mathcal{S}$ 覆盖到不同程度的均方可微性 [@Warnes1987]。原则上，极大似然估计的变化情况可以通过观察对数似然函数的曲面来分析^[SGLMM 模型的似然函数通常不止一个极值点]，但是，似然曲面的维数往往不允许直接观察。在这种情形下，另一个基于似然的想法是剖面似然 （profile likelihood）。一般地，假定我们有一个模型，其含有参数 $(\alpha,\phi)$，似然表示为 $L(\alpha,\phi)$。则关于 $\alpha$ 的剖面似然函数定义为
 \begin{equation}
 L_{p}(\alpha) = L(\alpha,\hat{\psi}(\alpha)) = \max_{\psi} (L(\alpha,\psi))
 (\#eq:profile-log-lik)
 \end{equation}
-\noindent 即考虑似然函数随 $\alpha$ 的变化情况，对每一个 $\alpha$ (保持 $\alpha$ 不变)，指定 $\psi$ 的值使得对数似然取得最大值。剖面似然就是让我们可以观察到关于 $\alpha$ 的似然曲面，显然，其维数比完全似然面要低，与只有一个参数的对数似然一样，它也可以用来计算单个参数的置信区间。现在，注意到简化的对数似然 \@ref(eq:reduced-gauss-log-lik) 其实可以看作模型 \@ref(eq:gaussian-model) 关于 $(\nu^2,\phi)$ 的剖面对数似然 [@Diggle2007]。
+\noindent 即考虑似然函数随 $\alpha$ 的变化情况，对每一个 $\alpha$ （保持 $\alpha$ 不变），指定 $\psi$ 的值使得对数似然取得最大值。剖面似然就是让我们可以观察到关于 $\alpha$ 的似然曲面，显然，其维数比完全似然面要低，与只有一个参数的对数似然一样，它也可以用来计算单个参数的置信区间。现在，注意到简化的对数似然 \@ref(eq:reduced-gauss-log-lik) 其实可以看作模型 \@ref(eq:gaussian-model) 关于 $(\nu^2,\phi)$ 的剖面对数似然 [@Diggle2007]。
 
 
 ## 参数估计的算法 {#sec:algrithms}
 
 ### 拉普拉斯近似算法 {#subsec:LA}
 
-为描述拉普拉斯近似算法，空间广义线性混合效应模型(简称 SGLMM)的结构重新表述如下：
+为描述拉普拉斯近似算法，空间广义线性混合效应模型（简称 SGLMM）的结构重新表述如下：
 \begin{equation}
 \begin{aligned}
 \mathbf{Y(x)} | S(\mathbf{x}) & \sim  f(\cdot;\boldsymbol{\mu(x)},\psi) \\
@@ -146,7 +146,7 @@ L(\boldsymbol{\theta};\mathbf{y}) = \int_{\mathbb{R}^n} [\mathbf{Y(x)}|S(\mathbf
 \end{equation}
 \noindent 其中，符号 $[\cdot]$ 表示某某的分布，一般地，边际似然函数$L(\boldsymbol{\theta};\mathbf{y})$包含两个分布的乘积和随机效应的积分，并且这个积分无法显式的表示，第一个分布是观测变量 $\mathbf{Y}$ 的抽样分布，第二个分布是多元高斯分布。一个特殊的情况是 $\mathbf{Y}$ 也假设服从多元高斯分布，这时积分有显式表达式。
 
-边际似然函数 \@ref(eq:marginal-likelihood) 卷入的数值积分是充满挑战的，因为积分的维数 $n$ 是观测值的数目，所以像二次、高斯--埃尔米特或适应性高斯--埃尔米特数值积分方式都是不可用的。Luke Tierney 和 Joseph B. Kadane (1986 年) 提出拉普拉斯近似方法 [@Tierney1986]，它在纵向数据分析中被大量采用 [@Diggle2002Analysis]。总之，对空间广义线性混合效应模型而言，拉普拉斯近似还可以继续采用，想法是近似边际似然函数中的高维 ($n > 3$) 积分，获得一个易于处理的表达式，有了积分的显式表达式，就可以用数值的方法求边际似然函数的极大值。拉普拉斯方法即用如下方式近似 \@ref(eq:marginal-likelihood) 中的积分
+边际似然函数 \@ref(eq:marginal-likelihood) 卷入的数值积分是充满挑战的，因为积分的维数 $n$ 是观测值的数目，所以像二次、高斯--埃尔米特或适应性高斯--埃尔米特数值积分方式都是不可用的。Luke Tierney 和 Joseph B. Kadane （1986 年）提出拉普拉斯近似方法 [@Tierney1986]，它在纵向数据分析中被大量采用 [@Diggle2002Analysis]。总之，对空间广义线性混合效应模型而言，拉普拉斯近似还可以继续采用，想法是近似边际似然函数中的高维 $(n > 3)$ 积分，获得一个易于处理的表达式，有了积分的显式表达式，就可以用数值的方法求边际似然函数的极大值。拉普拉斯方法即用如下方式近似 \@ref(eq:marginal-likelihood) 中的积分
 \begin{equation}
 I   =  \int_{\mathbb{R}^n} \exp\{Q(\mathbf{s})\}\mathrm{d}\mathbf{s} 
   \approx  (2\pi)^{n/2} |-Q''(\hat{\mathbf{s}})|^{-1/2}\exp\{Q(\hat{\mathbf{s}})\} (\#eq:laplace-approximate)
@@ -173,7 +173,7 @@ Q(S(\mathbf{x})) ={} &  \mathbf{y}^{\top} (D \boldsymbol{\beta} + S(\mathbf{x}))
                    & - \frac{n}{2}\log (2\pi) -\frac{1}{2}\log |\Sigma| -\frac{1}{2}S(\mathbf{x})^{\top} \Sigma^{-1} S(\mathbf{x})
 \end{aligned} (\#eq:log-lik)
 \end{equation}
-\noindent 方程 \@ref(eq:log-lik) 凸显了采纳拉普拉斯近似方法拟合空间广义线性混合效应模型的方便性，可以把 \@ref(eq:log-lik) 当成两部分来看，前一部分是广义线性模型下样本的对数似然的和的形式，后一部分是多元高斯分布的对数似然。要使用 \@ref(eq:laplace-approximate) 式，需要函数 $Q(S(\mathbf{x}))$ 的极大值点 $\hat{\mathbf{s}}$，这里采用牛顿-拉夫森算法 (Newton-Raphson，简称 NR) 寻找 $n$ 元函数的极大值点，NR 算法需要重复计算
+\noindent 方程 \@ref(eq:log-lik) 凸显了采纳拉普拉斯近似方法拟合空间广义线性混合效应模型的方便性，可以把 \@ref(eq:log-lik) 当成两部分来看，前一部分是广义线性模型下样本的对数似然的和的形式，后一部分是多元高斯分布的对数似然。要使用 \@ref(eq:laplace-approximate) 式，需要函数 $Q(S(\mathbf{x}))$ 的极大值点 $\hat{\mathbf{s}}$，这里采用牛顿-拉夫森算法 （Newton-Raphson，简称 NR） 寻找 $n$ 元函数的极大值点，NR 算法需要重复计算
 \begin{equation}
 \mathbf{s}_{i+1} = \mathbf{s}_{i} - Q''(\mathbf{s}_{i})^{-1}Q'(\mathbf{s}_{i}) 
 \end{equation}
@@ -192,7 +192,7 @@ Q''(\mathbf{s})& =  -\mathrm{diag} \{b''(D\boldsymbol{\beta} + \mathbf{s}) \} - 
 \end{equation}
 \noindent 现在极大化近似对数似然 \@ref(eq:approx-log-lik) 式，此时是求模型参数，可称之为外迭代过程，常用的算法是 Broyden-Fletcher-Goldfarb-Shanno (BFGS) 算法，它内置在 R 函数 `optim()` 中。方便起见，模型参数记为 $\boldsymbol{\theta} = (\boldsymbol{\beta},\log(\sigma^2),\log(\tau^2),\log(\phi),\log(\psi))$，且 $\hat{\boldsymbol{\theta}}$ 表示 $\boldsymbol{\theta}$ 的最大似然估计，根据第\@ref(prepare)章第\@ref(sec:def-mle)节定理\@ref(thm:asymptotic-normality)，则 $\hat{\boldsymbol{\theta}}$ 的渐进分布为
 \[ \hat{\boldsymbol{\theta}} \sim \mathcal{N}(\boldsymbol{\theta}, \mathbf{I}_{o}^{-1}(\hat{\boldsymbol{\theta}})) \]
-\noindent 其中 $\mathbf{I}_{o}(\hat{\boldsymbol{\theta}})$ 为观察到的样本信息阵，注意到在空间广义线性混合效应模型下，不能直接计算 Fisher 信息阵，因为对数似然函数没有显式表达式，只有数值迭代获得在 $\hat{\boldsymbol{\theta}}$ 处的观测信息矩阵。通常，这类渐进近似对协方差参数 $\sigma^2, \tau^2, \phi$ 的估计效果不好，在数据集不太大的情形下，可用第 \@ref(sec:profile-likelihood) 节介绍的剖面似然方法计算协方差参数及其置信区间。剖面似然估计的算法实现过程详见Ben Bolker等 (2017年) 开发的 **bbmle** 包 [@R-bbmle]，下面给出计算的细节步骤：
+\noindent 其中 $\mathbf{I}_{o}(\hat{\boldsymbol{\theta}})$ 为观察到的样本信息阵，注意到在空间广义线性混合效应模型下，不能直接计算 Fisher 信息阵，因为对数似然函数没有显式表达式，只有数值迭代获得在 $\hat{\boldsymbol{\theta}}$ 处的观测信息矩阵。通常，这类渐进近似对协方差参数 $\sigma^2, \tau^2, \phi$ 的估计效果不好，在数据集不太大的情形下，可用第 \@ref(sec:profile-likelihood) 节介绍的剖面似然方法计算协方差参数及其置信区间。剖面似然估计的算法实现过程详见 Ben Bolker 等 （2017年） 开发的 bbmle 包 [@R-bbmle]，下面给出计算的细节步骤：
 
 1. 选择模型参数 $\boldsymbol{\theta}$ 的初始值 $\boldsymbol{\theta}_{i}$；
 2. 计算协方差矩阵 $\Sigma$ 及其逆 $\Sigma^{-1}$；
@@ -207,7 +207,7 @@ Q''(\mathbf{s})& =  -\mathrm{diag} \{b''(D\boldsymbol{\beta} + \mathbf{s}) \} - 
 6. 用 BFGS 算法获得下一个值 $\boldsymbol{\theta}_{i+1}$；
 7. 重复上述过程直到收敛，获得参数的估计值 $\hat{\boldsymbol{\theta}}$。
 
-牛顿--拉夫森算法收敛速度是很快的，但是必须提供一个很好的初值，好的初值对于快速收敛到似然函数 $\ell(\boldsymbol{\theta};\mathbf{y})$ 的极大值点很重要。指定外迭代中的初值 $\boldsymbol{\theta}_{0}$的一个策略是首先拟合一个简单的广义线性模型，获得回归系数 $\boldsymbol{\beta}$ 的初值，基于这些值计算线性预测值 $\hat{\boldsymbol{\mu}}$；然后计算残差 $\hat{\boldsymbol{r}} = (\hat{\boldsymbol{\mu}} - \mathbf{y})$， $\hat{\boldsymbol{r}}$ 的方差作为 $\sigma^2$ 的初值，如果 SGLMM 带有块金效应，就用 $\sigma^2$ 的初值的一定比例，如 10\% 作为 $\tau^2$ 的初值；最后，$\phi$ 的初值选择两个距离最大的观测点之间的距离的 10\%，比较保险的办法是选择不同的 $\phi$ 作为初值，这个过程需要不断的试错以期获得算法的收敛[@Bonat2016Practical]。
+NR算法收敛速度是很快的，但是必须提供一个很好的初值，好的初值对于快速收敛到似然函数 $\ell(\boldsymbol{\theta};\mathbf{y})$ 的极大值点很重要。指定外迭代中的初值 $\boldsymbol{\theta}_{0}$的一个策略是首先拟合一个简单的广义线性模型，获得回归系数 $\boldsymbol{\beta}$ 的初值，基于这些值计算线性预测值 $\hat{\boldsymbol{\mu}}$；然后计算残差 $\hat{\boldsymbol{r}} = (\hat{\boldsymbol{\mu}} - \mathbf{y})$， $\hat{\boldsymbol{r}}$ 的方差作为 $\sigma^2$ 的初值，如果 SGLMM 带有块金效应，就用 $\sigma^2$ 的初值的一定比例，如 10\% 作为 $\tau^2$ 的初值；最后，$\phi$ 的初值选择两个距离最大的观测点之间的距离的 10\%，比较保险的办法是选择不同的 $\phi$ 作为初值，这个过程需要不断的试错以期获得算法的收敛[@Bonat2016Practical]。
 
 ### 蒙特卡罗极大似然算法 {#subsec:MCML}
 
@@ -240,11 +240,11 @@ L(\beta,\boldsymbol{\theta})
 L_{m}(\beta,\boldsymbol{\theta})=\frac{1}{m}\sum_{i=1}^{n}\frac{\mathcal{N}(t_{i};D\beta,\Sigma(\boldsymbol{\theta}))}{\mathcal{N}(t_{i};D\beta_{0},\Sigma(\boldsymbol{\theta}_{0}))} (\#eq:likelihood-approx)
 \end{equation}
 
-\noindent 这样做的依据是不管样本序列 $t_{(i)}$ 是否相关， $L_{m}(\beta,\boldsymbol{\theta})$ 都是 $L_{m}(\beta,\boldsymbol{\theta})$ 的一致估计 (consistent estimator)[@PrevMap2017JSS]。 最优的 $\beta_0,\boldsymbol{\theta}_0$ 是 $\beta,\boldsymbol{\theta}$ 的极大似然估计，即$\max_{\beta,\boldsymbol{\theta}}L_{m}(\beta,\boldsymbol{\theta}) \rightarrow 1, m \rightarrow\infty$。
+\noindent 这样做的依据是不管样本序列 $t_{(i)}$ 是否相关， $L_{m}(\beta,\boldsymbol{\theta})$ 都是 $L_{m}(\beta,\boldsymbol{\theta})$ 的一致估计 （consistent estimator）[@PrevMap2017JSS]。 最优的 $\beta_0,\boldsymbol{\theta}_0$ 是 $\beta,\boldsymbol{\theta}$ 的极大似然估计，即$\max_{\beta,\boldsymbol{\theta}}L_{m}(\beta,\boldsymbol{\theta}) \rightarrow 1, m \rightarrow\infty$。
 
 既然给定的初始值 $\beta_{0},\boldsymbol{\theta}_{0}$ 必定与真实的极大似然估计值不同，第 $m$ 步迭代获得的似然函数值 $L_{m}(\hat{\beta}_{m}, \hat{\boldsymbol{\theta})}_{m}$ 与 1 的距离可以用来刻画蒙特卡罗近似的准确度。实际操作中，用 $\hat{\beta}_{m}$ 和 $\hat{\boldsymbol{\theta}}_{m}$ 表示最大化 $L_{m}(\beta, \boldsymbol{\theta})$ 获得的 MCML 估计，重复迭代 $\beta_{0} = \hat{\beta}_{m}$ 和 $\boldsymbol{\theta}_{0} = \hat{\boldsymbol{\theta}}_{m}$ 直到收敛。 求蒙特卡罗近似的对数似然 $l_{m}(\beta, \boldsymbol{\theta}) = \log L_{m}(\beta, \boldsymbol{\theta})$ 的极值，可以使用 PrevMap 包，迭代 $L_{m}(\beta, \boldsymbol{\theta})$ 的过程中，可以选择 BFGS 算法。关于 $\boldsymbol{\psi}$ 的似然曲面是相当扁平的，为了更好的收敛到全局极大值，做一步重参数化，即令 $\boldsymbol{\psi} = \log(\boldsymbol{\theta})$，$L_{m}(\beta, \boldsymbol{\psi})$ 关于 $\beta$ 和 $\boldsymbol{\psi}$ 的一阶、二阶导数传递给 maxLik 包的 `maxBFGS` 函数。
 
-蒙特卡罗极大似然估计 $\boldsymbol{\theta}_{m}$ 的标准误差 (standard errors) 取似然函数 $l_{m}(\beta,\boldsymbol{\theta})$ 的负黑塞矩阵的逆的对角线元素的平方根。迭代次数足够多时，即 $m$ 充分大时，一般取到 10000 及以上，此时蒙特卡罗误差可忽略，即用方程 \@ref(eq:likelihood-approx) 近似 \@ref(eq:likelihood2) 的误差可忽略。
+蒙特卡罗极大似然估计 $\boldsymbol{\theta}_{m}$ 的标准误差 （standard errors） 取似然函数 $l_{m}(\beta,\boldsymbol{\theta})$ 的负黑塞矩阵的逆的对角线元素的平方根。迭代次数足够多时，即 $m$ 充分大时，一般取到 10000 及以上，此时蒙特卡罗误差可忽略，即用方程 \@ref(eq:likelihood-approx) 近似 \@ref(eq:likelihood2) 的误差可忽略。
 
 
 ### 贝叶斯 MCMC 算法 {#sec:MCMC}
@@ -327,7 +327,7 @@ K(u; \phi, \kappa) = \frac{\Gamma(\kappa + 1)^{1/2}\kappa^{(\kappa+1)/4}u^{(\kap
 S(x) \approx \sum_{i = 1}^r K(\|x-\tilde{x}_{i}\|; \phi, \kappa) U_{i} (\#eq:lr-approx)
 \end{equation}
 
-\noindent 式\@ref(eq:lr-approx)中， $(\tilde{x}_{1},\ldots,\tilde{x}_{r})$ 表示空间网格的格点，$U_{i}$ 是独立同分布的高斯变量，均值为0， 方差$\sigma^2$。 特别地， 尺度参数$\phi$越大时，空间曲面越平缓，如图 \@ref(fig:matern-2d)所示，在格点数 $r$ 比较少时也能得到不错的近似效果。 此外， 空间格点数 $r$ 与样本量 $n$ 是独立的， 因此， 低秩近似算法在样本量比较大时， 计算效率还比较高。
+\noindent 式\@ref(eq:lr-approx)中， $(\tilde{x}_{1},\ldots,\tilde{x}_{r})$ 表示空间网格的格点，$U_{i}$ 是独立同分布的高斯变量，均值为$0$， 方差为$\sigma^2$。 特别地， 尺度参数$\phi$越大时，空间曲面越平缓，如图 \@ref(fig:matern-2d)所示，在格点数 $r$ 比较少时也能得到不错的近似效果。 此外， 空间格点数 $r$ 与样本量 $n$ 是独立的， 因此， 低秩近似算法在样本量比较大时， 计算效率还比较高。
 
 注意到平稳空间高斯过程 $S(x)$ 经过方程 \@ref(eq:lr-approx) 的近似已不再平稳。通过乘以 $$\frac{1}{n}\sum_{i = 1}^n \sum_{j = 1}^m K(\|\tilde{x}_{j}-\tilde{x}_{i}\|; \phi, \kappa)^2$$ 来调整 $\sigma^2$。 事实上，调整后的 $\sigma^2$ 会更接近于高斯过程 $S(x)$ 的实际方差。
 
@@ -342,7 +342,7 @@ S(x) \approx \sum_{i = 1}^r K(\|x-\tilde{x}_{i}\|; \phi, \kappa) U_{i} (\#eq:lr-
 
 <!-- ### 算法提出的背景和意义 {#subsec:motivations} -->
 
-贝叶斯 MCMC 算法是一个计算密集型的算法，高效的实现对理论和应用都有非常重要的意义。因此，早在 1989 年剑桥大学研究人员开发出了 Windows 上的应用程序 WinBUGS，并被广泛使用。随着个人电脑的普及、Linux 和 MacOS 系统的蓬勃发展， 只能运行于 Windows 系统上的 WinBUGS 逐渐落后于时代，并在 2008 年宣布停止开发。 随后， OpenBUGS 以开源的开发方式重现了 WinBUGS 的功能，还可跨平台运行，弥补了 WinBUGS 的一些不足，而后又出现了同类的开源软件 JAGS。 无论是 OpenBUGS 还是 JAGS 都无法适应当代计算机硬件的迅猛发展， 它们的设计由于历史局限性， 已经无法满足在兼容性、 扩展性和高效性方面的要求。 所以， 哥伦比亚大学的统计系以开源的方式开发了新一代贝叶斯推断子程序库 Stan， 它与前辈们最明显的最直观的不同在于，它不是一个像 WinBUGS/OpenBUGS/JAGS 那样的软件有菜单窗口或软件内的命令行环境， [Stan](http://mc-stan.org/) 是一种概率编程语言 [@Stan2017JSS]， 可以替代 BUGS ( Bayesian inference Using Gibbs Sampling )  [@BUGS2009] 作为 MCMC 算法的高效实现。相比较于同类软件，Stan 的优势有：底层完全基于 C++ 实现；拥有活跃和快速发展的社区；支持在CPU/GPU上大规模并行计算；独立于系统和硬件平台；提供多种编程语言的接口，如 PyStan、 RStan 等等。 在大数据的背景下， 拥有数千台服务器的企业越来越多， 计算机资源达到前所未有的规模， 这为 Stan 的广泛应用打下了基础。
+贝叶斯 MCMC 算法是一个计算密集型的算法，高效的实现对理论和应用都有非常重要的意义。因此，早在 1989 年剑桥大学研究人员开发出了 Windows 上的应用程序 WinBUGS，并被广泛使用。随着个人电脑的普及、Linux 和 MacOS 系统的蓬勃发展， 只能运行于 Windows 系统上的 WinBUGS 逐渐落后于时代，并在 2008 年宣布停止开发。 随后， OpenBUGS 以开源的开发方式重现了 WinBUGS 的功能，还可跨平台运行，弥补了 WinBUGS 的一些不足，而后又出现了同类的开源软件 JAGS。 无论是 OpenBUGS 还是 JAGS 都无法适应当代计算机硬件的迅猛发展， 它们的设计由于历史局限性， 已经无法满足在兼容性、 扩展性和高效性方面的要求。 所以， 哥伦比亚大学的统计系以开源的方式开发了新一代贝叶斯推断子程序库 Stan， 它与前辈们最明显的最直观的不同在于，它不是一个像 WinBUGS/OpenBUGS/JAGS 那样的软件有菜单窗口或软件内的命令行环境， [Stan](http://mc-stan.org/) 是一种概率编程语言 [@Stan2017JSS]， 可以替代 BUGS （Bayesian inference Using Gibbs Sampling） [@BUGS2009] 作为 MCMC 算法的高效实现。相比较于同类软件，Stan 的优势有：底层完全基于 C++ 实现；拥有活跃和快速发展的社区；支持在CPU/GPU上大规模并行计算；独立于系统和硬件平台；提供多种编程语言的接口，如 PyStan、 RStan 等等。 在大数据的背景下， 拥有数千台服务器的企业越来越多， 计算机资源达到前所未有的规模， 这为 Stan 的广泛应用打下了基础。
 
 <!-- ### STAN-MCMC 算法实现过程 {#STANMCMC} -->
 
@@ -356,7 +356,7 @@ S(x) \approx \sum_{i = 1}^r K(\|x-\tilde{x}_{i}\|; \phi, \kappa) U_{i} (\#eq:lr-
 4. 更新模型系数 $\beta$ ：从条件密度 $p(\beta'|\beta)$ 以概率 $$\Delta = \min \big\{ \frac{\prod_{j=1}^{n}p(y_i|s_{i},\beta')p(\beta|\beta')}{\prod_{j=1}^{n}p(y_i|s_{i},\beta)p(\beta'|\beta)},1  \big\}$$ 接受 $\beta'$，否则不改变$\beta$。
 5. 重复步骤2，3，4 既定的次数，获得参数 $\beta,\theta$ 的迭代序列。
 
-\noindent 直到参数的迭代序列平稳，然后根据后续的平稳序列采样，获得各参数后验分布的样本，再根据样本估计参数值。程序实现的主要步骤(以 R 语言接口 rstan 和 brms 为例说明)：首先安装 C++ 编译工具，如果在 Windows 平台上，就从 R 官网下载安装 [RTools][rtools]， 它包含一套完整的 C++ 开发工具。 然后添加 gcc/g++ 编译器的路径到系统环境变量。 如果在 Linux 系统上， 这些工具都是自带的， 环境变量也不用配置， 减少了很多麻烦，但是在 Linux 系统上可以获得更好的算法性能。其它配置细节见 Stan 开发[官网][stan-setup]。其次，在 R 软件控制台，安装 rstan 和 brms 包以及相关依赖包。然后，加载 rstan 和 brms 包，配置参数如下：
+\noindent 直到参数的迭代序列平稳，然后根据后续的平稳序列采样，获得各参数后验分布的样本，再根据样本估计参数值。程序实现的主要步骤（以 R 语言接口 rstan 和 brms 为例说明）：首先安装 C++ 编译工具，如果在 Windows 平台上，就从 R 官网下载安装 [RTools][rtools]， 它包含一套完整的 C++ 开发工具。 然后添加 gcc/g++ 编译器的路径到系统环境变量。 如果在 Linux 系统上， 这些工具都是自带的， 环境变量也不用配置， 减少了很多麻烦，但是在 Linux 系统上可以获得更好的算法性能。其它配置细节见 Stan 开发[官网][stan-setup]。其次，在 R 软件控制台，安装 rstan 和 brms 包以及相关依赖包。然后，加载 rstan 和 brms 包，配置参数如下：
 ```{r,echo=TRUE,eval=FALSE}
 # 加载程序包
 library(rstan)
@@ -406,7 +406,7 @@ Table: (\#tab:sglmm-packages)  求解空间广义线性混合效应模型的 R �
 
 ## 本章小结 {#sec:estimations}
 
-本章参数估计和算法实现是论文的主要内容之一，首先沿着极大似然估计的思路，尝试写出SGLMM模型参数的似然函数，但是因为空间随机效应导致的高维积分无法用显式表达式表示，进而出现了以拉普拉斯近似和蒙特卡罗模拟的两类基于似然的方法，前者走近似高维积分的路子，后者走模拟计算的路子，这两类方法在数据分析中，前者尤其需要指定合适的初值，且在数据量不太大的时候才能应用，后者需要指定合适的先验分布。第\@ref(sec:STAN-MCMC)节在第\@ref(sec:MCMC)小节的基础上提出基于Stan实现的MCMC算法。
+本章参数估计和算法实现是论文的主要内容之一，首先沿着极大似然估计的思路，尝试写出 SGLMM 模型参数的似然函数，但是因为空间随机效应导致的高维积分无法用显式表达式表示，进而出现了以拉普拉斯近似和蒙特卡罗模拟的两类基于似然的方法，前者走近似高维积分的路子，后者走模拟计算的路子，这两类方法在数据分析中，前者尤其需要指定合适的初值，且在数据量不太大的时候才能应用，后者需要指定合适的先验分布。第\@ref(sec:STAN-MCMC)节在第\@ref(sec:MCMC)小节的基础上提出基于 Stan 实现的 MCMC 算法。
 
 [stan-setup]: https://github.com/stan-dev/rstan/wiki
 [rtools]: https://cran.r-project.org/bin/windows/Rtools/

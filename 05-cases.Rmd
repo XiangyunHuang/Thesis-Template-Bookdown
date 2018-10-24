@@ -1,16 +1,16 @@
 # 数据分析 {#applications}
 
-第\@ref(sec:spatial-random-effects)节基于小麦产量数据建立空间线性混合效应模型，以 R 软件和相关 R 包为工具，介绍空间统计建模分析的过程，特别是诊断和添加空间随机效应的分析方法和模型参数初值的确定方式。这个分析方法和初值的确定方式具有普适性，对于更复杂的空间广义线性混合效应模型也是适用的。第\@ref(case-rongelap)节建立响应变量服从泊松分布的空间广义线性混合效应模型分析一个真实数据集 rongelap。rongelap 数据集目前由 Ole F. Christensen  维护在 R 包 geoRglm 里，曾被 Peter J. Diggle 等 (1998年) [@Diggle1998] 和 Ole F Christensen (2004年) [@Christensen2004] 分析过，与他们不同的是，第\@ref(case-rongelap)节将基于蒙特卡罗极大似然算法估计该泊松型空间广义线性混合效应模型的参数。
+第\@ref(sec:spatial-random-effects)节基于小麦产量数据建立空间线性混合效应模型，以 R 软件和相关 R 包为工具，介绍空间统计建模分析的过程，特别是诊断和添加空间随机效应的分析方法和模型参数初值的确定方式。这个分析方法和初值的确定方式具有普适性，对于更复杂的空间广义线性混合效应模型也是适用的。第\@ref(case-rongelap)节建立响应变量服从泊松分布的空间广义线性混合效应模型分析一个真实数据集 rongelap。rongelap 数据集目前由 Ole F. Christensen  维护在 R 包 geoRglm 里，曾被 Peter J. Diggle 等 （1998年） [@Diggle1998] 和 Ole F Christensen （2004年） [@Christensen2004] 分析过，与他们不同的是，第\@ref(case-rongelap)节将基于蒙特卡罗极大似然算法估计该泊松型空间广义线性混合效应模型的参数。
 
 ## 小麦产量的空间分布 {#sec:spatial-random-effects}
 
-Walter W. Stroup 和 P. Stephen Baenziger (1994年) [@Stroup1994] 采用完全随机的区组设计研究小麦产量与品种等因素的关系，在 4 块肥力不同的地里都随机种植了 56 种不同的小麦， 实验记录了小麦产量、品种、位置以及土地肥力等数据， José Pinheiro 和 Douglas Bates (2000年) [@Pinheiro2000] 将该数据集命名为 Wheat2 ，整理后放在 nlme 包里。 这里利用该真实的农业生产数据构建带空间效应的线性混合效应模型，展示诊断和添加空间效应的过程。
+Walter W. Stroup 和 P. Stephen Baenziger （1994年） [@Stroup1994] 采用完全随机的区组设计研究小麦产量与品种等因素的关系，在 4 块肥力不同的地里都随机种植了 56 种不同的小麦， 实验记录了小麦产量、品种、位置以及土地肥力等数据， José Pinheiro 和 Douglas Bates （2000年） [@Pinheiro2000] 将该数据集命名为 Wheat2 ，整理后放在 nlme 包里。 这里利用该真实的农业生产数据构建带空间效应的线性混合效应模型，展示诊断和添加空间效应的过程。
 
 ```{r yields-block,fig.cap="小麦产量与土壤肥力的关系，图中纵轴表示试验田的4种类型，且土壤肥力强弱顺序是 1 > 2 > 3 > 4，横轴表示小麦产量，每块试验田都种植了 56 种小麦，图中分别以不同的颜色标识，图上方是小麦类型的编号",fig.asp=1,out.width="85%"}
 knitr::include_graphics(path = "figures/Yields-Block.png")
 ```
 
-图 \@ref(fig:yields-block) 按土壤肥力不同分块展示每种小麦的产量，图中暗示数据中有明显的 block 效应，即不同实验田对结果产生显著影响，而且不同实验田之间，小麦产量呈现异方差性，为了更好地表达这些效应，可以基于经纬度坐标信息添加与空间相关的结构 (spatial correlation structures)。基于上述对图\@ref(fig:yields-block) 的探索，先建立一般的线性模型，以量化上述描述性分析结果，模型结构如下
+图 \@ref(fig:yields-block) 按土壤肥力不同分块展示每种小麦的产量，图中暗示数据中有明显的 block 效应，即不同实验田对结果产生显著影响，而且不同实验田之间，小麦产量呈现异方差性，为了更好地表达这些效应，可以基于经纬度坐标信息添加与空间相关的结构 （spatial correlation structures）。基于上述对图\@ref(fig:yields-block) 的探索，先建立一般的线性模型，以量化上述描述性分析结果，模型结构如下
 \begin{equation}
 y_{ij} = \tau_i + \epsilon_{ij}, \quad \boldsymbol{\epsilon} \sim \mathcal{N}(\mathbf{0},\sigma^2 \boldsymbol{\Lambda}) (\#eq:extended-linear-model)
 \end{equation}
@@ -20,7 +20,7 @@ y_{ij} = \tau_i + \epsilon_{ij}, \quad \boldsymbol{\epsilon} \sim \mathcal{N}(\m
 knitr::include_graphics(path = "figures/Yields-Variogram.png")
 ```
 
-图 \@ref(fig:yields-variogram) 显示样本变差随空间距离有明显的增长趋势，可见空间随机效应明显，根据第\@ref(models)章第\@ref(subsec:covariance-function)小节，可以有理由地估计块金效应$\tau^2$大约是 0.2，参数 $\phi$ 可由样本变差为 1 对应的空间距离来初步估计，图\@ref(fig:yields-variogram)显示该值大约是 31。 图中的平滑曲线是 局部多项式回归拟合的结果，也可以用局部加权回归拟合的平滑法来确定初值 [@Xie2008COS]。上述图示分析，首先采用球性自相关函数拟合这组数据中的空间结构。考虑空间效应后，采用 `gls` 函数提供的限制极大似然法 (Restricted Maximum Likelihood Estimation， 简称 REML) 拟合模型\@ref(eq:extended-linear-model)，与第\@ref(prepare)章第\@ref(sec:def-mle)节介绍的极大似然估计相比，它对方差分量的估计偏差更小一些[@Diggle2007]，适合估计线性混合效应模型的参数，`gls` 还支持不同类型的空间自相关函数，因此继续探索球型和二次有理型自相关函数^[(ref:corRatio)]对模型拟合结果的影响。
+图 \@ref(fig:yields-variogram) 显示样本变差随空间距离有明显的增长趋势，可见空间随机效应明显，根据第\@ref(models)章第\@ref(subsec:covariance-function)小节，可以有理由地估计块金效应$\tau^2$大约是 0.2，参数 $\phi$ 可由样本变差为 1 对应的空间距离来初步估计，图\@ref(fig:yields-variogram)显示该值大约是 31。 图中的平滑曲线是 局部多项式回归拟合的结果，也可以用局部加权回归拟合的平滑法来确定初值 [@Xie2008COS]。上述图示分析，首先采用球性自相关函数拟合这组数据中的空间结构。考虑空间效应后，采用 `gls` 函数提供的限制极大似然法 （Restricted Maximum Likelihood Estimation， 简称 REML） 拟合模型\@ref(eq:extended-linear-model)，与第\@ref(prepare)章第\@ref(sec:def-mle)节介绍的极大似然估计相比，它对方差分量的估计偏差更小一些[@Diggle2007]，适合估计线性混合效应模型的参数，`gls` 还支持不同类型的空间自相关函数，因此继续探索球型和二次有理型自相关函数^[(ref:corRatio)]对模型拟合结果的影响。
 
 Table: (\#tab:yields-model-compare) 以小麦数据为例估计空间线性混合效应模型的参数，比较不同初值和自协方差函数对模型拟合效果的影响，表中$\phi_0,\tau^2_{0},\sigma^2_{0}$和$\hat{\phi},\hat{\tau}^2,\hat{\sigma}^2$分别是模型\@ref(eq:extended-linear-model)参数$\phi,\tau^2,\sigma^2$的初值和估计值
 
@@ -42,12 +42,12 @@ knitr::include_graphics(path = c("figures/heteroscedasticity.png","figures/norma
 
 ## 朗格拉普岛核污染浓度的空间分布 {#case-rongelap}
 
-朗格拉普岛位于南太平洋上，是马绍尔群岛的一部分，二战后，美国在该岛上进行了多次核武器测试，核爆炸后产生的放射性尘埃笼罩了全岛，目前该岛仍然不适合人类居住，只有经批准的科学研究人员才能登岛。基于马绍尔群岛国家的放射性调查数据，Peter J. Diggle 等 (1998年) [@Diggle1998] 使用 蒙特卡罗极大似然算法估计空间广义线性混合效应模型 \@ref(eq:rongelap-without-nugget-effect) 的各个参数，Ole F Christensen (2004年) [@Christensen2004] 发现该核污染数据集中存在不能被泊松分布解释的残差，因此添加了非空间的随机效应 $Z_i$，建立模型 \@ref(eq:rongelap-with-nugget-effect)，在地质统计领域内，$Z_i$ 还有个专有名词叫块金效应。
+朗格拉普岛位于南太平洋上，是马绍尔群岛的一部分，二战后，美国在该岛上进行了多次核武器测试，核爆炸后产生的放射性尘埃笼罩了全岛，目前该岛仍然不适合人类居住，只有经批准的科学研究人员才能登岛。基于马绍尔群岛国家的放射性调查数据，Peter J. Diggle 等 （1998年） [@Diggle1998] 使用 蒙特卡罗极大似然算法估计空间广义线性混合效应模型 \@ref(eq:rongelap-without-nugget-effect) 的各个参数，Ole F Christensen （2004年） [@Christensen2004] 发现该核污染数据集中存在不能被泊松分布解释的残差，因此添加了非空间的随机效应 $Z_i$，建立模型 \@ref(eq:rongelap-with-nugget-effect)，在地质统计领域内，$Z_i$ 还有个专有名词叫块金效应。
 \begin{align}
 \log\{\lambda(x_{i})\}& =  \beta + S(x_{i}) (\#eq:rongelap-without-nugget-effect)\\
 \log\{\lambda(x_{i})\}& =  \beta + S(x_{i}) + Z_{i} (\#eq:rongelap-with-nugget-effect)
 \end{align}
-放射性调查获得的 rongelap 数据集包含几个观测变量，分别是放射粒子数、相应时间间隔和157个空间坐标。图\@ref(fig:rongelap-dataset) 表示记录放射性数据的站点分布。根据 ${}^{137}\mathsf{Cs}$ 放出的伽马射线在 $N=157$ 站点不同时间间隔的放射量， 建立泊松广义线性混合效应模型 \@ref(eq:rongelap-with-nugget-effect)。模型\@ref(eq:rongelap-with-nugget-effect)中，$\beta$ 是截距， 放射粒子数作为响应变量服从强度为 $\lambda(x_i)$ 的泊松分布，即 $Y_{i} \sim \mathrm{Poisson}( \lambda(x_i) )$，平稳空间高斯过程 $S(x),x \in \mathbb{R}^2$的自协方差函数为 $\mathsf{Cov}( S(x_i), S(x_j) ) = \sigma^2 \exp( -\|x_i -x_j\|_{2} / \phi )$，且 $Z_i$ 之间相互独立同正态分布 $\mathcal{N}(0,\tau^2)$，这里 $i = 1,\ldots, 157$。
+放射性调查获得的 rongelap 数据集包含几个观测变量，分别是放射粒子数、相应时间间隔和157个空间坐标。图\@ref(fig:rongelap-dataset) 表示记录放射性数据的站点分布。根据 ${}^{137}\mathrm{Cs}$ 放出的伽马射线在 $N=157$ 站点不同时间间隔的放射量， 建立泊松广义线性混合效应模型 \@ref(eq:rongelap-with-nugget-effect)。模型\@ref(eq:rongelap-with-nugget-effect)中，$\beta$ 是截距， 放射粒子数作为响应变量服从强度为 $\lambda(x_i)$ 的泊松分布，即 $Y_{i} \sim \mathrm{Poisson}( \lambda(x_i) )$，平稳空间高斯过程 $S(x),x \in \mathbb{R}^2$的自协方差函数为 $\mathsf{Cov}( S(x_i), S(x_j) ) = \sigma^2 \exp( -\|x_i -x_j\|_{2} / \phi )$，且 $Z_i$ 之间相互独立同正态分布 $\mathcal{N}(0,\tau^2)$，这里 $i = 1,\ldots, 157$。
 
 ```{r rongelap-dataset,fig.cap="朗格拉普岛上测量伽玛粒子放射性强度的位置分布，图中加号 + 标注采样的位置，水平方向表示横坐标，垂直方向表示纵坐标，这里使用的坐标系是 UTM (Universal Transverse Mercator) 坐标系",out.width="60%"}
 knitr::include_graphics(path = "figures/rongelap-island.png")

@@ -5,14 +5,16 @@ library(geoR)
 library(geoRglm)
 
 set.seed(2018)
+N = 81 # 36 64 81
+
 ## Simulating data 二项分布
-sim <- grf(grid = expand.grid(x = seq(0.0555, 0.944444, l = 8),
-                              y = seq(0.0555, 0.944444, l = 8)), 
+sim <- grf(grid = expand.grid(x = seq(0.0555, 0.944444, l = sqrt(N)),
+                              y = seq(0.0555, 0.944444, l = sqrt(N))), 
            cov.pars = c(0.5, 0.2), kappa = 0.5, nugget = 0 )
 # cov.pars 依次是 sigma^2 (partial sill) 和 phi (range parameter)
-sim$units.m <- rep(4, 64) # 64 个采样点 每个采样点的观察值服从二项分布，其值分别取 0,1,2,3
+sim$units.m <- rep(4, N) # N 个采样点 每个采样点的观察值服从二项分布，其值分别取 0,1,2,3
 sim$prob <- exp(sim$data) / (1 + exp(sim$data))
-sim$data <- rbinom(64, size = sim$units.m, prob = sim$prob)
+sim$data <- rbinom(N, size = sim$units.m, prob = sim$prob)
 
 ## Visualising the data and the (unobserved) random effects 空间效应或者说平稳高斯过程
 
@@ -44,52 +46,11 @@ mcmc.sim <- mcmc.control(S.scale = 0.05, phi.scale = 0.015, thin = 100, burn.in 
 pred.grid <- expand.grid(x = seq(0.0125, 0.9875, l = 40), y = seq(0.0125, 0.9875, l = 40)) 
 # 预测位置 40 x 40 = 1600 个
 out.sim <- output.glm.control(sim.predict = TRUE)
-# 很费时间
-run.sim <- binom.krige.bayes(sim, locations = pred.grid, prior = prior.sim, 
-                             mcmc.input = mcmc.sim, output = out.sim)
-
-# 模拟过程的诊断
-## Autocorrelations 
-pdf(file = "binom-without-nugget-geoRglm-acf.pdf",width = 6,height = 8)
-par(mfrow = c(3, 2), mar = c(2.3, 2.5, .5, .7), mgp = c(1.5, .6, 0), cex = 0.6)
-plot(run.sim$posterior$sim[1, ], type = "l", ylab = "S(0.056, 0.056)")
-acf(run.sim$posterior$sim[1, ], main = "")
-plot(run.sim$posterior$sim[29, ], type = "l", ylab = "S(0.563, 0.436)")
-acf(run.sim$posterior$sim[29, ], main = "")
-plot(run.sim$posterior$phi$sample, type = "l", ylab = "phi")
-acf(run.sim$posterior$phi$sample, main = "")
-dev.off()
-
-## Plot of timeseries
-# 任意取两个位置观察其后验分布
-pdf(file = "binom-without-nugget-geoRglm-ts.pdf",width = 6,height = 9)
-par(mfrow = c(3, 1), mar = c(2.3, 2.5, .5, .7), mgp = c(1.5, .6, 0), cex = 0.6)
-plot(run.sim$posterior$sim[1, ], type = "l", ylab = "S(0.056, 0.056)")
-plot(run.sim$posterior$sim[29, ], type = "l", ylab = "S(0.563, 0.436)")
-plot(run.sim$posterior$phi$sample, type = "l", ylab = "phi")
-dev.off()
-
-## Predictions
-sim.predict <- apply(run.sim$pred$simulations, 1, mean)
-sim.predict.var <- apply(run.sim$pred$simulations, 1, var)
-
-pdf(file = "binom-without-nugget-geoRglm-pred.pdf",width = 6,height = 3)
-par(mfrow = c(1, 2), mar = c(2.3, 2.5, .5, .7), mgp = c(1.5, .6, 0), cex = 0.6)
-# 1600 个点的预测值
-image(
-  x = run.sim, locations = pred.grid, values.to.plot = sim.predict, 
-  col = gray(seq(1, 0, l = 30)),
-  x.leg = c(0.1, 0.9), y.leg = c(-0.12, -0.07), cex = 1.0, 
-  xlab = "Horizontal Coordinate", ylab = "Vertical Coordinate"
-)
-# 预测值对应的方差
-image(
-  x = run.sim, locations = pred.grid, 
-  values = sim.predict.var, col = gray(seq(1, 0, l = 30)),
-  x.leg = c(0.1, 0.9), y.leg = c(-0.12, -0.07), cex = 1.0, 
-  xlab = "Horizontal Coordinate", ylab = "Vertical Coordinate"
-)
-dev.off()
+# 这一步很费时间 
+system.time({
+  run.sim <- binom.krige.bayes(sim, locations = pred.grid, prior = prior.sim, 
+                               mcmc.input = mcmc.sim, output = out.sim)
+}, gcFirst = TRUE)
 
 
 df <- data.frame(
@@ -133,3 +94,46 @@ rownames(loc_prob) <- paste0("$p(x_{", seq(64), "})$")
 # 输出为 markdown 形式插入到 R Markdown 文档中
 knitr::kable(loc_prob, digits = 3, format = "markdown", padding = 2)
 
+
+# 模拟过程的诊断
+## Autocorrelations 
+pdf(file = "binom-without-nugget-geoRglm-acf.pdf",width = 6,height = 8)
+par(mfrow = c(3, 2), mar = c(2.3, 2.5, .5, .7), mgp = c(1.5, .6, 0), cex = 0.6)
+plot(run.sim$posterior$sim[1, ], type = "l", ylab = "S(0.056, 0.056)")
+acf(run.sim$posterior$sim[1, ], main = "")
+plot(run.sim$posterior$sim[29, ], type = "l", ylab = "S(0.563, 0.436)")
+acf(run.sim$posterior$sim[29, ], main = "")
+plot(run.sim$posterior$phi$sample, type = "l", ylab = "phi")
+acf(run.sim$posterior$phi$sample, main = "")
+dev.off()
+
+## Plot of timeseries
+# 任意取两个位置观察其后验分布
+pdf(file = "binom-without-nugget-geoRglm-ts.pdf",width = 6,height = 9)
+par(mfrow = c(3, 1), mar = c(2.3, 2.5, .5, .7), mgp = c(1.5, .6, 0), cex = 0.6)
+plot(run.sim$posterior$sim[1, ], type = "l", ylab = "S(0.056, 0.056)")
+plot(run.sim$posterior$sim[29, ], type = "l", ylab = "S(0.563, 0.436)")
+plot(run.sim$posterior$phi$sample, type = "l", ylab = "phi")
+dev.off()
+
+## Predictions
+sim.predict <- apply(run.sim$pred$simulations, 1, mean)
+sim.predict.var <- apply(run.sim$pred$simulations, 1, var)
+
+pdf(file = "binom-without-nugget-geoRglm-pred.pdf",width = 6,height = 3)
+par(mfrow = c(1, 2), mar = c(2.3, 2.5, .5, .7), mgp = c(1.5, .6, 0), cex = 0.6)
+# 1600 个点的预测值
+image(
+  x = run.sim, locations = pred.grid, values.to.plot = sim.predict, 
+  col = gray(seq(1, 0, l = 30)),
+  x.leg = c(0.1, 0.9), y.leg = c(-0.12, -0.07), cex = 1.0, 
+  xlab = "Horizontal Coordinate", ylab = "Vertical Coordinate"
+)
+# 预测值对应的方差
+image(
+  x = run.sim, locations = pred.grid, 
+  values = sim.predict.var, col = gray(seq(1, 0, l = 30)),
+  x.leg = c(0.1, 0.9), y.leg = c(-0.12, -0.07), cex = 1.0, 
+  xlab = "Horizontal Coordinate", ylab = "Vertical Coordinate"
+)
+dev.off()

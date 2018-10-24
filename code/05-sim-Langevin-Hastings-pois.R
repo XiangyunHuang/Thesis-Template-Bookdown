@@ -1,35 +1,40 @@
+rm(list = ls())
+
 library(geoR)
 library(geoRglm)
 set.seed(371)
-sim <- grf(grid = expand.grid(x = seq(0, 1, l = 8), 
-                              y = seq(0, 1, l = 8)), 
+
+N = 100 # 64 100
+
+sim <- grf(grid = expand.grid(x = seq(0, 1, l = sqrt(N)), 
+                              y = seq(0, 1, l = sqrt(N))), 
 			cov.pars = c(2, 0.2),cov.model = "mat", kappa = 1.5) 
 # sigmasq = 2  phi = 0.2
 sim$lambda <- exp(0.5 + sim$data)	# alpha = 0.5 
 sim$data <- rpois(length(sim$data), lambda = sim$lambda) 
 
-pdf(file = "poisson-without-nugget-geoRglm.pdf",width = 8,height = 4)
-par(mfrow = c(1, 2), mar = c(2.3, 2.5, .5, .7), mgp = c(1.5, .6, 0), cex = 1)
-plot(c(-0.1, 1.1), c(-0.1, 1.1), type = "n", xlab = "Horizontal Coordinate", ylab = "Vertical Coordinate")
-text(sim$coords[,1], sim$coords[,2], format(sim$lambda, digits = 1), cex = 0.8) 
-
-plot(c(-0.1, 1.1), c(-0.1, 1.1), type = "n", xlab = "Horizontal Coordinate", ylab = "Vertical Coordinate") 
-text(sim$coords[,1], sim$coords[,2], format(sim$data)) 
-dev.off()
+# pdf(file = "poisson-without-nugget-geoRglm.pdf",width = 8,height = 4)
+# par(mfrow = c(1, 2), mar = c(2.3, 2.5, .5, .7), mgp = c(1.5, .6, 0), cex = 1)
+# plot(c(-0.1, 1.1), c(-0.1, 1.1), type = "n", xlab = "Horizontal Coordinate", ylab = "Vertical Coordinate")
+# text(sim$coords[,1], sim$coords[,2], format(sim$lambda, digits = 1), cex = 0.8) 
+# 
+# plot(c(-0.1, 1.1), c(-0.1, 1.1), type = "n", xlab = "Horizontal Coordinate", ylab = "Vertical Coordinate") 
+# text(sim$coords[,1], sim$coords[,2], format(sim$data)) 
+# dev.off()
 
 # 调参数
 # First we need to tune the algorithm by scaling the proposal variance so
 # that acceptance rate is approximately 60 percent (optimal acceptance rate
 # for Langevin-Hastings algorithm). This is done by trial and error.
-set.seed(371)
-mcc.tune <- mcmc.control(S.scale = 0.014, phi.scale = 0.15, thin = 100, n.iter = 5000)
-# 50 个样本
-pgc.tune <- prior.glm.control(
-  phi.prior = "uniform", phi = 0.2,
-  phi.discrete = seq(0, 2, by = 0.02),
-  tausq.rel = 0
-)
-pkb.tune <- pois.krige.bayes(sim, prior = pgc.tune, mcmc.input = mcc.tune)
+# set.seed(371)
+# mcc.tune <- mcmc.control(S.scale = 0.014, phi.scale = 0.15, thin = 100, n.iter = 5000)
+# # 50 个样本
+# pgc.tune <- prior.glm.control(
+#   phi.prior = "uniform", phi = 0.2,
+#   phi.discrete = seq(0, 2, by = 0.02),
+#   tausq.rel = 0
+# )
+# pkb.tune <- pois.krige.bayes(sim, prior = pgc.tune, mcmc.input = mcc.tune)
 # 全量迭代模拟
 set.seed(371)
 mcmc.sim <- mcmc.control(S.scale = 0.025, phi.scale = 0.1, thin = 100, 
@@ -38,11 +43,16 @@ prior.sim <- prior.glm.control(
   phi.prior = "exponential", phi = 0.2,
   phi.discrete = seq(0, 2, by = 0.02)
 )
-pred.grid <- expand.grid(x = seq(0.0125, 0.9875, l = 4), y = seq(0.0125, 0.9875, l = 4)) 
+pred.grid <- expand.grid(x = seq(0.0125, 0.9875, l = 40), y = seq(0.0125, 0.9875, l = 40)) 
 out.sim <- output.glm.control(sim.predict = TRUE)
 # 很费时间
-run.sim <- pois.krige.bayes(sim, locations = pred.grid, prior = prior.sim, 
-                             mcmc.input = mcmc.sim, output = out.sim)
+
+system.time({
+  run.sim <- pois.krige.bayes(sim, locations = pred.grid, prior = prior.sim, 
+                              mcmc.input = mcmc.sim, output = out.sim)
+},gcFirst = TRUE)
+
+
 
 true_value  <- c(0.5,0.2,2.0)
 
