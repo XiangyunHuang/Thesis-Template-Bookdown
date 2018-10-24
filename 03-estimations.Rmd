@@ -133,7 +133,7 @@ Q''(\mathbf{s})& =  -\mathrm{diag} \{b''(D\boldsymbol{\beta} + \mathbf{s}) \} - 
 & - \frac{n}{2}\log (2\pi) -\frac{1}{2}\log |\Sigma| -\frac{1}{2}\hat{\mathbf{s}}^{\top} \Sigma^{-1} \hat{\mathbf{s}}
 \end{aligned} (\#eq:approx-log-lik)
 \end{equation}
-\noindent 现在极大化近似对数似然 \@ref(eq:approx-log-lik) 式，此时是求模型参数，可称之为外迭代过程，常用的算法是 Broyden-Fletcher-Goldfarb-Shanno (BFGS) 算法，它内置在 R 函数 `optim()` 中。方便起见，模型参数记为 $\boldsymbol{\theta} = (\boldsymbol{\beta},\log(\sigma^2),\log(\tau^2),\log(\phi),\log(\psi))$，且 $\hat{\boldsymbol{\theta}}$ 表示 $\boldsymbol{\theta}$ 的最大似然估计，根据第\@ref(prepare)章第\@ref(sec:def-mle)节定理\@ref(thm:asymptotic-normality)，则 $\hat{\boldsymbol{\theta}}$ 的渐进分布为
+\noindent 现在极大化近似对数似然 \@ref(eq:approx-log-lik) 式，此时是求模型参数，可称之为外迭代过程，常用的算法是 Broyden-Fletcher-Goldfarb-Shanno (简称BFGS) 算法，它内置在 R 函数 `optim()` 中。方便起见，模型参数记为 $\boldsymbol{\theta} = (\boldsymbol{\beta},\log(\sigma^2),\log(\tau^2),\log(\phi),\log(\psi))$，且 $\hat{\boldsymbol{\theta}}$ 表示 $\boldsymbol{\theta}$ 的最大似然估计，根据第\@ref(prepare)章第\@ref(sec:def-mle)节定理\@ref(thm:asymptotic-normality)，则 $\hat{\boldsymbol{\theta}}$ 的渐进分布为
 \[ \hat{\boldsymbol{\theta}} \sim \mathcal{N}(\boldsymbol{\theta}, \mathbf{I}_{o}^{-1}(\hat{\boldsymbol{\theta}})) \]
 \noindent 其中 $\mathbf{I}_{o}(\hat{\boldsymbol{\theta}})$ 为观察到的样本信息阵，注意到在空间广义线性混合效应模型下，不能直接计算 Fisher 信息阵，因为对数似然函数没有显式表达式，只有数值迭代获得在 $\hat{\boldsymbol{\theta}}$ 处的观测信息矩阵。通常，这类渐进近似对协方差参数 $\sigma^2, \tau^2, \phi$ 的估计效果不好，在数据集不太大的情形下，可用第 \@ref(sec:profile-likelihood) 节介绍的剖面似然方法计算协方差参数及其置信区间。剖面似然估计的算法实现过程详见 Bolker 等 （2017年） 开发的 bbmle 包 [@R-bbmle]，下面给出计算的细节步骤：
 
@@ -141,7 +141,7 @@ Q''(\mathbf{s})& =  -\mathrm{diag} \{b''(D\boldsymbol{\beta} + \mathbf{s}) \} - 
 2. 计算协方差矩阵 $\Sigma$ 及其逆 $\Sigma^{-1}$；
 3. 通过如下步骤极大$Q$函数，获得估计值 $\hat{\mathbf{s}}$；
    (a) 为 $\mathbf{s}$ 选择初始值；
-   (b) 按 \@ref(eq:first-deriv) 式计算 $Q'(\mathbf{s})$，按 \@ref(eq:second-deriv) 式计算 $Q''(\mathbf{s})$，其中导数计算的代码实现可参考黄湘云(2016年) [@Huang2016COS]；
+   (b) 按 \@ref(eq:first-deriv) 式计算 $Q'(\mathbf{s})$，按 \@ref(eq:second-deriv) 式计算 $Q''(\mathbf{s})$，其中导数计算的代码实现可参考黄湘云（2016年） [@Huang2016COS]；
    (c) 解线性方程组 $Q''(\mathbf{s})\mathbf{s}^{\star} = Q'(\mathbf{s})$；
    (d) 更新 $\mathbf{s = s + s^{\star}}$；
    (e) 迭代直到收敛以获得 $\hat{\mathbf{s}}$。
@@ -156,56 +156,56 @@ NR算法收敛速度是很快的，但是必须提供一个很好的初值，好
 
 为描述蒙特卡罗极大似然算法，空间广义线性混合效应模型的结构表述如下
 \begin{equation}
-g(\mu_i) = T_{i} = d(x_i)'\beta + S(x_i) + Z_i (\#eq:again-SGLMM)
+g(\mu_i) = T_{i} = d(x_i)^{\top}\boldsymbol{\beta} + S(x_i) + Z_i (\#eq:again-SGLMM)
 \end{equation}
-\noindent 其中，令 $d_{i} = d'(x_i)$，$d'(x_i)$ 主要是强调协变量的空间内容， 这里表示采样点处观测数据向量， 即 $p$ 个协变量在第 $i$ 个位置 $x_i$ 的观察值。 $\mathcal{S} = \{S(x): x \in \mathbb{R}^2\}$ 是均值为 $\mathbf{0}$，方差为 $\sigma^2$，平稳且各向同性的空间高斯过程，自相关函数是 $\rho(u;\phi)$，$S(x_i)$ 表示空间效应，$Z_i \stackrel{i.i.d}{\sim} \mathcal{N}(0,\tau^2)$ 的块金效应，$g$ 是联系函数，$x_i \in \mathbb{R}^2$是采样点的位置。 综上，模型 \@ref(eq:again-SGLMM) 待估计的参数有 $\beta$ 和 $\boldsymbol{\theta}' = (\sigma^2,\phi,\tau^2)$。 特别地，当响应变量分别服从二项分布和泊松分布时， 模型 \@ref(eq:again-SGLMM) 分别变为模型 \@ref(eq:BL-SGLMM) 和模型 \@ref(eq:Poss-SGLMM)。
+\noindent 其中，令 $d_{i} = d(x_i)^{\top}$，用$d(x_i)^{\top}$ 表示 主要是强调协变量的空间内容， 这里表示采样点处观测数据向量， 即 $p$ 个协变量在第 $i$ 个位置 $x_i$ 的观察值。 $\mathcal{S} = \{S(x): x \in \mathbb{R}^2\}$ 是均值为 $\mathbf{0}$，方差为 $\sigma^2$，平稳且各向同性的空间高斯过程，自相关函数是 $\rho(u;\phi)$，$S(x_i)$ 表示空间效应，$Z_i \stackrel{i.i.d}{\sim} \mathcal{N}(0,\tau^2)$ 的块金效应，$g$ 是联系函数，$x_i \in \mathbb{R}^2$是采样点的位置。 综上，模型 \@ref(eq:again-SGLMM) 待估计的参数有 $\boldsymbol{\beta}$ 和 $\boldsymbol{\theta}' = (\sigma^2,\phi,\tau^2)$。 特别地，当响应变量分别服从二项分布和泊松分布时， 模型 \@ref(eq:again-SGLMM) 分别变为模型 \@ref(eq:BL-SGLMM) 和模型 \@ref(eq:Poss-SGLMM)。
 \begin{align}
-\log\{\frac{p_i}{1-p_i}\} & = T_{i} = d(x_i)'\beta + S(x_i) + Z_i  (\#eq:BL-SGLMM)\\
-\log(\lambda_i)           & = T_{i} = d(x_i)'\beta + S(x_i) + Z_i  (\#eq:Poss-SGLMM)
+\log\{\frac{p_i}{1-p_i}\} & = T_{i} = d(x_i)^{\top}\boldsymbol{\beta} + S(x_i) + Z_i  (\#eq:BL-SGLMM)\\
+\log(\lambda_i)           & = T_{i} = d(x_i)^{\top}\boldsymbol{\beta} + S(x_i) + Z_i  (\#eq:Poss-SGLMM)
 \end{align}
 \noindent 模型 \@ref(eq:BL-SGLMM) 中，响应变量 $Y_i$ 服从二项分布 $Y_i \sim \mathrm{Binomial}(m_i,p_i)$， 均值 $\mathrm{E}(Y_i|S(x_i),Z_i)=m_{i}p_{i}$， $m_i$ 表示在 $x_i$ 的位置抽取的样本量，总的样本量就是 $M = \sum_{i=1}^{N}m_i$，$N$ 表示采样点的个数。模型 \@ref(eq:Poss-SGLMM) 中， 响应变量 $Y_i$ 服从泊松分布 $Y_i \sim \mathrm{Possion}(\lambda_i)$。 在获取响应变量 $Y$ 的观测的过程中，与广义线性或广义线性混合效应模型 \@ref(eq:GLM) 和 \@ref(eq:GLMM) 不同的在于：在每个采样点 $x_i$，$Y_i$ 都服从参数不同但同类的分布。
 
-模型 \@ref(eq:BL-SGLMM) 中参数 $\beta$ 和 $\boldsymbol{\theta}' = (\sigma^2,\phi,\tau^2)$ 的似然函数是通过对 $T_i$ 内的随机效应积分获得的。 用大写 $D$ 表示 $n\times p$ 的数据矩阵,  $y' = (y_1,y_2,\cdots,y_n)$ 表示各空间位置 $x_i$ 处响应变量的观测值，对应模型 \@ref(eq:BL-SGLMM) 中的 $Y_i \sim \mathrm{Binomial}(m_i,p_i)$， $T = (T_1,T_2,\ldots,T_n)$ 的边际分布是 $\mathcal{N}(D\beta, \Sigma(\boldsymbol{\theta}))$， 其中，协方差矩阵 $\Sigma(\boldsymbol{\theta})$ 的对角元是 $\sigma^2+\tau^2$， 非对角元是 $\sigma^2\rho(u_{ij})$， $u_{ij}$ 是位置 $x_i$ 与 $x_j$ 之间的距离。在给定 $T'=t'=(t_1,t_2,\cdots,t_n)$ 下， $Y'=(Y_1,\cdots,Y_n)$ 的条件分布是独立二项概率分布函数的乘积 $f(y|t)=\prod_{i=1}^{n}f(y_{i}|t_{i})$， 因此， $\beta$ 和 $\boldsymbol{\theta}$ 的似然函数可以写成
+模型 \@ref(eq:BL-SGLMM) 中参数 $\boldsymbol{\beta}$ 和 $\boldsymbol{\theta}^{\top} = (\sigma^2,\phi,\tau^2)$ 的似然函数是通过对 $T_i$ 内的随机效应积分获得的。 用大写 $D$ 表示 $n\times p$ 的数据矩阵,  $y = (y_1, y_2,\cdots, y_n)$ 表示各空间位置 $x_i$ 处响应变量的观测值，对应模型 \@ref(eq:BL-SGLMM) 中的 $Y_i \sim \mathrm{Binomial}(m_i,p_i)$， $T = (T_1,T_2,\ldots,T_n)$ 的边际分布是 $\mathcal{N}(D\boldsymbol{\beta}, \Sigma(\boldsymbol{\theta}))$， 其中，协方差矩阵 $\Sigma(\boldsymbol{\theta})$ 的对角元是 $\sigma^2+\tau^2$， 非对角元是 $\sigma^2\rho(u_{ij})$， $u_{ij}$ 是位置 $x_i$ 与 $x_j$ 之间的距离。在给定 $T = t = (t_1,t_2,\cdots,t_n)$ 下， $\mathbf{Y} = y =(Y_1,\cdots,Y_n)$ 的条件分布是独立二项概率分布函数的乘积 $f(y|t)=\prod_{i=1}^{n}f(y_{i}|t_{i})$， 因此， $\boldsymbol{\beta}$ 和 $\boldsymbol{\theta}$ 的似然函数可以写成
 \begin{equation}
-L(\beta,\boldsymbol{\theta}) = f(y;\beta,\boldsymbol{\theta}) = \int_{\mathbb{R}^{n}}\mathcal{N}(t;D\beta,\Sigma(\boldsymbol{\theta}))f(y|t)dt (\#eq:likelihood)
+L(\boldsymbol{\beta},\boldsymbol{\theta}) = f(y;\boldsymbol{\beta},\boldsymbol{\theta}) = \int_{\mathbb{R}^{n}}\mathcal{N}(t;D\boldsymbol{\beta},\Sigma(\boldsymbol{\theta}))f(y|t)dt (\#eq:likelihood)
 \end{equation}
-\noindent 其中$\mathcal{N}(\cdot;\mu,\Sigma)$ 表示均值为 $\mu$，协方差矩阵为 $\Sigma$ 的多元高斯分布的密度函数。Geyer (1994 年)[@Geyer1994On] 在给定 $Y=y$ 的情况下，使用 $T$ 的条件分布 $f(T|Y=y)$ 模拟近似方程 \@ref(eq:likelihood) 中的高维积分，则似然函数 $L(\beta,\boldsymbol{\theta})$ 可以重写为
+\noindent 其中$\mathcal{N}(\cdot;\mu,\Sigma)$ 表示均值为 $\mu$，协方差矩阵为 $\Sigma$ 的多元高斯分布的密度函数。Geyer (1994 年)[@Geyer1994On] 在给定 $Y=y$ 的情况下，使用 $T$ 的条件分布 $f(T|Y=y)$ 模拟近似方程 \@ref(eq:likelihood) 中的高维积分，则似然函数 $L(\boldsymbol{\beta},\boldsymbol{\theta})$ 可以重写为
 \begin{equation}
 \begin{aligned}
-L(\beta,\boldsymbol{\theta})
-& = \int_{\mathbb{R}^{n}} \frac{\mathcal{N}(t;D\beta,\Sigma(\boldsymbol{\theta}))f(y|t)}{\mathcal{N}(t;D\beta_{0},\Sigma(\boldsymbol{\theta}_{0}))f(y|t)}f(y,t)dt \\
-& \varpropto \int_{\mathbb{R}^{n}} \frac{\mathcal{N}(t;D\beta, \Sigma(\boldsymbol{\theta}))}{\mathcal{N}(t;D\beta_{0}, \Sigma(\boldsymbol{\theta}_{0}))}f(t|y)dt \\
-&= E_{T|y}\left[\frac{\mathcal{N}(t; D\beta, \Sigma(\boldsymbol{\theta}))}{\mathcal{N}(t; D\beta_{0}, \Sigma(\boldsymbol{\theta}_{0}))}\right] 
+L(\boldsymbol{\beta},\boldsymbol{\theta})
+& = \int_{\mathbb{R}^{n}} \frac{\mathcal{N}(t;D\boldsymbol{\beta},\Sigma(\boldsymbol{\theta}))f(y|t)}{\mathcal{N}(t;D\boldsymbol{\beta}_{0},\Sigma(\boldsymbol{\theta}_{0}))f(y|t)}f(y,t)dt \\
+& \varpropto \int_{\mathbb{R}^{n}} \frac{\mathcal{N}(t;D\boldsymbol{\beta}, \Sigma(\boldsymbol{\theta}))}{\mathcal{N}(t;D\boldsymbol{\beta}_{0}, \Sigma(\boldsymbol{\theta}_{0}))}f(t|y)dt \\
+&= E_{T|y}\left[\frac{\mathcal{N}(t; D\boldsymbol{\beta}, \Sigma(\boldsymbol{\theta}))}{\mathcal{N}(t; D\boldsymbol{\beta}_{0}, \Sigma(\boldsymbol{\theta}_{0}))}\right] 
 \end{aligned} (\#eq:likelihood2)
 \end{equation}
-\noindent 其中 $\beta_{0},\boldsymbol{\theta}_{0}$ 作为迭代初始值预先给定，则 $Y$ 和 $T$ 的联合分布可以表示成 $f(y,t) = \mathcal{N}(t; D\beta_{0}, \Sigma(\boldsymbol{\theta}_{0})) f(y|t)$。 再通过蒙特卡罗方法，用求和代替积分近似期望， 做法是从条件分布 $f(T|Y=y; \beta_0, \boldsymbol{\theta}_0)$ 抽取 $m$ 个样本 $t_{(i)}$， 那么，可以用方程 \@ref(eq:likelihood-approx) 近似方程 \@ref(eq:likelihood2)
+\noindent 其中 $\boldsymbol{\beta}_{0},\boldsymbol{\theta}_{0}$ 作为迭代初始值预先给定，则 $Y$ 和 $T$ 的联合分布可以表示成 $f(y,t) = \mathcal{N}(t; D\boldsymbol{\beta}_{0}, \Sigma(\boldsymbol{\theta}_{0})) f(y|t)$。 再通过蒙特卡罗方法，用求和代替积分近似期望， 做法是从条件分布 $f(T|Y=y; \boldsymbol{\beta}_0, \boldsymbol{\theta}_0)$ 抽取 $m$ 个样本 $t_{(i)}$， 那么，可以用方程 \@ref(eq:likelihood-approx) 近似方程 \@ref(eq:likelihood2)
 \begin{equation}
-L_{m}(\beta,\boldsymbol{\theta})=\frac{1}{m}\sum_{i=1}^{n}\frac{\mathcal{N}(t_{i};D\beta,\Sigma(\boldsymbol{\theta}))}{\mathcal{N}(t_{i};D\beta_{0},\Sigma(\boldsymbol{\theta}_{0}))} (\#eq:likelihood-approx)
+L_{m}(\boldsymbol{\beta},\boldsymbol{\theta})=\frac{1}{m}\sum_{i=1}^{n}\frac{\mathcal{N}(t_{i};D\boldsymbol{\beta},\Sigma(\boldsymbol{\theta}))}{\mathcal{N}(t_{i};D\boldsymbol{\beta}_{0},\Sigma(\boldsymbol{\theta}_{0}))} (\#eq:likelihood-approx)
 \end{equation}
 
-\noindent 这样做的依据是不管样本序列 $t_{(i)}$ 是否相关， $L_{m}(\beta,\boldsymbol{\theta})$ 都是 $L_{m}(\beta,\boldsymbol{\theta})$ 的一致估计 （consistent estimator）[@PrevMap2017JSS]。 最优的 $\beta_0,\boldsymbol{\theta}_0$ 是 $\beta,\boldsymbol{\theta}$ 的极大似然估计，即$\max_{\beta,\boldsymbol{\theta}}L_{m}(\beta,\boldsymbol{\theta}) \rightarrow 1, m \rightarrow\infty$。
+\noindent 这样做的依据是不管样本序列 $t_{(i)}$ 是否相关， $L_{m}(\boldsymbol{\beta},\boldsymbol{\theta})$ 都是 $L_{m}(\boldsymbol{\beta},\boldsymbol{\theta})$ 的一致估计 （consistent estimator）[@PrevMap2017JSS]。 最优的 $\boldsymbol{\beta}_0,\boldsymbol{\theta}_0$ 是 $\boldsymbol{\beta},\boldsymbol{\theta}$ 的极大似然估计，即$\max_{\boldsymbol{\beta},\boldsymbol{\theta}}L_{m}(\boldsymbol{\beta},\boldsymbol{\theta}) \rightarrow 1, m \rightarrow\infty$。
 
-既然给定的初始值 $\beta_{0},\boldsymbol{\theta}_{0}$ 必定与真实的极大似然估计值不同，第 $m$ 步迭代获得的似然函数值 $L_{m}(\hat{\beta}_{m}, \hat{\boldsymbol{\theta})}_{m}$ 与 1 的距离可以用来刻画蒙特卡罗近似的准确度。实际操作中，用 $\hat{\beta}_{m}$ 和 $\hat{\boldsymbol{\theta}}_{m}$ 表示最大化 $L_{m}(\beta, \boldsymbol{\theta})$ 获得的 MCML 估计，重复迭代 $\beta_{0} = \hat{\beta}_{m}$ 和 $\boldsymbol{\theta}_{0} = \hat{\boldsymbol{\theta}}_{m}$ 直到收敛。 求蒙特卡罗近似的对数似然 $l_{m}(\beta, \boldsymbol{\theta}) = \log L_{m}(\beta, \boldsymbol{\theta})$ 的极值，可以使用 PrevMap 包，迭代 $L_{m}(\beta, \boldsymbol{\theta})$ 的过程中，可以选择 BFGS 算法。关于 $\boldsymbol{\psi}$ 的似然曲面是相当扁平的，为了更好的收敛到全局极大值，做一步重参数化，即令 $\boldsymbol{\psi} = \log(\boldsymbol{\theta})$，$L_{m}(\beta, \boldsymbol{\psi})$ 关于 $\beta$ 和 $\boldsymbol{\psi}$ 的一阶、二阶导数传递给 maxLik 包的 `maxBFGS` 函数。
+既然给定的初始值 $\boldsymbol{\beta}_{0},\boldsymbol{\theta}_{0}$ 必定与真实的极大似然估计值不同，第 $m$ 步迭代获得的似然函数值 $L_{m}(\hat{\boldsymbol{\beta}}_{m}, \hat{\boldsymbol{\theta})}_{m}$ 与 1 的距离可以用来刻画蒙特卡罗近似的准确度。实际操作中，用 $\hat{\boldsymbol{\beta}}_{m}$ 和 $\hat{\boldsymbol{\theta}}_{m}$ 表示最大化 $L_{m}(\boldsymbol{\beta}, \boldsymbol{\theta})$ 获得的 MCML 估计，重复迭代 $\boldsymbol{\beta}_{0} = \hat{\boldsymbol{\beta}}_{m}$ 和 $\boldsymbol{\theta}_{0} = \hat{\boldsymbol{\theta}}_{m}$ 直到收敛。 求蒙特卡罗近似的对数似然 $l_{m}(\boldsymbol{\beta}, \boldsymbol{\theta}) = \log L_{m}(\boldsymbol{\beta}, \boldsymbol{\theta})$ 的极值，可以使用 PrevMap 包，迭代 $L_{m}(\boldsymbol{\beta}, \boldsymbol{\theta})$ 的过程中，可以选择 BFGS 算法。关于 $\boldsymbol{\psi}$ 的似然曲面是相当扁平的，为了更好的收敛到全局极大值，做一步重参数化，即令 $\boldsymbol{\psi} = \log(\boldsymbol{\theta})$，$L_{m}(\boldsymbol{\beta}, \boldsymbol{\psi})$ 关于 $\boldsymbol{\beta}$ 和 $\boldsymbol{\psi}$ 的一阶、二阶导数传递给 maxLik 包的 `maxBFGS` 函数。
 
-蒙特卡罗极大似然估计 $\boldsymbol{\theta}_{m}$ 的标准误差 （standard errors） 取似然函数 $l_{m}(\beta,\boldsymbol{\theta})$ 的负黑塞矩阵的逆的对角线元素的平方根。迭代次数足够多时，即 $m$ 充分大时，一般取到 10000 及以上，此时蒙特卡罗误差可忽略，即用方程 \@ref(eq:likelihood-approx) 近似 \@ref(eq:likelihood2) 的误差可忽略。
+蒙特卡罗极大似然估计 $\boldsymbol{\theta}_{m}$ 的标准误差 （standard errors） 取似然函数 $l_{m}(\boldsymbol{\beta},\boldsymbol{\theta})$ 的负黑塞矩阵的逆的对角线元素的平方根。迭代次数足够多时，即 $m$ 充分大时，一般取到 10000 及以上，此时蒙特卡罗误差可忽略，即用方程 \@ref(eq:likelihood-approx) 近似 \@ref(eq:likelihood2) 的误差可忽略。
 
 
 ### 贝叶斯 MCMC 算法 {#sec:MCMC}
 
-在贝叶斯框架里，$\beta, \theta$ 的后验分布由贝叶斯定理和 $\beta, \theta$ 的联合先验分布确定，见第\@ref(prepare)章基础知识第\@ref(sec:bayes-prior)节后验分布的推导。假定 $\beta, \theta$ 的先验分布如下：
-\[ \theta \sim  g(\cdot), \quad \beta | \sigma^2 \sim  \mathcal{N}(\cdot; \xi, \sigma^2 \Omega) \]
-\noindent 其中 $g(\cdot)$ 可以是 $\theta$ 的任意分布，$\xi$ 和 $\Omega$ 分别是 $\beta$ 的高斯先验的均值向量和协方差矩阵。则$\beta, \theta$ 和 $T$ 的后验分布是
+在贝叶斯框架里，$\boldsymbol{\beta}, \boldsymbol{\theta}$ 的后验分布由贝叶斯定理和 $\boldsymbol{\beta}, \boldsymbol{\theta}$ 的联合先验分布确定，见第\@ref(prepare)章基础知识第\@ref(sec:bayes-prior)节后验分布的推导。假定 $\boldsymbol{\beta}, \boldsymbol{\theta}$ 的先验分布如下：
+\[ \boldsymbol{\theta} \sim  g(\cdot), \quad \boldsymbol{\beta} | \sigma^2 \sim  \mathcal{N}(\cdot; \xi, \sigma^2 \Omega) \]
+\noindent 其中 $g(\cdot)$ 可以是 $\boldsymbol{\theta}$ 的任意分布，$\xi$ 和 $\Omega$ 分别是 $\boldsymbol{\beta}$ 的高斯先验的均值向量和协方差矩阵。则$\boldsymbol{\beta}, \boldsymbol{\theta}$ 和 $T$ 的后验分布是
 \begin{equation}
-\pi(\beta, \theta, t | y) \propto g(\theta)\mathcal{N}(\beta; \xi, \sigma^2 \Omega)\mathcal{N}(t; D\beta, \Sigma(\theta))f(y|t) (\#eq:posterior)
+\pi(\boldsymbol{\beta}, \boldsymbol{\theta}, t | y) \propto g(\boldsymbol{\theta})\mathcal{N}(\boldsymbol{\beta}; \xi, \sigma^2 \Omega)\mathcal{N}(t; D\boldsymbol{\beta}, \Sigma(\boldsymbol{\theta}))f(y|t) (\#eq:posterior)
 \end{equation}
-\noindent R 包 PrevMap 内的函数 `binomial.logistic.Bayes` 可以从上述后验分布中抽得样本，这个抽样的过程使用了 MCMC 算法， $\theta, \beta$ 和 $T$ 轮流迭代的过程如下：
+\noindent R 包 PrevMap 内的函数 `binomial.logistic.Bayes` 可以从上述后验分布中抽得样本，这个抽样的过程使用了 MCMC 算法， $\boldsymbol{\theta}, \boldsymbol{\beta}$ 和 $T$ 轮流迭代的过程如下：
 
-1. 初始化$\beta, \theta$ 和$T$；
-2. 对协方差$\Sigma(\theta)$中的参数做如下变换 [@Christensen2006] $$(\tilde{\theta}_{1}, \tilde{\theta}_{2}, \tilde{\theta}_{3}) = (\log \sigma, \log (\sigma^2/\phi^{2\kappa}), \log \tau^2)$$
+1. 初始化$\boldsymbol{\beta}, \boldsymbol{\theta}$ 和$T$；
+2. 对协方差$\Sigma(\boldsymbol{\theta})$中的参数做如下变换 [@Christensen2006] $$(\tilde{\theta}_{1}, \tilde{\theta}_{2}, \tilde{\theta}_{3}) = (\log \sigma, \log (\sigma^2/\phi^{2\kappa}), \log \tau^2)$$
 使用随机游走 Metropolis-Hastings 算法轮流更新上述三个参数，在第 $i$ 次迭代时，候选高斯分布的标准差 $h$ 是 $h_{i} = h_{i-1} + c_{1}i^{-c_{2}}(\alpha_{i}-0.45)$，其中，$c_{1} > 0$ 和 $c_{2}  \in (0,1]$ 是预先给定的常数，$\alpha_i$ 是第 $i$ 次迭代时的接受概率，其中 0.45 是一元高斯分布的最优接受概率；
-3. 使用吉布斯步骤更新 $\beta$， 所需条件分布 $\beta|\theta,T$ 是高斯分布，均值 $\tilde{\xi}$，协方差矩阵 $\sigma^2\tilde{\Omega}$，且与 $y$ 不相关，记$\Sigma(\theta) = \sigma^2 R(\theta)$ \[ \tilde{\xi}  =  \tilde{\Omega}(\Omega^{-1}\xi+D' R(\theta)^{-1} T), \quad \sigma^2 \tilde{\Omega}  =  \sigma^2(\Omega^{-1} + D' R(\theta)^{-1} D)^{-1} \]
-4. 使用汉密尔顿蒙特卡罗算法更新条件分布 $T|\beta,\theta,y$，用 $H(t,u)$ 表示汉密尔顿函数 $$H(t, u) = u' u/2 - \log f(t | y, \beta, \theta)$$
-\noindent 其中，$u\in\mathbb{R}^2$， $f(t | y, \beta, \theta)$ 表示给定 $\beta$， $\theta$ 和 $y$下，$T$ 的条件分布。根据汉密尔顿方程，函数 $H(u, t)$ 的偏导决定 $u,t$ 随时间 $v$ 的变化过程，
+3. 使用Gibbs步骤更新 $\boldsymbol{\beta}$， 所需条件分布 $\boldsymbol{\beta}|\boldsymbol{\theta},T$ 是高斯分布，均值 $\tilde{\xi}$，协方差矩阵 $\sigma^2\tilde{\Omega}$，且与 $y$ 不相关，记$\Sigma(\boldsymbol{\theta}) = \sigma^2 R(\boldsymbol{\theta})$ \[ \tilde{\xi}  =  \tilde{\Omega}(\Omega^{-1}\xi+D^{\top} R(\boldsymbol{\theta})^{-1} T), \quad \sigma^2 \tilde{\Omega}  =  \sigma^2(\Omega^{-1} + D^{\top} R(\boldsymbol{\theta})^{-1} D)^{-1} \]
+4. 使用汉密尔顿蒙特卡罗算法更新条件分布 $T|\boldsymbol{\beta},\boldsymbol{\theta},y$，用 $H(t,u)$ 表示汉密尔顿函数 $$H(t, u) = u^{\top} u/2 - \log f(t | y, \boldsymbol{\beta}, \boldsymbol{\theta})$$
+\noindent 其中，$u\in\mathbb{R}^2$， $f(t | y, \boldsymbol{\beta}, \boldsymbol{\theta})$ 表示给定 $\boldsymbol{\beta}$， $\boldsymbol{\theta}$ 和 $y$下，$T$ 的条件分布。根据汉密尔顿方程，函数 $H(u, t)$ 的偏导决定 $u,t$ 随时间 $v$ 的变化过程，
 \begin{eqnarray*}
 \frac{d t_{i}}{d v} & = & \frac{\partial H}{\partial u_{i}} \\
 \frac{d u_{i}}{d v} & = & -\frac{\partial H}{\partial t_{i}}
@@ -217,7 +217,7 @@ L_{m}(\beta,\boldsymbol{\theta})=\frac{1}{m}\sum_{i=1}^{n}\frac{\mathcal{N}(t_{i
 
 低秩近似算法分两部分来阐述，第一部分讲空间高斯过程的近似，第二部分将该近似方法应用于 SGLMM 模型。
 
-空间高斯过程 $\mathcal{S} = \{S(x),x\in\mathbb{R}^2\}$ 对任意给定一组空间位置 $x_1,x_2,\ldots,x_n, \forall x_{i} \in \mathbb{R}^2$，随机变量 $S(x_i),i = 1,2,\ldots,n$ 的联合分布 $\mathcal{S}=\{S(x_1),S(x_2),\ldots,S(x_n)\}$ 是多元高斯分布，其由均值 $\mu(x) = \mathrm{E}[S(x)]$ 和协方差 $G_{ij} =\gamma(x_i,x_j)= \mathrm{Cov}\{S(x_i),S(x_j)\}$ 完全确定，即 $\mathcal{S} \sim \mathrm{MVN}(\mu_{S},G)$。
+空间高斯过程 $\mathcal{S} = \{S(x),x\in\mathbb{R}^2\}$ 对任意给定一组空间位置 $x_1,x_2,\ldots,x_n, \forall x_{i} \in \mathbb{R}^2$，随机变量 $S(x_i),i = 1,2,\ldots,n$ 的联合分布 $\mathcal{S}=\{S(x_1),S(x_2),\ldots,S(x_n)\}$ 是多元高斯分布，其由均值 $\mu(x) = \mathsf{E}[S(x)]$ 和协方差 $G_{ij} =\gamma(x_i,x_j)= \mathsf{Cov}\{S(x_i),S(x_j)\}$ 完全确定，即 $\mathcal{S} \sim \mathcal{N}(\mu_{S},G)$。
 
 低秩近似算法使用奇异值分解协方差矩阵 $G$ [@Diggle2007]， 将协方差矩阵 $G$ 分解，也意味着将空间高斯过程 $\mathcal{S}$ 分解，令 $$\mathcal{S} = AZ$$ 
 \noindent 其中，$A = U\Lambda^{1/2}$，对角矩阵 $\Lambda$ 包含 $G$ 的所有特征值，$U$ 是特征值对应的特征向量。将特征值按从大到小的顺序排列，取 $A$ 的前 $m(<n)$ 列，即可获得 $\mathcal{S}$ 的近似 $\mathcal{S}^{\star}$，
@@ -232,9 +232,9 @@ L_{m}(\beta,\boldsymbol{\theta})=\frac{1}{m}\sum_{i=1}^{n}\frac{\mathcal{N}(t_{i
 \begin{equation}
 S(x) = \sum_{j=1}^{m}A_{j}f_{j}(x), \forall x \in \mathbb{R}^2 (\#eq:svd-S4)
 \end{equation}
-\noindent 若 $A_j$ 服从零均值，协方差为 $\mathrm{Cov}(A_{j},A_{k})=\gamma_{jk}$ 的多元高斯分布，则 $\mathcal{S}$ 均值为0，协方差为
+\noindent 若 $A_j$ 服从零均值，协方差为 $\mathsf{Cov}(A_{j},A_{k})=\gamma_{jk}$ 的多元高斯分布，则 $\mathcal{S}$ 均值为0，协方差为
 \begin{equation}
-\mathrm{Cov}(S(x),S(x')) =  \sum_{j=1}^{m}\sum_{k=1}^{m}\gamma_{jk}f_{j}(x)f_{k}(x') (\#eq:svd-S5)
+\mathsf{Cov}(S(x),S(x')) =  \sum_{j=1}^{m}\sum_{k=1}^{m}\gamma_{jk}f_{j}(x)f_{k}(x') (\#eq:svd-S5)
 \end{equation}
 \noindent 一般情况下，协方差结构 \@ref(eq:svd-S5) 不是平稳的，其中，$f_{k}(\cdot)$ 来自一组正交基
 \begin{equation*}
@@ -249,7 +249,7 @@ S(x) = \sum_{j=1}^{m}A_{j}f_{j}(x), \forall x \in \mathbb{R}^2 (\#eq:svd-S4)
 为方便叙述起见，低秩近似算法以模型 \@ref(eq:lowrank-SGLMM) 为描述对象，它是模型 \@ref(eq:again-SGLMM) 的特殊形式，主要区别是模型 \@ref(eq:lowrank-SGLMM) 中，联系函数 $g(\mu) = \log\big(\frac{\mu}{1-\mu}\big)$
 
 \begin{equation}
-\log\{\frac{p_i}{1-p_i}\}  = T_{i} = d(x_i)'\beta + S(x_i) + Z_{i} (\#eq:lowrank-SGLMM)
+\log\{\frac{p_i}{1-p_i}\}  = T_{i} = d(x_i)^{\top}\boldsymbol{\beta} + S(x_i) + Z_{i} (\#eq:lowrank-SGLMM)
 \end{equation}
 
 \noindent 模型 \@ref(eq:lowrank-SGLMM) 中的高斯过程 $\mathcal{S} = S(x)$ 可以表示成高斯噪声的卷积形式
@@ -274,10 +274,10 @@ S(x) \approx \sum_{i = 1}^r K(\|x-\tilde{x}_{i}\|; \phi, \kappa) U_{i} (\#eq:lr-
 
 注意到平稳空间高斯过程 $S(x)$ 经过方程 \@ref(eq:lr-approx) 的近似已不再平稳。通过乘以 $$\frac{1}{n}\sum_{i = 1}^n \sum_{j = 1}^m K(\|\tilde{x}_{j}-\tilde{x}_{i}\|; \phi, \kappa)^2$$ 来调整 $\sigma^2$。 事实上，调整后的 $\sigma^2$ 会更接近于高斯过程 $S(x)$ 的实际方差。
 
-低秩近似的关键是对高斯过程 $\mathcal{S}$ 的协方差矩阵 $\Sigma(\theta)$ 做降维分解， 这对 $\Sigma(\theta)$ 的逆和行列式运算是非常重要的，在计算之前，将 $K(\theta)$ 表示为 $n\times r$ 的核矩阵，它是由自协方差函数决定的空间距离矩阵，协方差矩阵 $\Sigma(\theta) = \sigma^2K(\theta)K(\theta)'+\tau^2 I_{n}$，$I_{n}$ 是 $n\times n$ 的单位矩阵。根据 Woodbury 公式可得 $$\Sigma(\theta)^{-1} = \sigma^2\nu^{-2}(I_{n}-\nu^{-2}K(\theta)(\nu^{-2}K(\theta)' K(\theta)+I_{r})^{-1}K(\theta)')$$ 其中， $\nu^2 = \tau^2/\sigma^2$，求 $n$ 阶方阵 $\Sigma(\theta)$ 的逆变成求 $r$ 阶方阵的逆， 从而达到了降维的目的。 下面再根据 Sylvester 行列式定理计算 $\Sigma(\theta)$ 的行列式 $|\Sigma(\theta)|$
+低秩近似的关键是对高斯过程 $\mathcal{S}$ 的协方差矩阵 $\Sigma(\boldsymbol{\theta})$ 做降维分解， 这对 $\Sigma(\boldsymbol{\theta})$ 的逆和行列式运算是非常重要的，在计算之前，将 $K(\boldsymbol{\theta})$ 表示为 $n\times r$ 的核矩阵，它是由自协方差函数决定的空间距离矩阵，协方差矩阵 $\Sigma(\boldsymbol{\theta}) = \sigma^2K(\boldsymbol{\theta})K(\boldsymbol{\theta})^{\top}+\tau^2 I_{n}$，$I_{n}$ 是 $n\times n$ 的单位矩阵。根据 Woodbury 公式可得 $$\Sigma(\boldsymbol{\theta})^{-1} = \sigma^2\nu^{-2}(I_{n}-\nu^{-2}K(\boldsymbol{\theta})(\nu^{-2}K(\boldsymbol{\theta})^{\top} K(\boldsymbol{\theta})+I_{r})^{-1}K(\boldsymbol{\theta})^{\top})$$ 其中， $\nu^2 = \tau^2/\sigma^2$，求 $n$ 阶方阵 $\Sigma(\boldsymbol{\theta})$ 的逆变成求 $r$ 阶方阵的逆， 从而达到了降维的目的。 下面再根据 Sylvester 行列式定理计算 $\Sigma(\boldsymbol{\theta})$ 的行列式 $|\Sigma(\boldsymbol{\theta})|$
 \begin{eqnarray*}
-|\Sigma(\theta)| & = & |\sigma^2K(\theta)K(\theta)'+\tau^2 I_{n}| \\ 
-                 & = & \tau^{2n}|\nu^{-2}K(\theta)' K(\theta)+I_{r}|
+|\Sigma(\boldsymbol{\theta})| & = & |\sigma^2K(\boldsymbol{\theta})K(\boldsymbol{\theta})^{\top}+\tau^2 I_{n}| \\ 
+                 & = & \tau^{2n}|\nu^{-2}K(\boldsymbol{\theta})^{\top} K(\boldsymbol{\theta})+I_{r}|
 \end{eqnarray*}
 \noindent 类似地，行列式运算的维数从 $n\times n$ 降到了 $r\times r$ [@Diggle2007]。
 
@@ -291,13 +291,13 @@ S(x) \approx \sum_{i = 1}^r K(\|x-\tilde{x}_{i}\|; \phi, \kappa) U_{i} (\#eq:lr-
 
 为了与本章第 \@ref(sec:MCMC) 节提出的贝叶斯 MCMC 算法比较，我们基于 Stan 实现求解 SGLMM 模型的贝叶斯 MCMC 算法(简称 STAN-MCMC)。目前，我与 Bürkner 一起开发了 brms 包 [@brms2017JSS]， 主要工作是修复程序调用和文档书写错误， 特别是与求解 SGLMM 模型相关的 `gp` 函数，相关细节见 brms 的 Github 开发仓库。
 
-在 SGLMM 模型下，STAN-MCMC 算法，先从条件分布 $[S|\theta,\beta,Y]$ 抽样，然后是 $[\theta|S]$ ，最后是 $[\beta|S,Y]$，具体步骤如下：
+在 SGLMM 模型下，STAN-MCMC 算法，先从条件分布 $[S|\boldsymbol{\theta},\boldsymbol{\beta},Y]$ 抽样，然后是 $[\boldsymbol{\theta}|S]$ ，最后是 $[\boldsymbol{\beta}|S,Y]$，这里符号 $[\cdot]$ 表示随机变（向）量的分布，具体步骤如下：
 
-1. 选择初始值 $\theta,\beta,S$，如 $\beta$ 的初始值来自正态分布，$\theta$ 的初始值来自对数正态分布；
-2. 更新参数向量 $\theta$ ：(i) 从指定的先验分布中均匀抽取新的 $\theta'$ ；(ii) 以概率 $\Delta(\theta,\theta') = \min \big\{\frac{p(S|\theta')}{p(S|\theta)},1\big\}$，否则不改变 $\theta$；
-3. 更新高斯过程 $S$ 的取值：(i) 抽取新的值 $S_{i}'$， 向量 $S$ 的第 $i$ 值来自一元条件高斯密度 $p(S_{i}'|S_{-i},\theta)$，$S_{-i}'$ 表示移除 $S$ 中的第 $i$ 个值；(ii) 以概率 $\Delta(S_{i},S_{i}') = \min\big\{ \frac{p(y_{i}|s_{i}',\beta)}{p(y_{i}s_{i},\beta)},1 \big\}$ 接受 $S_{i}'$，否则不改变$S_i$；(iii) 重复 (i) 和 (ii) $\forall i = 1,2,\ldots,n$；
-4. 更新模型系数 $\beta$ ：从条件密度 $p(\beta'|\beta)$ 以概率 $$\Delta = \min \big\{ \frac{\prod_{j=1}^{n}p(y_i|s_{i},\beta')p(\beta|\beta')}{\prod_{j=1}^{n}p(y_i|s_{i},\beta)p(\beta'|\beta)},1  \big\}$$ 接受 $\beta'$，否则不改变$\beta$。
-5. 重复步骤2，3，4 既定的次数，获得参数 $\beta,\theta$ 的迭代序列。
+1. 选择初始值 $\boldsymbol{\theta},\boldsymbol{\beta},S$，如 $\boldsymbol{\beta}$ 的初始值来自正态分布，$\boldsymbol{\theta}$ 的初始值来自对数正态分布；
+2. 更新参数向量 $\boldsymbol{\theta}$ ：(i) 从指定的先验分布中均匀抽取新的 $\boldsymbol{\theta}'$ ；(ii) 以概率 $\Delta(\boldsymbol{\theta},\boldsymbol{\theta}') = \min \big\{\frac{p(S|\boldsymbol{\theta}')}{p(S|\boldsymbol{\theta})},1\big\}$，否则不改变 $\boldsymbol{\theta}$；
+3. 更新高斯过程 $S$ 的取值：(i) 抽取新的值 $S_{i}'$， 向量 $S$ 的第 $i$ 值来自一元条件高斯密度 $p(S_{i}'|S_{-i},\boldsymbol{\theta})$，$S_{-i}'$ 表示移除 $S$ 中的第 $i$ 个值；(ii) 以概率 $\Delta(S_{i},S_{i}') = \min\big\{ \frac{p(y_{i}|s_{i}',\boldsymbol{\beta})}{p(y_{i}s_{i},\boldsymbol{\beta})},1 \big\}$ 接受 $S_{i}'$，否则不改变$S_i$；(iii) 重复 (i) 和 (ii) $\forall i = 1,2,\ldots,n$；
+4. 更新模型系数 $\boldsymbol{\beta}$ ：从条件密度 $p(\boldsymbol{\beta}'|\boldsymbol{\beta})$ 以概率 $$\Delta = \min \big\{ \frac{\prod_{j=1}^{n}p(y_i|s_{i},\boldsymbol{\beta}')p(\boldsymbol{\beta}|\boldsymbol{\beta}')}{\prod_{j=1}^{n}p(y_i|s_{i},\boldsymbol{\beta})p(\boldsymbol{\beta}'|\boldsymbol{\beta})},1  \big\}$$ 接受 $\boldsymbol{\beta}'$，否则不改变$\boldsymbol{\beta}$。
+5. 重复步骤2，3，4 既定的次数，获得参数 $\boldsymbol{\beta},\boldsymbol{\theta}$ 的迭代序列。
 
 \noindent 直到参数的迭代序列平稳，然后根据后续的平稳序列采样，获得各参数后验分布的样本，再根据样本估计参数值。程序实现的主要步骤（以 R 语言接口 rstan 和 brms 为例说明）：首先安装 C++ 编译工具，如果在 Windows 平台上，就从 R 官网下载安装 [RTools][rtools]， 它包含一套完整的 C++ 开发工具。 然后添加 gcc/g++ 编译器的路径到系统环境变量。 如果在 Linux 系统上， 这些工具都是自带的， 环境变量也不用配置， 减少了很多麻烦，但是在 Linux 系统上可以获得更好的算法性能。其它配置细节见 Stan 开发[官网][stan-setup]。其次，在 R 软件控制台，安装 rstan 和 brms 包以及相关依赖包。然后，加载 rstan 和 brms 包，配置参数如下：
 ```{r,echo=TRUE,eval=FALSE}
