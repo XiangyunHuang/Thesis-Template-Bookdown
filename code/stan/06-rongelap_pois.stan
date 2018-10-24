@@ -60,14 +60,15 @@ data {
   int<lower=0> y[N];
   real<lower=0> units[N];
 }
-transformed data {
-  real delta = 1e-12;
-}
+// transformed data {
+//   real delta = 1e-12;
+// }
 parameters {
   real<lower=0> phi;
   real<lower=0> sigmasq;
   real alpha;
   vector[N] eta;
+  real delta;
 }
 model {
   vector[N] f;

@@ -55,7 +55,7 @@ a(\phi) = \phi, \quad b(\theta) = \theta^2/2, \quad c(y,\phi) = - \frac{1}{2}\{ 
 \[ a(\phi) = \phi/w \]
 \noindent 其中 $\phi$ 可由 $\sigma^2$ 表示，故而也叫做发散参数 （dispersion parameter），是一个与样本观察值相关的常数，$w$ 是已知的权重，随样本观察值变化。对正态分布模型而言，$w$ 的分量是 $m$ 个相互独立的样本观察值的均值，有 $a(\phi) = \sigma^2/m$，所以，$w = m$。
 
-根据 \@ref(eq:common-exponential-family)式，正态、泊松和二项分布的特征见表 \@ref(tab:common-characteristics)，其它常见分布见 Peter McCullagh 等 （1989年） [@McCullagh1989]。
+根据 \@ref(eq:common-exponential-family)式，正态、泊松和二项分布的特征见表 \@ref(tab:common-characteristics)，其它常见分布见 McCullagh 等 （1989年） [@McCullagh1989]。
 
 Table: (\#tab:common-characteristics) 指数族内常见的一元分布的共同特征及符号表示^[(ref:footnote-tab-common-characteristics)] 
 
@@ -153,7 +153,7 @@ I(\theta_{0}) = \mathsf{E}_{\theta_{0}} \big[ \frac{ p'(x,\theta_{0}) }{ p(x,\th
 \[ \lim_{h \to 0} \mathsf{E}\big[ \{S(x + h) - S(x)\}^{2} \big] = 0 \] 
 \noindent 则称 $S(x)$ 是均方连续（mean-square continuous）的。随机过程 $S(x)$ 满足
 \[ \lim_{h \to 0} \mathsf{E} \big[ \{ \frac{S(x+h) - S(x)}{h} - S'(x) \}^2 \big] = 0 \]
-\noindent 则称 $S(x)$ 是均方可微（mean-square differentiable）的，并且 $S'(x)$ 就是均方意义下的一阶导数。如果 $S'(x)$ 是均方可微的，则 $S(x)$ 是二次均方可微的，随机过程 $S(x)$ 的高阶均方可微性可类似定义。M. S. Bartlett （1955 年） [@Bartlett1955] 得到如下重要结论
+\noindent 则称 $S(x)$ 是均方可微（mean-square differentiable）的，并且 $S'(x)$ 就是均方意义下的一阶导数。如果 $S'(x)$ 是均方可微的，则 $S(x)$ 是二次均方可微的，随机过程 $S(x)$ 的高阶均方可微性可类似定义。Bartlett （1955 年） [@Bartlett1955] 得到如下重要结论
 ```
 ```{theorem, label="stationary-mean-square-properties", name="平稳随机过程的可微性", echo=TRUE}
 自相关函数为 $\rho(u)$ 的平稳随机过程是 $k$ 次均方可微的，当且仅当 $\rho(u)$ 在 $u = 0$ 处是 $2k$ 次可微的。
@@ -161,7 +161,7 @@ I(\theta_{0}) = \mathsf{E}_{\theta_{0}} \big[ \frac{ p'(x,\theta_{0}) }{ p(x,\th
 
 ## 修正的第二类贝塞尔函数 {#sec:modified-bessel-function}
 
-平稳空间高斯过程的自协方差函数是梅隆型时，需要用到修正的第二类贝塞尔函数 $\mathcal{K}_{\kappa}(u)$，它是修正的贝塞尔方程的解 [@Abramowitz1972]，函数形式如下
+平稳空间高斯过程的自协方差函数是 Matérn 型（详见第\@ref(models)章第\@ref(subsec:covariance-function)小节）时，需要用到修正的第二类贝塞尔函数 $\mathcal{K}_{\kappa}(u)$，它是修正的贝塞尔方程的解 [@Abramowitz1972]，函数形式如下
 
 \begin{equation}
 \begin{aligned}
@@ -293,11 +293,11 @@ Table: (\#tab:calculate-volume-of-hyperball) 前 10 维单位超立方体内切�
 
 在上世纪 40\~50 年代，由梅特罗波利斯 （Nicholas Metropolis），冯$\cdot$诺依曼 （John von Neumann） 和乌拉姆 （Stanislaw Ulam） 创立蒙特卡罗方法，为了纪念乌拉姆，Stan 就以他的名字命名。Stan 是一门基于 C++ 的概率编程语言，主要用于贝叶斯推断，它的代码完全[开源][stan]的，托管在 [Github][stan-dev] 上，自 2012 年 8 月 30 日发布第一个 1.0 版本以来，截至写作时间已发布 33 个版本，目前最新版本是 2.18.0。使用 Stan，用户需提供数据、Stan 代码写的脚本模型，编译 Stan 写的程序，然后与数据一起运行，模型参数的后验模拟过程是自动实现的。除了可以在命令行环境下编译运行 Stan 脚本中写模型外，Stan 还提供其他编程语言的接口，如 R、Python、Matlab、Mathematica、Julia 等等，这使得熟悉其他编程语言的用户可以方便地调用和分析数据。但是，与 Python、R等 这类解释型编程语言不同， Stan 代码需要先翻译成 C++ 代码，然后使用系统编译器 （如 GCC） 编译，若使用 R 语言接口，编译后的动态链接库可以载入 R 内存中，再被其他 R 函数调用执行。
 
-随机模拟的前提是有能产生高质量高效的伪随机数发生器，只有周期长，生成速度快，能通过一系列统计检验的伪随机数才能用作统计模拟，Stan 内置了 Mersenne Twister 发生器，它的周期长达 \(2^{19937}-1\)，通过了一系列严格的检验，被广泛采用到现代软件中，如 Octave 和 Matlab 等 [@Huang2017COS]。除了 Mersenne Twister 随机数发生器，Stan 还使用了 [Boost C++][boost-cpp] 和 [Eigen C++][eigen-cpp] 等模版库用于线性代数计算，这样的底层设计路线使得 Stan 的运算效率很高。 
+随机模拟的前提是有能产生高质量高效的伪随机数发生器，只有周期长，生成速度快，能通过一系列统计检验的伪随机数才能用作统计模拟，Stan 内置了 Mersenne-Twister 发生器，它的周期长达 \(2^{19937}-1\)，通过了一系列严格的检验，被广泛采用到现代软件中，如 Octave 和 Matlab 等 [@Huang2017COS]。除了 Mersenne Twister 随机数发生器，Stan 还使用了 [Boost C++][boost-cpp] 和 [Eigen C++][eigen-cpp] 等模版库用于线性代数计算，这样的底层设计路线使得 Stan 的运算效率很高。 
 
-Stan 内置的采样器 No-U-Turn （简称 NUTS） 源于汉密尔顿蒙特卡罗算法 （Hamiltonian Monte Carlo，简称 HMC），最早由 Matthew D. Hoffman 和 Andrew Gelman （2014年） [@hoffman2014] 提出。与 Stan 有相似功能的软件 BUGS 和 JAGS 主要采用的是 Gibbs 采样器，前者基于 Pascal 语言开发于 1989 年至 2004 年，后者基于 C++ 活跃开发于 2007 年至 2013 年。在时间上， Stan 具有后发优势，特别在灵活性和扩展性方面，它支持任意的目标函数，模型语言也更加简单易于推广学习，其每一行都是命令式的语句，而 BUGS 和 JAGS 采用声明式；在大量数据的建模分析中， Stan 可以更快地处理复杂模型，这一部分归功于它高效的算法实现和内存管理，另一部分在于高级的 MCMC 算法 --- 带 NUTS 采样器的 HMC 算法。
+Stan 内置的采样器 No-U-Turn （简称 NUTS） 源于汉密尔顿蒙特卡罗算法 （Hamiltonian Monte Carlo，简称 HMC），最早由 Hoffman 和 Gelman （2014年） [@hoffman2014] 提出。与 Stan 有相似功能的软件 BUGS 和 JAGS 主要采用的是 Gibbs 采样器，前者基于 Pascal 语言开发于 1989 年至 2004 年，后者基于 C++ 活跃开发于 2007 年至 2013 年。在时间上， Stan 具有后发优势，特别在灵活性和扩展性方面，它支持任意的目标函数，模型语言也更加简单易于推广学习，其每一行都是命令式的语句，而 BUGS 和 JAGS 采用声明式；在大量数据的建模分析中， Stan 可以更快地处理复杂模型，这一部分归功于它高效的算法实现和内存管理，另一部分在于高级的 MCMC 算法 --- 带 NUTS 采样器的 HMC 算法。
 
-Donald B. Rubin （1981年） [@Rubin1981] 分析了 Donald L. Alderman 和 Donald E. Powers [@Alderman1980] 收集的原始数据，得出表 \@ref(tab:eight-high-schools)， Andrew Gelman 和 John B. Carlin 等 （2003年） [@Gelman2003] 建立分层正态模型 \@ref(eq:hierarchical-normal-models) 分析 Eight Schools 数据集，由美国教育考试服务调查搜集，用以分析不同的培训项目对学生考试分数的影响，其随机调查了 8 所高中，学生的成绩作为培训效应的估计 $y_j$，其样本方差 $\sigma^2_j$，数据集见表 \@ref(tab:eight-high-schools)。这里再次以该数据集和模型为例介绍 Stan 的使用。
+Rubin （1981年） [@Rubin1981] 分析了 Alderman 和 Powers [@Alderman1980] 收集的原始数据，得出表 \@ref(tab:eight-high-schools)， Gelman 和 Carlin 等 （2003年） [@Gelman2003] 建立分层正态模型 \@ref(eq:hierarchical-normal-models) 分析 Eight Schools 数据集，由美国教育考试服务调查搜集，用以分析不同的培训项目对学生考试分数的影响，其随机调查了 8 所高中，学生的成绩作为培训效应的估计 $y_j$，其样本方差 $\sigma^2_j$，数据集见表 \@ref(tab:eight-high-schools)。这里再次以该数据集和模型为例介绍 Stan 的使用。
 
 Table: (\#tab:eight-high-schools) Eight Schools 数据集
 
@@ -439,7 +439,7 @@ knitr::include_graphics(path = c(
 ))
 ```
 
-为了评估链条之间和内部的混合效果， Andrew Gelman 等 [@Gelman2013R] 使用潜在尺度缩减因子 （potential scale reduction factor） $\hat{R}$ 描述链条的波动程度，类似一组数据的方差含义，方差越小波动性越小，数据越集中，这里意味着链条波动性小。一般地，对于每个待估的量 $\omega$，模拟产生 $m$ 条链，每条链有 $n$ 次迭代值 $\omega_{ij} (i = 1,\ldots,n;j=1,\ldots,m)$，用 $B$ 和 $W$ 分别表示链条之间（不妨看作组间方差）和内部的方差（组内方差）
+为了评估链条之间和内部的混合效果，Gelman 等 [@Gelman2013R] 使用潜在尺度缩减因子 （potential scale reduction factor） $\hat{R}$ 描述链条的波动程度，类似一组数据的方差含义，方差越小波动性越小，数据越集中，这里意味着链条波动性小。一般地，对于每个待估的量 $\omega$，模拟产生 $m$ 条链，每条链有 $n$ 次迭代值 $\omega_{ij} (i = 1,\ldots,n;j=1,\ldots,m)$，用 $B$ 和 $W$ 分别表示链条之间（不妨看作组间方差）和内部的方差（组内方差）
 
 \begin{equation}
 \begin{aligned}

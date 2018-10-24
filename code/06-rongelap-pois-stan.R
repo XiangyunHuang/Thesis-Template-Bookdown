@@ -20,7 +20,9 @@ rongelap_pois_data <- list(
 )
 
 rongelap_pois_fit <- sampling(rongelap_pois_stan,
-                              data = rongelap_pois_data, cores = 2, chains = 2,
+                              data = rongelap_pois_data, 
+                              init = 0,
+                              cores = 2, chains = 2,
                               iter = 2000, control = list(adapt_delta = 0.95, max_treedepth = 15)
 )
 

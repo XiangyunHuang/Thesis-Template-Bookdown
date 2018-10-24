@@ -18,7 +18,7 @@ Y = X^{\top}\beta + \epsilon, \mathsf{E}(\epsilon) = 0, \mathsf{Cov}(\epsilon) =
 \begin{equation}
 g(\mu) = X^{\top}\beta  (\#eq:GLM)
 \end{equation}
-\noindent 其中，$\mu \equiv \mathsf{E}(Y)$， $g$ 代表联系函数，特别地，当 $Y \sim \mathcal{N}(\mu,\sigma^2)$ 时，联系函数 $g(x) = x$，模型 \@ref(eq:GLM) 变为一般线性模型 \@ref(eq:LM)。当 $Y \sim \mathrm{Binomial}(n,p)$ 时，响应变量 $Y$ 的期望 $\mu =\mathsf{E}(Y) = np$， 联系函数 $g(x)=\ln(\frac{x}{1-x})$，模型 \@ref(eq:GLM) 变为$\log(\frac{p}{1-p})=X^{\top}\beta$。 当 $Y \sim \mathrm{Poisson}(\lambda)$ 时，响应变量 $Y$ 的期望 $\mu =\mathsf{E}(Y) = \lambda$， 联系函数$g(x) = \ln(x)$， 模型 \@ref(eq:GLM) 变为 $\log(\lambda) = X^{\top}\beta$。 指数族下其余分布对应的联系函数此处不一一列举， 完整列表可以参看 1989 年 McCullagh 和 Nelder 所著的《广义线性模型》 [@McCullagh1989]。 模型 \@ref(eq:GLM) 最早由 Nelder 和 Wedderburn 在1972年提出[@Nelder1972]，它弥补了模型 \@ref(eq:LM) 的两个重要缺点： 一是因变量只能取连续值的情况， 二是期望与自变量只能用线性关系联系 [@Chen2011]。 求解广义线性模型 \@ref(eq:GLM) 的 R 函数是 `glm`， 常用拟似然法去估计模型 \@ref(eq:GLM) 的参数。
+\noindent 其中，$\mu \equiv \mathsf{E}(Y)$， $g$ 代表联系函数，特别地，当 $Y \sim \mathcal{N}(\mu,\sigma^2)$ 时，联系函数 $g(x) = x$，模型 \@ref(eq:GLM) 变为一般线性模型 \@ref(eq:LM)。当 $Y \sim \mathrm{Binomial}(n,p)$ 时，响应变量 $Y$ 的期望 $\mu =\mathsf{E}(Y) = np$， 联系函数 $g(x)=\ln(\frac{x}{1-x})$，模型 \@ref(eq:GLM) 变为$\log(\frac{p}{1-p})=X^{\top}\beta$。 当 $Y \sim \mathrm{Poisson}(\lambda)$ 时，响应变量 $Y$ 的期望 $\mu =\mathsf{E}(Y) = \lambda$， 联系函数$g(x) = \ln(x)$， 模型 \@ref(eq:GLM) 变为 $\log(\lambda) = X^{\top}\beta$。 指数族下其余分布对应的联系函数此处不一一列举， 完整列表可以参看 1989 年 McCullagh 和 Nelder 所著的《广义线性模型》 [@McCullagh1989]。 模型 \@ref(eq:GLM) 最早由 Nelder 和 Wedderburn 在 1972 年提出 [@Nelder1972]，它弥补了模型 \@ref(eq:LM) 的两个重要缺点： 一是因变量只能取连续值的情况， 二是期望与自变量只能用线性关系联系 [@Chen2011]。 求解广义线性模型 \@ref(eq:GLM) 的 R 函数是 `glm`， 常用拟似然法去估计模型 \@ref(eq:GLM) 的参数。
 
 ## 广义线性混合效应模型 {#sec:Generalized-Linear-Mixed-Effects-Models}
 
@@ -87,7 +87,7 @@ knitr::include_graphics(path = "figures/matern.png")
 knitr::include_graphics(path = "figures/matern-3d.png")
 ```
 
-从图\@ref(fig:matern-2d)可以看出，相比于贝塞尔函数的阶 $\kappa$， 尺度参数 $\phi$ 对相关函数的影响大些，由图\@ref(fig:matern-2d)看出随着空间距离的增加，相关性减弱地特别快。在实际应用中，先固定下 $\kappa$ 是可以接受的，为简化编程和表述，Peter J. Diggle 等 （1998年） [@Diggle1998] 在真实数据分析中使用幂指数型自相关函数 $\rho_{0}(u) = \exp(-(\alpha u)^{\delta}), \alpha > 0, 0 < \delta \leq 2$。 虽然其形式大大简化， 但函数图像和性质却与梅隆型有相似之处， 即当 $0 < \delta < 2$ 时， $S(x)$ 均方连续但不可微，当 $\delta = 2$ 时， $S(x)$ 无限次可微。
+从图\@ref(fig:matern-2d)可以看出，相比于贝塞尔函数的阶 $\kappa$， 尺度参数 $\phi$ 对相关函数的影响大些，由图\@ref(fig:matern-2d)看出随着空间距离的增加，相关性减弱地特别快。在实际应用中，先固定下 $\kappa$ 是可以接受的，为简化编程和表述，Diggle 等 （1998年） [@Diggle1998] 在真实数据分析中使用幂指数型自相关函数 $\rho_{0}(u) = \exp(-(\alpha u)^{\delta}), \alpha > 0, 0 < \delta \leq 2$。 虽然其形式大大简化， 但函数图像和性质却与梅隆型有相似之处， 即当 $0 < \delta < 2$ 时， $S(x)$ 均方连续但不可微，当 $\delta = 2$ 时， $S(x)$ 无限次可微。
 
 ### 模型识别 {#subsec:identify}
 
@@ -103,13 +103,13 @@ g(\mu_i) = d(x_i)^{\top}\beta + S(x_i) (\#eq:no-nugget-SGLMM)
 \sigma^2\rho(u_{ij})/(\sigma^2+\tau^2) & : x_{i} \neq x_{j}
 \end{cases} (\#eq:corr-nugget-function)
 \end{equation}
-\noindent 在原点不连续，只有当 $\tau^2 = \mathsf{Var}[Y_i|S(x_i)]$ 已知或者在同一位置可以用重复测量的方法直接获得时，参数 $\tau^2, \sigma^2, \phi$ 是可识别的 [@Diggle2002Childhood; @Diggle2007]。如果通过探索性数据分析观察到不可忽略的非空间效应 $\tau^2$ 时，Ole F Christensen （2004年） [@Christensen2004] 建议使用样本变差函数对 $\tau^2$ 作初步估计，然后计算关于 $\tau^2$ 的剖面似然函数曲线，或者协方差参数 $\phi,\tau^2$一起确定最佳的值，第 \@ref(applications) 章第 \@ref(case-rongelap) 节将用剖面似然函数曲面的方法获取真实数据场景中的参数估计值。
+\noindent 在原点不连续，只有当 $\tau^2 = \mathsf{Var}[Y_i|S(x_i)]$ 已知或者在同一位置可以用重复测量的方法直接获得时，参数 $\tau^2, \sigma^2, \phi$ 是可识别的 [@Diggle2002Childhood; @Diggle2007]。如果通过探索性数据分析观察到不可忽略的非空间效应 $\tau^2$ 时，Christensen （2004年） [@Christensen2004] 建议使用样本变差函数对 $\tau^2$ 作初步估计，然后计算关于 $\tau^2$ 的剖面似然函数曲线，或者协方差参数 $\phi,\tau^2$一起确定最佳的值，第 \@ref(applications) 章第 \@ref(case-rongelap) 节将用剖面似然函数曲面的方法获取真实数据场景中的参数估计值。
 
 ### 先验分布 {#subsec:prior-sglmm}
 
 基于贝叶斯方法实现模型 \@ref(eq:SGLMM) 的参数估计，必然使用 MCMC 算法，自然地，需要指定模型参数 $\boldsymbol{\theta} = (\beta,\tau^2,\sigma^2,\phi)$ 的先验分布。对于 $\beta$，选择相互独立的均匀先验，而对于参数 $\tau^2,\sigma^2,\phi$，选取如下模糊先验：
 $$f(\tau^2) \propto \frac{1}{\tau^2};f(\sigma^2) \propto \frac{1}{\sigma^2};f(\phi) \propto \frac{1}{\phi^2}$$
-\noindent 其中，$\tau^2$ 和 $\sigma^2$ 为 Jeffreys 先验， Peter J. Diggle 等 （2002 年） [@Diggle2002Childhood] 使用如下先验分布
+\noindent 其中，$\tau^2$ 和 $\sigma^2$ 为 Jeffreys 先验，Diggle 等 （2002 年） [@Diggle2002Childhood] 使用如下先验分布
 \begin{equation*}
 \log(\nu^2),\log(\sigma^2),\log(\phi)  \sim \text{正态分布}
 \end{equation*}

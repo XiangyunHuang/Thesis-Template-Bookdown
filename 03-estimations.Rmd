@@ -89,7 +89,7 @@ L(\boldsymbol{\theta};\mathbf{y}) = \int_{\mathbb{R}^n} [\mathbf{Y(x)}|S(\mathbf
 \end{equation}
 \noindent 其中，符号 $[\cdot]$ 表示某某的分布，一般地，边际似然函数$L(\boldsymbol{\theta};\mathbf{y})$包含两个分布的乘积和随机效应的积分，并且这个积分无法显式的表示，第一个分布是观测变量 $\mathbf{Y}$ 的抽样分布，第二个分布是多元高斯分布。一个特殊的情况是 $\mathbf{Y}$ 也假设服从多元高斯分布，这时积分有显式表达式。
 
-边际似然函数 \@ref(eq:marginal-likelihood) 卷入的数值积分是充满挑战的，因为积分的维数 $n$ 是观测值的数目，所以像二次、高斯--埃尔米特或适应性高斯--埃尔米特数值积分方式都是不可用的。Luke Tierney 和 Joseph B. Kadane （1986 年）提出拉普拉斯近似方法 [@Tierney1986]，它在纵向数据分析中被大量采用 [@Diggle2002Analysis]。总之，对空间广义线性混合效应模型而言，拉普拉斯近似还可以继续采用，想法是近似边际似然函数中的高维 $(n > 3)$ 积分，获得一个易于处理的表达式，有了积分的显式表达式，就可以用数值的方法求边际似然函数的极大值。拉普拉斯方法即用如下方式近似 \@ref(eq:marginal-likelihood) 中的积分
+边际似然函数 \@ref(eq:marginal-likelihood) 卷入的数值积分是充满挑战的，因为积分的维数 $n$ 是观测值的数目，所以像二次、高斯--埃尔米特或适应性高斯--埃尔米特数值积分方式都是不可用的。Tierney 和 Kadane （1986 年）提出拉普拉斯近似方法 [@Tierney1986]，它在纵向数据分析中被大量采用 [@Diggle2002Analysis]。总之，对空间广义线性混合效应模型而言，拉普拉斯近似还可以继续采用，想法是近似边际似然函数中的高维 $(n > 3)$ 积分，获得一个易于处理的表达式，有了积分的显式表达式，就可以用数值的方法求边际似然函数的极大值。拉普拉斯方法即用如下方式近似 \@ref(eq:marginal-likelihood) 中的积分
 \begin{equation}
 I   =  \int_{\mathbb{R}^n} \exp\{Q(\mathbf{s})\}\mathrm{d}\mathbf{s} 
   \approx  (2\pi)^{n/2} |-Q''(\hat{\mathbf{s}})|^{-1/2}\exp\{Q(\hat{\mathbf{s}})\} (\#eq:laplace-approximate)
@@ -135,7 +135,7 @@ Q''(\mathbf{s})& =  -\mathrm{diag} \{b''(D\boldsymbol{\beta} + \mathbf{s}) \} - 
 \end{equation}
 \noindent 现在极大化近似对数似然 \@ref(eq:approx-log-lik) 式，此时是求模型参数，可称之为外迭代过程，常用的算法是 Broyden-Fletcher-Goldfarb-Shanno (BFGS) 算法，它内置在 R 函数 `optim()` 中。方便起见，模型参数记为 $\boldsymbol{\theta} = (\boldsymbol{\beta},\log(\sigma^2),\log(\tau^2),\log(\phi),\log(\psi))$，且 $\hat{\boldsymbol{\theta}}$ 表示 $\boldsymbol{\theta}$ 的最大似然估计，根据第\@ref(prepare)章第\@ref(sec:def-mle)节定理\@ref(thm:asymptotic-normality)，则 $\hat{\boldsymbol{\theta}}$ 的渐进分布为
 \[ \hat{\boldsymbol{\theta}} \sim \mathcal{N}(\boldsymbol{\theta}, \mathbf{I}_{o}^{-1}(\hat{\boldsymbol{\theta}})) \]
-\noindent 其中 $\mathbf{I}_{o}(\hat{\boldsymbol{\theta}})$ 为观察到的样本信息阵，注意到在空间广义线性混合效应模型下，不能直接计算 Fisher 信息阵，因为对数似然函数没有显式表达式，只有数值迭代获得在 $\hat{\boldsymbol{\theta}}$ 处的观测信息矩阵。通常，这类渐进近似对协方差参数 $\sigma^2, \tau^2, \phi$ 的估计效果不好，在数据集不太大的情形下，可用第 \@ref(sec:profile-likelihood) 节介绍的剖面似然方法计算协方差参数及其置信区间。剖面似然估计的算法实现过程详见 Ben Bolker 等 （2017年） 开发的 bbmle 包 [@R-bbmle]，下面给出计算的细节步骤：
+\noindent 其中 $\mathbf{I}_{o}(\hat{\boldsymbol{\theta}})$ 为观察到的样本信息阵，注意到在空间广义线性混合效应模型下，不能直接计算 Fisher 信息阵，因为对数似然函数没有显式表达式，只有数值迭代获得在 $\hat{\boldsymbol{\theta}}$ 处的观测信息矩阵。通常，这类渐进近似对协方差参数 $\sigma^2, \tau^2, \phi$ 的估计效果不好，在数据集不太大的情形下，可用第 \@ref(sec:profile-likelihood) 节介绍的剖面似然方法计算协方差参数及其置信区间。剖面似然估计的算法实现过程详见 Bolker 等 （2017年） 开发的 bbmle 包 [@R-bbmle]，下面给出计算的细节步骤：
 
 1. 选择模型参数 $\boldsymbol{\theta}$ 的初始值 $\boldsymbol{\theta}_{i}$；
 2. 计算协方差矩阵 $\Sigma$ 及其逆 $\Sigma^{-1}$；
@@ -169,7 +169,7 @@ g(\mu_i) = T_{i} = d(x_i)'\beta + S(x_i) + Z_i (\#eq:again-SGLMM)
 \begin{equation}
 L(\beta,\boldsymbol{\theta}) = f(y;\beta,\boldsymbol{\theta}) = \int_{\mathbb{R}^{n}}\mathcal{N}(t;D\beta,\Sigma(\boldsymbol{\theta}))f(y|t)dt (\#eq:likelihood)
 \end{equation}
-\noindent 其中$\mathcal{N}(\cdot;\mu,\Sigma)$ 表示均值为 $\mu$，协方差矩阵为 $\Sigma$ 的多元高斯分布的密度函数。Charles J. Geyer (1994 年)[@Geyer1994On] 在给定 $Y=y$ 的情况下，使用 $T$ 的条件分布 $f(T|Y=y)$ 模拟近似方程 \@ref(eq:likelihood) 中的高维积分，则似然函数 $L(\beta,\boldsymbol{\theta})$ 可以重写为
+\noindent 其中$\mathcal{N}(\cdot;\mu,\Sigma)$ 表示均值为 $\mu$，协方差矩阵为 $\Sigma$ 的多元高斯分布的密度函数。Geyer (1994 年)[@Geyer1994On] 在给定 $Y=y$ 的情况下，使用 $T$ 的条件分布 $f(T|Y=y)$ 模拟近似方程 \@ref(eq:likelihood) 中的高维积分，则似然函数 $L(\beta,\boldsymbol{\theta})$ 可以重写为
 \begin{equation}
 \begin{aligned}
 L(\beta,\boldsymbol{\theta})
@@ -210,7 +210,7 @@ L_{m}(\beta,\boldsymbol{\theta})=\frac{1}{m}\sum_{i=1}^{n}\frac{\mathcal{N}(t_{i
 \frac{d t_{i}}{d v} & = & \frac{\partial H}{\partial u_{i}} \\
 \frac{d u_{i}}{d v} & = & -\frac{\partial H}{\partial t_{i}}
 \end{eqnarray*}
-\noindent 其中，$i = 1,\ldots, n$， 上述动态汉密尔顿微分方程根据 leapfrog 方法离散 [@Brooks2011]， 然后求解离散后的方程组获得近似解。
+\noindent 其中，$i = 1,\ldots, n$， 上述动态汉密尔顿微分方程根据 leapfrog 方法[@Brooks2011]离散， 然后求解离散后的方程组获得近似解。
 
 
 ### 低秩近似算法 {#LowRank}
@@ -289,7 +289,7 @@ S(x) \approx \sum_{i = 1}^r K(\|x-\tilde{x}_{i}\|; \phi, \kappa) U_{i} (\#eq:lr-
 
 <!-- ### STAN-MCMC 算法实现过程 {#STANMCMC} -->
 
-为了与本章第 \@ref(sec:MCMC) 节提出的贝叶斯 MCMC 算法比较，我们基于 Stan 实现求解 SGLMM 模型的贝叶斯 MCMC 算法(简称 STAN-MCMC)。目前，我与 Paul Bürkner 一起开发了 brms 包 [@brms2017JSS]， 主要工作是修复程序调用和文档书写错误， 特别是与求解 SGLMM 模型相关的 `gp` 函数，相关细节见 brms 的 Github 开发仓库。
+为了与本章第 \@ref(sec:MCMC) 节提出的贝叶斯 MCMC 算法比较，我们基于 Stan 实现求解 SGLMM 模型的贝叶斯 MCMC 算法(简称 STAN-MCMC)。目前，我与 Bürkner 一起开发了 brms 包 [@brms2017JSS]， 主要工作是修复程序调用和文档书写错误， 特别是与求解 SGLMM 模型相关的 `gp` 函数，相关细节见 brms 的 Github 开发仓库。
 
 在 SGLMM 模型下，STAN-MCMC 算法，先从条件分布 $[S|\theta,\beta,Y]$ 抽样，然后是 $[\theta|S]$ ，最后是 $[\beta|S,Y]$，具体步骤如下：
 
