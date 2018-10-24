@@ -20,7 +20,7 @@ autocorr.plot(MCmle.coda)
 ## maximum likelihood 
 mcmcobj <- prepare.likfit.glsm(MCmle.input.fixed)
 # 极大似然 不做 box-cox 变换 lambda = 1
-lik.boxcox.1.expon.nugget <- likfit.glsm(mcmcobj, ini.phi = 100) 
+lik.boxcox.1.expon.nugget <- likfit.glsm(mcmcobj, ini.phi = 100, fix.nugget.rel = FALSE) 
 
 beta = 6.188
 sigmasq = 2.403
