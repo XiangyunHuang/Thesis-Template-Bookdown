@@ -18,7 +18,7 @@ Y = X^{\top}\boldsymbol{\beta} + \boldsymbol{\epsilon}, \mathsf{E}(\boldsymbol{\
 \begin{equation}
 g(\mu) = X^{\top}\boldsymbol{\beta}  (\#eq:GLM)
 \end{equation}
-\noindent 其中，$\mu \equiv \mathsf{E}(Y)$， $g$ 代表联系函数，特别地，当 $Y \sim \mathcal{N}(\mu,\sigma^2)$ 时，联系函数 $g(x) = x$，模型 \@ref(eq:GLM) 变为一般线性模型 \@ref(eq:LM)。当 $Y \sim \mathrm{Binomial}(n,p)$ 时，响应变量 $Y$ 的期望 $\mu =\mathsf{E}(Y) = np$， 联系函数 $g(x)=\ln(\frac{x}{1-x})$，模型 \@ref(eq:GLM) 变为$\log(\frac{p}{1-p})=X^{\top}\boldsymbol{\beta}$。 当 $Y \sim \mathrm{Poisson}(\lambda)$ 时，响应变量 $Y$ 的期望 $\mu =\mathsf{E}(Y) = \lambda$， 联系函数$g(x) = \ln(x)$， 模型 \@ref(eq:GLM) 变为 $\log(\lambda) = X^{\top}\boldsymbol{\beta}$。 指数族下其余分布对应的联系函数此处不一一列举， 完整列表可以参看 1989 年 McCullagh 和 Nelder 所著的《广义线性模型》 [@McCullagh1989]。 模型 \@ref(eq:GLM) 最早由 Nelder 和 Wedderburn 在 1972 年提出 [@Nelder1972]，它弥补了模型 \@ref(eq:LM) 的两个重要缺点： 一是因变量只能取连续值的情况， 二是期望与自变量只能用线性关系联系 [@Chen2011]。 求解广义线性模型 \@ref(eq:GLM) 的 R 函数是 `glm`， 常用拟似然法去估计模型 \@ref(eq:GLM) 的参数。
+\noindent 其中，$\mu \equiv \mathsf{E}(Y)$， $g$ 代表联系函数，特别地，当 $Y \sim \mathcal{N}(\mu,\sigma^2)$ 时，联系函数 $g(x) = x$，模型 \@ref(eq:GLM) 变为一般线性模型 \@ref(eq:LM)。当 $Y \sim \mathrm{Binomial}(n,p)$ 时，响应变量 $Y$ 的期望 $\mu =\mathsf{E}(Y) = np$， 联系函数 $g(x)=\ln(\frac{x}{1-x})$，模型 \@ref(eq:GLM) 变为$\log(\frac{p}{1-p})=X^{\top}\boldsymbol{\beta}$。 当 $Y \sim \mathrm{Poisson}(\lambda)$ 时，响应变量 $Y$ 的期望 $\mu =\mathsf{E}(Y) = \lambda$， 联系函数$g(x) = \ln(x)$， 模型 \@ref(eq:GLM) 变为 $\log(\lambda) = X^{\top}\boldsymbol{\beta}$。 指数族下其余分布对应的联系函数此处不一一列举， 完整列表可以参看 McCullagh 和 Nelder （1989 年 ）[@McCullagh1989] 所著的《广义线性模型》 。 模型 \@ref(eq:GLM) 最早由 Nelder 和 Wedderburn （1972 年）[@Nelder1972] 提出，它弥补了模型 \@ref(eq:LM) 的两个重要缺点： 一是因变量只能取连续值的情况， 二是期望与自变量只能用线性关系联系 [@Chen2011]。 求解广义线性模型 \@ref(eq:GLM) 的 R 函数是 `glm`， 常用拟似然法去估计模型 \@ref(eq:GLM) 的参数。
 
 ## 广义线性混合效应模型 {#sec:Generalized-Linear-Mixed-Effects-Models}
 
@@ -113,7 +113,7 @@ $$f(\tau^2) \propto \frac{1}{\tau^2};f(\sigma^2) \propto \frac{1}{\sigma^2};f(\p
 \begin{equation*}
 \log(\nu^2),\log(\sigma^2),\log(\phi)  \sim \mathcal{N}(\cdot,\cdot)
 \end{equation*}
-这些无信息先验分布的选择主要是出于实用和经验的考虑，也可以取别的，只要保持马尔科夫链收敛即可。实际操作中，我们还选取不同初始值，产生多条链，同时去掉迭代初始阶段产生的相对发散的参数迭代值，后续迭代值在链条收敛的情况下，可以把它当作后验分布产生的样本，然后依据该样本估计后验分布的参数。这些无信息先验分布的选择对最终结果几乎没有影响，这是贝叶斯方法的优势，也是贝叶斯推断方法得以被广泛应用的原因之一 [@mao2006]。
+这些无信息先验分布的选择主要是出于实用和经验的考虑，也可以取别的，只要保持马尔科夫链收敛即可。实际操作中，我们还选取不同初始值，产生多条链，同时去掉迭代初始阶段产生的相对发散的参数迭代值，后续迭代值在链条收敛的情况下，可以把它当作后验分布产生的样本，然后依据该样本估计后验分布的参数。
 
 ## 本章小结 {#sec:models}
 

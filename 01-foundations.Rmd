@@ -53,7 +53,7 @@ a(\phi) = \phi, \quad b(\theta) = \theta^2/2, \quad c(y,\phi) = - \frac{1}{2}\{ 
 \[ a(\phi) = \phi/w \]
 \noindent 其中 $\phi$ 可由 $\sigma^2$ 表示，故而也叫做发散参数 （dispersion parameter），是一个与样本观察值相关的常数，$w$ 是已知的权重，随样本观察值变化。对正态分布模型而言，$w$ 的分量是 $m$ 个相互独立的样本观察值的均值，有 $a(\phi) = \sigma^2/m$，所以，$w = m$。
 
-根据 \@ref(eq:common-exponential-family)式，正态、泊松和二项分布的特征见表 \@ref(tab:common-characteristics)，符号约定同 McCullagh 和 Nelder 所著的《Generalized Linear Models》，其它常见分布见 McCullagh 和 Nelder 等 （1989年） [@McCullagh1989]。
+根据 \@ref(eq:common-exponential-family)式，正态、泊松和二项分布的特征见表 \@ref(tab:common-characteristics)，符号约定同 McCullagh 和 Nelder （1989年） 所著的《广义线性模型》。
 
 Table: (\#tab:common-characteristics) 指数族内常见的一元分布的共同特征及符号表示^[(ref:footnote-tab-common-characteristics)] 
 
@@ -210,7 +210,7 @@ knitr::include_graphics(path = "figures/bessel.png")
 ```
 1. 写出样本的对数似然函数 $l(\boldsymbol{\theta}|x) = \sum_{i=1}^{n}\ln p(x_i | \boldsymbol{\theta})$； 
 2. 算出参数 $\boldsymbol{\theta}$ 的 Fisher 信息阵 $$\mathbf{I}(\boldsymbol{\theta}) = \mathsf{E}_{x|\theta} \big( - \frac{\partial^2 l}{\partial \theta_i \partial \theta_j} \big)_{i,j=1,\ldots,p}$$ 在单参数场合， $\mathbf{I}(\theta) = \mathsf{E}_{x|\theta} \big( - \frac{\partial^2 l}{\partial \theta^2} \big)$；
-3. $\boldsymbol{\theta}$ 的无信息先验密度函数为 $\pi(\boldsymbol{\theta}) = [\det \mathbf{I}(\theta) ]^{1/2}$，在单参数场合， $\pi(\boldsymbol{\theta}) = [\mathbf{I}(\theta) ]^{1/2}$。
+3. $\boldsymbol{\theta}$ 的无信息先验密度函数为 $\pi(\boldsymbol{\theta}) = [\det \mathbf{I}(\boldsymbol{\theta}) ]^{1/2}$，在单参数场合， $\pi(\boldsymbol{\theta}) = [\mathbf{I}(\theta) ]^{1/2}$。
 
 ## 常用贝叶斯估计 {#bayes-estimates}
 
@@ -293,7 +293,7 @@ Table: (\#tab:eight-high-schools) Eight Schools 数据集
 ```{r code-8schools,comment=NA}
 cat(readLines("code/stan/02-8schools.stan"), sep = "\n")
 ```
-上述 Stan 代码的第一段提供数据：学校的数目 $J$，估计值 $y_1,\ldots,y_{J}$，标准差 $\sigma_1,\ldots,\sigma_{J}$，数据类型可以是整数、实数，结构可以是向量，或更一般的数组，还可以带约束，如在这个模型中 $J$ 限制为非负， $\sigma_{J}$ 必须是正的，另外两个反斜杠 // 表示注释。第二段代码声明参数：模型中的待估参数，学校总体的效应 $\theta_j$，均值 $\mu$，标准差 $\tau$，学校水平上的误差 $\eta$ 和效应 $\theta$。在这个模型中，用 $\mu,\tau,\eta$ 表示 $\theta$ 而不是直接声明 $\theta$ 作一个参数，通过这种参数化，采样器的运行效率会提高，还应该尽量使用向量化操作代替 for 循环语句。最后一段是模型：稍微注意的是，正文中正态分布 $\mathcal{N}(\cdot,\cdot)$ 中后一个位置是方差，而 Stan 代码中使用的是标准差。`target += normal_lpdf(y | theta, sigma)`  和 `y ~ normal(theta, sigma)` 对模型的贡献是一样的，都使用正态分布的对数概率密度函数，只是后者扔掉了对数后验密度的常数项而已，这对于 Stan 的采样、近似和优化算法没有影响 [@Stan2017JSS]。
+上述 Stan 代码的第一段提供数据：学校的数目 $J$，估计值 $y_1,\ldots,y_{J}$，标准差 $\sigma_1,\ldots,\sigma_{J}$，数据类型可以是整数、实数，结构可以是向量，或更一般的数组，还可以带约束，如在这个模型中 $J$ 限制为非负， $\sigma_{J}$ 必须是正的，另外两个反斜杠 // 表示注释。第二段代码声明参数：模型中的待估参数，学校总体的效应 $\theta_j$，均值 $\mu$，标准差 $\tau$，学校水平上的误差 $\eta$ 和效应 $\theta$。在这个模型中，用 $\mu,\tau,\eta$ 表示 $\theta$ 而不是直接声明 $\theta$ 作一个参数，通过这种参数化，采样器的运行效率会提高，还应该尽量使用向量化操作代替 for 循环语句。最后一段是模型：稍微注意的是，正文中正态分布 $\mathcal{N}(\cdot,\cdot)$ 中后一个位置是方差，而 Stan 代码中使用的是标准差。`target += normal_lpdf(y | theta, sigma)`  和 `y ~ normal(theta, sigma)` 对模型的贡献是一样的，都使用正态分布的对数概率密度函数，只是后者扔掉了对数后验密度的常数项而已，这对于 Stan 的采样、近似和优化算法没有影响。
 
 算法运行的硬件环境是 16 核 32 线程主频 2.8 GHz 英特尔至强 E5-2680 处理器，系统环境 CentOS 7，R 软件版本 3.5.1，RStan 版本 2.17.3。算法参数设置了 4 条迭代链，每条链迭代 10000 次，为复现模型结果随机数种子设为 2018。
 
@@ -417,13 +417,13 @@ knitr::include_graphics(path = c(
 \end{aligned} (\#eq:potential-scale-reduction)
 \end{equation}
 
-\noindent $\omega$ 的后验边际方差 $\omega|Y$ 是 $W$ 和 $B$ 的加权平均
+\noindent $\omega$ 的后验方差 $\widehat{\mathsf{Var}}^{+}(\omega|Y)$ 是 $W$ 和 $B$ 的加权平均
 
 \begin{equation}
 \widehat{\mathsf{Var}}^{+}(\omega|Y) = \frac{n-1}{n} W + \frac{1}{n} B 
 \end{equation}
 
-当初始分布发散 （overdispersed） 时，这个量会高估边际后验方差，但在链条平稳或 $n \to \infty$ 时，它是无偏的。同时，对任意有限的 $n$，组内方差 $W$ 应该会低估 $\mathsf{Var}(\omega|Y)$，因为单个链条没有时间覆盖目标分布；在 $n \to \infty$， $W$ 的期望会是 $\mathsf{Var}(\omega|Y)$。
+当初始分布发散时，这个量会高估边际后验方差，但在链条平稳或 $n \to \infty$ 时，它是无偏的。同时，对任意有限的 $n$，组内方差 $W$ 应该会低估 $\mathsf{Var}(\omega|Y)$，因为单个链条没有时间覆盖目标分布；在 $n \to \infty$， $W$ 的期望会是 $\mathsf{Var}(\omega|Y)$。
 
 通过迭代序列采集的样本估计 $\hat{R}$ 以检测链条的收敛性
 

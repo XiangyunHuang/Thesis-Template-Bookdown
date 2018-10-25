@@ -4,19 +4,19 @@
 
 ## 极大似然估计 {#sec:mle}
 
-设研究区域 $D \subseteq \mathbb{R}^2$， 对于第 $i$ 次观测， $s_i$ 表示区域 $D$ 内的位置，$Y(s_i)$ 表示响应变量，$\mathbf{x}(s_i), i = 1, \ldots, n$ 是一个 $p$ 维的固定效应，定义如下的 SGLMM 模型：
+设研究区域 $D \subseteq \mathbb{R}^2$， 对于第 $i$ 次观测， $s_i$ 表示区域 $D$ 内的位置，$y(s_i)$ 表示响应变量，$\mathbf{x}(s_i), i = 1, \ldots, n$ 是一个 $p$ 维的固定效应，定义如下的 SGLMM 模型：
 
-\[ \mathrm{E}[Y(s_i)|u(s_i)] = g^{-1}[\mathbf{x}(s_i)^{\top}\boldsymbol{\beta} + \mathbf{u}(s_i)], \quad i = 1, \ldots, n \]
+\[ \mathrm{E}[y(s_i)|u(s_i)] = g^{-1}[\mathbf{x}(s_i)^{\top}\boldsymbol{\beta} + \mathbf{u}(s_i)], \quad i = 1, \ldots, n \]
 
-\noindent 其中 $g(\cdot)$ 是实值可微的逆联系函数， $\boldsymbol{\beta}$ 是 $p$ 维的回归参数向量，代表 SGLMM 模型的固定效应。随机过程 $\{U(\mathbf{s}): \mathbf{s} \in D\}$ 是平稳的空间高斯过程，其均值为 $\mathbf{0}$， 自协方差函数 $\mathsf{Cov}(U(\mathbf{s}),U(\mathbf{s}')) = C(\mathbf{s} - \mathbf{s}'; \boldsymbol{\theta})$， $\boldsymbol{\theta}$ 是其中的参数向量。 $\mathbf{u} = (u(s_1),u(s_2),\ldots,u(s_n))^{\top}$ 是平稳空间高斯过程 $U(\cdot)$ 的一个实例。$Y(\cdot)|U(\cdot)$ 是独立随机过程，即给定 $\mathbf{u}$的情况下，观察值 $Y = (y(s_1),y(s_2),\ldots,y(s_n))^{\top}$ 是相互独立的。
+\noindent 其中 $g(\cdot)$ 是实值可微的逆联系函数， $\boldsymbol{\beta}$ 是 $p$ 维的回归参数向量，代表 SGLMM 模型的固定效应。随机过程 $\{U(\mathbf{s}): \mathbf{s} \in D\}$ 是平稳的空间高斯过程，其均值为 $\mathbf{0}$， 自协方差函数 $\mathsf{Cov}(U(\mathbf{s}),U(\mathbf{s}')) = C(\mathbf{s} - \mathbf{s}'; \boldsymbol{\theta})$， $\boldsymbol{\theta}$ 是其中的参数向量。 $\mathbf{u} = (u(s_1),u(s_2),\ldots,u(s_n))^{\top}$ 是平稳空间高斯过程 $U(\cdot)$ 的一个实例。给定 $\mathbf{u}$的情况下，观察值 $\mathbf{y} = (y(s_1),y(s_2),\ldots,y(s_n))^{\top}$ 是相互独立的。
 
-给定 $u_i = u(s_i), i = 1, \ldots, n$的条件下， $y_i = y(s_i)$ 的条件概率密度函数是 $$f(y_i|u_i;\boldsymbol{\beta}) = \exp[a(\mu_i)y_i - b(\mu_i)]c(y_i)$$ 其中 $\mu_i = Y_i|u_i$， $a(\cdot),b(\cdot)$ 和 $c(\cdot)$ 是特定的函数，具体的情况视所服从的分布而定，第\@ref(prepare)章第\@ref(sec:exp)节就不同的分布给出了不同函数形式。 SGLMM 模型的边际似然函数
+给定 $u_i = u(s_i), i = 1, \ldots, n$的条件下， $y_i = y(s_i)$ 的条件概率密度函数是 $$f(y_i|u_i;\boldsymbol{\beta}) = \exp[a(\mu_i)y_i - b(\mu_i)]c(y_i)$$ 其中 $\mu_i = \mathsf{E}(y_i|u_i)$， $a(\cdot),b(\cdot)$ 和 $c(\cdot)$ 是特定的函数，具体的情况视所服从的分布而定，第\@ref(prepare)章第\@ref(sec:exp)节就不同的分布给出了不同函数形式。 SGLMM 模型的边际似然函数
 \begin{equation}
 L(\boldsymbol{\psi};\mathbf{y}) = \int \prod_{i=1}^{n} f(y_i|u_i;\boldsymbol{\beta})\phi_{n}(\mathbf{u};0,\Sigma_{\boldsymbol{\theta}})\mathrm{d}\mathbf{u} (\#eq:likelihood-function-1)
 \end{equation}
-\noindent 其中 $\boldsymbol{\psi} = (\boldsymbol{\beta},\boldsymbol{\theta})$ 是 SGLMM 模型的参数， $\phi_{n}(\cdot;0,\Sigma_{\boldsymbol{\theta}})$ 表示 $n$ 元正态密度函数，其均值为 $\mathbf{0}$， 协方差矩阵为 $\Sigma_{\boldsymbol{\theta}} = (c_{ij}) = (C(s_i - s_j; \boldsymbol{\theta})), i,j = 1, \ldots, n$。 边际似然函数 \@ref(eq:likelihood-function-1) 几乎总是卷入一个难以处理的积分，这是主要面临的问题，并且计算量随观测 $y_i$ 的数量增加，因为此积分的维数等于观测点的个数[@Diggle2007]。
+\noindent 记号 $\boldsymbol{\psi} = (\boldsymbol{\beta},\boldsymbol{\theta})$ 表示 SGLMM 模型的全部参数， $\phi_{n}(\cdot;0,\Sigma_{\boldsymbol{\theta}})$ 表示 $n$ 元正态密度函数，其均值为 $\mathbf{0}$， 协方差矩阵为 $\Sigma_{\boldsymbol{\theta}} = (c_{ij}) = (C(s_i - s_j; \boldsymbol{\theta})), i,j = 1, \ldots, n$。 边际似然函数 \@ref(eq:likelihood-function-1) 几乎总是卷入一个难以处理的积分，这是主要面临的问题，并且计算量随观测 $y_i$ 的数量增加，因为此积分的维数等于观测点的个数。
 
-再从贝叶斯方法的角度来看 SGLMM 模型， 令 $Y = (y(s_1),\ldots,y(s_n))^{\top}$ 表示观测值， $\pi(\boldsymbol{\psi})$ 表示模型参数的联合先验密度，那么联合后验密度为
+再从贝叶斯方法的角度来看 SGLMM 模型， 令 $\mathbf{y} = (y(s_1),\ldots,y(s_n))^{\top}$ 表示观测值， $\pi(\boldsymbol{\psi})$ 表示模型参数的联合先验密度，那么联合后验密度为
 \begin{equation}
 \begin{aligned}
 \pi(\boldsymbol{\psi},\mathbf{u}|\mathbf{y}) &= \frac{f(\mathbf{y|\mathbf{u}, \boldsymbol{\psi}})\phi_{n}(\mathbf{u};0,\Sigma_{\boldsymbol{\theta}})\pi(\boldsymbol{\psi})}{m(\mathbf{y})} \\
@@ -185,9 +185,7 @@ L_{m}(\boldsymbol{\beta},\boldsymbol{\theta})=\frac{1}{m}\sum_{i=1}^{n}\frac{\ma
 
 \noindent 这样做的依据是不管样本序列 $t_{(i)}$ 是否相关， $L_{m}(\boldsymbol{\beta},\boldsymbol{\theta})$ 都是 $L_{m}(\boldsymbol{\beta},\boldsymbol{\theta})$ 的一致估计 （consistent estimator）[@PrevMap2017JSS]。 最优的 $\boldsymbol{\beta}_0,\boldsymbol{\theta}_0$ 是 $\boldsymbol{\beta},\boldsymbol{\theta}$ 的极大似然估计，即$\max_{\boldsymbol{\beta},\boldsymbol{\theta}}L_{m}(\boldsymbol{\beta},\boldsymbol{\theta}) \rightarrow 1, m \rightarrow\infty$。
 
-既然初始值 $\boldsymbol{\beta}_{0},\boldsymbol{\theta}_{0}$ 与真实的极大似然估计值不同，可以用第 $m$ 步迭代获得的似然函数值 $L_{m}(\hat{\boldsymbol{\beta}}_{m}, \hat{\boldsymbol{\theta})}_{m}$ 与 1 的距离来刻画蒙特卡罗近似的准确度。实际操作中，用 $\hat{\boldsymbol{\beta}}_{m}$ 和 $\hat{\boldsymbol{\theta}}_{m}$ 表示最大化 $L_{m}(\boldsymbol{\beta}, \boldsymbol{\theta})$ 获得的 MCML 估计，重复迭代 $\boldsymbol{\beta}_{0} = \hat{\boldsymbol{\beta}}_{m}$ 和 $\boldsymbol{\theta}_{0} = \hat{\boldsymbol{\theta}}_{m}$ 直到收敛。 求蒙特卡罗近似的对数似然 $l_{m}(\boldsymbol{\beta}, \boldsymbol{\theta}) = \log L_{m}(\boldsymbol{\beta}, \boldsymbol{\theta})$ 的极值，可以使用 PrevMap 包，迭代 $L_{m}(\boldsymbol{\beta}, \boldsymbol{\theta})$ 的过程中，可以选择 BFGS 算法。由于 $\boldsymbol{\psi}$ 的似然曲面是相当扁平的，为了更好的收敛到全局极大值，做一步重参数化，即令 $\boldsymbol{\psi} = \log(\boldsymbol{\theta})$，$L_{m}(\boldsymbol{\beta}, \boldsymbol{\psi})$ 关于 $\boldsymbol{\beta}$ 和 $\boldsymbol{\psi}$ 的一阶、二阶导数传递给 maxLik 包的 `maxBFGS` 函数。
-
-蒙特卡罗极大似然估计 $\boldsymbol{\theta}_{m}$ 的标准误差 （standard errors） 取似然函数 $l_{m}(\boldsymbol{\beta},\boldsymbol{\theta})$ 的负黑塞矩阵的逆的对角线元素的平方根。迭代次数足够多时，即 $m$ 充分大时，一般取到 10000 及以上，此时蒙特卡罗误差可忽略，即用方程 \@ref(eq:likelihood-approx) 近似 \@ref(eq:likelihood2) 的误差可忽略。
+既然初始值 $\boldsymbol{\beta}_{0},\boldsymbol{\theta}_{0}$ 与真实的极大似然估计值不同，可以用第 $m$ 步迭代获得的似然函数值 $L_{m}(\hat{\boldsymbol{\beta}}_{m}, \hat{\boldsymbol{\theta})}_{m}$ 与 1 的距离来刻画蒙特卡罗近似的准确度。实际操作中，用 $\hat{\boldsymbol{\beta}}_{m}$ 和 $\hat{\boldsymbol{\theta}}_{m}$ 表示最大化 $L_{m}(\boldsymbol{\beta}, \boldsymbol{\theta})$ 获得的 MCML 估计，重复迭代 $\boldsymbol{\beta}_{0} = \hat{\boldsymbol{\beta}}_{m}$ 和 $\boldsymbol{\theta}_{0} = \hat{\boldsymbol{\theta}}_{m}$ 直到收敛。 求蒙特卡罗近似的对数似然 $l_{m}(\boldsymbol{\beta}, \boldsymbol{\theta}) = \log L_{m}(\boldsymbol{\beta}, \boldsymbol{\theta})$ 的极值，可以使用 PrevMap 包，迭代 $L_{m}(\boldsymbol{\beta}, \boldsymbol{\theta})$ 的过程中，可以选择 BFGS 算法。由于 $\boldsymbol{\psi}$ 的似然曲面是相当扁平的，为了更好的收敛，做一步重参数化，即令 $\boldsymbol{\psi} = \log(\boldsymbol{\theta})$，$L_{m}(\boldsymbol{\beta}, \boldsymbol{\psi})$ 关于 $\boldsymbol{\beta}$ 和 $\boldsymbol{\psi}$ 的一阶、二阶导数传递给 maxLik 包的 `maxBFGS` 函数。蒙特卡罗极大似然估计 $\boldsymbol{\theta}_{m}$ 的标准误差 （standard errors） 取似然函数 $l_{m}(\boldsymbol{\beta},\boldsymbol{\theta})$ 的负黑塞矩阵的逆的对角线元素的平方根。迭代次数足够多时，即 $m$ 充分大时，一般取到 10000 及以上，此时蒙特卡罗误差可忽略，即用方程 \@ref(eq:likelihood-approx) 近似 \@ref(eq:likelihood2) 的误差可忽略。
 
 
 ### 贝叶斯 MCMC 算法 {#sec:MCMC}
