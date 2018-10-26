@@ -90,23 +90,6 @@ Table: (\#tab:HMC-Pois-SGLMM) 汉密尔顿蒙特卡罗算法，采样点 64 个�
 |lp__        |  722.28|     0.39|  6.83|  708.00|  718.14|  722.49|  726.91|  734.71|   312.69|  1.03|
 
 
-## 图 {#simulate-plot .unnumbered}
-
-```{r rongelap-trace-plot,fig.cap='(ref:rongelap-trace-plot)'}
-knitr::include_graphics(path = "figures/rongelap-mcml-diagnosis-trace-9.png")
-```
-从图 \@ref(fig:rongelap-trace-plot) 可以看出迭代序列符合平稳性的特征。
-
-```{r rongelap-acf-plot,fig.cap='(ref:rongelap-acf-plot)'}
-knitr::include_graphics(path = "figures/rongelap-mcml-diagnosis-acf-9.png")
-```
-
-从图 \@ref(fig:rongelap-acf-plot) 可以看出迭代序列满足马尔科夫性，没有明显的延迟相关性。
-
-(ref:rongelap-trace-plot) Langevin-Hastings 算法模拟条件分布 $[S(x_{i})|Y_{i}], i = 1,\ldots,4$，$[\cdot]$ 表示某某的分布，第一列是迭代序列轨迹图，第二列是对应的密度分布
-
-(ref:rongelap-acf-plot) 条件分布 $[S(x_{i})|Y_{i}], i = 1, \ldots, 4$ 的采样序列的自相关图
-
 ## 代码 {#simulate-code .unnumbered}
 
 模拟平稳空间高斯过程 
