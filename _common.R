@@ -1,15 +1,15 @@
 library(methods)
 set.seed(2018)
 # 加载依赖
-# library(ggplot2)
-# library(StanHeaders)
-# library(rstan)
+library(ggplot2)
+library(StanHeaders)
+library(rstan)
 # 设置环境
 is_on_travis = identical(Sys.getenv("TRAVIS"), "true")
 is_online = curl::has_internet()
 
-# options(mc.cores = if(is_on_travis) 4 else 2)
-# rstan_options(auto_write = TRUE)
+options(mc.cores = if(is_on_travis) 4 else 2)
+rstan_options(auto_write = TRUE)
 
 library(tibble)
 knitr::opts_chunk$set(
