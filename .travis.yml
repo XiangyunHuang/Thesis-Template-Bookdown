@@ -1,5 +1,6 @@
 language: r
 r:
+  - release
   - 3.5.0
 sudo: false
 cache:
@@ -14,7 +15,7 @@ branches:
     - stable
     - develop
 
-pandoc_version: 2.2.3.2
+pandoc_version: 2.3.1
 
 git:
   depth: 5
@@ -30,41 +31,25 @@ addons:
     sources:
       - sourceline: ppa:opencpu/imagemagick
       - ubuntu-toolchain-r-test
-      - llvm-toolchain-trusty-6.0
     packages:
       - ghostscript
       - imagemagick
       - optipng
       - fonts-inconsolata
       - libgit2-dev
-      #- libudunits2-dev 
-      #- libgdal-dev 
-      #- libgeos-dev 
-      #- libproj-dev
-      - clang-6.0
-     # - clang-format-3.9
-     # - gcc-8 
-     # - g++-8
+      - gcc-8 
+      - g++-8
 env:
-  # - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
-  - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
-        
+  - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
+
 before_install:
-  #- mkdir ~/.R
-  #- cp Makevars ~/.R # CXX14 conflict with readr
-  #- echo "CXX = $CXX" >> ~/.R/Makevars 
-  #- echo "CXX14 = $CXX" >> ~/.R/Makevars 
-  #- echo "CXX14FLAGS = `R CMD config CXXFLAGS` -pedantic -g0 -fPIC" >> ~/.R/Makevars 
-  #- export CLANG_EXTRA_ARG=""
-  #- if [[ $CXX =~ clang.* ]] ;  then export CLANG_EXTRA_ARG=" -Qunused-arguments -fcolor-diagnostics " ; fi
-  #- echo ${CXX} --version
-  #- echo ${CLANG_EXTRA_ARG}  
+  - mkdir ~/.R
+  - cp Makevars ~/.R
   - npm install netlify-cli -g
   - curl -fLo /tmp/tinytex.tar.gz https://travis-bin.yihui.name/tinytex.tar.gz
   - tar xzf /tmp/tinytex.tar.gz -C /$HOME
   - export PATH=/$HOME/.TinyTeX/bin/x86_64-linux:$PATH
   - Rscript -e 'if(!require(tinytex)) install.packages("tinytex");tinytex::tlmgr_install(readLines("latex/TeXLive.pkgs"))'
-#  - tlmgr install $(cat latex/TeXLive.pkgs | tr '\n' ' ') || true
   - git clone https://github.com/XiangyunHuang/fonts.git winfonts 
   - mkdir -p /$HOME/.fonts
   - cp -r winfonts/* /$HOME/.fonts/
@@ -74,11 +59,10 @@ before_install:
   - du -h -d 1
 
 before_script:
-  #- Rscript -e 'update.packages(lib.loc = .libPaths()[1], ask = FALSE)'
+  - Rscript -e 'update.packages(lib.loc = .libPaths()[1], ask = FALSE)'
   - chmod +x ./_deploy.sh
 script:
   - Rscript -e 'bookdown::render_book("index.Rmd")'
- # - Rscript -e 'bookdown::render_book("index.Rmd", config_file = "_bookdown_skeleton.yml")'
 
 after_success:
   - make pdf

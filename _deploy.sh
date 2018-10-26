@@ -3,7 +3,7 @@
 set -e
 
 [ -z "${GH_TOKEN}" ] && exit 0
-[ "${TRAVIS_BRANCH}" != "master" ] && exit 0
+[ "${TRAVIS_BRANCH}" != "release" ] && exit 0
 
 # configure your name and email if you have not done so
 git config --global user.email "xiangyunfaith@outlook.com"
