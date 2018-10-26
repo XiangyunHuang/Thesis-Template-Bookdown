@@ -36,7 +36,7 @@ g(\mu) = X^{\top}\boldsymbol{\beta} + Z^{\top}\mathbf{b}  (\#eq:GLMM)
 \begin{equation}
 g(\mu_i) = d(x_i)^{\top}\boldsymbol{\beta} + S(x_i) + Z_i (\#eq:SGLMM)
 \end{equation}
-\noindent 其中，$d^{\top}(x_i)$ 表示协变量对应的观测数据向量，即 $p$ 个协变量在第 $i$ 个位置 $x_i$ 的观察值。 这里， 假定 $\mathcal{S} = \{S(x): x \in \mathbb{R}^2\}$ 是均值为0， 方差为 $\sigma^2$，平稳且各向同性的空间高斯过程， $\rho(x,x') = \mathsf{Corr}\{S(x),S(x')\} \equiv \rho(\|x,x'\|)$， $\|\cdot\|$ 表示距离。 样本之间的位置间隔不大就用欧氏距离， 间隔很大可以考虑用球面距离； $S(x_i)$ 代表了与空间位置 $x_i$ 相关的随机效应， 简称空间效应。 $Z_i \stackrel{i.i.d}{\sim} \mathcal{N}(0,\tau^2)$ 的非空间随机效应， 也称块金效应， 一般解释为测量误差 （measurement error） 或微观变化 （micro-scale variation） [@Christensen2004]， 即 $\tau^2=\mathsf{Var}(Y_{i}|S(x_{i})),\forall i = 1,2, \ldots, N$， $N$ 是采样点的数目， 其它符号含义不变。
+\noindent 其中，$d^{\top}(x_i)$ 表示协变量对应的观测数据向量，即 $p$ 个协变量在第 $i$ 个位置 $x_i$ 的观察值。 这里， 假定 $\mathcal{S} = \{S(x): x \in \mathbb{R}^2\}$ 是均值为$\mathbf{0}$， 方差为 $\sigma^2$，平稳且各向同性的空间高斯过程， $\rho(x,x') = \mathsf{Corr}\{S(x),S(x')\} \equiv \rho(\|x,x'\|)$， $\|\cdot\|$ 表示距离。 样本之间的位置间隔不大就用欧氏距离， 间隔很大可以考虑用球面距离； $S(x_i)$ 代表了与空间位置 $x_i$ 相关的随机效应， 简称空间效应。 $Z_i \stackrel{i.i.d}{\sim} \mathcal{N}(0,\tau^2)$ 的非空间随机效应， 也称块金效应， 一般解释为测量误差 （measurement error） 或微观变化 （micro-scale variation） [@Christensen2004]， 即 $\tau^2=\mathsf{Var}(Y_{i}|S(x_{i})),\forall i = 1,2, \ldots, N$， $N$ 是采样点的数目， 其它符号含义不变。
 
 
 ### 自协方差函数 {#subsec:covariance-function}
