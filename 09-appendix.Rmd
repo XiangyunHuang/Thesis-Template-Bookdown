@@ -190,6 +190,17 @@ summary(fit.poisson)
 plot(fit.poisson)
 ```
 
+`r if (knitr::is_html_output() & is_on_travis) '
+## 交互图  {#Interactive-Web-Maps .unnumbered}
+'`
+
+```{r rongelap-leaflet,fig.cap="朗格拉普岛上核污染分布图",eval=knitr::is_html_output() & is_on_travis,echo=FALSE}
+lapply(c('geoRglm','sp','rgdal','leaflet'), function(pkg) {
+  if (system.file(package = pkg) == '') install.packages(pkg)
+})
+source(file = 'code/06-rongelap-leaflet-map.R',local = TRUE)
+```
+
 
 `r if (knitr::is_html_output() & is_on_travis) '
 ## 编译信息  {#compileinfo .unnumbered}
