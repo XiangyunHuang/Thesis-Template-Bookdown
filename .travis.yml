@@ -1,7 +1,7 @@
 language: r
 r:
-  - 3.5.0
-sudo: false
+  - 3.5.1
+sudo: true
 cache:
   packages: true
   directories:
@@ -29,17 +29,21 @@ addons:
   apt:
     sources:
       - sourceline: ppa:opencpu/imagemagick
-      #- ubuntu-toolchain-r-test
+      - ubuntu-toolchain-r-test
     packages:
       - ghostscript
       - imagemagick
       - optipng
+      - libudunits2-dev
+      - libproj-dev 
+      - libgeos-dev 
+      - libgdal-dev      
       - fonts-inconsolata
       - libgit2-dev
-      #- gcc-8 
-      #- g++-8
-#env:
-#  - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
+      - gcc-8 
+      - g++-8
+env:
+  - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
 
 before_install:
   - mkdir ~/.R
