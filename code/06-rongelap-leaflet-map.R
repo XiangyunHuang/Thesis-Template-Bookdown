@@ -5,8 +5,9 @@ dat <- cbind.data.frame(rongelap$coords, rongelap$data, rongelap$units.m)
 colnames(dat) <- c("x", "y", "data", "units.m")
 # 转化空间坐标
 library(sp)
-library(rgdal)
+library(rgdal) # 需要调整坐标参考系 可能不是 UTM
 sps <- SpatialPoints(dat[, c("x", "y")], proj4string = CRS("+proj=utm +zone=28"))
+# sps <- SpatialPoints(dat[, c("x", "y")], proj4string = CRS("+proj=utm +zone=28"))
 spst <- spTransform(sps, CRS("+proj=longlat +datum=WGS84"))
 dat[, c("long", "lat")] <- coordinates(spst)
 
@@ -22,3 +23,8 @@ leaflet(dat) %>%
   ) %>%
   addScaleBar(position = c("bottomleft"))
 
+# 参考 https://paula-moraga.github.io/tutorial-geostatistical-data/
+library(geoR)
+data(gambia) # CRS coordinate reference system
+# gambia 数据集指出了坐标系统的类型是 UTM
+# rongelap 数据集没有指出坐标系统类型，所以
