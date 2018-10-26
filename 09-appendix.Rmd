@@ -195,9 +195,11 @@ plot(fit.poisson)
 '`
 
 ```{r rongelap-leaflet,fig.cap="朗格拉普岛上核污染分布图",eval=knitr::is_html_output() & is_on_travis,echo=FALSE,message=FALSE}
-lapply(c('geoRglm','sp','rgdal','leaflet'), function(pkg) {
-  if (system.file(package = pkg) == '') install.packages(pkg)
-})
+invisible(
+  lapply(c("geoRglm", "sp", "rgdal", "leaflet"), function(pkg) {
+    if (system.file(package = pkg) == "") install.packages(pkg)
+  })
+)
 # 加载数据
 data(rongelap, package = "geoRglm")
 # 改变数据结构
@@ -212,7 +214,7 @@ dat[, c("long", "lat")] <- coordinates(spst)
 
 # 单位时间内放射的粒子数目
 library(leaflet)
-pal <- colorBin("viridis", bins = c(0, 3, 6, 9, 12, 15, 20), reverse = TRUE)
+pal <- colorBin("Spectral", bins = c(0, 3, 6, 9, 12, 15, 20), reverse = TRUE)
 leaflet(dat) %>%
   addProviderTiles(providers$CartoDB.Positron) %>%
   addCircles(lng = ~long, lat = ~lat, color = ~pal(data / units.m)) %>%

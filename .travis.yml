@@ -4,8 +4,8 @@ r:
 sudo: true
 cache:
   packages: true
-  directories:
-    - $HOME/.npm
+  #directories:
+  #  - $HOME/.npm
 latex: false
 branches:
   only:
