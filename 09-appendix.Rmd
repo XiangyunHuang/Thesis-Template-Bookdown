@@ -1,7 +1,7 @@
 \cleardoublepage
 
 `r if (knitr::is_html_output()) '
-# 附录 {#appendix .unnumbered}
+# 附录 A {#appendix .unnumbered}
 '`
 
 ```{=latex}
