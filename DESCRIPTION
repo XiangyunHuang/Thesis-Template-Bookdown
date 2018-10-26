@@ -12,6 +12,7 @@ Imports:
   ggplot2,
   gridExtra,
   rmarkdown,
+  rstan,
   sessioninfo,
   tibble
 Suggests: 
