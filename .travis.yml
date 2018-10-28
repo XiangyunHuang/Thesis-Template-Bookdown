@@ -4,8 +4,8 @@ r:
 sudo: true
 cache:
   packages: true
-  #directories:
-  #  - $HOME/.npm
+  directories:
+    - $HOME/.npm
 latex: false
 branches:
   only:
@@ -48,6 +48,8 @@ env:
 before_install:
   - mkdir ~/.R
   - cp Makevars ~/.R
+  - nvm install 8
+  - nvm use 8  
   - npm install netlify-cli -g
   - curl -fLo /tmp/tinytex.tar.gz https://travis-bin.yihui.name/tinytex.tar.gz
   - tar xzf /tmp/tinytex.tar.gz -C /$HOME

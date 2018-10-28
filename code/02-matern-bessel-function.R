@@ -88,47 +88,57 @@ library(gridExtra)
 p1 <- ggplot(dat, aes(phi, kappa)) +
   geom_raster(aes(fill = value1)) +
   scale_fill_distiller(palette = "Spectral", guide = FALSE) +
-  labs(x = quote(plain(u) == 0.1), y = "")
+  labs(x = quote(phi), y = quote(kappa)) +
+  ggtitle(quote(plain(u) == 0.1))
+
 
 p2 <- ggplot(dat, aes(phi, kappa)) +
   geom_raster(aes(fill = value2)) +
   scale_fill_distiller(palette = "Spectral", guide = FALSE) +
-  labs(x = quote(plain(u) == 0.5), y = "")
+  labs(x = quote(phi), y = quote(kappa)) +
+  ggtitle(quote(plain(u) == 0.5))
 
 p3 <- ggplot(dat, aes(phi, kappa)) +
   geom_raster(aes(fill = value3)) +
   scale_fill_distiller(palette = "Spectral", guide = FALSE) +
-  labs(x = quote(plain(u) == 1.0), y = "")
+  labs(x = quote(phi), y = quote(kappa)) +
+  ggtitle(quote(plain(u) == 1.0))
 
 p4 <- ggplot(dat, aes(phi, kappa)) +
   geom_raster(aes(fill = value4)) +
   scale_fill_distiller(palette = "Spectral", guide = FALSE) +
-  labs(x = quote(plain(u) == 1.5), y = "")
+  labs(x = quote(phi), y = quote(kappa)) +
+  ggtitle(quote(plain(u) == 1.5))
 
 p5 <- ggplot(dat, aes(phi, kappa)) +
   geom_raster(aes(fill = value5)) +
   scale_fill_distiller(palette = "Spectral", guide = FALSE) +
-  labs(x = quote(plain(u) == 2.0), y = "")
+  labs(x = quote(phi), y = quote(kappa)) +
+  ggtitle(quote(plain(u) == 2.0))
 
 p6 <- ggplot(dat, aes(phi, kappa)) +
   geom_raster(aes(fill = value6)) +
   scale_fill_distiller(palette = "Spectral", guide = FALSE) +
-  labs(x = quote(plain(u) == 2.5), y = "")
+  labs(x = quote(phi), y = quote(kappa)) +
+  ggtitle(quote(plain(u) == 2.5))
 
 p7 <- ggplot(dat, aes(phi, kappa)) +
   geom_raster(aes(fill = value7)) +
   scale_fill_distiller(palette = "Spectral", guide = FALSE) +
-  labs(x = quote(plain(u) == 3.0), y = "")
+  labs(x = quote(phi), y = quote(kappa)) +
+  ggtitle(quote(plain(u) == 3.0))
 
 p8 <- ggplot(dat, aes(phi, kappa)) +
   geom_raster(aes(fill = value8)) +
   scale_fill_distiller(palette = "Spectral", guide = FALSE) +
-  labs(x = quote(plain(u) == 3.5), y = "")
+  labs(x = quote(phi), y = quote(kappa)) +
+  ggtitle(quote(plain(u) == 3.5))
 
 p9 <- ggplot(dat, aes(phi, kappa)) +
   geom_raster(aes(fill = value9)) +
   scale_fill_distiller(palette = "Spectral", guide = FALSE) +
-  labs(x = quote(plain(u) == 4.0), y = "")
+  labs(x = quote(phi), y = quote(kappa)) +
+  ggtitle(quote(plain(u) == 4.0))
 # 默认按行排列
 
 pdf(file = "matern-3d.pdf",width = 6,height = 6)
@@ -145,14 +155,14 @@ library(tikzDevice)
 tf <- file.path(getwd(), "figures/bessel.tex")
 tikz(tf, width = 7,height = 3, pointsize = 30, standAlone = TRUE)
 
-par(mfrow = c(1,2),mar = c(2.1, 3.1, 0.5, 1.5))
+par(mfrow = c(1,2),mar = c(4.1, 4.1, 0.5, 1.5))
 x0 <- 2^(-20:10)
 nus <- c(0:5, 10, 20)
 x <- seq(0, 4, length.out = 501)
 
-plot(x0, x0^-8,
-     log = "xy", xaxt = "n",
-     yaxt = "n", type = "n", ann = FALSE, panel.first = grid()
+plot(x0, x0^-8,frame.plot=TRUE,
+     log = "xy", xlab = "$u$", axes = FALSE,
+     ylab = "$\\mathcal{K}_{\\kappa}(u)$", type = "n", ann = TRUE, panel.first = grid()
 ) # x 和 y 轴都取对数
 
 axis(1,
@@ -164,17 +174,17 @@ axis(2,
      labels = expression(10^-16, 1, 10^16, 10^32, 10^48), las = 1
 )
 
-cols <- terrain.colors(9) # RColorBrewer::brewer.pal(9,name = "Set3")
+cols <- gray.colors(9) # terrain.colors(9) # RColorBrewer::brewer.pal(9,name = "Set3")
 for (i in seq(length(nus)))
   lines(x0, besselK(x0, nu = nus[i]), col = cols[i], lwd = 2)
-legend("topright",legend = paste0("$\\kappa=", nus,"$"),col = cols, lwd = 2, cex = 0.8)
+legend("topright",legend = paste0("$\\kappa=", rev(nus),"$"),col = rev(cols), lwd = 2, cex = 0.8)
 
 # 数据变化范围太大，因此横纵坐标轴都取了以10为底的对数，数据可以紧凑的在一张图内展示
 x <- seq(0, 40, length.out = 801)
 x <- x[x > 0]
-plot(x, x,
-     ylim = c(1e-18, 1e11), log = "y", yaxt = "n",
-     type = "n", ann = FALSE, panel.first = grid()
+plot(x, x,frame.plot=TRUE,
+     ylim = c(1e-18, 1e11), log = "y", xlab = "$u$", type = "n",  yaxt = "n",
+     ylab = "$\\mathcal{K}_{\\kappa}(u)$", ann = TRUE, panel.first = grid()
 )
 axis(2,
      at = c(1e-19, 1e-12, 1e-05, 1e+02, 1e+09),
@@ -183,7 +193,7 @@ axis(2,
 
 for (i in seq(length(nus)))
   lines(x, besselK(x, nu = nus[i]), col = cols[i], lwd = 2)
-legend("topright", legend = paste0("$\\kappa=", nus,"$"), col = cols, lwd = 2, cex = 0.8)
+legend("topright", legend = paste0("$\\kappa=", rev(nus),"$"), col = rev(cols), lwd = 2, cex = 0.8)
 
 dev.off()
 tools::texi2dvi(tf, pdf = T)

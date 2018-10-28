@@ -75,15 +75,32 @@ knitr::include_graphics("figures/semi-variance.png")
 \begin{equation}
 \rho_{0}(u)=\{2^{\kappa -1}\Gamma(\kappa)\}^{-1}(u)^{\kappa}\mathcal{K}_{\kappa}(u),u > 0 (\#eq:matern2)
 \end{equation}
-\noindent 其中，$\mathcal{K}_{\kappa}(\cdot)$ 是阶数为 $\kappa$ 的第二类修正的贝塞尔函数（详见第 \@ref(prepare) 章第\@ref(sec:modified-bessel-function) 节）， $\kappa(>0)$ 是平滑参数，满足这些条件的空间过程 $\mathcal{S}$ 是 $\lceil\kappa\rceil-1$ 次均方可微的。值得注意的是 Matérn 型包含幂指数型
+\noindent 其中，$\mathcal{K}_{\kappa}(\cdot)$ 是阶数为 $\kappa$ 的第二类修正的贝塞尔函数，函数图像见图 \@ref(fig:bessel-function)， $\kappa(>0)$ 是平滑参数，满足这些条件的空间过程 $\mathcal{S}$ 是 $\lceil\kappa\rceil-1$ 次均方可微的。值得注意的是 Matérn 型包含幂指数型
 \noindent 当 $\kappa = 0.5$时，$\rho_{0}(u) = \exp(-u)$， $S(x)$ 均方连续但是不可微，当 $\kappa \to \infty$ 时， $\rho_{0}(u) = \exp(-u^2)$， $S(x)$ 无限次均方可微[@Diggle2007]。
+
+下面详细给出修正的第二类贝塞尔函数 $\mathcal{K}_{\kappa}(u)$，它是修正的贝塞尔方程的解 [@Abramowitz1972]，函数形式如下
+
+\begin{equation}
+\begin{aligned}
+I_{-\kappa}(u) & =  \sum_{m=0}^{\infty} \frac{1}{m!\Gamma(m + \kappa + 1)} \big(\frac{u}{2}\big)^{2m + \kappa} \\
+\mathcal{K}_{\kappa}(u) & = \frac{\pi}{2} \frac{I_{-\kappa}(u) - I_{\kappa}(u)}{\sin (\kappa \pi)}
+\end{aligned} (\#eq:besselK-function)
+\end{equation}
+
+\noindent 其中 $u \geq 0$，$\kappa \in \mathbb{R}$，如果 $\kappa \in \mathbb{Z}$，则取该点的极限值，$\mathcal{K}_{\kappa}(u)$ 的值可由 R 内置的函数 `besselK` 计算。
+
+```{r bessel-function,fig.cap='(ref:bessel-function)',fig.asp=1}
+knitr::include_graphics(path = "figures/bessel.png")
+```
+
+(ref:bessel-function) 修正的第二类贝塞尔函数图像
 
 在实际数据分析中，估计 $\kappa$ 时，为了节省计算，又不失一般性，经验做法是取离散的 $\kappa$ 值，如 $\kappa = 0.5, 1.5, 2.5$， 这样，平稳空间高斯过程就分别具有均方连续不可微、一次可微和二次可微三种不同程度的光滑性。根据第 \@ref(prepare) 章第 \@ref(sec:stationary-gaussian-process) 节定理 \@ref(thm:stationary-mean-square-properties)，自相关函数 $\rho(u)$ 的可微性表示了空间过程 $\mathcal{S}$ 的曲面平滑程度。为更加直观地观察 $\rho(u)$，作图 \@ref(fig:matern-2d) 和图 \@ref(fig:matern-3d)。
 
-```{r matern-2d,fig.cap="左图：固定尺度参数 $\\phi$，自相关函数 $\\rho(u)$ 随空间距离 $u$ 的变化；右图：固定贝塞尔函数的阶 $\\kappa$，自相关函数$\\rho(u)$ 随空间距离 $u$ 的变化",out.width="80%"}
+```{r matern-2d,fig.cap="自相关函数 $\\rho(u)$ 随尺度参数 $\\phi$（左图）和平滑参数 $\\kappa$ （右图）的变化",out.width="80%"}
 knitr::include_graphics(path = "figures/matern.png")
 ```
-```{r matern-3d,fig.cap="自相关函数 $\\rho(\\mathsf{u})$ 在不同空间距离$\\mathsf{u}$处随贝塞尔函数的阶 $\\kappa$ 和尺度参数 $\\phi$ 的变化，横轴表示尺度参数 $\\phi$，纵轴表示贝塞尔函数的阶$\\kappa$，我们用 从蓝到红的颜色变化表示自相关函数 $\\rho(\\mathsf{u})$ 值由小到大，即表示相关性由弱变强",out.width="80%"}
+```{r matern-3d,fig.cap="$\\rho(\\mathsf{u})$ 在不同空间距离 $\\mathsf{u}$处随 $\\kappa$ 和 $\\phi$ 的变化，从蓝到红的颜色变化表示 $\\rho(\\mathsf{u})$ 的值由小到大",out.width="80%"}
 knitr::include_graphics(path = "figures/matern-3d.png")
 ```
 

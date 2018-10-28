@@ -1,6 +1,6 @@
 # 数值模拟 {#simulations}
 
-空间广义线性混合效应模型在广义线性混合效应模型基础上添加了与空间位置相关的随机效应，这种随机效应在文献中常称为空间效应 [@Diggle1998]。 它与采样点的位置、数量都有关系， 其中采样点的位置决定空间过程的协方差结构， 而采样点的数量决定空间效应的维度，从而导致空间广义线性混合效应模型比普通的广义线性混合效应模型复杂。作为过渡，我们在第 \@ref(sim-one-gp) 和 \@ref(sim-two-gp) 节模拟了一维和二维平稳高斯过程。 第 \@ref(sim-sglmm) 节模拟 SGLMM 模型， 分两个小节展开叙述，第 \@ref(sim-binomal-sglmm) 小节模拟响应变量服从二项分布的情形，  第 \@ref(possion-sglmm) 小节模拟响应变量服从泊松分布的情形，在这两个小节里，比较了第\@ref(algorithms)章第\@ref(sec:MCMC)小节介绍的贝叶斯马尔科夫链蒙特卡罗算法（简称贝叶斯 MCMC）和第\@ref(sec:STAN-MCMC)节介绍的贝叶斯 STAN-MCMC 算法的表现，贝叶斯 MCMC 算法基于 R 包 geoRglm 内置的 Langevin-Hastings 算法实现，贝叶斯 STAN-MCMC 算法基于 Stan 内置的 HMC 算法实现。
+空间广义线性混合效应模型在广义线性混合效应模型基础上添加了与空间位置相关的随机效应，这种随机效应在文献中常称为空间效应 [@Diggle1998]。 它与采样点的位置、数量都有关系， 其中采样点的位置决定空间过程的协方差结构， 而采样点的数量决定空间效应的维度，从而导致空间广义线性混合效应模型比普通的广义线性混合效应模型复杂。作为过渡，我们在第 \@ref(sim-one-gp) 和 \@ref(sim-two-gp) 节模拟了一维和二维平稳高斯过程。 第 \@ref(sim-sglmm) 节模拟 SGLMM 模型， 分两个小节展开叙述，第 \@ref(sim-binomal-sglmm) 小节模拟响应变量服从二项分布的情形，  第 \@ref(possion-sglmm) 小节模拟响应变量服从泊松分布的情形，在这两个小节里，比较了第\@ref(algorithms)章第\@ref(sec:MCMC)小节介绍的贝叶斯马尔科夫链蒙特卡罗算法（简称贝叶斯 MCMC）和第\@ref(sec:stan-hmc)节介绍的贝叶斯 STAN-HMC 算法的表现，贝叶斯 MCMC 算法基于 R 包 geoRglm 内置的 Langevin-Hastings 算法实现，贝叶斯 STAN-HMC 算法基于 Stan 内置的 HMC 算法实现。
 
 ## 平稳空间高斯过程 {#spatial-gaussian-processes}
 
@@ -193,7 +193,7 @@ g(\mu_i) = \log[\lambda(x_i)] = \alpha + S(x_i) (\#eq:pois-SGLMM)
 \end{equation}
 \noindent 其中，$S(x)$ 是平稳空间高斯过程，其均值为 $\mathbf{0}$，协方差函数为 $\mathrm{Cov}(S(x_i),S(x_j)) = \sigma^2 \big\{2^{\kappa-1}\Gamma(\kappa)\big\}^{-1}(u/\phi)^{\kappa}K_{\kappa}(u/\phi)$，联系函数 $g(\mu_i) = \log[\lambda(x_{i})]$。
 
-类似 \@ref(sim-binomal-sglmm) 小节，首先产生服从平稳空间高斯过程 $S(x)$ 的随机数 $S(x_i),i=1,\ldots,N$，然后由 \@ref(eq:pois-SGLMM) 式可得 $\lambda(x_i) = \exp(\alpha + S(x_i))$，且响应变量 $Y_i \sim \mathrm{Poisson}(\lambda(x_{i}))$，根据 R 内置函数 `rpois` 即可 产生服从参数为 $\lambda(x_i)$ 的泊松分布的随机数。Langevin-Hastings 算法和 HMC 算法模拟的结果见表 \@ref(tab:Pois-MCLV-vs-NUTS)。HMC 算法包含有效样本数 $n_{eff}$、 潜在尺度缩减因子 $\hat{R}$ 和蒙特卡罗均值误差 se\_mean 的完整表格见附表 \@ref(tab:HMC-Pois-SGLMM)，参数迭代序列的收敛性分析已在第\@ref(prepare) 章第\@ref(sec:stan-samplers)节给出，这里不再赘述，所有的模拟实验都是在完成收敛性分析后给出的。
+类似 \@ref(sim-binomal-sglmm) 小节，首先产生服从平稳空间高斯过程 $S(x)$ 的随机数 $S(x_i),i=1,\ldots,N$，然后由 \@ref(eq:pois-SGLMM) 式可得 $\lambda(x_i) = \exp(\alpha + S(x_i))$，且响应变量 $Y_i \sim \mathrm{Poisson}(\lambda(x_{i}))$，根据 R 内置函数 `rpois` 即可 产生服从参数为 $\lambda(x_i)$ 的泊松分布的随机数。Langevin-Hastings 算法和 HMC 算法模拟的结果见表 \@ref(tab:Pois-MCLV-vs-NUTS)。HMC 算法包含有效样本数 $n_{eff}$、 潜在尺度缩减因子 $\hat{R}$ 和蒙特卡罗均值误差 se\_mean 的完整表格见附表 \@ref(tab:HMC-Pois-SGLMM)，参数迭代序列的收敛性分析已在第\@ref(prepare) 章第\@ref(subsec:stan-samplers)节给出，这里不再赘述，所有的模拟实验都是在完成收敛性分析后给出的。
 
 在模型\@ref(eq:pois-SGLMM)的设置下，Langevin-Hastings 算法和 HMC 算法的比较见表\@ref(tab:Pois-MCLV-vs-NUTS)，模型参数真值为 $\alpha = 0.5, \phi = 0.2, \sigma^2 = 2.0, \kappa = 1.5$，采样点数目分别为 $N=36,64,100$，对于每组参数设置，重复模拟了 100 次。表格各列依次是参数的真值（初始值）、后验均值、后验方差、后验五个分位点、样本量和算法运行时间（单位：秒）。表格前半部分是 Langevin-Hastings 算法实现的结果，后半部分是 Stan 实现的结果。
 
@@ -231,7 +231,7 @@ Table: (\#tab:Pois-MCLV-vs-NUTS) 在模型\@ref(eq:pois-SGLMM)的设置下，Lan
 
 geoRglm 包实现的 Langevin-Hastings 算法，相比较而言，收敛速度慢，迭代序列自相关性表现拖尾，因此在上述模拟实验中，为了降低相关性，采样间隔取100，这就直接要求增加总的迭代次数以达到足够的后验样本量，这样才能用于后验量的计算。此外，在调参数的过程中面临不收敛的情况是常有的，而这个不收敛的原因至少有两个，其一是参数初值不合适，其二是总迭代次数不够。因此，我们也遭遇了 Christensen 迭代上百万次的[情形][geoRglm-feq]，在尽量保持统一的参数设置下，我们选择继续调整参数，而保持总迭代次数110000次不变。在每组模型设置下都获得最佳的参数，这无疑是一件十分耗时的工作，因为该算法的参数只有不断试错才能获得更加合适的参数设置，在已经收敛的情形下调参数，这个过程会更加漫长。
 
-基于 Stan 实现的贝叶斯 STAN-MCMC 算法，其内置的 HMC 算法是结合了 NUTS 采样器[@hoffman2014]，搜索模型参数的策略更加友好，不需要手动调参数，只需要指定合适的参数先验，使得迭代序列保持收敛即可，编程过程中，模型参数的重参数化（reparameterization）对迭代进程和结果会产生一定影响，如第\@ref(prepare)章第\@ref(sec:stan-samplers)节基于 Eight Schools 数据集介绍分层正态模型就对参数 $\mu$ 和 $\sigma$ 做了重参数化。
+基于 Stan 实现的贝叶斯 STAN-HMC 算法，其内置的 HMC 算法是结合了 NUTS 采样器[@hoffman2014]，搜索模型参数的策略更加友好，不需要手动调参数，只需要指定合适的参数先验，使得迭代序列保持收敛即可，编程过程中，模型参数的重参数化（reparameterization）对迭代进程和结果会产生一定影响，如第\@ref(prepare)章第\@ref(subsec:stan-samplers)小节基于 Eight Schools 数据集介绍分层正态模型就对参数 $\mu$ 和 $\sigma$ 做了重参数化。
 
 基于似然推断的算法，如第\@ref(algorithms)章第\@ref(subsec:MCML)小节介绍的蒙特卡罗极大似然算法和第\@ref(subsec:LA)小节介绍的拉普拉斯近似算法，都需要非常接近真值的参数初值，才能得到好的结果，因为在大多数情形下，SGLMM 模型的对数似然曲面是呈现山岭或峡谷状，局部极值点多而且对数似然函数值变化不大，导致收敛速度极慢或者陷入局部极值点的收敛，非常难获得全局极值点。因此，一个合适的策略是在合理的初值周围打网格，格点作为迭代初值，以不同的初值进行迭代，将计算的剖面似然函数轮廓画在二维平面上，通过这种降维观察的方式，获得一个可靠的全局极值点，作为参数的最佳似然估计，在后续的第\@ref(applications)章第\@ref(case-rongelap)节以分析朗格拉普岛核污染数据集为例介绍这一策略。
 
