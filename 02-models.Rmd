@@ -41,7 +41,7 @@ g(\mu_i) = d(x_i)^{\top}\boldsymbol{\beta} + S(x_i) + Z_i (\#eq:SGLMM)
 
 ### 自协方差函数 {#subsec:covariance-function}
 
-模型 \@ref(eq:SGLMM) 的空间效应结构设定为随机过程 $\mathcal{S} = \{S(x): x \in \mathbb{R}^2\}$，它由自协方差函数决定。在给出随机过程 $\mathcal{S}$ 的自协方差函数之前， 先计算一下它的理论变差 $V(x,x')$^[变差来源于采矿术语，其实是空间过程 $\mathcal{S}$ 的自协方差函数的一半]，模型 \@ref(eq:SGLMM) 的线性预测 $T_{i}$ 的变差 $V_{T}(u_{ij})$。为方便起见，记 $T_{i} = d(x_i)^{\top}\boldsymbol{\beta} + S(x_i) + Z_i$
+模型 \@ref(eq:SGLMM) 的空间效应结构设定为随机过程 $\mathcal{S} = \{S(x): x \in \mathbb{R}^2\}$，它由自协方差函数决定。在给出随机过程 $\mathcal{S}$ 的自协方差函数之前， 先计算一下它的理论变差 $V(x,x')$ 和模型 \@ref(eq:SGLMM) 中 $T_{i}$ 的变差 $V_{T}(u_{ij})$^[变差来源于采矿术语[@Krige1951]]。为方便起见，记 $T_{i} = d(x_i)^{\top}\boldsymbol{\beta} + S(x_i) + Z_i$
 \begin{equation}
 \begin{aligned}
 V(x,x') 
