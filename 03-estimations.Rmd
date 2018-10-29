@@ -1,6 +1,6 @@
 # 参数估计 {#algorithms}
 
-模型的参数估计是建模分析的重要步骤，鉴于空间广义线性混合效应模型（简称 SGLMM）的复杂性，文献中的参数估计方法，如最小二乘估计（简称 LSE）和极大似然估计（简称 MLE） 都没有显式的表达式，因此必须发展有效的算法。目前，文献中的出现的算法有拉普拉斯近似算法、蒙特卡罗极大似然算法、贝叶斯马尔科夫链蒙特卡罗算法和低秩近似算法，应用这些算法去估计 SGLMM 模型参数，此外，特别提出了基于 Stan 实现的贝叶斯 MCMC 算法。第\@ref(sec:mle)节和第\@ref(sec:profile-likelihood)节分别介绍 SGLMM 模型的极大似然估计和空间线性混合模型下的剖面似然估计，由于估计中空间随机效应带来的高维积分问题，文献中出现了三类估计模型参数的算法，分别是第 \@ref(subsec:LA) 小节介绍的拉普拉斯近似极大似然算法（简称LAML）、第 \@ref(subsec:MCML) 小节介绍的蒙特卡罗极大似然算法（简称 MCML）， 第 \@ref(sec:MCMC) 小节介绍的贝叶斯框架下的马尔科夫链蒙特卡罗算法 （简称贝叶斯 MCMC），第 \@ref(LowRank) 小节介绍的低秩近似算法（简称 Low-Rank），在第 \@ref(sec:stan-hmc) 节详细介绍在贝叶斯 MCMC 算法的基础上提出的 STAN-HMC 算法，并分三个小节进行，第\@ref(subsec:motivations)小节介绍算法提出的背景和意义，第 \@ref(subsec:stan-samplers) 小节从 Stan 的发展、内置算法设置以及与同类软件的比较等三方面介绍，然后以数据集 Eight Schools 为例子介绍 Stan 的使用，为空间广义线性混合效应模型的 Stan 实现作铺垫，第\@ref(subsec:stan-hmc)小节介绍 STAN-HMC 算法实现过程。
+模型的参数估计是建模分析的重要步骤，鉴于空间广义线性混合效应模型（简称 SGLMM）的复杂性，文献中的参数估计方法，如最小二乘估计（简称 LSE）和极大似然估计（简称 MLE） 都没有显式的表达式，因此必须发展有效的算法。目前，文献中的出现的算法有拉普拉斯近似算法、蒙特卡罗极大似然算法、贝叶斯马尔科夫链蒙特卡罗算法和低秩近似算法，应用这些算法去估计 SGLMM 模型参数，此外，特别提出了基于 Stan 实现的贝叶斯 MCMC 算法。第\@ref(sec:mle)节和第\@ref(sec:profile-likelihood)节分别介绍 SGLMM 模型的极大似然估计和空间线性混合模型下的剖面似然估计，由于估计中空间随机效应带来的高维积分问题，文献中出现了三类估计模型参数的算法，分别是第 \@ref(subsec:LA) 小节介绍的拉普拉斯近似极大似然算法（简称LAML）、第 \@ref(subsec:MCML) 小节介绍的蒙特卡罗极大似然算法（简称 MCML）， 第 \@ref(sec:MCMC) 小节介绍的贝叶斯框架下的马尔科夫链蒙特卡罗算法 （简称贝叶斯 MCMC），第 \@ref(LowRank) 小节介绍的低秩近似算法（简称 Low-Rank），在第 \@ref(sec:stan-hmc) 节详细介绍在贝叶斯 MCMC 算法的基础上提出基于 Stan 实现的汉密尔顿蒙特卡罗算法（简称 Stan-HMC 算法），并分三个小节进行，第\@ref(subsec:motivations)小节介绍算法提出的背景和意义，第 \@ref(subsec:stan-samplers) 小节从 Stan 的发展、内置算法设置以及与同类软件的比较等三方面介绍，然后以数据集 Eight Schools 为例子介绍 Stan 的使用，为空间广义线性混合效应模型的 Stan 实现作铺垫，第\@ref(subsec:stan-hmc)小节介绍 Stan-HMC 算法实现过程。
 
 ## 极大似然估计 {#sec:mle}
 
@@ -69,7 +69,8 @@ L_{p}(\alpha) = L(\alpha,\hat{\psi}(\alpha)) = \max_{\psi} (L(\alpha,\psi))
 
 ### 拉普拉斯近似极大似然算法 {#subsec:LA}
 
-为描述拉普拉斯近似极大似然算法，空间广义线性混合效应模型（简称 SGLMM）的结构重新表述如下：
+为描述拉普拉斯近似极大似然算法，空间广义线性混合效应模型的结构重新表述如下：
+
 \begin{equation}
 \begin{aligned}
 \mathbf{Y(x)} | S(\mathbf{x}) & \sim  f(\cdot;\boldsymbol{\mu(x)},\psi) \\
@@ -83,49 +84,66 @@ S(\mathbf{x}) & \sim  \mathcal{N}(\mathbf{0},\Sigma)
 
 $R(\mathbf{x};\phi)$ 是具有单位方差的平稳空间高斯过程，其自相关函数为 $\rho(u,\phi)$，这里 $u$ 表示一对空间位置之间的距离，$\phi$ 是刻画空间相关性的参数。自相关函数 $\rho(u,\phi) (\in \mathbb{R}^d)$ 是 $d$ 维空间到一维空间的映射函数，特别地，假定空间过程 $S(\mathbf{x})$的自相关函数仅仅依赖成对点之间的欧氏距离，即 $u =\|x_i - x_j\|$。常见的自相关函数有指数型、梅隆型和球型。线性预测的随机效应部分协方差矩阵 $\Sigma = \sigma^2 R(\mathbf{x};\phi) + \tau^2\mathbf{I}$。
 
-估计 SGLMM 模型 \@ref(eq:sglmm) 的参数 $\boldsymbol{\theta} = (\boldsymbol{\beta},\sigma^2,\tau^2,\phi,\psi)$ 需要极大化边际似然函数 
+估计 SGLMM 模型 \@ref(eq:sglmm) 的参数 $\boldsymbol{\theta} = (\boldsymbol{\beta},\sigma^2,\tau^2,\phi,\psi)$ 需要极大化边际似然函数
+
 \begin{equation}
 L(\boldsymbol{\theta};\mathbf{y}) = \int_{\mathbb{R}^n} [\mathbf{Y(x)}|S(\mathbf{x})][S(\mathbf{x})]\mathrm{d}S(\mathbf{x}) (\#eq:marginal-likelihood)
 \end{equation}
-\noindent 其中，符号 $[\cdot]$ 表示随机变（向）量的分布，一般地，边际似然函数$L(\boldsymbol{\theta};\mathbf{y})$包含两个分布的乘积和随机效应的积分，并且这个积分无法显式的表示，第一个分布是观测变量 $\mathbf{Y}$ 的抽样分布，第二个分布是多元高斯分布。一个特殊的情况是 $\mathbf{Y}$ 也假设服从多元高斯分布，这时积分有显式表达式。
+
+\noindent 边际似然函数 $L(\boldsymbol{\theta};\mathbf{y})$ 包含两个分布的乘积和随机效应的积分，并且这个积分无法显式的表示，第一个分布是观测变量 $\mathbf{Y}$ 的抽样分布，第二个分布是多元高斯分布。一个特殊的情况是 $\mathbf{Y}$ 也假设服从多元高斯分布，这时积分有显式表达式。
 
 边际似然函数 \@ref(eq:marginal-likelihood) 卷入的数值积分是充满挑战的，因为积分的维数 $n$ 是观测值的数目，所以像二次、高斯-埃尔米特或适应性高斯-埃尔米特数值积分方式都是不可用的，Tierney 和 Kadane （1986 年）提出拉普拉斯近似方法 [@Tierney1986]，它在纵向数据分析中被大量采用 [@Diggle2002Analysis]。总之，对空间广义线性混合效应模型而言，拉普拉斯近似还可以继续采用，想法是近似边际似然函数中的高维 $(n > 3)$ 积分，获得一个易于处理的表达式，有了积分的显式表达式，就可以用数值的方法求边际似然函数的极大值。拉普拉斯方法即用如下方式近似 \@ref(eq:marginal-likelihood) 中的积分
+
 \begin{equation}
 I   =  \int_{\mathbb{R}^n} \exp\{Q(\mathbf{s})\}\mathrm{d}\mathbf{s} 
   \approx  (2\pi)^{n/2} |-Q''(\hat{\mathbf{s}})|^{-1/2}\exp\{Q(\hat{\mathbf{s}})\} (\#eq:laplace-approximate)
 \end{equation}
+
 \noindent 其中，$Q(\mathbf{s})$ 为已知的 $n$ 元函数，$\hat{\mathbf{s}}$ 是其极大值点，$Q''(\hat{\mathbf{s}})$ 是黑塞矩阵。拉普拉斯近似的一维情形和主要近似的想法已在第\@ref(prepare)章第\@ref(sec:Laplace-approximation)节详细阐述。
 
 拉普拉斯近似方法也可以用于一般的广义线性混合效应模型的似然推断，特别地，对于空间广义线性混合效应模型，假定条件分布 $f$ 可以表示成如下指数族的形式
+
 \begin{equation}
 f(\mathbf{y};\boldsymbol{\beta})  = \exp\{\mathbf{y}^{\top} (D\boldsymbol{\beta} + S(\mathbf{x})) - \mathbf{1}^{\top} b( D\boldsymbol{\beta} + S(\mathbf{x})) + \mathbf{1}^{\top} c(\mathbf{y}) \}  (\#eq:exponential-family)
 \end{equation}
+
 \noindent 其中 $b(\cdot)$ 是特定的函数，常用的分布有泊松分布和二项分布等，详见第\@ref(prepare)章第\@ref(sec:exp)节。把 \@ref(eq:marginal-likelihood) 式中关于 $[S(\mathbf{x})]$ 多元高斯密度函数表示为
+
 \begin{align}
 f(S(\mathbf{x});\Sigma) & = (2\pi)^{-n/2}|\Sigma|^{-1/2} \exp\{ -\frac{1}{2}S(\mathbf{x})^{\top} \Sigma^{-1} S(\mathbf{x}) \} \\
                       & = \exp\{ - \frac{n}{2}\log (2\pi) -\frac{1}{2}\log |\Sigma|  -\frac{1}{2}S(\mathbf{x})^{\top} \Sigma^{-1} S(\mathbf{x}) \} (\#eq:multi-gaussian-dist)
 \end{align}
+
 \noindent 现在将边际似然函数 \@ref(eq:marginal-likelihood) 写成适合使用拉普拉斯近似的格式
+
 \begin{equation}
 L(\boldsymbol{\theta};\mathbf{y}) = \int_{\mathbb{R}^n} \exp\{Q(S(\mathbf{x}))\} \mathrm{d}S(\mathbf{x}) 
 \end{equation}
+
 \noindent 其中
+
 \begin{equation}
 \begin{aligned}
 Q(S(\mathbf{x})) ={} &  \mathbf{y}^{\top} (D \boldsymbol{\beta} + S(\mathbf{x})) - \mathbf{1}^{\top} b(D \boldsymbol{\beta} + S(\mathbf{x})) + \mathbf{1}^{\top}c(\mathbf{y}) \\
                    & - \frac{n}{2}\log (2\pi) -\frac{1}{2}\log |\Sigma| -\frac{1}{2}S(\mathbf{x})^{\top} \Sigma^{-1} S(\mathbf{x})
 \end{aligned} (\#eq:log-lik)
 \end{equation}
+
 \noindent 方程 \@ref(eq:log-lik) 凸显了采纳拉普拉斯近似方法拟合空间广义线性混合效应模型的方便性，可以把 \@ref(eq:log-lik) 当成两部分来看，前一部分是广义线性模型下样本的对数似然的和的形式，后一部分是多元高斯分布的对数似然。要使用 \@ref(eq:laplace-approximate) 式，需要函数 $Q(S(\mathbf{x}))$ 的极大值点 $\hat{\mathbf{s}}$，这里采用牛顿-拉夫森算法 （Newton-Raphson，简称 NR） 寻找 $n$ 元函数的极大值点，NR 算法需要重复计算
+
 \begin{equation}
 \mathbf{s}_{i+1} = \mathbf{s}_{i} - Q''(\mathbf{s}_{i})^{-1}Q'(\mathbf{s}_{i}) 
 \end{equation}
+
 \noindent 一直收敛到 $\hat{\mathbf{s}}$。在这个内迭代的过程中，将参数 $\boldsymbol{\theta}$ 当作已知的。$Q$ 函数的一阶和二阶导数如下
+
 \begin{align}
 Q'(\mathbf{s})& =  \{\mathbf{y} - b'(D\boldsymbol{\beta} + \mathbf{s}) \}^{\top} - \mathbf{s}^{\top}\Sigma^{-1} (\#eq:first-deriv) \\
 Q''(\mathbf{s})& =  -\mathrm{diag} \{b''(D\boldsymbol{\beta} + \mathbf{s}) \} - \Sigma^{-1} (\#eq:second-deriv)
 \end{align}
+
 \noindent 用拉普拉斯方法近似的对数似然$\ell(\boldsymbol{\theta};\mathbf{y})$
+
 \begin{equation}
 \begin{aligned}
 \ell(\boldsymbol{\theta};\mathbf{y}) = {} & \frac{n}{2}\log (2\pi) -\frac{1}{2}\log | -\mathrm{diag} \{b''(D\boldsymbol{\beta} + \mathbf{s}) \} - \Sigma^{-1} |  \\
@@ -133,8 +151,11 @@ Q''(\mathbf{s})& =  -\mathrm{diag} \{b''(D\boldsymbol{\beta} + \mathbf{s}) \} - 
 & - \frac{n}{2}\log (2\pi) -\frac{1}{2}\log |\Sigma| -\frac{1}{2}\hat{\mathbf{s}}^{\top} \Sigma^{-1} \hat{\mathbf{s}}
 \end{aligned} (\#eq:approx-log-lik)
 \end{equation}
+
 \noindent 现在极大化近似对数似然 \@ref(eq:approx-log-lik) 式，此时是求模型参数，可称之为外迭代过程，常用的算法是 Broyden-Fletcher-Goldfarb-Shanno (简称BFGS) 算法，它内置在 R 函数 `optim()` 中。方便起见，模型参数记为 $\boldsymbol{\theta} = (\boldsymbol{\beta},\log(\sigma^2),\log(\tau^2),\log(\phi),\log(\psi))$，且 $\hat{\boldsymbol{\theta}}$ 表示 $\boldsymbol{\theta}$ 的最大似然估计，根据第\@ref(prepare)章第\@ref(sec:def-mle)节定理\@ref(thm:asymptotic-normality)，则 $\hat{\boldsymbol{\theta}}$ 的渐进分布为
+
 \[ \hat{\boldsymbol{\theta}} \sim \mathcal{N}(\boldsymbol{\theta}, \mathbf{I}_{o}^{-1}(\hat{\boldsymbol{\theta}})) \]
+
 \noindent 其中 $\mathbf{I}_{o}(\hat{\boldsymbol{\theta}})$ 为观察到的样本信息阵，注意到在空间广义线性混合效应模型下，不能直接计算 Fisher 信息阵，因为对数似然函数没有显式表达式，只有数值迭代获得在 $\hat{\boldsymbol{\theta}}$ 处的观测信息矩阵。通常，这类渐进近似对协方差参数 $\sigma^2, \tau^2, \phi$ 的估计效果不好，在数据集不太大的情形下，可用第 \@ref(sec:profile-likelihood) 节介绍的剖面似然方法计算协方差参数及其置信区间。剖面似然估计的算法实现过程详见 Bolker 等 （2017年） 开发的 bbmle 包 [@R-bbmle]，下面给出计算的细节步骤：
 
 1. 选择模型参数 $\boldsymbol{\theta}$ 的初始值 $\boldsymbol{\theta}_{i}$；
@@ -155,9 +176,11 @@ NR算法收敛速度是很快的，但是必须提供一个很好的初值，好
 ### 蒙特卡罗极大似然算法 {#subsec:MCML}
 
 为描述蒙特卡罗极大似然算法，空间广义线性混合效应模型的结构表述如下
+
 \begin{equation}
 g(\mu_i) = T_{i} = d(x_i)^{\top}\boldsymbol{\beta} + S(x_i) + Z_i (\#eq:again-SGLMM)
 \end{equation}
+
 \noindent 其中，令 $d_{i} = d(x_i)^{\top}$，用$d(x_i)^{\top}$ 表示 主要是强调协变量的空间内容， 这里表示采样点处观测数据向量， 即 $p$ 个协变量在第 $i$ 个位置 $x_i$ 的观察值。 $\mathcal{S} = \{S(x): x \in \mathbb{R}^2\}$ 是均值为 $\mathbf{0}$，方差为 $\sigma^2$，平稳且各向同性的空间高斯过程，自相关函数是 $\rho(u;\phi)$，$S(x_i)$ 表示空间效应，$Z_i \stackrel{i.i.d}{\sim} \mathcal{N}(0,\tau^2)$ 的块金效应，$g$ 是联系函数，$x_i \in \mathbb{R}^2$是采样点的位置。 综上，模型 \@ref(eq:again-SGLMM) 待估计的参数有 $\boldsymbol{\beta}$ 和 $\boldsymbol{\theta}' = (\sigma^2,\phi,\tau^2)$。 特别地，当响应变量分别服从二项分布和泊松分布时， 模型 \@ref(eq:again-SGLMM) 分别变为模型 \@ref(eq:BL-SGLMM) 和模型 \@ref(eq:Poss-SGLMM)。
 \begin{align}
 \log\{\frac{p_i}{1-p_i}\} & = T_{i} = d(x_i)^{\top}\boldsymbol{\beta} + S(x_i) + Z_i  (\#eq:BL-SGLMM)\\
@@ -279,7 +302,7 @@ S(x) \approx \sum_{i = 1}^r K(\|x-\tilde{x}_{i}\|; \phi, \kappa) U_{i} (\#eq:lr-
 \end{eqnarray*}
 \noindent 类似地，行列式运算的维数从 $n\times n$ 降到了 $r\times r$ [@Diggle2007]。
 
-## 贝叶斯 STAN-HMC 算法 {#sec:stan-hmc}
+## 贝叶斯 Stan-HMC 算法 {#sec:stan-hmc}
 
 ### 蒙特卡罗积分 {#subsec:Curse-of-Dimensionality}
 
@@ -482,11 +505,11 @@ knitr::include_graphics(path = c(
 [eigen-cpp]: http://eigen.tuxfamily.org/index.php?title=Main_Page
 
 
-### 实现 STAN-HMC 算法的过程 {#subsec:stan-hmc}
+### 实现 Stan-HMC 算法的过程 {#subsec:stan-hmc}
 
-为了与本章第 \@ref(sec:MCMC) 节提出的贝叶斯 MCMC 算法比较，我们基于 Stan 实现求解 SGLMM 模型的贝叶斯 MCMC 算法 (简称 STAN-HMC)。目前，我与 Bürkner 一起开发了 brms 包 [@brms2017JSS]， 主要工作是修复程序调用和文档书写错误， 特别是与求解 SGLMM 模型相关的 `gp` 函数，相关细节见 brms 的 Github 开发仓库。
+为了与本章第 \@ref(sec:MCMC) 节提出的贝叶斯 MCMC 算法比较，我们基于 Stan 实现求解 SGLMM 模型的贝叶斯 MCMC 算法。目前，我与 Bürkner 一起开发了 brms 包 [@brms2017JSS]， 主要工作是修复程序调用和文档书写错误， 特别是与求解 SGLMM 模型相关的 `gp` 函数，相关细节见 brms 的 Github 开发仓库。
 
-在 SGLMM 模型下，STAN-MCMC 算法，先从条件分布 $S|\boldsymbol{\theta},\boldsymbol{\beta},Y$ 抽样，然后从条件分布 $\boldsymbol{\theta}|S$ 抽样，最后从条件分布 $\boldsymbol{\beta}|S,Y$ 抽样，具体步骤如下：
+在 SGLMM 模型下，Stan-HMC 算法，先从条件分布 $S|\boldsymbol{\theta},\boldsymbol{\beta},Y$ 抽样，然后从条件分布 $\boldsymbol{\theta}|S$ 抽样，最后从条件分布 $\boldsymbol{\beta}|S,Y$ 抽样，具体步骤如下：
 
 1. 选择初始值 $\boldsymbol{\theta},\boldsymbol{\beta},S$，如 $\boldsymbol{\beta}$ 的初始值来自正态分布，$\boldsymbol{\theta}$ 的初始值来自对数正态分布；
 2. 更新参数向量 $\boldsymbol{\theta}$ ：
@@ -504,7 +527,7 @@ knitr::include_graphics(path = c(
 # 加载程序包
 library(rstan)
 library(brms)
-# 以并行方式运行STAN-MCMC算法，指定 CPU 的核心数
+# 以并行方式运行Stan-HMC算法，指定 CPU 的核心数
 options(mc.cores = parallel::detectCores())
 # 将编译后的模型写入磁盘，可防止重新编译
 rstan_options(auto_write = TRUE)

@@ -100,7 +100,7 @@ knitr::include_graphics(path = "figures/bessel.png")
 ```{r matern-2d,fig.cap="自相关函数 $\\rho(u)$ 随尺度参数 $\\phi$（左图）和平滑参数 $\\kappa$ （右图）的变化",out.width="80%"}
 knitr::include_graphics(path = "figures/matern.png")
 ```
-```{r matern-3d,fig.cap="$\\rho(\\mathsf{u})$ 在不同空间距离 $\\mathsf{u}$处随 $\\kappa$ 和 $\\phi$ 的变化，从蓝到红的颜色变化表示 $\\rho(\\mathsf{u})$ 的值由小到大",out.width="80%"}
+```{r matern-3d,fig.cap="$\\rho(\\mathsf{u})$ 在不同空间距离 $\\mathsf{u}$处随 $\\kappa$ 和 $\\phi$ 的变化，从蓝到红的颜色变化表示 $\\rho(\\mathsf{u})$ 的值由小到大",out.width="80%",fig.pos="!htb"}
 knitr::include_graphics(path = "figures/matern-3d.png")
 ```
 
