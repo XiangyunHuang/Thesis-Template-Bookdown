@@ -2,22 +2,14 @@
 \chapter*{\markboth{摘要}{摘要}{摘\quad 要}}
 \pagenumbering{Roman} 
 \medskip
-空间广义线性混合效应模型（简称 SGLMM）在现实环境中有广泛的应用，实现其参数估计的算法是研究的重要方面，主要困难是要处理估计中与空间随机效应相关的高维积分，文中总结了拉普拉斯近似和蒙特卡罗积分两类计算方法在 SGLMM 模型的参数估计中的应用。论文的创新点其一是借助 Stan 实现汉密尔顿蒙特卡罗算法（简称 HMC）去估计 SGLMM 模型的参数，在响应变量服从二项分布和泊松分布的两组模拟实验中，与基于 R 包 geoRglm 实现的 Langevin-Hastings 算法相比，发现 HMC 算法在保持相似结果下能大大减少迭代次数，还不需要对算法进行调参；其二是在真实数据分析中研究了基于似然函数的参数估计算法，发现这类算法容易陷入局部极值，因此，在小麦数据的分析中借助样本变差图选择初值，在核污染数据的分析中利用剖面似然轮廓来确定合适的初值。
-
-% profile likelihood contour 
-% 文中提出结合剖面似然估计的思想来确定最佳的参数初值，并以朗格拉普岛核污染数据为例给出分析过程。
-% 有三个方面，其一是在 R 语言编程环境下实现了估计 SGLMM 模型参数的三类算法，分别是低秩近似、蒙特卡罗最大似然和贝叶斯马尔科夫链蒙特卡罗算法；其二是在数值模拟结果上比较了三类算法的优劣；其三是在软件 Stan 上实现了贝叶斯 MCMC 算法，并将其应用到喀麦隆地区患眼线虫病和朗格拉普岛上核残留的数据分析上，STAN-MCMC 取得了和贝叶斯 MCMC 算法几乎一样的效果，由于软件 Stan 本身具有的高可扩展性和适应性，STAN-MCMC 算法同样具有这些优点。
+空间广义线性混合效应模型（简称 SGLMM）在现实环境中有广泛的应用，实现其参数估计的算法是研究的重要方面，主要困难是要处理估计中与空间随机效应相关的高维积分，文献中利用似然来处理时，常采用两类方法：一类是蒙特卡罗积分法，另一类是拉普拉斯近似法。这些方法在迭代次数、运算时间或者初始值选取等方面存在不足。为此，我们进行改进：一方面是不同于文献中基于 R 包 geoRglm 实现的 Langevin-Hastings 算法，我们借助 Stan 实现汉密尔顿蒙特卡罗算法（简称 Stan-HMC）去估计 SGLMM 模型的参数，在响应变量服从二项分布和泊松分布的两组模拟实验中，发现 Stan-HMC 算法在保持相似结果下能大大减少迭代次数，还不需要对算法进行调参；另一方面是我们对初始值的选取，在真实数据分析中研究了基于似然函数的参数估计算法，发现这类算法容易陷入局部极值，因此，在小麦数据的分析中借助样本变差图选择初值，在核污染数据的分析中利用剖面似然轮廓来确定合适的初值。
 
 
-% 数值模拟的结论
-% ：低秩近似算法精度比较低，增加样本量可以提高精度，但是计算效率就会明显降低；近似贝叶斯与蒙特卡罗最大似然算法在准确度一致的情况下，前者计算效率更高。在同样的准确度下，基于新的计算框架 Stan 实现的贝叶斯马尔科夫链蒙特卡罗算法比基于R语言实现的效率高，同时也比前两类算法效率高，但是比第三类算法效率稍低。
+% 文中总结了拉普拉斯近似和蒙特卡罗积分两类计算方法在 SGLMM 模型的参数估计中的应用。论文的创新点其一是借助 Stan 实现汉密尔顿蒙特卡罗算法（简称 HMC）去估计 SGLMM 模型的参数，在响应变量服从二项分布和泊松分布的两组模拟实验中，与基于 R 包 geoRglm 实现的 Langevin-Hastings 算法相比，发现 HMC 算法在保持相似结果下能大大减少迭代次数，还不需要对算法进行调参；其二是在真实数据分析中研究了基于似然函数的参数估计算法，发现这类算法容易陷入局部极值，因此，在小麦数据的分析中借助样本变差图选择初值，在核污染数据的分析中利用剖面似然轮廓来确定合适的初值。
 
-% 然后，探索了基于 Stan 实现的贝叶斯马尔科夫链蒙特卡罗算法，并与现有算法进行性能比较
-%，还在 Stan 框架下实现了基于贝叶斯推断的算法。
-%，Stan 框架因其本身优化程度极高的计算库、并行特点和编译带来的再次优化大大加速了模拟的过程。
 \medskip
 \par
-{\heiti 关键词 ：} 空间随机效应，拉普拉斯近似，蒙特卡罗方法
+{\heiti 关键词 ：} 空间随机效应，拉普拉斯近似，蒙特卡罗方法，Stan-HMC
 
 \par
 \vspace{1cm}
@@ -32,23 +24,17 @@
 \end{center}
 \par
 
-The spatial generalized linear mixed-effects models (SGLMMs) have a wide range of applications in the real world. The high dimensional integral for spatially correlated random effects involved in the parameter estimation is analytically intractable in general. Laplace approximation and Monte Carlo integral, two kinds of calculation methods, are used to estimate parameters of SGLMMs. We use the Hamilton Monte Carlo algorithm (HMC), programming in Stan language, to estimate the parameters of the SGLMMs. In the simulation experiments in which the response variables draws from the binomial distribution and poisson distribution, respectively. Compared with the Langevin-Hastings algorithm which included in R package geoRglm, it is concluded that the HMC algorithm can greatly reduce the number of iterations while providing really similar results, and does not need to tune the algorithm's parameters. The second is to study the parameter estimation algorithm based on likelihood function in real data analysis. It is found that such algorithms are easy to fall into local extremum. Therefore, the sample variogram is used to choose the initial parameter value in the analysis of wheat data while the profile likelihood contour is used in the analysis of nuclear pollution data.
-
-
+The spatial generalized linear mixed-effects models (SGLMMs) have a wide range of applications in the real world. The high dimensional integral for spatially correlated random effects involved in the parameter estimation is analytically intractable in general. Laplace approximation and Monte Carlo integral, two kinds of calculation methods, are used to estimate parameters of SGLMMs. We use the Hamilton Monte Carlo algorithm (Stan-HMC), programming in Stan language, to estimate the parameters of the SGLMMs. In the simulation experiments in which the response variables draws from the binomial distribution and poisson distribution, respectively. Compared with the Langevin-Hastings algorithm which included in R package geoRglm, it is concluded that the Stan-HMC algorithm can greatly reduce the number of iterations while providing really similar results, and does not need to tune the algorithm's parameters. The second is to study the parameter estimation algorithm based on likelihood function in real data analysis. It is found that such algorithms are easy to fall into local extremum. Therefore, the sample variogram is used to choose the initial parameter value in the analysis of wheat data while the profile likelihood contour is used in the analysis of nuclear pollution data.
 
 %  main obstacle is to  with the 
 %  The algorithm for realizing its parameter estimation is an important aspect of research  
 %  
 % Effective and efficient algorithms of spatial generalized linear mixed effects models are always pursued by reseachers. The innovation of the thesis has three parts. One is to realize three kinds of parameter estimation methods of spatial generalized linear mixed effects model under the R language programming environment. They are low rank approximation, Monte Carlo Maximum Likelihood and Bayesian Markov Chain Monte Carlo algorithms, respectively. The second is the numerical simulation for comparing the advantages and disadvantages of above algorithms. The third is to implement Bayesian MCMC algorithm based on Stan software, which also applied to analyze malaria data in the Gambia and loa loa data in Cameroon. In conclusion, STAN-MCMC has achieved performance of Bayesian MCMC algorithm almost. Furthermore, due to the high scalability and adaptability of Stan software, the STAN-MCMC algorithm also has these advantages.
 
-
-
-% In large-scale sparse settings, effective and efficient algorithms are always pursued by reseachers. Low-rank, likelihood-based and bayesian framework approaches are simultaneously carried out. By comparison, the low-rank approximation method has obvious efficiency advantages, but with less accurate. Under the same accuracy, The MCMC algorithm is implemented by Stan, a new computational framework whose computational efficiency is significantly better than the traditional BUGS.
-
 \medskip
 \par
 
-{\bf Key words：} spatial random effects, laplace approximation, monte carlo methods
+{\bf Key words：} spatial random effects, laplace approximation, monte carlo methods, Stan-HMC
 
 % 空白页
 \newpage 
