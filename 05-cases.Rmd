@@ -40,7 +40,7 @@ knitr::include_graphics(path = c("figures/heteroscedasticity.png","figures/norma
 
 (ref:corRatio) 详见 R 包 nlme 内函数 corRatio 帮助文档。
 
-## 朗格拉普岛核污染浓度的空间分布 {#case-rongelap}
+## 核污染浓度的空间分布 {#case-rongelap}
 
 朗格拉普岛位于南太平洋上，是马绍尔群岛的一部分，二战后，美国在该岛上进行了多次核武器测试，核爆炸后产生的放射性尘埃笼罩了全岛，目前该岛仍然不适合人类居住，只有经批准的科学研究人员才能登岛。基于马绍尔群岛国家的放射性调查数据，Diggle 等 （1998年） [@Diggle1998] 使用 蒙特卡罗极大似然算法估计空间广义线性混合效应模型 \@ref(eq:rongelap-without-nugget-effect) 的各个参数，Christensen （2004年） [@Christensen2004] 发现该核污染数据集中存在不能被泊松分布解释的残差，因此添加了非空间的随机效应 $Z_i$，建立模型 \@ref(eq:rongelap-with-nugget-effect)，在地质统计领域内，$Z_i$ 还有个专有名词叫块金效应。
 \begin{align}
@@ -55,40 +55,44 @@ knitr::include_graphics(path = "figures/rongelap-island.png")
 
 根据 ${}^{137}\mathrm{Cs}$ 放出的伽马射线在 $N=157$ 站点不同时间间隔的放射量， 建立泊松广义线性混合效应模型 \@ref(eq:rongelap-with-nugget-effect)。模型\@ref(eq:rongelap-with-nugget-effect)中，$\beta$ 是截距， 放射粒子数作为响应变量服从强度为 $\lambda(x_i)$ 的泊松分布，即 $Y_{i} \sim \mathrm{Poisson}( \lambda(x_i) )$，平稳空间高斯过程 $S(x),x \in \mathbb{R}^2$的自协方差函数为 $\mathsf{Cov}( S(x_i), S(x_j) ) = \sigma^2 \exp( -\|x_i -x_j\|_{2} / \phi )$，且 $Z_i$ 之间相互独立同正态分布 $\mathcal{N}(0,\tau^2)$，这里 $i = 1,\ldots, 157$。
 
-蒙特卡罗极大似然算法迭代的初值 $\beta_{0} = 6.2,\sigma^2_{0} = 2.40,\phi_{0} = 340,\tau^2_{rel} = 2.074$，模拟次数为 30000 次，前 10000 次迭代视为预处理阶段，其后每隔 20 次迭代采一个样本点，即存储模型各参数的迭代值，每个参数获得1000次迭代值。蒙特卡罗模拟平稳空间高斯过程 $S(x)$ 关于响应变量$Y$的条件分布时，使用了第\@ref(algorithms)章第\@ref(sec:MCMC)节介绍的 Langevin-Hastings 算法 [@Omiros2003]，157 个站点意味着有 157 个条件分布需要模拟，共产生 157个迭代链，每条链需保持平稳才可用于模型参数的推断，因此需要先检验每条链的平稳性，可以采用自相关图和时序图来检验，篇幅所限，取部分站点展示，见图\@ref(fig:rongelap-trace-plot) 和图 \@ref(fig:rongelap-acf-plot)，经观察157个站点处的$S_i$的迭代点列没有出现不平稳的现象。
+蒙特卡罗极大似然算法迭代的初值 $\beta_{0} = 6.2,\sigma^2_{0} = 2.40,\phi_{0} = 340,\tau^2_{rel} = 2.074$，模拟次数为 30000 次，前 10000 次迭代视为预处理阶段，其后每隔 20 次迭代采一个样本点，即存储模型各参数的迭代值，每个参数获得1000次迭代值。蒙特卡罗模拟平稳空间高斯过程 $S(x)$ 关于响应变量$Y$的条件分布时，使用了第\@ref(algorithms)章第\@ref(sec:MCMC)节介绍的 Langevin-Hastings 算法 [@Omiros2003]。此处，157 个站点意味着有 157 个条件分布需要模拟，共产生 157个迭代链，每条链需保持平稳才可用于模型参数的估计。因此，需要先检验每条链的平稳性，可以采用自相关图和时序图来检验，篇幅所限，取部分站点展示，图\@ref(fig:rongelap-trace-plot) 是四个站点处的后验分布的模拟过程图，图 \@ref(fig:rongelap-acf-plot) 是9个站点处的模拟点列的自相关系数图。从图 \@ref(fig:rongelap-trace-plot) 可以看出迭代序列符合平稳性的特征，从图 \@ref(fig:rongelap-acf-plot) 可以看出迭代序列满足马尔科夫性，没有明显的延迟相关性。经观察 157 个站点处的$S_i$的迭代点列没有出现不平稳的现象。
 
-```{r rongelap-trace-plot,fig.cap='(ref:rongelap-trace-plot)'}
+```{r rongelap-trace-plot,fig.cap='(ref:rongelap-trace-plot)',out.width="80%",fig.pos="!htb"}
 knitr::include_graphics(path = "figures/rongelap-mcml-diagnosis-trace-9.png")
 ```
-从图 \@ref(fig:rongelap-trace-plot) 可以看出迭代序列符合平稳性的特征。
-
-```{r rongelap-acf-plot,fig.cap='(ref:rongelap-acf-plot)'}
+```{r rongelap-acf-plot,fig.cap='(ref:rongelap-acf-plot)',out.width="80%",fig.pos="!htb"}
 knitr::include_graphics(path = "figures/rongelap-mcml-diagnosis-acf-9.png")
 ```
 
-从图 \@ref(fig:rongelap-acf-plot) 可以看出迭代序列满足马尔科夫性，没有明显的延迟相关性。
+(ref:rongelap-trace-plot) Langevin-Hastings 算法模拟条件分布 $S(x_{i})|Y_{i}, i = 1,\ldots,4$，第一列是迭代序列轨迹图，第二列是对应的后验密度分布
 
-(ref:rongelap-trace-plot) Langevin-Hastings 算法模拟条件分布 $[S(x_{i})|Y_{i}], i = 1,\ldots,4$，$[\cdot]$ 表示某某的分布，第一列是迭代序列轨迹图，第二列是对应的密度分布
+(ref:rongelap-acf-plot) 条件分布 $S(x_{i})|Y_{i}, i = 1, \ldots, 4$ 的采样序列的自相关图
 
-(ref:rongelap-acf-plot) 条件分布 $[S(x_{i})|Y_{i}], i = 1, \ldots, 4$ 的采样序列的自相关图
+表 \@ref(tab:rongelap-mcml-result) 中括号内表示相应模型参数的初值，以第4行为例，模型\@ref(eq:rongelap-with-nugget-effect)中块金效应的估计值应为 $\hat{\tau}^2 = \hat{\sigma}^{2} \times \hat{\tau}^2_{rel} = 4.929$，第 2 行是基于第\@ref(algorithms)章第\@ref(subsec:LA)小节介绍的拉普拉斯近似极大似然算法（简称LAML）获得的结果，第 3 行基于蒙特卡罗极大似然算法（简称MCML）获得的结果，其初值选择和 LAML 算法一致，第 4 行先根据剖面似然轮廓图\@ref(fig:profile-phi-tausq)确定初值，然后根据MCML算法获得参数估计值。第6列是最终参数估计值处的对数似然函数值。
 
-Table: (\#tab:rongelap-mcml-result) 拉普拉斯近似极大似然算法（简称LAML）和蒙特卡罗极大似然算法（简称MCML）估计模型 \@ref(eq:rongelap-with-nugget-effect) 的参数，以第4行为例，块金效应的估计值应为 $\hat{\tau}^2 = \hat{\sigma}^{2} \times \hat{\tau}^2_{rel} = 4.929$
+Table: (\#tab:rongelap-mcml-result) 模型 \@ref(eq:rongelap-with-nugget-effect) 的参数估计值
 
 | 算法     | $\hat{\beta}(\beta_{0})$ | $\hat{\sigma}^{2}(\sigma^2_0)$ | $\hat{\phi}(\phi_0)$  | $\hat{\tau}^2_{rel}(\tau^2_{rel_0})$ |  $\log L_{m}$          |
 | :------:| :-------------|:-------------|:-------------|:-------------|:-------------|
 |    LAML   | 1.821(2.014)  | 0.264(0.231)    |   151.795(50)|   0.133(0.1)    | $-1317.195$   |
-|    MCML   | 1.821(2.014)  | 0.265(0.231)    |   151.859(50)|   0.132(0.1)    | $-8.8903$      |
-|    MCML   | 6.190(6.200)  | 2.401(2.400)    |   338.126(340)|   2.053(2.074) | $-5.8458$ |
+|    MCML   | 1.821(2.014)  | 0.265(0.231)    |   151.859(50)|   0.132(0.1)    | $-8.8903$     |
+|    MCML   | 6.190(6.200)  | 2.401(2.400)    |   338.126(340)|   2.053(2.074) | $-5.8458$     |
 
-表 \@ref(tab:rongelap-mcml-result) 中括号内表示相应参数的初值，第 2 行是基于第\@ref(algorithms)章第\@ref(subsec:LA)小节 介绍的拉普拉斯近似算法获得的结果，第 3 行基于蒙特卡罗极大似然算法获得的结果，其初值选择和拉普拉斯近似算法一致，第 4 行先根据剖面似然轮廓图\@ref(fig:profile-phi-tausq)确定初值，然后根据蒙特卡罗极大似然算法获得参数估计值。第6列是最终参数估计值处的对数似然函数值，由于两个算法所采用的方法不同，前者采用拉普拉斯近似似然函数中的高维积分，并且扔掉了似然函数中的正则常数，后者采用蒙特卡罗模拟计算高维积分，所以对数似然函数值差别很大，两种算法之间不能以这个比较算法优劣。表\@ref(tab:rongelap-mcml-result)第3和第4行的设置是同种算法不同初始值的比较，可以比较最终的似然函数值，后者初值选得好，对数似然函数值更大，同时结合图 \@ref(fig:profile-phi-tausq) 有理由怀疑前一组初值使得最终的迭代陷入一个局部极值点或者由于似然曲面太平坦致使迭代停止。
+由于两个算法所采用的方法不同，前者采用拉普拉斯近似似然函数中的高维积分，并且扔掉了似然函数中的正则常数，后者采用蒙特卡罗模拟计算高维积分，所以对数似然函数值差别很大，两种算法之间不能以这个比较算法优劣。
+
+\newpage
+
+表\@ref(tab:rongelap-mcml-result)第3和第4行的设置是同种算法不同初始值的比较，可以比较最终的似然函数值，后者初值选得好，对数似然函数值更大，同时结合图 \@ref(fig:profile-phi-tausq) 有理由怀疑前一组初值使得最终的迭代陷入一个局部极值点或者由于似然曲面太平坦致使迭代停止。
 
 ```{r profile-phi-tausq,fig.cap='(ref:profile-phi-tausq)',out.width="65%",fig.pos="!htb"}
 knitr::include_graphics(path = "figures/profile-phitausq.png")
 ```
 
+图\@ref(fig:profile-phi-tausq)是泊松型空间广义线性混合效应模型 \@ref(eq:rongelap-with-nugget-effect) 关于参数 $\phi$ 和相对块金效应 $\tau^2_{rel} = \tau^2 / \sigma^2$ 的剖面似然函数轮廓图，平稳空间高斯过程 $S(x)$ 的自协方差函数选用指数型 $\mathsf{Cov}( S(x_i), S(x_j) ) = \sigma^2 \exp( -\|x_i -x_j\|_{2} / \phi )$，剖面似然函数值由 geoRglm 包提供的 proflik.glsm 函数计算。
+
 由表 \@ref(tab:rongelap-mcml-result) 可知，正如第 \@ref(simulations) 章第 \@ref(sec:simulations) 节对蒙特卡罗极大似然算法所指出的那样，必须提供足够接近真值的初值，才能获得好的参数估计。由图 \@ref(fig:profile-phi-tausq) 不难看出，关于 $\phi$ 和相对块金效应 $\tau^2_{rel}$ 的剖面似然函数曲面类似一个极其狭长的、坡度又平缓的山谷，基于似然的算法对这种类型的问题还没有好的解决办法，目前取多个不同参数初值进行迭代，用迭代值画出剖面似然函数曲面，然后通过观察获得最佳初值。从实践的过程来看，参数初值的组数不宜太多，过多可能会用掉不少计算资源，因为如第\@ref(algorithms)章第\@ref(sec:profile-likelihood)节剖面似然估计所指出的迭代过程，剖面似然函数值的计算涉及空间随机效应的协方差阵的求逆，当空间采样点数目较多时，协方差阵阶数会随着变大，计算会变困难。
 
-(ref:profile-phi-tausq) 泊松型空间广义线性混合效应模型 \@ref(eq:rongelap-with-nugget-effect) 关于 $\phi$ 和相对块金效应 $\tau^2_{rel} = \tau^2 / \sigma^2$ 的剖面似然函数轮廓，平稳空间高斯过程 $S(x)$ 的自协方差函数选用指数型 $\mathsf{Cov}( S(x_i), S(x_j) ) = \sigma^2 \exp( -\|x_i -x_j\|_{2} / \phi )$，剖面似然函数值由 geoRglm 包提供的 proflik.glsm 函数计算
+(ref:profile-phi-tausq) 模型 \@ref(eq:rongelap-with-nugget-effect) 关于参数 $\phi$ 和 $\tau^2_{rel} = \tau^2 / \sigma^2$ 的剖面似然函数轮廓图
 
 ## 本章小结 {#sec:cases}
 
