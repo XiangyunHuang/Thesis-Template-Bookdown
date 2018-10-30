@@ -18,6 +18,7 @@ bookdown::pdf_book:
   keep_tex: yes
   pandoc_args: ["--top-level-division=chapter", "--lua-filter=latex/sidebar.lua"]
   template: latex/default.latex
+  toc: no
   toc_depth: 3
   toc_unnumbered: yes
   toc_appendix: no

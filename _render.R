@@ -43,5 +43,5 @@ for (fmt in formats) {
 setwd(owd)
 
 if(!travis){
-  system("rm Thesis-Template-Bookdown.rds")
+  system("rm Thesis-Template-Bookdown-Abstract.rds")
 }

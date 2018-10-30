@@ -1,4 +1,4 @@
-book_filename: "Thesis-Template-Bookdown"
+book_filename: "Thesis-Template-Bookdown-Abstract"
 delete_merged_file: true
 language:
   label:
@@ -15,24 +15,11 @@ language:
     edit: "编辑"
     chapter_name: ["第 ", " 章"]
 
-clean: ["packages.bib", "Thesis-Template-Bookdown.rds"]
+clean: ["packages.bib", "Thesis-Template-Bookdown-Abstract.rds"]
 output_dir: _book
 new_session: yes    
 before_chapter_script: ["_common.R"]
 
 rmd_files: [
   "index.Rmd",
-  "01-foundations.Rmd",
-  "02-models.Rmd",
-  "03-estimations.Rmd",
-  "04-simulations.Rmd",
-  "05-cases.Rmd",
-  "06-summary.Rmd",
-
-  "07-acknowledge.Rmd",
-  "08-author.Rmd",
-  "09-appendix.Rmd",
-  "10-references.Rmd",
 ]
-
-edit: https://github.com/XiangyunHuang/Thesis-Template-Bookdown/edit/master/%s
