@@ -1,6 +1,6 @@
 # 基础知识 {#prepare}
 
-作为第 \@ref(models) 章统计模型和第 \@ref(algorithms) 章参数估计的知识准备，本章给出主要的知识点。第 \@ref(sec:exp) 节首先介绍指数族的一般形式，包含各成分的定义，特别介绍正态分布、二项分布和泊松分布情形下均值函数、联系函数和方差函数等特征量。第 \@ref(sec:lse) 节介绍线性模型下，设计矩阵保持正定时的最小二乘估计和加权最小二乘估计。第 \@ref(sec:def-mle) 节介绍极大似然估计的定义，相合性，以及在一定条件下的渐近正态性。第 \@ref(sec:stationary-gaussian-process) 节介绍平稳高斯过程的定义，均方连续性和可微性的定义，以及判断可微性的一个充要条件。第 \@ref(sec:Laplace-approximation) 节介绍拉普拉斯近似方法。第 \@ref(sec:bayes-prior) 介绍先验、后验分布和 Jeffreys 无信息先验分布。
+作为第 \@ref(models) 章统计模型和第 \@ref(algorithms) 章参数估计的知识准备，本章给出主要的知识点。第 \@ref(sec:exp) 节首先介绍指数族的一般形式，包含各成分的定义，特别介绍正态分布、二项分布和泊松分布情形下均值函数、联系函数和方差函数等特征量。第 \@ref(sec:lse) 节介绍线性模型下，设计矩阵保持正定时的最小二乘估计和加权最小二乘估计。第 \@ref(sec:def-mle) 节介绍极大似然估计的定义，相合性，以及在一定条件下的渐近正态性。第 \@ref(sec:stationary-gaussian-process) 节介绍平稳高斯过程的定义，均方连续性和可微性的定义，以及判断可微性的一个充要条件。第 \@ref(sec:bayes-prior) 介绍先验、后验分布和 Jeffreys 无信息先验分布。
 
 ## 指数族 {#sec:exp}
 
@@ -137,7 +137,9 @@ Table: (\#tab:common-characteristics) 指数族内常见的一元分布的共同
 
 一般地，空间高斯过程 $\mathcal{S} = \{S(x),x\in\mathbb{R}^2\}$ 必须满足条件：任意给定一组空间位置 $x_1,x_2,\ldots,x_n, \forall x_{i} \in \mathbb{R}^2$， 每个位置上对应的随机变量 $S(x_i), i = 1,2,\ldots,n$ 的联合分布 $\mathcal{S} = \{S(x_1), S(x_2),\ldots,S(x_n)\}$ 是多元高斯分布，其由均值 $\mu(x) = \mathsf{E}[S(x)]$ 和协方差 $G_{ij} = \gamma(x_i,x_j) = \mathsf{Cov}\{S(x_i),S(x_j)\}$ 完全确定，即 $\mathcal{S} \sim \mathcal{N}(\mu_{S},G)$。
 
-平稳空间高斯过程需要空间高斯过程满足平稳性条件：其一， $\mu(x) = \mu, \forall x \in \mathbb{R}^2$， 其二，自协方差函数 $\gamma(x_i,x_j) = \gamma(u),u=\|x_{i} - x_{j}\|$。 可见均值 $\mu$ 是一个常数， 而自协方差函数 $\gamma(x_i,x_j)$ 只与空间距离有关。 注意到平稳高斯过程 $\mathcal{S}$ 的方差是一个常数，即 $\sigma^2 = \gamma(0)$， 然后可以定义自相关函数 $\rho(u) = \gamma(u)/\sigma^2$， 并且 $\rho(u)$ 是关于空间距离$u$对称的，即 $\rho(u) = \rho(-u)$。 因为对 $\forall u, \mathsf{Corr}\{S(x),S(x-u)\} = \mathsf{Corr}\{S(x-u), S(x)\} = \mathsf{Corr}\{S(x),S(x+u)\}$， 这里的第二个等式是根据平稳性得来的， 由协方差的定义不难验证。 如果不特别说明， 平稳就指上述协方差意义下的平稳， 因为这种平稳性条件广泛应用于空间数据的统计建模。不失一般性，介绍一维空间下随机过程 $S(x)$ 的均方连续性和可微性定义。
+平稳空间高斯过程需要空间高斯过程满足平稳性条件：其一， $\mu(x) = \mu, \forall x \in \mathbb{R}^2$， 其二，自协方差函数 $\gamma(x_i,x_j) = \gamma(u),u=\|x_{i} - x_{j}\|$。 可见均值 $\mu$ 是一个常数， 而自协方差函数 $\gamma(x_i,x_j)$ 只与空间距离有关。
+
+平稳高斯过程 $\mathcal{S}$ 的方差是一个常数，即 $\sigma^2 = \gamma(0)$， 然后可以定义自相关函数 $\rho(u) = \gamma(u)/\sigma^2$， 并且 $\rho(u)$ 是关于空间距离$u$对称的，即 $\rho(u) = \rho(-u)$。 因为对 $\forall u, \mathsf{Corr}\{S(x),S(x-u)\} = \mathsf{Corr}\{S(x-u), S(x)\} = \mathsf{Corr}\{S(x),S(x+u)\}$， 这里的第二个等式是根据平稳性得来的， 由协方差的定义不难验证。 如果不特别说明， 平稳就指上述协方差意义下的平稳， 因为这种平稳性条件广泛应用于空间数据的统计建模。不失一般性，介绍一维空间下随机过程 $S(x)$ 的均方连续性和可微性定义。
 
 ```{definition, label="continuous-differentiable", name="连续性和可微性", echo=TRUE}
 随机过程 $S(x)$ 满足
@@ -149,31 +151,6 @@ Table: (\#tab:common-characteristics) 指数族内常见的一元分布的共同
 ```{theorem, label="stationary-mean-square-properties", name="平稳随机过程的可微性", echo=TRUE}
 自相关函数为 $\rho(u)$ 的平稳随机过程是 $k$ 次均方可微的，当且仅当 $\rho(u)$ 在 $u = 0$ 处是 $2k$ 次可微的。
 ```
-
-
-## 拉普拉斯近似 {#sec:Laplace-approximation}
-
-先回顾一下基本的泰勒展开，将一个函数 $f(x)$ 在点 $a$ 处展开成和的形式，有时候是无穷多项，可以使用其中的有限项作为近似，通常会选用前三项，即到达函数 $f(x)$ 二阶导的位置。
-\[ f(x) = f(a) + \frac{f'(a)}{1!}(x-a) + \frac{f''(a)}{2!}(x-a)^2 + \frac{f'''(a)}{3!}(x-a)^3 + \ldots \]
-\noindent 以基本的抛物线函数 $f(x) = x^2$ 为例，考虑将它在 $a = 2$ 处展开。首先计算 $f(x)$ 的各阶导数
-\[ f(x) = x^2, \quad f'(x) = 2x, \quad f''(x) = 2, \quad f^{(n)}(x) = 0, \quad n = 3,4,\ldots \]
-\noindent 因此，$f(x)$ 可以展开成有限项的和的形式
-\[ f(x) = x^2 = 2^2 + 2(2)(x-2) + \frac{2}{2}(x-2)^2 \]
-拉普拉斯近似本质上是用正态分布来近似任意分布 $g(x)$，用泰勒展开的前三项近似 $\log g(x)$，展开的位置是密度函数 $g(x)$ 的极值点 $\hat{x}$，则有
-\[ \log g(x) \approx \log g(\hat{x}) + \frac{\partial \log g(\hat{x})}{\partial x} (x - \hat{x}) + \frac{\partial^2 \log g(\hat{x})}{2\partial x^2} (x - \hat{x})^2 \]
-\noindent 由于是在函数 $g(x)$ 的极值点 $\hat{x}$ 展开， 所以 $x = \hat{x}$ 一阶导是 0，用曲率去估计方差是 $\hat{\sigma}^2 = -1/\frac{\partial^2 \log g(\hat{x})}{2\partial x^2}$，再重写上述近似
-\[ \log g(x) \approx \log g(\hat{x}) - \frac{1}{2\hat{\sigma}^2} (x - \hat{x})^2 \]
-\noindent 现在，用这个结果做正态近似，将上式两端先取指数，再积分，移去常数项
-\[ \int g(x) \mathrm{d}x = \int \exp[\log g(x)] \mathrm{d}x \approx \mathrm{constant} \int \exp[- \frac{(x - \hat{x})^2}{2\hat{\sigma}^2}] \mathrm{d}x \]
-\noindent 则拉普拉斯方法近似任意密度函数 $g(x)$ 得到的正态分布的均值为 $\hat{x}$， $\hat{x}$ 可以通过求解方程 $g'(x) = 0$ 获得，方差为 $\hat{\sigma}^2 = -1/g''(\hat{x})$。下面以卡方分布 $\chi^2$ 为例，由于
-\begin{align*}
-    f(x; k) & = \frac{ x^{k/2-1} \mathrm{e}^{-x/2} }{ 2^{k/2}\Gamma(k/2) }, x \geq 0 \quad \log f(x) = (k/2 - 1) \log x - x/2 \\
- \log f'(x) & = (k/2-1)/x - 1/2 = 0 \quad \log f''(x)  = -(k/2-1)/x^2
-\end{align*}
-\noindent 所以，卡方分布的拉普拉斯近似为
-\[ \chi_{k}^2 \overset{LA}{\sim}  \mathcal{N}(\hat{x} = k-2, \hat{\sigma}^2 = 2(k-2)) \]
-\noindent 自由度越大，近似效果越好，对于多元分布的情况不难推广，使用多元泰勒展开和黑塞矩阵即可表示[@Tierney1986]。
-
 
 ## 先验和后验分布 {#sec:bayes-prior}
 
@@ -224,9 +201,7 @@ $$\mathsf{MSE}(\boldsymbol{\delta}^{\pi}|x) = \mathsf{E}_{\boldsymbol{\theta}|x}
 $$\mathsf{MSE}(\boldsymbol{\delta}^{\pi}|x) = \mathsf{Var}(\boldsymbol{\delta}^{\pi}|x) + [\boldsymbol{\delta}^{\pi}(x) - \mathsf{E}(\boldsymbol{\theta}|x)]^2$$
 可见，当贝叶斯估计$\boldsymbol{\delta}^{\pi}(x)$为后验均值时，贝叶斯估计的精度就用$\boldsymbol{\delta}^{\pi}$的后验方差$\mathsf{Var}(\boldsymbol{\delta}^{\pi}|x)$ 表示，或用后验标准差 $[\mathsf{Var}(\boldsymbol{\delta}^{\pi}|x)]^{1/2}$ 表示 [@mao2006]。
 
-
-
 ## 本章小结 {#sec:foundations}
 
-本章第\@ref(sec:exp)节介绍了指数族的一般形式，指出基于样本点的对数似然函数和样本均值、样本方差的关系，以表格的形式列出了正态、泊松和二项分布的各个特征，为第\@ref(models)章统计模型和第\@ref(algorithms)章参数估计作铺垫。接着，第\@ref(sec:lse)节和第\@ref(sec:def-mle)节分别介绍了最小二乘估计和极大似然估计的定义、性质，给出了线性模型的最小二乘估计，极大似然估计的相合性和渐进正态性。第\@ref(sec:stationary-gaussian-process)节介绍了平稳高斯过程，给出了其均方连续性、可微性定义以及一个均方可微的判断定理，平稳高斯过程作为空间随机效应的实现，多次出现在后续章节中。第\@ref(sec:Laplace-approximation)节介绍了拉普拉斯近似的思想，具体以正态分布作为阐述，它是空间广义线性混合模型参数估计的重要部分，主要应用在第\@ref(algorithms)章第\@ref(subsec:LA)小节当中，用以近似似然函数中关于空间随机效应的高维积分。第\@ref(sec:bayes-prior)节至第\@ref(sec:bayes-estimates)节分别是与贝叶斯相关的概念定义。
+本章第\@ref(sec:exp)节介绍了指数族的一般形式，指出基于样本点的对数似然函数和样本均值、样本方差的关系，以表格的形式列出了正态、泊松和二项分布的各个特征，为第\@ref(models)章统计模型和第\@ref(algorithms)章参数估计作铺垫。接着，第\@ref(sec:lse)节和第\@ref(sec:def-mle)节分别介绍了最小二乘估计和极大似然估计的定义、性质，给出了线性模型的最小二乘估计，极大似然估计的相合性和渐进正态性。第\@ref(sec:stationary-gaussian-process)节介绍了平稳高斯过程，给出了其均方连续性、可微性定义以及一个均方可微的判断定理，平稳高斯过程作为空间随机效应的实现，多次出现在后续章节中。第\@ref(sec:bayes-prior)节至第\@ref(sec:bayes-estimates)节分别是与贝叶斯相关的概念定义。
 
