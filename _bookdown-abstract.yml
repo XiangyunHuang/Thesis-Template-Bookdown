@@ -1,0 +1,27 @@
+book_filename: "Thesis-Template-Bookdown-Abstract"
+delete_merged_file: true
+language:
+  label:
+    fig: "图 "
+    tab: "表 "
+    thm: "定理 "
+    lem: "引理 "
+    cor: "推论 "
+    prp: "命题 "
+    def: "定义 "
+    exm: "例 "
+    exr: "练习 "
+  ui:
+    edit: "编辑"
+    chapter_name: ["第 ", " 章"]
+
+clean: ["packages.bib", "Thesis-Template-Bookdown.rds"]
+output_dir: _book
+new_session: yes    
+before_chapter_script: ["_common.R"]
+
+rmd_files: [
+  "index.Rmd",
+  "00-abstract-zh.Rmd",
+  "00-abstract-en.Rmd",
+]
