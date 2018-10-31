@@ -39,122 +39,59 @@ description: "Spatial generalized linear mixed models, Stationary Spatial Gaussi
 \chapter*{\markboth{摘要}{摘要}{摘\quad 要}}
 ```
 
-如何计算空间广义线性混合效应模型的参数一直以来是研究的重点，由于模型中的随机效应和空间位置相关联，而空间位置的数量和具体坐标直接影响空间效应的维度，给参数估计值的计算带来很大的复杂性，因为参数的贝叶斯估计和极大似然估计都离不开对空间效应的高维积分，所以在计算上是一个很大的挑战。在贝叶斯方法下，Diggle 等 （1998 年）提出随机游走的 Metropolis 程序实现马尔科夫链蒙特卡罗算法获得模型参数的后验密度分布及后验量的估计值。Ribeiro 和 Diggle （2001 年）提出 Langevin-Hastings 算法，相比于随机游走的 Metropolis 算法，取得了更好的计算效率，后续的一个稳健版本由 Christensen （2006 年） 给出。在实际操作中，马尔科夫链蒙特卡罗算法（简称 MCMC）面临的主要问题是收敛性诊断和计算时间， 当然算法实现的本身也很重要，对终端用户来说，可能大部分并不善于编程，所以算法的实现过程可能存在问题，因此，寻求一个好的贝叶斯推断工具或平台也很重要。目前，通过 MCMC 方式拟合带随机效应的模型有 [WinBUGS][winbugs]，[OpenBUGS][openbugs]， [JAGS][jags]，[BayesX][bayesx]， [MultiBUGS][multi-bugs]，Stan 等软件。近年来，一些研究者开始将注意力放到高维积分的近似上，从而出现了一类新的近似贝叶斯推断， Rue 等 （2009 年） 在高斯马尔科夫随机场近似平稳空间高斯过程的设置下，用拉普拉斯近似空间效应的高维积分，从而提出集成嵌套拉普拉斯算法，Lindgren 等 （2011 年） 提出相似的算法用于随机效应是偏态分布情形下的 SGLMM 模型的参数估计。Rue 等 （2009 年） 肯定了拉普拉斯近似方法的使用，认为这类近似具有足够的准确度，可以用于实际数据分析。虽然在计算上达到了快捷，但人们对贝叶斯方法最严厉的评判依然是它依赖于先验分布的选择。 Christensen （2004 年） 又提出蒙特卡罗极大似然算法，它还是依赖 MCMC 算法，但是提供了关于参数的似然分析，其算法实现打包在 R 包 geoRglm 里，详细描述参见 Diggle 和 Ribeiro（2007 年）。作为蒙特卡罗似然的一个替代方法， Hao （2002 年） 提出蒙特卡罗期望极大算法 （简称 MCEM ），他将不能直接观察到的空间随机效应部分看作是缺失数据。
+空间广义线性混合效应模型在地质勘探、流行病预测和环境污染分析中扮演着重要的角色，因此实现其参数估计的算法对解决实际问题有直接的帮助，也一直是研究的重要方向。
 
-Diggle 等 （1998 年）基于马绍尔群岛国家放射性调查数据 --- 记录南太平洋朗格拉普岛上 ${}^{137}\mathrm{Cs}$ 放射 $\gamma$ 粒子的强度数据，建立响应变量服从泊松分布的 SGLMM 模型，在贝叶斯方法下，用 Metropolis-Hastings 采样实现 MCMC 算法，获得 SGLMM 模型的参数估计，分析了残留的核污染物浓度的空间分布，此外，他们还建立响应变量服从二项分布的 SGLMM 模型分析北拉纳克郡和南坎布里亚郡的居民感染弯曲杆菌的空间分布情况。 Christensen （2004 年） 在 Diggle 等 （1998 年） 分析格拉普岛核残留数据的模型上，添加非空间的相互独立的随机效应，取得了更好的拟合效果，这种非空间的随机效应在地质统计学中常称为块金效应（nugget effect）。Diggle 和 Giorgi （2016年） 基于肯尼亚尼扬扎省的疟疾数据，该数据组合了学校和村庄的信息，分析的是一个多源数据，假定其中一个数据是有偏的，来自非随机的调查，另一个数据是无偏的，来自随机调查，因而建立包含两个服从平稳空间过程的空间随机效应，使用蒙特卡罗极大似然算法（简称 MCML ）估计二项 SGLMM 模型的参数，获得疟疾在该省的空间分布；第二个数据是马拉维奇瓦瓦区 2010 年 5 月至 2013 年 6 月收集的疟疾数据，在 Diggle 等 （1998 年）的基础上将时间考虑进二项 SGLMM 模型中，并且假定时间项和空间项是无关的，而块金效应只依赖于时间变化，同样基于 MCML 算法，估计了模型的各个参数；第三个数据建模是在带块金效应的 SGLMM 基础上，认为响应变量应服从混合二项分布以包含极低的感染程度，比如有些村庄没有一个受到感染，因此建立零过多 （Zero-inflation）二项空间混合效应模型分析第三个河盲病数据集。
+本文充分运用空间随机过程、蒙特卡罗积分、拉普拉斯近似、极大似然估计等理论知识，研究了空间广义线性混合效应模型的参数估计及其算法实现问题，特别是空间随机效应给参数估计带来的难以处理的高维积分问题，它直接导致估计没有显式表达式，对计算造成很大的挑战，归纳了文献中存在的基于似然函数的拉普拉斯近似极大似然算法（简称LAML）、蒙特卡罗极大似然算法（简称MCML）和基于贝叶斯方法的 Langevin-Hastings 算法。系统总结和分析了基于似然函数的估计方法的优缺点，这类算法收敛速度快，但是要求参数初值接近真值，否则容易陷入局部极值，对此提出样本变差图和剖面似然轮廓图来帮助选择参数初值，并在小麦数据和核污染数据分析中加以应用，取得显著的效果。而基于贝叶斯方法的 Langevin-Hastings 算法迭代次数多，调参过程复杂，而且运行时间长，对此提出基于 Stan 实现的汉密尔顿蒙特卡罗算法（简称 Stan-HMC）弥补了这些不足，在响应变量分别服从泊松分布和二项分布的两组模拟实验中得到了印证。
 
-在面对复杂的高维积分时，每种替代方法，无论走随机模拟还是近似的路线，都有相应的代价，基于拉普拉斯近似的方法依赖于初值的选择，基于随机模拟的 MCMC 算法依赖于先验分布和算法参数的调整，这些对最后的数据分析结果都会产生影响，调参的过程往往充满经验和技巧。尽管不断有新的、复杂的算法和方法开发出来，Bonat 和 Ribeiro（2016年） 认为只有能被广泛使用，实现方式比较直接的参数估计方法才是比较安全可靠的选择。
+第二章主要介绍本文中涉及到的指数族、最小二乘估计、极大似然估计、平稳高斯过程、先验后验分布和常用贝叶斯估计等相关基础知识，这里不再赘述。
 
-
-第二章介绍了指数族，最小二乘估计，极大似然估计和平稳高斯过程等文献中的基础知识。
-
-第三章除了回顾了一般线性模型到 SGLMM 模型的结构， 指出了模型从简单到复杂的变化过程，及其中的区别和联系。
-
-第四章首先介绍了目前估计 SGLMM 模型参数的算法，依次是拉普拉斯近似算法、蒙特卡罗极大似然算法、贝叶斯 Langevin-Hastings 算法和低秩近似算法。其中，有三部分补充文献中的内容：其一，推导了 SGLMM 模型似然函数的一般形式；其二，详细给出了剖面似然的思想和计算过程；其三，以卡方分布为例阐述了拉普拉斯近似的思想和计算方法，用以近似似然函数中关于空间随机效应的高维积分；其四，在贝叶斯 Langevin-Hastings 算法的基础上，提出 Stan 程序库实现的汉密尔顿蒙特卡罗算法（简称 Stan-HMC）。并分四小节进行详细介绍：其一，以计算$n$维超球体积的积分过程给出蒙特卡罗积分的原理和局限；其二，给出 Stan-HMC 算法提出的背景和意义；其三，归纳总结了 Stan 的历史，并以 Eight Schools 数据集为例介绍 Stan 的使用，在原来文献上补充了代码注解，平稳性检验的全过程；其四，给出实现 Stan-HMC 算法的过程。
-
-
-
-模型的参数估计是建模分析的重要步骤，鉴于空间广义线性混合效应模型（简称 SGLMM）的复杂性，文献中的参数估计方法，如最小二乘估计（简称 LSE）和极大似然估计（简称 MLE） 都没有显式的表达式，因此必须发展有效的算法。
-
-设研究区域 $D \subseteq \mathbb{R}^2$， 对于第 $i$ 次观测， $s_i$ 表示区域 $D$ 内的位置，$y(s_i)$ 表示响应变量，$\mathbf{x}(s_i), i = 1, \ldots, n$ 是一个 $p$ 维的固定效应，定义如下的 SGLMM 模型：
-$$
-\mathrm{E}[y(s_i)|u(s_i)] = g^{-1}[\mathbf{x}(s_i)^{\top}\boldsymbol{\beta} + \mathbf{u}(s_i)], \quad i = 1, \ldots, n
-$$
-
-\noindent 其中， $g(\cdot)$ 是实值可微的逆联系函数， $\boldsymbol{\beta}$ 是 $p$ 维的回归参数向量，代表 SGLMM 模型的固定效应。随机过程 $\{U(\mathbf{s}): \mathbf{s} \in D\}$ 是平稳的空间高斯过程，其均值为 $\mathbf{0}$， 自协方差函数 $\mathsf{Cov}(U(\mathbf{s}),U(\mathbf{s}')) = C(\mathbf{s} - \mathbf{s}'; \boldsymbol{\theta})$， $\boldsymbol{\theta}$ 表示其中的参数向量。 $\mathbf{u} = (u(s_1),u(s_2),\ldots,u(s_n))^{\top}$ 是平稳空间高斯过程 $U(\cdot)$ 的一个实例。给定 $\mathbf{u}$的情况下，观察值 $\mathbf{y} = (y(s_1),y(s_2),\ldots,y(s_n))^{\top}$ 是相互独立的。
-
-给定 $u_i = u(s_i), i = 1, \ldots, n$的条件下， $y_i = y(s_i)$ 的条件概率密度函数是
-$$
-f(y_i|u_i;\boldsymbol{\beta}) = \exp[a(\mu_i)y_i - b(\mu_i)]c(y_i)
-$$ 
-
-\noindent 其中， $\mu_i = \mathsf{E}(y_i|u_i)$， $a(\cdot),b(\cdot)$ 和 $c(\cdot)$ 是特定的函数，具体的情况视所服从的分布而定。 SGLMM 模型的边际似然函数
+第三章首先回顾了简单线性模型、广义线性模型和广义线性混合效应模型，然后引出空间广义线性混合效应模型（简称SGLMM），它是随机效应来自平稳空间高斯过程的广义线性混合效应模型，并推导了添加空间随机效应后模型复杂的协方差结构。SGLMM 模型的具体形式如下：
 
 \begin{equation}
-L(\boldsymbol{\psi};\mathbf{y}) = \int \prod_{i=1}^{n} f(y_i|u_i;\boldsymbol{\beta})\phi_{n}(\mathbf{u};0,\Sigma_{\boldsymbol{\theta}})\mathrm{d}\mathbf{u} (\#eq:likelihood-function-1)
+g(\mu_i) = d(x_i)^{\top}\boldsymbol{\beta} + S(x_i) + Z_i (\#eq:SGLMM)
 \end{equation}
 
-\noindent 记号 $\boldsymbol{\psi} = (\boldsymbol{\beta},\boldsymbol{\theta})$ 表示 SGLMM 模型的全部参数， $\phi_{n}(\cdot;0,\Sigma_{\boldsymbol{\theta}})$ 表示 $n$ 元正态密度函数，其均值为 $\mathbf{0}$， 协方差矩阵为 $\Sigma_{\boldsymbol{\theta}} = (c_{ij}) = (C(s_i - s_j; \boldsymbol{\theta})), i,j = 1, \ldots, n$。 边际似然函数 \@ref(eq:likelihood-function-1) 几乎总是卷入一个难以处理的积分，这是主要面临的问题，并且计算量随观测 $y_i$ 的数量增加，此积分的维数等于观测点的个数。
-
-再从贝叶斯方法的角度来看 SGLMM 模型， 令 $\mathbf{y} = (y(s_1),\ldots,y(s_n))^{\top}$ 表示观测值， $\pi(\boldsymbol{\psi})$ 表示模型参数的联合先验密度，那么联合后验密度为
+\noindent 为方便起见，记 $T_{i} = d(x_i)^{\top}\boldsymbol{\beta} + S(x_i) + Z_i$，平稳空间高斯过程 $\mathcal{S} = S(x), x \in \mathbb{R}^2$ 的理论变差 $V(x,x')$ 和模型 \@ref(eq:SGLMM) 中 $T_{i}$ 的变差 $V_{T}(u_{ij})$ 分别为
 
 \begin{equation}
 \begin{aligned}
-\pi(\boldsymbol{\psi},\mathbf{u}|\mathbf{y}) &= \frac{f(\mathbf{y|\mathbf{u}, \boldsymbol{\psi}})\phi_{n}(\mathbf{u};0,\Sigma_{\boldsymbol{\theta}})\pi(\boldsymbol{\psi})}{m(\mathbf{y})} \\
-m(\mathbf{y}) &= \int f(\mathbf{y|\mathbf{u}, \boldsymbol{\psi}})\phi_{n}(\mathbf{u};0,\Sigma_{\boldsymbol{\theta}})\pi(\boldsymbol{\psi})\mathrm{d} \mathbf{u} \mathrm{d} \boldsymbol{\psi}
+V(x,x') 
+      &= \frac{1}{2}\mathsf{Var}\{S(x)-S(x')\} \\
+      &= \frac{1}{2}\mathsf{Cov}(S(x)-S(x'),S(x)-S(x'))\\
+      &= \frac{1}{2}\{\mathsf{E}[S(x)-S(x')][S(x)-S(x')]-[\mathsf{E}(S(x)-S(x'))]^2\}\\
+      &= \sigma^2-\mathsf{Cov}(S(x),S(x'))=\sigma^2\{1-\rho(u)\}\\
+V_{T}(u_{ij})
+      &= \frac{1}{2}\mathsf{Var}\{T_{i}(x)-T_{j}(x)\} = \frac{1}{2}\mathsf{E}[(T_{i}-T_{j})^2]=\tau^2+\sigma^2(1-\rho(u_{ij})) 
+\end{aligned} (\#eq:variograms)
+\end{equation}
+
+\noindent 根据协方差定义可推知随机向量 $\mathbf{T} = (T_1,T_2,\ldots,T_n)$ 的协方差矩阵结构如下：
+
+\begin{equation}
+\begin{aligned}
+\mathsf{Cov}(T_{i}(x),T_{i}(x)) &= \mathsf{E}[S(x_i)]^2 + \mathsf{E}Z_{i}^{2}= \sigma^2+\tau^2 \\
+\mathsf{Cov}(T_{i}(x),T_{j}(x)) &= \mathsf{E}[S(x_i)S(x_j)]  = \sigma^2\rho(u_{ij})
 \end{aligned}
 \end{equation}
 
-\noindent 同样遭遇难以处理的高维积分问题，所以 $m(\mathbf{y})$ 亦不会有显式表达式。特别地，若取 $\pi(\boldsymbol{\psi})$ 为扁平先验，如 $\pi(\boldsymbol{\psi}) \propto 1$， 后验分布将简化为似然函数 \@ref(eq:likelihood-function-1) 的常数倍。 如果导出的后验是合适的， MCMC 算法可以用来研究似然函数， 但是对很多 SGLMM 模型扁平先验会导出不合适的后验，所以选用模糊先验来导出合适的后验，导出的后验能接近似然函数，并不要求后验模完全是似然函数的极大似然估计 MLE。
+\noindent 平稳空间高斯过程 $\mathcal{S}$ 的自相关函数 $\rho(u)$ 为
 
-为了与贝叶斯 Langevin-Hastings 算法比较，我们基于 Stan 实现求解 SGLMM 模型的贝叶斯汉密尔顿蒙特卡罗算法（简称 Stan-HMC）。目前，我与 Bürkner 一起开发了 brms 包， 主要工作是修复程序调用和文档书写错误， 特别是与求解 SGLMM 模型相关的 `gp` 函数，相关细节见 brms 的 Github 开发仓库。
+\begin{equation}
+\rho(u)=\{2^{\kappa -1}\Gamma(\kappa)\}^{-1}(u/\phi)^{\kappa}\mathcal{K}_{\kappa}(u/\phi),u > 0 (\#eq:matern)
+\end{equation}
 
-在 SGLMM 模型下，Stan-HMC 算法，先从条件分布 $S|\boldsymbol{\theta},\boldsymbol{\beta},Y$ 抽样，然后从条件分布 $\boldsymbol{\theta}|S$ 抽样，最后从条件分布 $\boldsymbol{\beta}|S,Y$ 抽样，具体步骤如下：
+\noindent \@ref(eq:matern) 式中函数 $\mathcal{K}_{\kappa}(\cdot)$ 的具体形式为
 
-1. 选择初始值 $\boldsymbol{\theta},\boldsymbol{\beta},S$，如 $\boldsymbol{\beta}$ 的初始值来自正态分布，$\boldsymbol{\theta}$ 的初始值来自对数正态分布；
-2. 更新参数向量 $\boldsymbol{\theta}$ ：
-   (i) 从指定的先验分布中均匀抽取新的 $\boldsymbol{\theta}'$ ；
-   (ii) 以概率 $\Delta(\boldsymbol{\theta},\boldsymbol{\theta}') = \min \big\{\frac{p(S|\boldsymbol{\theta}')}{p(S|\boldsymbol{\theta})},1\big\}$接受$\boldsymbol{\theta}'$，否则不改变 $\boldsymbol{\theta}$。
-3. 更新高斯过程 $S$ 的取值：
-   (i) 抽取新的值 $S_{i}'$， 向量 $S$ 的第 $i$ 值来自一元条件高斯密度 $p(S_{i}'|S_{-i},\boldsymbol{\theta})$，$S_{-i}'$ 表示移除 $S$ 中的第 $i$ 个值；
-   (ii) 以概率 $\Delta(S_{i},S_{i}') = \min\big\{ \frac{p(y_{i}|s_{i}',\boldsymbol{\beta})}{p(y_{i}s_{i},\boldsymbol{\beta})},1 \big\}$ 接受 $S_{i}'$，否则不改变$S_i$；
-   (iii) 重复 (i) 和 (ii) $\forall i = 1,2,\ldots,n$。
-4. 更新模型系数 $\boldsymbol{\beta}$ ：从条件密度 $p(\boldsymbol{\beta}'|\boldsymbol{\beta})$ 以概率 $$\Delta = \min \big\{ \frac{\prod_{j=1}^{n}p(y_i|s_{i},\boldsymbol{\beta}')p(\boldsymbol{\beta}|\boldsymbol{\beta}')}{\prod_{j=1}^{n}p(y_i|s_{i},\boldsymbol{\beta})p(\boldsymbol{\beta}'|\boldsymbol{\beta})},1  \big\}$$ 接受 $\boldsymbol{\beta}'$，否则不改变$\boldsymbol{\beta}$；
-5. 重复步骤2，3，4 既定的次数，获得参数 $\boldsymbol{\beta},\boldsymbol{\theta}$ 的迭代序列，直到参数的迭代序列平稳，然后根据后续的平稳序列采样，获得各参数后验分布的样本，再根据样本估计参数值。
+\begin{equation}
+\begin{aligned}
+I_{-\kappa}(u) & =  \sum_{m=0}^{\infty} \frac{1}{m!\Gamma(m + \kappa + 1)} \big(\frac{u}{2}\big)^{2m + \kappa} \\
+\mathcal{K}_{\kappa}(u) & = \frac{\pi}{2} \frac{I_{-\kappa}(u) - I_{\kappa}(u)}{\sin (\kappa \pi)}
+\end{aligned} (\#eq:besselK-function)
+\end{equation}
 
+\noindent 其中 $u \geq 0$，$\kappa \in \mathbb{R}$，如果 $\kappa \in \mathbb{Z}$，则取该点的极限值。
 
-
-
-第五章数值模拟
-
-空间广义线性混合效应模型在广义线性混合效应模型基础上添加了与空间位置相关的随机效应，这种随机效应在文献中常称为空间效应。 它与采样点的位置、数量都有关系， 其中采样点的位置决定空间过程的协方差结构， 而采样点的数量决定空间效应的维度，从而导致空间广义线性混合效应模型比普通的广义线性混合效应模型复杂。作为过渡，
-
-第五章首先实现了一维和二维情形下平稳空间高斯过程的模拟，然后在二维情形下，分别模拟了响应变量服从二项分布和泊松分布的 SGLMM 模型，比较了贝叶斯 Langevin-Hastings 算法和我们提出的贝叶斯 Stan-HMC 算法，在获得相似估计效果的情形下，我们提出的算法所需迭代次数少，迭代初值可以随机生成，运行时间短。 
-
-
-第六章给出了两个案例分析，分别是基于空间线性混合效应模型的小麦数据分析和基于泊松型空间广义线性混合效应模型的核污染数据分析，我们发现基于样本变差图和剖面似然轮廓图等可视化辅助手段可以获得非常好的模型参数初始值，这对于基于似然函数的参数估计算法选初值很有帮助。
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+第四章参数估计
 
 
 
@@ -169,45 +106,3 @@ m(\mathbf{y}) &= \int f(\mathbf{y|\mathbf{u}, \boldsymbol{\psi}})\phi_{n}(\mathb
 \chapter*{\markboth{Abstract}{Abstract}{Abstract}}
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-[multi-bugs]: https://www.multibugs.org
-[JAGS]: http://mcmc-jags.sourceforge.net/
-[openbugs]: http://www.openbugs.net/
-[winbugs]: http://www.mrc-bsu.cam.ac.uk/software/bugs/the-bugs-project-winbugs/
-[bayesx]: http://www.BayesX.org
-[nimble]: https://r-nimble.org/

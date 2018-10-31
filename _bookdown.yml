@@ -18,7 +18,7 @@ language:
 clean: ["packages.bib", "Thesis-Template-Bookdown-Abstract.rds"]
 output_dir: _book
 new_session: yes    
-before_chapter_script: ["_common.R"]
+#before_chapter_script: ["_common.R"]
 
 rmd_files: [
   "index.Rmd",
