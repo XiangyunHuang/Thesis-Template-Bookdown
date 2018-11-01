@@ -97,14 +97,14 @@ L_{p}(\alpha) = L(\alpha,\hat{\psi}(\alpha)) = \max_{\psi} (L(\alpha,\psi))
 \[ \int g(x) \mathrm{d}x = \int \exp[\log g(x)] \mathrm{d}x \approx \mathrm{constant} \int \exp[- \frac{(x - \hat{x})^2}{2\hat{\sigma}^2}] \mathrm{d}x \]
 \noindent 则拉普拉斯方法近似任意密度函数 $g(x)$ 得到的正态分布的均值为 $\hat{x}$， $\hat{x}$ 可以通过求解方程 $g'(x) = 0$ 获得，方差为 $\hat{\sigma}^2 = -1/g''(\hat{x})$。下面以卡方分布 $\chi^2$ 为例，由于
 \begin{align*}
-    f(x; k) & = \frac{ x^{k/2-1} \mathrm{e}^{-x/2} }{ 2^{k/2}\Gamma(k/2) }, x \geq 0 \\
-    \log f(x) & = (k/2 - 1) \log x - x/2 \\
- \log f'(x) & = (k/2-1)/x - 1/2 = 0 \\
- \log f''(x)  & = -(k/2-1)/x^2
+    &{} f(x; k)     = \frac{ x^{k/2-1} \mathrm{e}^{-x/2} }{ 2^{k/2}\Gamma(k/2) }, x \geq 0 \quad
+        \log f(x)   = (k/2 - 1) \log x - x/2 \\
+    &{} \log f'(x)  = (k/2-1)/x - 1/2 = 0 \\
+    &{} \log f''(x) = -(k/2-1)/x^2
 \end{align*}
 \noindent 所以，卡方分布的拉普拉斯近似为
 \[ \chi_{k}^2 \overset{LA}{\sim}  \mathcal{N}(\hat{x} = k-2, \hat{\sigma}^2 = 2(k-2)) \]
-\noindent 自由度越大，近似效果越好，对于多元分布的情况不难推广，使用多元泰勒展开和黑塞矩阵即可表示[@Tierney1986]。
+\noindent 且自由度越大，近似效果越好，对于多元分布的情况不难推广，使用多元泰勒展开和黑塞矩阵即可表示[@Tierney1986]。
 
 ## 参数估计的算法 {#sec:algrithms}
 
@@ -384,11 +384,21 @@ Table: (\#tab:calculate-volume-of-hyperball) 前 10 维单位超立方体内切�
 
 在上世纪 40\~50 年代，由梅特罗波利斯，冯$\cdot$诺依曼和乌拉姆 （Stanislaw Ulam） 创立蒙特卡罗方法，为了纪念乌拉姆，Stan 就以他的名字命名。Stan 是一门基于 C++ 的概率编程语言，主要用于贝叶斯推断，它的代码完全[开源][stan]的，托管在 [Github][stan-dev] 上，自 2012 年 8 月 30 日发布第一个 1.0 版本以来，截至写作时间已发布 33 个版本，目前最新版本是 2.18.0。使用 Stan，用户需提供数据、Stan 代码写的脚本模型，编译 Stan 写的程序，然后与数据一起运行，模型参数的后验模拟过程是自动实现的。除了可以在命令行环境下编译运行 Stan 脚本中写模型外，Stan 还提供其他编程语言的接口，如 R、Python、Matlab、Mathematica、Julia 等等，这使得熟悉其他编程语言的用户可以方便地调用和分析数据。但是，与 Python、R等 这类解释型编程语言不同， Stan 代码需要先翻译成 C++ 代码，然后使用系统编译器 （如 GCC） 编译，若使用 R 语言接口，编译后的动态链接库可以载入 R 内存中，再被其他 R 函数调用执行。
 
-随机模拟的前提是有能产生高质量高效的伪随机数发生器，只有周期长，生成速度快，能通过一系列统计检验的伪随机数才能用作统计模拟，Stan 内置了 Mersenne-Twister 发生器，它的周期长达 \(2^{19937}-1\)，通过了一系列严格的检验，被广泛采用到现代软件中，如 Octave 和 Matlab 等 [@Huang2017COS]。除了 Mersenne Twister 随机数发生器，Stan 还使用了 [Boost C++][boost-cpp] 和 [Eigen C++][eigen-cpp] 等模版库用于线性代数计算，这样的底层设计路线使得 Stan 的运算效率很高。 
+随机模拟的前提是有能产生高质量高效的伪随机数发生器，只有周期长，生成速度快，能通过一系列统计检验的伪随机数才能用作统计模拟。Stan 内置了 Mersenne Twister 发生器，它的周期长达 \(2^{19937}-1\)，通过了一系列严格的检验，被广泛采用到现代软件中，如 Octave 和 Matlab 等 [@Huang2017COS]。除了 Mersenne Twister 随机数发生器，Stan 还使用了 [Boost C++][boost-cpp] 和 [Eigen C++][eigen-cpp] 等模版库用于线性代数计算，这样的底层设计路线使得 Stan 的运算效率很高。 
 
 Stan 内置的采样器 No-U-Turn （简称 NUTS） 源于汉密尔顿蒙特卡罗算法 （Hamiltonian Monte Carlo，简称 HMC），最早由 Hoffman 和 Gelman （2014年） [@hoffman2014] 提出。与 Stan 有相似功能的软件 BUGS 和 JAGS 主要采用的是 Gibbs 采样器，前者基于 Pascal 语言开发于 1989 年至 2004 年，后者基于 C++ 活跃开发于 2007 年至 2013 年。在时间上， Stan 具有后发优势，特别在灵活性和扩展性方面，它支持任意的目标函数，模型语言也更加简单易于推广学习，其每一行都是命令式的语句，而 BUGS 和 JAGS 采用声明式；在大量数据的建模分析中， Stan 可以更快地处理复杂模型，这一部分归功于它高效的算法实现和内存管理，另一部分在于高级的 MCMC 算法 --- 带 NUTS 采样器的 HMC 算法。
 
 Rubin （1981年） [@Rubin1981] 分析了 Alderman 和 Powers [@Alderman1980] 收集的原始数据，得出表 \@ref(tab:eight-high-schools)， Gelman 和 Carlin 等 （2003年） [@Gelman2003] 建立分层正态模型 \@ref(eq:hierarchical-normal-models) 分析 Eight Schools 数据集，由美国教育考试服务调查搜集，用以分析不同的培训项目对学生考试分数的影响，其随机调查了 8 所高中，学生的成绩作为培训效应的估计 $y_j$，其样本方差 $\sigma^2_j$，数据集见表 \@ref(tab:eight-high-schools)。这里再次以该数据集和模型为例介绍 Stan 的使用。
+
+\begin{equation}
+\begin{aligned}
+    &{} \mu \sim \mathcal{N}(0,5), \quad \tau \sim \text{Half-Cauchy}(0,5), \quad p(\mu,\tau) \propto 1 \\
+    &{} \eta_i \sim \mathcal{N}(0,1), \quad
+        \theta_i  =   \mu + \tau \cdot \eta_i, \quad 
+        y_i \sim \mathcal{N}(\theta_i,\sigma^2_{i}), i = 1,\ldots,8
+\end{aligned}
+(\#eq:hierarchical-normal-models)
+\end{equation}
 
 Table: (\#tab:eight-high-schools) Eight Schools 数据集
 
@@ -396,16 +406,6 @@ Table: (\#tab:eight-high-schools) Eight Schools 数据集
 |:----------:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
 |   $y_i$    |  28   |   8   |   -3  |   7   |   -1  |   1   |   18  |   12  |
 | $\sigma_i$ |  15   |  10   |   16  |   11  |    9  |   11  |   10  |   18  |
-
-\begin{equation}
-\begin{aligned}
-    \mu \sim \mathcal{N}(0,5), \quad \tau \sim \text{Half-Cauchy}(0,5) \\
-    p(\mu,\tau) \propto 1, \quad \eta_i \sim \mathcal{N}(0,1) \\
-    \theta_i  =   \mu + \tau \cdot \eta_i \\
-    y_i \sim \mathcal{N}(\theta_i,\sigma^2_{i}), i = 1,\ldots,8
-\end{aligned}
-(\#eq:hierarchical-normal-models)
-\end{equation}
 
 ```{r code-8schools,comment=NA,eval=FALSE}
 cat(readLines("code/stan/02-8schools.stan"), sep = "\n")
