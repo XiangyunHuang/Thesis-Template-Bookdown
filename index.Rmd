@@ -203,3 +203,9 @@ g(\mu_i) = \log\big\{\frac{p(x_i)}{1-p(x_i)}\big\} = \alpha + S(x_i) (\#eq:binom
 \chapter*{\markboth{Abstract}{Abstract}{Abstract}}
 ```
 
+The spatial generalized linear mixed-effects model plays an important role in geological exploration, epidemic prediction and environmental pollution analysis. Therefore, the algorithm for realizing its parameter estimation has a direct help to solve practical problems, and it has always been an important direction of research.
+
+In the paper, the spatial stochastic process, Monte Carlo integral, Laplace approximation, maximum likelihood estimation and other theoretical knowledge are used to study the parameter estimation and algorithm implementation of spatial generalized linear mixed-effects models. The high dimensional integral caused by spatial random effect is analytically intractable in general, which poses a great challenge to the calculation. 
+
+It concludes the Laplace approximation maximum likelihood algorithm (LAML), Monte Carlo maximum likelihood algorithm (MCML) and Langevin-Hastings algorithm based on Bayesian method in the literature. In addition, it summarizes systematically the advantages and disadvantages of the estimation method above. The way to use the likelihood function has a fast convergence speed, but it requires the initial value of the parameter to be close to the true value, otherwise it is easy to fall into the local extremum. So, the sample variation diagram and the profile likelihood contour are proposed to helps to select the initial values of the parameters, and they are applied in the analysis of wheat data and nuclear pollution data, respectively. Langevin-Hastings algorithm needs large numbers of iterations and tune complex parameters, and long running time while the Hamilton Monte Carlo algorithm implemented with Stan (Stan-HMC) is used to improve the shortcomings. 
+
