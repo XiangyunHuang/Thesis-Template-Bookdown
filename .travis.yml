@@ -68,7 +68,6 @@ before_script:
   - chmod +x ./_deploy.sh
 script:
   - Rscript -e 'bookdown::render_book("index.Rmd")'
-  #- Rscript -e 'bookdown::render_book("index.Rmd","bookdown::pdf_book",config_file = "_bookdown-abstract.yml")'
 
 after_success:
   - make pdf
