@@ -39,13 +39,13 @@ description: "Spatial generalized linear mixed models, Stationary Spatial Gaussi
 \chapter*{\markboth{摘要}{摘要}{摘\quad 要}}
 ```
 
-空间广义线性混合效应模型在地质勘探、流行病预测和环境污染分析中扮演着重要的角色，因此实现其参数估计的算法对解决实际问题有直接的帮助，也一直是研究的重要方向。
+空间广义线性混合效应模型（简称SGLMM）在地质勘探、流行病预测和环境污染分析中扮演着重要的角色，因此实现其参数估计的算法对解决实际问题有直接的帮助，也一直是研究的重要方向。
 
 本文充分运用空间随机过程、蒙特卡罗积分、拉普拉斯近似、极大似然估计等理论知识，研究了空间广义线性混合效应模型的参数估计及其算法实现问题，特别是空间随机效应给参数估计带来的难以处理的高维积分问题，它直接导致估计没有显式表达式，对计算造成很大的挑战，归纳了文献中存在的基于似然函数的拉普拉斯近似极大似然算法（简称LAML）、蒙特卡罗极大似然算法（简称MCML）和基于贝叶斯方法的 Langevin-Hastings 算法。系统总结和分析了基于似然函数的估计方法的优缺点，这类算法收敛速度快，但是要求参数初值接近真值，否则容易陷入局部极值，对此提出样本变差图和剖面似然轮廓图来帮助选择参数初值，并在小麦数据和核污染数据分析中加以应用，取得显著的效果。而基于贝叶斯方法的 Langevin-Hastings 算法迭代次数多，调参过程复杂，而且运行时间长，对此提出基于 Stan 实现的汉密尔顿蒙特卡罗算法（简称 Stan-HMC）弥补了这些不足，在响应变量分别服从泊松分布和二项分布的两组模拟实验中得到了印证。
 
 第二章主要介绍本文中涉及到的指数族、最小二乘估计、极大似然估计、平稳高斯过程、先验后验分布和常用贝叶斯估计等相关基础知识，这里不再赘述。
 
-第三章首先回顾了简单线性模型、广义线性模型和广义线性混合效应模型，然后引出空间广义线性混合效应模型（简称SGLMM），它是随机效应来自平稳空间高斯过程的广义线性混合效应模型，接着推导了添加空间随机效应后模型的协方差结构。SGLMM 模型的具体形式如下：
+第三章首先回顾了简单线性模型、广义线性模型和广义线性混合效应模型，然后引出空间广义线性混合效应模型，它是随机效应来自平稳空间高斯过程的广义线性混合效应模型，接着推导了添加空间随机效应后模型的协方差结构。SGLMM 模型的具体形式如下：
 \begin{equation}
 g(\mu_i) = d(x_i)^{\top}\boldsymbol{\beta} + S(x_i) + Z_i (\#eq:SGLMM)
 \end{equation}
@@ -88,7 +88,7 @@ I_{-\kappa}(u) & =  \sum_{m=0}^{\infty} \frac{1}{m!\Gamma(m + \kappa + 1)} \big(
 
 \noindent 其中 $u \geq 0$，$\kappa \in \mathbb{R}$，如果 $\kappa \in \mathbb{Z}$，则取该点的极限值。
 
-第四章首先介绍了目前估计 SGLMM 模型参数的算法，依次是拉普拉斯近似算法、蒙特卡罗极大似然算法、贝叶斯 Langevin-Hastings 算法和低秩近似算法。其中，有四部分补充文献中的内容：其一，推导了 SGLMM 模型似然函数的一般形式；其二，详细给出了剖面似然的思想和计算过程；其三，以卡方分布为例阐述了拉普拉斯近似的思想和计算方法，用以近似似然函数中关于空间随机效应的高维积分；其四，在贝叶斯 Langevin-Hastings 算法的基础上，提出 Stan 程序库实现的汉密尔顿蒙特卡罗算法（简称 Stan-HMC）。并分四小节进行详细介绍：第一小节，以计算$n$维超球体积的积分过程给出蒙特卡罗积分的原理和局限；第二小节，给出 Stan-HMC 算法提出的背景和意义；第三小节，归纳总结了 Stan 的历史，并以 Eight Schools 数据集为例介绍 Stan 的使用，在原来文献上补充了代码注解，平稳性检验的全过程；第四小节，给出实现 Stan-HMC 算法的过程。下面分两部分给出其重要内容，其一是在 SGLMM 模型下极大似然估计的主要推导过程，其二是 Stan-HMC 算法的主要实现步骤。
+第四章首先介绍了目前估计 SGLMM 模型参数的算法，依次是拉普拉斯近似算法、蒙特卡罗极大似然算法、贝叶斯 Langevin-Hastings 算法和低秩近似算法。其中，有四部分补充文献中的内容：其一，推导了 SGLMM 模型似然函数的一般形式；其二，详细给出了剖面似然的思想和计算过程；其三，以卡方分布为例阐述了拉普拉斯近似的思想和计算方法，用以近似似然函数中关于空间随机效应的高维积分；其四，在贝叶斯 Langevin-Hastings 算法的基础上，提出 Stan 程序库实现的汉密尔顿蒙特卡罗算法（简称 Stan-HMC）。并分四小节进行详细介绍：第一小节，以计算$n$维超球体积的积分过程给出蒙特卡罗积分的原理和局限；第二小节，给出 Stan-HMC 算法提出的背景和意义；第三小节，归纳总结了 Stan 的历史，并以 Eight Schools 数据集为例介绍 Stan 的使用，在原来文献上补充了代码注解，平稳性检验的全过程；第四小节，给出实现 Stan-HMC 算法的过程。下面分两部分给出其重要内容，分别是在 SGLMM 模型下极大似然估计的主要推导过程和 Stan-HMC 算法的主要实现步骤。
 
 设研究区域 $D \subseteq \mathbb{R}^2$， 对于第 $i$ 次观测， $s_i$ 表示区域 $D$ 内的位置，$y(s_i)$ 表示响应变量，$\mathbf{x}(s_i), i = 1, \ldots, n$ 是一个 $p$ 维的固定效应，定义如下的 SGLMM 模型：
 $$
@@ -182,18 +182,21 @@ L_{p}(\alpha) = L(\alpha,\hat{\psi}(\alpha)) = \max_{\psi} (L(\alpha,\psi))
 \end{align}
 
 二维情形下，在规则平面上模拟平稳高斯过程 $\mathcal{S} = S(x), x \in \mathbb{R}^2$， 其均值向量为零向量 $\mathbf{0}$， 协方差函数为指数型，见公式 \@ref(eq:cov-exp)，协方差参数 $\phi = 1, \sigma^2 = 1$。在单位平面区域为 $[0,1] \times [0,1]$ 模拟服从上述二维平稳空间高斯过程，不妨将此区域划分为 $6 \times 6$ 的小网格，而每个格点作为采样的位置，共计 36个采样点，在这些采样点上的观察值即为目标值 $S(x)$。 
-
 类似模拟一维平稳空间过程的步骤， 首先根据采样点位置坐标和协方差函数 \@ref(eq:cov-exp) 计算得目标空间过程的 $\mathcal{S}$ 协方差矩阵 $G$，然后使用 R 包 MASS 提供的 `mvrnorm` 函数产生多元正态分布随机数，与 模拟一维平稳空间过程不同的是这里采用特征值分解，即 $G = L\Lambda L^{\top}$，与 Cholesky 分解相比，特征值分解更稳定些，但是 Cholesky 分解更快，Stan 即采用此法，后续过程与一维模拟一致。
 
 响应变量服从二项分布 $Y_{i} \sim \mathrm{Binomial}(m_{i},p(x_{i}))$，即在位置 $x_i$ 处以概率 $p(x_i)$ 重复抽取了 $m_i$ 个样本，总样本数 $M=\sum_{i=1}^{N}m_i$，$N$ 是采样点的个数，模拟二项型空间广义线性混合效应模型为 \@ref(eq:binom-SGLMM)，联系函数为 $g(\mu_i) = \log\{\frac{p(x_i)}{1-p(x_i)}\}$，$S(x)$ 是均值为 $\mathbf{0}$，协方差函数为 $\mathsf{Cov}(S(x_i),S(x_j)) = \sigma^2 \big\{2^{\kappa-1}\Gamma(\kappa)\big\}^{-1}(u/\phi)^{\kappa}K_{\kappa}(u/\phi), \kappa = 0.5$ 的平稳空间高斯过程。
+
 \begin{equation}
 g(\mu_i) = \log\big\{\frac{p(x_i)}{1-p(x_i)}\big\} = \alpha + S(x_i) (\#eq:binom-SGLMM)
 \end{equation}
 
-设置固定效应参数 $\alpha = 0$，协方差参数为 $\boldsymbol{\theta} = (\sigma^2, \phi) = (0.5, 0.2)$，采样点数目为 $N = 64$，每个采样点抽取的样本数 $m_i = 4, i = 1, 2, \ldots, 64$，则 $Y_i$ 的取值范围为 $0, 1, 2, 3, 4$。首先模拟平稳空间高斯过程 $S(x)$，在单位区域 $[0,1] \times [0,1]$ 划分为 $8 \times 8$ 的网格，格点选为采样位置，用 geoR 包提供的 `grf` 函数产生协方差参数为 $\boldsymbol{\theta} = (\sigma^2,\phi) = (0.5, 0.2)$ 的平稳空间高斯过程，由公式 \@ref(eq:binom-SGLMM) 可知 $p(x_i) = \exp[\alpha + S(x_i)]/\{1 + \exp[\alpha + S(x_i)]\}$， 即每个格点处二项分布的概率值，然后依此概率，由 `rbinom` 函数产生服从二项分布的观察值 $Y_i$。
+\noindent 其中，固定效应参数 $\alpha = 0$，协方差参数为 $\boldsymbol{\theta} = (\sigma^2, \phi) = (0.5, 0.2)$，采样点数目为 $N = 64$，每个采样点抽取的样本数 $m_i = 4, i = 1, 2, \ldots, 64$，则 $Y_i$ 的取值范围为 $0, 1, 2, 3, 4$。首先模拟平稳空间高斯过程 $S(x)$，在单位区域 $[0,1] \times [0,1]$ 划分为 $8 \times 8$ 的网格，格点选为采样位置，用 geoR 包提供的 `grf` 函数产生协方差参数为 $\boldsymbol{\theta} = (\sigma^2,\phi) = (0.5, 0.2)$ 的平稳空间高斯过程，由公式 \@ref(eq:binom-SGLMM) 可知 $p(x_i) = \exp[\alpha + S(x_i)]/\{1 + \exp[\alpha + S(x_i)]\}$， 即每个格点处二项分布的概率值，然后依此概率，由 `rbinom` 函数产生服从二项分布的观察值 $Y_i$。模拟响应变量服从泊松分布的情形与此类似，不再赘述。
 
 第六章给出了两个案例分析，分别是基于空间线性混合效应模型的小麦数据分析和基于泊松型空间广义线性混合效应模型的核污染数据分析，我们发现基于样本变差图和剖面似然轮廓图等可视化辅助手段可以获得非常好的模型参数初始值，这对于基于似然函数的参数估计算法选初值很有帮助。
 
+\medskip
+
+**关键词 ：** 空间随机效应，拉普拉斯近似，蒙特卡罗方法，Stan-HMC
 
 `r if (knitr::is_html_output()) '
 # Abstract {#abstract-en .unnumbered}
@@ -203,9 +206,12 @@ g(\mu_i) = \log\big\{\frac{p(x_i)}{1-p(x_i)}\big\} = \alpha + S(x_i) (\#eq:binom
 \chapter*{\markboth{Abstract}{Abstract}{Abstract}}
 ```
 
-The spatial generalized linear mixed-effects model plays an important role in geological exploration, epidemic prediction and environmental pollution analysis. Therefore, the algorithm for realizing its parameter estimation has a direct help to solve practical problems, and it has always been an important direction of research.
+The spatial generalized linear mixed-effects model (SGLMM) plays an important role in geological exploration, epidemic prediction and environmental pollution analysis. Therefore, the algorithm to estimate its parameters has a direct help to solve practical problems, and it has always been an vital direction of research.
 
-In the paper, the spatial stochastic process, Monte Carlo integral, Laplace approximation, maximum likelihood estimation and other theoretical knowledge are used to study the parameter estimation and algorithm implementation of spatial generalized linear mixed-effects models. The high dimensional integral caused by spatial random effect is analytically intractable in general, which poses a great challenge to the calculation. 
+The spatial stochastic process, Monte Carlo integral, Laplace approximation, maximum likelihood estimation and other theoretical knowledge are used to estimate the parameters and algorithms of SGLMMs in the paper. The high-dimensional integral from spatial random effect is analytically intractable in general, which gives a great challenge to the calculation. 
 
-It concludes the Laplace approximation maximum likelihood algorithm (LAML), Monte Carlo maximum likelihood algorithm (MCML) and Langevin-Hastings algorithm based on Bayesian method in the literature. In addition, it summarizes systematically the advantages and disadvantages of the estimation method above. The way to use the likelihood function has a fast convergence speed, but it requires the initial value of the parameter to be close to the true value, otherwise it is easy to fall into the local extremum. So, the sample variation diagram and the profile likelihood contour are proposed to helps to select the initial values of the parameters, and they are applied in the analysis of wheat data and nuclear pollution data, respectively. Langevin-Hastings algorithm needs large numbers of iterations and tune complex parameters, and long running time while the Hamilton Monte Carlo algorithm implemented with Stan (Stan-HMC) is used to improve the shortcomings. 
+The purpose of the paper is to conclude the Laplace approximation maximum likelihood (LAML), Monte Carlo maximum likelihood (MCML) and Langevin-Hastings algorithm in the literature. In addition, it summarizes systematically the advantages and disadvantages of parameter estimations. The methods standing on the shoulders of the likelihood function have a fast convergence speed, but they require really good initial values of the parameters, otherwise they usually fall into the local extremum. So, the sample variation diagram and the profile likelihood contour are proposed to select the initial values of the parameters, and they are also applied in the analysis of wheat data and nuclear pollution data, respectively. Langevin-Hastings algorithm must iterate many times and tune parameters repeatedly and run for a long time while the Hamilton Monte Carlo algorithm programmed with Stan (Stan-HMC) relieves the shortcomings significantly. 
 
+\medskip
+
+**Key words：** spatial random effects, laplace approximation, monte carlo methods, Stan-HMC
