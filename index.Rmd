@@ -192,26 +192,31 @@ g(\mu_i) = \log\big\{\frac{p(x_i)}{1-p(x_i)}\big\} = \alpha + S(x_i) (\#eq:binom
 
 The spatial generalized linear mixed-effects model (SGLMM) plays an important role in geological exploration, epidemic prediction and environmental pollution analysis. Therefore, the algorithm to estimate its parameters has a direct help to solve practical problems, and it has always been an vital direction of research.
 
-<!-- The spatial stochastic process, Monte Carlo integral, Laplace approximation, maximum likelihood estimation and other theoretical knowledge are used to estimate the parameters and algorithms of SGLMMs in the paper. The high-dimensional integral from spatial random effect is analytically intractable in general, which gives a great challenge to the calculation.  -->
+The spatial stochastic process, Monte Carlo integral, Laplace approximation, maximum likelihood estimation and other theoretical knowledge are used to estimate the parameters and algorithms of SGLMMs in the paper. The high-dimensional integral from spatial random effect is analytically intractable in general, which gives a great challenge to the calculation.
+
 The purpose of the paper is to conclude the Laplace approximation maximum likelihood (LAML), Monte Carlo maximum likelihood (MCML) and Langevin-Hastings algorithm in the literature and summarizes systematically the advantages and disadvantages of parameter estimations. The algorithms standing on the shoulders of the likelihood function have a fast convergence speed, but they require really good initial values of the parameters, otherwise they usually fall into the local extremum. So, the sample variation diagram and the profile likelihood contour are proposed to select the initial values of the parameters, and they are also applied in the analysis of wheat data and nuclear pollution data, respectively. Langevin-Hastings algorithm must iterate many times, tune parameters repeatedly and run for a long time while the Hamilton Monte Carlo algorithm programmed with Stan (Stan-HMC) relieves the shortcomings significantly.
-The second chapter mainly introduces the related basic knowledge of the exponential family, least squares estimation, maximum likelihood estimation, stationary Gaussian process, a priori posterior distribution and common Bayesian estimation, which are involved in this paper, and will not be repeated here.
+
+The second chapter mainly introduces the related basic knowledge of the exponential family, least squares estimation, maximum likelihood estimation and stationary Gaussian process which are involved in this paper and will not be repeated here.
 
 The third chapter deduces the covariance structure of the SGLMM with spatial random effects. The specific form of the SGLMM is as follows:
 \begin{equation}
 g(\mu_i) = d(x_i)^{\top}\boldsymbol{\beta} + S(x_i) + Z_i (\#eq:SGLMM-en)
 \end{equation}
-\noindent Let $T_{i} = d(x_i)^{\top}\boldsymbol{\beta} + S(x_i) + Z_i$ and $\mathcal{S} = S(x), x \in \mathbb{R}^2$. Then the theoretical variograms of $T_{i}$ and $S(x)$ are $V_{T}(u_{ij})$ and $V(x,x')$ respectively, and detailed by
+\noindent Let $T_{i} = d(x_i)^{\top}\boldsymbol{\beta} + S(x_i) + Z_i$ and $\mathcal{S} = S(x), x \in \mathbb{R}^2$. Then the theoretical variograms of $T_{i}$ and $S(x)$ are $V_{T}(u_{ij})$ and $V(x,x')$ respectively and detailed by
 \begin{equation}
 \begin{aligned}
 V(x,x') 
-      &= \frac{1}{2}\mathsf{Var}\{S(x)-S(x')\} \\
-      &= \frac{1}{2}\mathsf{Cov}(S(x)-S(x'),S(x)-S(x'))\\
+      &= \frac{1}{2}\mathsf{Var}\{S(x)-S(x')\} = \frac{1}{2}\mathsf{Cov}(S(x)-S(x'),S(x)-S(x'))\\
       &= \frac{1}{2}\{\mathsf{E}[S(x)-S(x')][S(x)-S(x')]-[\mathsf{E}(S(x)-S(x'))]^2\}\\
-      &= \sigma^2-\mathsf{Cov}(S(x),S(x'))=\sigma^2\{1-\rho(u)\}\\
+      &= \sigma^2-\mathsf{Cov}(S(x),S(x'))=\sigma^2\{1-\rho(u)\}
+\end{aligned}
+\end{equation}
+\begin{equation}
+\begin{aligned}
 V_{T}(u_{ij})
       &= \frac{1}{2}\mathsf{Var}\{T_{i}(x)-T_{j}(x)\} \\
       &= \frac{1}{2}\mathsf{E}[(T_{i}-T_{j})^2]=\tau^2+\sigma^2(1-\rho(u_{ij})) 
-\end{aligned} (\#eq:variograms-en)
+\end{aligned}
 \end{equation}
 \noindent According to the definition of covariance, the structure of covariance matrix of random vector $\mathbf{T} = (T_1,T_2,\ldots,T_n)$ can be inferred by
 \begin{equation}
@@ -233,9 +238,11 @@ I_{-\kappa}(u) & =  \sum_{m=0}^{\infty} \frac{1}{m!\Gamma(m + \kappa + 1)} \big(
 \end{equation}
 \noindent where $u \geq 0$, $\kappa \in \mathbb{R}$. Specifically, $\mathcal{K}_{\kappa}(u)$ gets the limit value when $\kappa \in \mathbb{Z}$.
 
-The fourth chapter introduces the algorithms to estimate the parameters of SGLMM, followed by Laplace approximation, Monte Carlo maximum likelihood, Langevin-Hastings and low rank approximation algorithm. There are four parts to supplement the contents of the literature. Firstly, the general form of the likelihood function of the SGLMM model is derived. Secondly, the idea and calculation process of the profile likelihood are given in detail. Thirdly, the chi-square distribution is taken as an example for explaining the idea and calculation method behind Laplace approximation which is expounded to approximate the high-dimensional integral of the spatial random effect in the likelihood function. Fourthly, based on the Bayesian Langevin-Hastings algorithm, Hamilton Monte Carlo algorithm (Stan-HMC) is proposed. It is divided into four sections for detailed introduction: in the first section, the integration process of calculating the $n$ dimension hypersphere volume gives the principle and limitation of Monte Carlo integration. The second section introduces the background and significance of the Stan-HMC. The third section summarizes the history of Stan and details the use of Stan with the Eight Schools dataset. It supplements the code annotation and the whole process of stationarity test compared with the original literature. The fourth section gives the implementation of Stan-HMC. The following is the main derivation process of the maximum likelihood estimation and iteration steps of the Stan-HMC.
+The fourth chapter introduces the algorithms to estimate the parameters of SGLMM. There are four parts to supplement the contents of the literature. Firstly, the general form of the likelihood function of the SGLMM model is derived. Secondly, the idea and calculation process of the profile likelihood are given in detail. Thirdly, the chi-square distribution is taken as an example for explaining the idea and calculation method behind Laplace approximation which is expounded to approximate the high-dimensional integral of the spatial random effect in the likelihood function. Fourthly, based on the Bayesian Langevin-Hastings algorithm, Hamilton Monte Carlo algorithm (Stan-HMC) is proposed. 
 
-Let $D \subseteq \mathbb{R}^2$ be the region of interest and for the $i$th observation, let $s_i$ be some spatial location within $D$ and $y(s_i)$ be the response variable, $\mathbf{x}(s_i), i = 1, \ldots, n$ be a $q-$dimensional vector of covariates for the fixed effects.  The SGLMM as follows:
+Stan-HMC is divided into four sections for detailed introduction: in the first section, the integration process of calculating the $n$ dimension hypersphere volume gives the principle and limitation of Monte Carlo integration. The second section introduces the background and significance of the Stan-HMC. The third section summarizes the history of Stan and details the use of Stan with the Eight Schools dataset. It supplements the code annotation and the whole process of stationarity test compared with the original literature. The fourth section gives the implementation of Stan-HMC. The following is the main derivation process of the maximum likelihood estimation and iteration steps of the Stan-HMC.
+
+Let $D \subseteq \mathbb{R}^2$ be the region of interest and for the $i$th observation, let $s_i$ be some spatial location within $D$ and $y(s_i)$ be the response variable, $\mathbf{x}(s_i), i = 1, \ldots, n$ be a $q-$dimensional vector of covariates for the fixed effects. The SGLMM as follows:
 $$
 \mathrm{E}[y(s_i)|u(s_i)] = g^{-1}[\mathbf{x}(s_i)^{\top}\boldsymbol{\beta} + \mathbf{u}(s_i)], \quad i = 1, \ldots, n
 $$
@@ -317,10 +324,11 @@ The fifth chapter firstly simulates the stationary spatial Gaussian process in o
 
 In the one-dimensional case, the auto-covariance function of the stationary Gaussian process $S(x)$ is exponentiated quadratic, see the formula \@ref(eq:cov-exp-quad-en). In particular, when $\kappa =1$, the auto-covariance function is exponential, see the formula \@ref(eq:cov-exp-en). The following divides $\kappa =1$ and $\kappa =2$ to simulate two one-dimensional stationary spatial Gaussian processes. The covariance parameters are $\sigma^2 = 1$ and $\phi = 0.15$ with the mean vectors are both $\mathbf{0}$. In the interval of $[-2,2]$, produces 2000 random numbers from uniform distribution. On the basis of the position and covariance function formula \@ref(eq:cov-exp-en) or \@ref(eq:cov-exp-quad-en), we get the covariance matrix $G$ of the 2000-dimensional Gaussian distribution. To ensure the positive definiteness of the covariance matrix $G$, we add the noise, $1 \times 10^{-12}$, on the diagonal of the matrix. So, the symmetric positive definite matrix $G$ can be decomposed using Cholesky and the lower triangular block $L$ is obtained simultaneously because of $G = L \times L^{\top}$. And then we generate 2000 random numbers denoted by $\eta$ from normal distribution with mean $0$ and standard deviation $1$. $L\eta$ is the random vector required from the stationary Gaussian process.
 \begin{align}
-\mathsf{Cov}(S(x_i), S(x_j)) & = \sigma^2 \exp\big\{ - \frac{|x_{i} - x_{j}|}{ \phi } \big\}  (\#eq:cov-exp-en) \\
+\mathsf{Cov}(S(x_i), S(x_j)) & = \sigma^2 \exp\big\{ - \frac{|x_{i} - x_{j}|}{ \phi } \big\}  (\#eq:cov-exp-en)
+\end{align}
+\begin{align}
 \mathsf{Cov}(S(x_i), S(x_j)) & = \sigma^2 \exp\big\{ -\big( \frac{ |x_{i} - x_{j}| }{ \phi } \big) ^ {\kappa} \big\}, 0 < \kappa \leq 2  (\#eq:cov-exp-quad-en) 
 \end{align}
-
 In the two-dimensional case, the stationary Gaussian process $\mathcal{S} = S(x), x \in \mathbb{R}^2$ is simulated on the regular plane with zero mean vector $\mathbf{0}$ and covariance parameter $\phi = 1, \sigma^2 = 1$. $S(x)$ obeys two-dimensional stationary spatial Gaussian process in the unit plane area $[0,1] \times [0,1]$ where divided into grid of $6 \times 6$ and each grid point as the sampling locations. There are a total of 36 sampling points and the corresponding observed value is the target value $S(x)$. 
 
 Similar to the step of simulating a one-dimensional stationary spatial process. We first calculate the $\mathcal{S}$ covariance matrix $G$ of the target spatial process using the sampling point coordinates and the covariance function \@ref(eq:cov-exp-en). Then use the `mvrnorm` function provided by the R package MASS to generate random numbers from multivariate normal distribution. Unlike the simulated one-dimensional stationary spatial process, the eigenvalue decomposition is used here with $G = L\Lambda L^{\top}$. Compared with Cholesky decomposition, eigenvalue decomposition is more stable, however, Cholesky decomposition which adopted by Stan is faster. The subsequent steps are consistent with one-dimensional simulation.
