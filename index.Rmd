@@ -267,11 +267,7 @@ $$
 \mathrm{E}[y(s_i)|u(s_i)] = g^{-1}[\mathbf{x}(s_i)^{\top}\boldsymbol{\beta} + \mathbf{u}(s_i)], \quad i = 1, \ldots, n
 $$
 
-\noindent where, $g(\cdot)$ is a real-value differentiable and invertible link function and $\boldsymbol{\beta}$ is a vector of $p$ regression parameters. $\{U(\mathbf{s}): \mathbf{s} \in D\}$ is stationary spatial Gaussian process with zero mean and spatial covariance function $\mathsf{Cov}(U(\mathbf{s}),U(\mathbf{s}')) = C(\mathbf{s} - \mathbf{s}'; \boldsymbol{\theta})$
-
-where $\boldsymbol{\theta}$ is a vector of correlation parameters. $\mathbf{u} = (u(s_1),u(s_2),\ldots,u(s_n))^{\top}$ is a realization of $U(\cdot)$. Conditionally on $\mathbf{u}$, $\mathbf{y} = (y(s_1),y(s_2),\ldots,y(s_n))^{\top}$ are mutually independent.
-
-The form of conditional density function of $y_i = y(s_i)$ given $u_i = u(s_i), i = 1, \ldots, n$ is
+\noindent where, $g(\cdot)$ is a real-value differentiable and invertible link function and $\boldsymbol{\beta}$ is a vector of $p$ regression parameters. $\{U(\mathbf{s}): \mathbf{s} \in D\}$ is stationary spatial Gaussian process with zero mean and spatial covariance function $\mathsf{Cov}(U(\mathbf{s}),U(\mathbf{s}')) = C(\mathbf{s} - \mathbf{s}'; \boldsymbol{\theta})$ where $\boldsymbol{\theta}$ is a vector of correlation parameters. $\mathbf{u} = (u(s_1),u(s_2),\ldots,u(s_n))^{\top}$ is a realization of $U(\cdot)$. Conditionally on $\mathbf{u}$, $\mathbf{y} = (y(s_1),y(s_2),\ldots,y(s_n))^{\top}$ are mutually independent. The form of conditional density function of $y_i = y(s_i)$ given $u_i = u(s_i), i = 1, \ldots, n$ is
 $$
 f(y_i|u_i;\boldsymbol{\beta}) = \exp[a(\mu_i)y_i - b(\mu_i)]c(y_i)
 $$ 
@@ -297,7 +293,7 @@ m(\mathbf{y}) &= \int f(\mathbf{y|\mathbf{u}, \boldsymbol{\psi}})\phi_{n}(\mathb
 
 Maximum likelihood estimation is a widely accepted statistical method, with well-known optimality properties in large samples. Under mild regularity conditions, the maximum likelihood estimator is asymptotically normally distributed, unbiased and fully efficient.
 
-For convenience of description, the likelihood function can have an explicit expression, and the spatial linear mixed effect model is considered, that is, the response variable obeys the normal distribution.
+For convenience of description, the likelihood function can have an explicit expression, and the spatial linear mixed-effect model is considered, that is, the response variable obeys the normal distribution.
 
 \begin{equation}
 \mathbf{Y} \sim \mathcal{N}(D\boldsymbol{\beta},\sigma^2 \mathbf{R}(\phi) + \tau^2\mathbf{I})
@@ -314,64 +310,51 @@ L(\boldsymbol{\beta},\tau^2,\sigma^2,\phi) = {}
 \end{aligned} (\#eq:gauss-log-lik-en)
 \end{equation}
 
-\noindent 极大化 \@ref(eq:gauss-log-lik) 式就是求模型 \@ref(eq:gaussian-model) 参数的极大似然估计，极大化对数似然的过程分步如下：
+\noindent maximisation of which yields the maximum likelihood estimates of the model parameters. An algorithm for maxmisation of log-likelihood proceeds as follows. 
 
-1. 重参数化 $\nu^2 = \tau^2/\sigma^2$，令 $V = \mathbf{R}(\phi) + \nu^2 \mathbf{I}$；
-2. 给定 $V$，对数似然函数 \@ref(eq:gauss-log-lik) 在
+1. We reparameterise to $\nu^2 = \tau^2/\sigma^2$ and let $V = \mathbf{R}(\phi) + \nu^2 \mathbf{I}$；
+2. Given $V$, the log-likelihood function is maximised at
    \begin{equation}
    \begin{aligned}
       \hat{\boldsymbol{\beta}}(V) & =  (D^{\top} V^{-1} D)^{-1} D^{\top} V^{-1}\mathbf{Y} \\
       \hat{\sigma}^2(V)           & =  n^{-1} \{\mathbf{Y} - D\hat{\boldsymbol{\beta}}(V)\}^{\top} V^{-1} \{\mathbf{Y} - D\hat{\boldsymbol{\beta}}(V)\}
-   \end{aligned} (\#eq:beta-sigma)
+   \end{aligned} (\#eq:beta-sigma-en)
    \end{equation}
-  取得极大值；
-3. 将 \@ref(eq:beta-sigma) 式代入对数似然函数 \@ref(eq:gauss-log-lik) 式，可获得一个简化的对数似然
+3. By substituting the above expressions for $\hat{\boldsymbol{\beta}}(V)$ and $\hat{\sigma}^2(V)$ into the log-likelihood function, we obtain a concentrated log-likelihood
    \begin{equation}
-      L_{0}(\nu^2,\phi) = - 0.5\{ n\log(2\pi) + n\log \hat{\sigma}^2(V) + \log |V| + n \} (\#eq:reduced-gauss-log-lik)
+      L_{0}(\nu^2,\phi) = - 0.5\{ n\log(2\pi) + n\log \hat{\sigma}^2(V) + \log |V| + n \} (\#eq:reduced-gauss-log-lik-en)
    \end{equation}
-4. 关于参数 $\nu^2, \phi$ 极大化 \@ref(eq:reduced-gauss-log-lik) 式，获得参数 $\nu^2, \phi$ 的估计值，再将其回代 \@ref(eq:beta-sigma) 式，获得估计值 $\hat{\boldsymbol{\beta}}$ 和 $\hat{\sigma}^2$。
+4. This must then be optimised numerically with respect to $\nu^2$ and $\phi$, followed by back substitution to obtain $\hat{\boldsymbol{\beta}}$ and $\hat{\sigma}^2$.
 
-在空间线性混合效应模型的设置下，上述极大化似然函数的过程可能与自协方差函数的类型有关，如在使用 Matérn 型自协方差函数的时，平滑参数 $\kappa$ 也卷入到 $\phi$ 中，导致识别问题。因此，让 $\kappa$ 分别取 $0.5,1.5,2.5$，使得平稳空间高斯过程 $\mathcal{S}$ 覆盖到不同程度的均方可微性。原则上，极大似然估计的变化情况可以通过观察对数似然函数的曲面来分析，但是，似然曲面的维数往往不允许直接观察。在这种情形下，另一个基于似然的想法是剖面似然。一般地，假定有一个模型含有参数 $(\alpha,\phi)$，其参数的似然函数表示为 $L(\alpha,\phi)$。则关于 $\alpha$ 的剖面似然函数定义为
+The practical details of the optimisation may depend on the particular family under consideration. For example, when using the Matérn covariance function, the shape parameter $\kappa$ is ofen poorly identified. Therefore, let $\kappa$ from a discrete set, for example $\{0.5,1.5,2.5\}$, cover different degrees of mean-square differentiability of the underlying stationary spatial Gaussian process.
+
+In principle, the variability of maximum likelihood estimates can be investigated by inspection of the log-likelihood surface. However, the typical dimension of this surface does not allow direct inspection. Another generic likelihood-based idea which is useful in this situation is that profile likelihood. Suppose, in general, that we have a model with parameters $(\alpha,\phi)$ and denote its likelihood by $L(\alpha,\phi)$. We define the profile likelihood for $\alpha$ by
+
 \begin{equation}
 L_{p}(\alpha) = L(\alpha,\hat{\psi}(\alpha)) = \max_{\psi} (L(\alpha,\psi))
-(\#eq:profile-log-lik)
+(\#eq:profile-log-lik-en)
 \end{equation}
 
-\noindent 即考虑似然函数随 $\alpha$ 的变化情况，对每一个 $\alpha$ （保持 $\alpha$ 不变），指定 $\psi$ 的值使得对数似然取得最大值。剖面似然就是让我们可以观察到关于 $\alpha$ 的似然曲面，显然，其维数比完全似然曲面要低，与只有一个参数的对数似然一样，它也可以用来计算单个参数的置信区间。现在，注意到简化的对数似然 \@ref(eq:reduced-gauss-log-lik) 其实可以看作模型 \@ref(eq:gaussian-model) 关于 $(\nu^2,\phi)$ 的剖面对数似然。
+\noindent In other words, we consider how the likelihood varies with respect to $\alpha$ when, for each value of  $\alpha$ we assign to $\psi$ the value which maximises the log-likelihood with $\alpha$ held fixed. The profile log-likelihood allows us to inspect a likelihood surface for $\alpha$, which is of lower dimension than the full likelihood surface. It can also be used to calcute confidence intervals for individual parameters, exactly as in the case of ordinary log-likelihood for a single parameter model. Note that the concentrated log-likelihood \@ref(eq:reduced-gauss-log-lik-en), which we introduced as a computational device for maximum likelihood estimation, can now be seen to be the profile log-likelihood surface for $(\nu^2,\phi)$ in the model \@ref(eq:gaussian-model-en).
 
-在估计 SGLMM 模型参数的过程中，Stan-HMC 算法先从条件分布 $S|\boldsymbol{\theta},\boldsymbol{\beta},Y$ 抽样，然后从条件分布 $\boldsymbol{\theta}|S$ 抽样，最后从条件分布 $\boldsymbol{\beta}|S,Y$ 抽样，具体步骤如下：
+For esitmating parameters of SGLMM, and noting that the data $Y$ are fixed, a single cycle of the Stan-HMC algorithms involves first sampling from $S|\boldsymbol{\theta},\boldsymbol{\beta},Y$, then from $\boldsymbol{\theta}|S$, and finally from $\boldsymbol{\beta}|S,Y$, detailed iteration steps as follow:
 
-1. 选择初始值 $\boldsymbol{\theta},\boldsymbol{\beta},S$，如 $\boldsymbol{\beta}$ 的初始值来自正态分布，$\boldsymbol{\theta}$ 的初始值来自对数正态分布；
-2. 更新参数向量 $\boldsymbol{\theta}$ ：
-   (i) 从指定的先验分布中均匀抽取新的 $\boldsymbol{\theta}'$ ；
-   (ii) 以概率 $\Delta(\boldsymbol{\theta},\boldsymbol{\theta}') = \min \big\{\frac{p(S|\boldsymbol{\theta}')}{p(S|\boldsymbol{\theta})},1\big\}$接受$\boldsymbol{\theta}'$，否则不改变 $\boldsymbol{\theta}$。
-3. 更新高斯过程 $S$ 的取值：
-   (i) 抽取新的值 $S_{i}'$， 向量 $S$ 的第 $i$ 值来自一元条件高斯密度 $p(S_{i}'|S_{-i},\boldsymbol{\theta})$，$S_{-i}'$ 表示移除 $S$ 中的第 $i$ 个值；
-   (ii) 以概率 $\Delta(S_{i},S_{i}') = \min\big\{ \frac{p(y_{i}|s_{i}',\boldsymbol{\beta})}{p(y_{i}s_{i},\boldsymbol{\beta})},1 \big\}$ 接受 $S_{i}'$，否则不改变$S_i$；
-   (iii) 重复 (i) 和 (ii) $\forall i = 1,2,\ldots,n$。
-4. 更新模型系数 $\boldsymbol{\beta}$ ：从条件密度 $p(\boldsymbol{\beta}'|\boldsymbol{\beta})$ 以概率 $$\Delta = \min \big\{ \frac{\prod_{j=1}^{n}p(y_i|s_{i},\boldsymbol{\beta}')p(\boldsymbol{\beta}|\boldsymbol{\beta}')}{\prod_{j=1}^{n}p(y_i|s_{i},\boldsymbol{\beta})p(\boldsymbol{\beta}'|\boldsymbol{\beta})},1  \big\}$$ 接受 $\boldsymbol{\beta}'$，否则不改变$\boldsymbol{\beta}$；
-5. 重复步骤2，3，4 既定的次数，获得参数 $\boldsymbol{\beta},\boldsymbol{\theta}$ 的迭代序列，直到参数的迭代序列平稳，然后根据后续的平稳序列采样，获得各参数后验分布的样本，再根据样本估计参数值。
+1. Choose initial values for $\boldsymbol{\theta},\boldsymbol{\beta},S$. such as $\boldsymbol{\beta}$ from normal distribution and $\boldsymbol{\theta}$ from log-normal distribution;
+2. Update all the components of the parameter vector $\boldsymbol{\theta}$ ：
+   (i) choose a new proposed value $\boldsymbol{\theta}'$ by sampling uniformly from the parameter space specified by the prior;
+   (ii) accept $\boldsymbol{\theta}'$ with probability $\Delta(\boldsymbol{\theta},\boldsymbol{\theta}') = \min \big\{\frac{p(S|\boldsymbol{\theta}')}{p(S|\boldsymbol{\theta})},1\big\}$, otherwise leave $\boldsymbol{\theta}$ unchanged.
+3. Update $S$:
+   (i) choose a new proposed value, $S_{i}'$, for $i$th component of $S$ from the univariate Gaussian conditional probability density $p(S_{i}'|S_{-i},\boldsymbol{\theta})$, where $S_{-i}'$ denotes $S$ with its $i$th element removed;
+   (ii) accept $S_{i}'$ with probability $\Delta(S_{i},S_{i}') = \min\big\{ \frac{p(y_{i}|s_{i}',\boldsymbol{\beta})}{p(y_{i}s_{i},\boldsymbol{\beta})},1 \big\}$, otherwise leave $S_i$ unchanged;
+   (iii) repeat (i) and (ii) $\forall i = 1,2,\ldots,n$.
+4. Update all the elements of the regression parameter $\boldsymbol{\beta}$: 
+   (i) choose a new proposed value $\boldsymbol{\beta}'$ from conditional density $p(\boldsymbol{\beta}'|\boldsymbol{\beta})$;
+   (ii) accept $\boldsymbol{\beta}'$ with probability $$\Delta = \min \big\{ \frac{\prod_{j=1}^{n}p(y_i|s_{i},\boldsymbol{\beta}')p(\boldsymbol{\beta}|\boldsymbol{\beta}')}{\prod_{j=1}^{n}p(y_i|s_{i},\boldsymbol{\beta})p(\boldsymbol{\beta}'|\boldsymbol{\beta})},1  \big\},$$ otherwise leave $\boldsymbol{\beta}$ unchanged.
+5. repeat step 2，3，4 with given iteration numbers to gain chains of all parameters  $\boldsymbol{\beta},\boldsymbol{\theta}$ so as to guarantee convergence of the chains to the required equilibrium distribution. According to the stationary subsequence, parameter estimations are gained by sampling samples of the posterior distribution of each parameter. 
 
-第五章首先模拟了一维和二维情形下平稳空间高斯过程，在二维情形下，又分别模拟了响应变量服从二项分布和泊松分布的 SGLMM 模型，比较了贝叶斯 Langevin-Hastings 算法和我们提出的贝叶斯 Stan-HMC 算法，在获得相似估计效果的情形下，我们提出的算法所需迭代次数少，迭代初值可以随机生成，运行时间短。下面就一维和二维情形下，给出平稳空间高斯过程的模拟过程和二项型 SGLMM 模型的模拟过程，数值实验获得的图表不再赘述。
+The fifth chapter firstly simulates the stationary spatial Gaussian process in one-dimensional and two-dimensional cases. In the two-dimensional case, the SGLMM with response variables obeying binomial distribution and Poisson distribution is simulated respectively. The proposed Bayesian Stan-HMC algorithm compared with the Bayesian Langevin-Hastings algorithm hold similar estimation results. The Stan-HMC algorithm requires fewer iterations, and its initial values can be randomly generated and its running time is shorter. In the following one-dimensional and two-dimensional cases, the simulation process of the stationary spatial Gaussian process and the simulation process of the binomial SGLMM are given. The figures and tables obtained by numerical experiments are not showed here.
 
-一维情形下，平稳高斯过程 $S(x)$ 的自协方差函数采用幂指数型，见公式 \@ref(eq:cov-exp-quad)。特别地，当 $\kappa =1$ 时，自协方差函数为指数型，见公式 \@ref(eq:cov-exp)。下面分 $\kappa =1$ 和 $\kappa =2$，模拟两个一维平稳空间高斯过程，协方差参数均为 $\sigma^2 = 1$，$\phi = 0.15$，均值向量都是 $\mathbf{0}$，在 $[-2,2]$ 的区间上，产生 2000 个服从均匀分布的随机数，由这些随机数的位置和协方差函数公式 \@ref(eq:cov-exp) 或 \@ref(eq:cov-exp-quad) 计算得到 2000 维的高斯分布的协方差矩阵 $G$，为保证协方差矩阵的正定性，在矩阵对角线上添加扰动 $1 \times 10^{-12}$，然后即可根据 Cholesky 分解该对称正定矩阵，得到下三角块 $L$，使得 $G = L \times L^{\top}$，再产生 2000 个服从标准正态分布的随机向量 $\eta$，而 $L\eta$ 即为所需的服从平稳高斯过程的一组随机数。
-\begin{align}
-\mathsf{Cov}(S(x_i), S(x_j)) & = \sigma^2 \exp\big\{ - \frac{|x_{i} - x_{j}|}{ \phi } \big\}  (\#eq:cov-exp) \\
-\mathsf{Cov}(S(x_i), S(x_j)) & = \sigma^2 \exp\big\{ -\big( \frac{ |x_{i} - x_{j}| }{ \phi } \big) ^ {\kappa} \big\}, 0 < \kappa \leq 2  (\#eq:cov-exp-quad) 
-\end{align}
 
-二维情形下，在规则平面上模拟平稳高斯过程 $\mathcal{S} = S(x), x \in \mathbb{R}^2$， 其均值向量为零向量 $\mathbf{0}$， 协方差函数为指数型，见公式 \@ref(eq:cov-exp)，协方差参数 $\phi = 1, \sigma^2 = 1$。在单位平面区域为 $[0,1] \times [0,1]$ 模拟服从上述二维平稳空间高斯过程，不妨将此区域划分为 $6 \times 6$ 的小网格，而每个格点作为采样的位置，共计 36个采样点，在这些采样点上的观察值即为目标值 $S(x)$。 
-类似模拟一维平稳空间过程的步骤， 首先根据采样点位置坐标和协方差函数 \@ref(eq:cov-exp) 计算得目标空间过程的 $\mathcal{S}$ 协方差矩阵 $G$，然后使用 R 包 MASS 提供的 `mvrnorm` 函数产生多元正态分布随机数，与 模拟一维平稳空间过程不同的是这里采用特征值分解，即 $G = L\Lambda L^{\top}$，与 Cholesky 分解相比，特征值分解更稳定些，但是 Cholesky 分解更快，Stan 即采用此法，后续过程与一维模拟一致。
-
-响应变量服从二项分布 $Y_{i} \sim \mathrm{Binomial}(m_{i},p(x_{i}))$，即在位置 $x_i$ 处以概率 $p(x_i)$ 重复抽取了 $m_i$ 个样本，总样本数 $M=\sum_{i=1}^{N}m_i$，$N$ 是采样点的个数，模拟二项型空间广义线性混合效应模型为 \@ref(eq:binom-SGLMM)，联系函数为 $g(\mu_i) = \log\{\frac{p(x_i)}{1-p(x_i)}\}$，$S(x)$ 是均值为 $\mathbf{0}$，协方差函数为 $\mathsf{Cov}(S(x_i),S(x_j)) = \sigma^2 \big\{2^{\kappa-1}\Gamma(\kappa)\big\}^{-1}(u/\phi)^{\kappa}K_{\kappa}(u/\phi), \kappa = 0.5$ 的平稳空间高斯过程。
-
-\begin{equation}
-g(\mu_i) = \log\big\{\frac{p(x_i)}{1-p(x_i)}\big\} = \alpha + S(x_i) (\#eq:binom-SGLMM)
-\end{equation}
-
-\noindent 其中，固定效应参数 $\alpha = 0$，协方差参数为 $\boldsymbol{\theta} = (\sigma^2, \phi) = (0.5, 0.2)$，采样点数目为 $N = 64$，每个采样点抽取的样本数 $m_i = 4, i = 1, 2, \ldots, 64$，则 $Y_i$ 的取值范围为 $0, 1, 2, 3, 4$。首先模拟平稳空间高斯过程 $S(x)$，在单位区域 $[0,1] \times [0,1]$ 划分为 $8 \times 8$ 的网格，格点选为采样位置，用 geoR 包提供的 `grf` 函数产生协方差参数为 $\boldsymbol{\theta} = (\sigma^2,\phi) = (0.5, 0.2)$ 的平稳空间高斯过程，由公式 \@ref(eq:binom-SGLMM) 可知 $p(x_i) = \exp[\alpha + S(x_i)]/\{1 + \exp[\alpha + S(x_i)]\}$， 即每个格点处二项分布的概率值，然后依此概率，由 `rbinom` 函数产生服从二项分布的观察值 $Y_i$。模拟响应变量服从泊松分布的情形与此类似，不再赘述。
-
-第六章给出了两个案例分析，分别是基于空间线性混合效应模型的小麦数据分析和基于泊松型空间广义线性混合效应模型的核污染数据分析，我们发现基于样本变差图和剖面似然轮廓图等可视化辅助手段可以获得非常好的模型参数初始值，这对于基于似然函数的参数估计算法选初值很有帮助。
 
 
 
