@@ -174,7 +174,8 @@ axis(2,
      labels = expression(10^-16, 1, 10^16, 10^32, 10^48), las = 1
 )
 
-cols <- gray.colors(9) # terrain.colors(9) # RColorBrewer::brewer.pal(9,name = "Set3")
+cols <- RColorBrewer::brewer.pal(9,name = "Spectral") 
+# gray.colors(9) terrain.colors(9)  RColorBrewer::brewer.pal(9,name = "Spectral")
 for (i in seq(length(nus)))
   lines(x0, besselK(x0, nu = nus[i]), col = cols[i], lwd = 2)
 legend("topright",legend = paste0("$\\kappa=", rev(nus),"$"),col = rev(cols), lwd = 2, cex = 0.8)
