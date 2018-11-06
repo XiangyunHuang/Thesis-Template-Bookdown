@@ -192,13 +192,13 @@ g(\mu_i) = \log\big\{\frac{p(x_i)}{1-p(x_i)}\big\} = \alpha + S(x_i) (\#eq:binom
 
 The spatial generalized linear mixed-effects model (SGLMM) plays an important role in geological exploration, epidemic prediction and environmental pollution analysis. Therefore, the algorithm to estimate its parameters has a direct help to solve practical problems, and it has always been an vital direction of research.
 
-The spatial stochastic process, Monte Carlo integral, Laplace approximation, maximum likelihood estimation and other theoretical knowledge are used to estimate the parameters and algorithms of SGLMMs in the paper. The high-dimensional integral from spatial random effect is analytically intractable in general, which gives a great challenge to the calculation.
+The spatial stochastic process, Monte Carlo integral, Laplace approximation, maximum likelihood estimation and other theoretical knowledge are used to estimate the parameters and algorithms of SGLMM in the paper. The high-dimensional integral from spatial random effect is analytically intractable in general, which gives a great challenge to the calculation.
 
 The purpose of the paper is to conclude the Laplace approximation maximum likelihood (LAML), Monte Carlo maximum likelihood (MCML) and Langevin-Hastings algorithm in the literature and summarizes systematically the advantages and disadvantages of parameter estimations. The algorithms standing on the shoulders of the likelihood function have a fast convergence speed, but they require really good initial values of the parameters, otherwise they usually fall into the local extremum. So, the sample variation diagram and the profile likelihood contour are proposed to select the initial values of the parameters, and they are also applied in the analysis of wheat data and nuclear pollution data, respectively. Langevin-Hastings algorithm must iterate many times, tune parameters repeatedly and run for a long time while the Hamilton Monte Carlo algorithm programmed with Stan (Stan-HMC) relieves the shortcomings significantly.
 
 The second chapter mainly introduces the related basic knowledge of the exponential family, least squares estimation, maximum likelihood estimation and stationary Gaussian process which are involved in this paper and will not be repeated here.
 
-The third chapter deduces the covariance structure of the SGLMM with spatial random effects. The specific form of the SGLMM is as follows:
+The third chapter derives the covariance structure of the SGLMM with spatial random effects. The specific form of the SGLMM is as follows:
 \begin{equation}
 g(\mu_i) = d(x_i)^{\top}\boldsymbol{\beta} + S(x_i) + Z_i (\#eq:SGLMM-en)
 \end{equation}
