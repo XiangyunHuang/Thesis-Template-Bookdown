@@ -58,3 +58,4 @@ code/rongelap/*.RData
 data/eight_schools.RData
 *.html
 supplement/*.Rmd
+data/save-mcmc-datasets/
