@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>附录 A | Master Thesis Template</title>
+  <meta name="description" content="Spatial generalized linear mixed models, Stationary Spatial Gaussian Process, Stan platform, Markov chain Monte Carlo.">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="附录 A | Master Thesis Template" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:image" content="images/logo.png" />
+  <meta property="og:description" content="Spatial generalized linear mixed models, Stationary Spatial Gaussian Process, Stan platform, Markov chain Monte Carlo." />
+  <meta name="github-repo" content="XiangyunHuang/Thesis-Template-Bookdown" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="附录 A | Master Thesis Template" />
+  
+  <meta name="twitter:description" content="Spatial generalized linear mixed models, Stationary Spatial Gaussian Process, Stan platform, Markov chain Monte Carlo." />
+  <meta name="twitter:image" content="images/logo.png" />
+
+<meta name="author" content="Xiang-Yun Huang">
+
+
+<meta name="date" content="2019-01-18">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+<link rel="prev" href="author.html">
+<link rel="next" href="references.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">空间广义线性混合效应模型及其应用</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> 绪论</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#reviews"><i class="fa fa-check"></i><b>1.1</b> 文献综述</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#stracture"><i class="fa fa-check"></i><b>1.2</b> 论文结构</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="prepare.html"><a href="prepare.html"><i class="fa fa-check"></i><b>2</b> 基础知识</a><ul>
+<li class="chapter" data-level="2.1" data-path="prepare.html"><a href="prepare.html#sec:exp"><i class="fa fa-check"></i><b>2.1</b> 指数族</a></li>
+<li class="chapter" data-level="2.2" data-path="prepare.html"><a href="prepare.html#sec:lse"><i class="fa fa-check"></i><b>2.2</b> 最小二乘估计</a></li>
+<li class="chapter" data-level="2.3" data-path="prepare.html"><a href="prepare.html#sec:def-mle"><i class="fa fa-check"></i><b>2.3</b> 极大似然估计</a></li>
+<li class="chapter" data-level="2.4" data-path="prepare.html"><a href="prepare.html#sec:stationary-gaussian-process"><i class="fa fa-check"></i><b>2.4</b> 平稳高斯过程</a></li>
+<li class="chapter" data-level="2.5" data-path="prepare.html"><a href="prepare.html#sec:bayes-prior"><i class="fa fa-check"></i><b>2.5</b> 先验和后验分布</a></li>
+<li class="chapter" data-level="2.6" data-path="prepare.html"><a href="prepare.html#sec:bayes-estimates"><i class="fa fa-check"></i><b>2.6</b> 常用贝叶斯估计</a></li>
+<li class="chapter" data-level="2.7" data-path="prepare.html"><a href="prepare.html#sec:foundations"><i class="fa fa-check"></i><b>2.7</b> 本章小结</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="models.html"><a href="models.html"><i class="fa fa-check"></i><b>3</b> 统计模型</a><ul>
+<li class="chapter" data-level="3.1" data-path="models.html"><a href="models.html#sec:Linear-Models"><i class="fa fa-check"></i><b>3.1</b> 简单线性模型</a></li>
+<li class="chapter" data-level="3.2" data-path="models.html"><a href="models.html#sec:Generalized-Linear-Models"><i class="fa fa-check"></i><b>3.2</b> 广义线性模型</a></li>
+<li class="chapter" data-level="3.3" data-path="models.html"><a href="models.html#sec:Generalized-Linear-Mixed-Effects-Models"><i class="fa fa-check"></i><b>3.3</b> 广义线性混合效应模型</a></li>
+<li class="chapter" data-level="3.4" data-path="models.html"><a href="models.html#sec:Spatial-Generalized-linear-mixed-effects-models"><i class="fa fa-check"></i><b>3.4</b> 空间广义线性混合效应模型</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="models.html"><a href="models.html#subsec:structure-sglmm"><i class="fa fa-check"></i><b>3.4.1</b> 模型结构</a></li>
+<li class="chapter" data-level="3.4.2" data-path="models.html"><a href="models.html#subsec:covariance-function"><i class="fa fa-check"></i><b>3.4.2</b> 自协方差函数</a></li>
+<li class="chapter" data-level="3.4.3" data-path="models.html"><a href="models.html#subsec:identify"><i class="fa fa-check"></i><b>3.4.3</b> 模型识别</a></li>
+<li class="chapter" data-level="3.4.4" data-path="models.html"><a href="models.html#subsec:prior-sglmm"><i class="fa fa-check"></i><b>3.4.4</b> 先验分布</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="models.html"><a href="models.html#sec:models"><i class="fa fa-check"></i><b>3.5</b> 本章小结</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="algorithms.html"><a href="algorithms.html"><i class="fa fa-check"></i><b>4</b> 参数估计</a><ul>
+<li class="chapter" data-level="4.1" data-path="algorithms.html"><a href="algorithms.html#sec:mle"><i class="fa fa-check"></i><b>4.1</b> 极大似然估计</a></li>
+<li class="chapter" data-level="4.2" data-path="algorithms.html"><a href="algorithms.html#sec:profile-likelihood"><i class="fa fa-check"></i><b>4.2</b> 剖面似然估计</a></li>
+<li class="chapter" data-level="4.3" data-path="algorithms.html"><a href="algorithms.html#sec:Laplace-approximation"><i class="fa fa-check"></i><b>4.3</b> 拉普拉斯近似</a></li>
+<li class="chapter" data-level="4.4" data-path="algorithms.html"><a href="algorithms.html#sec:algrithms"><i class="fa fa-check"></i><b>4.4</b> 参数估计的算法</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="algorithms.html"><a href="algorithms.html#subsec:LA"><i class="fa fa-check"></i><b>4.4.1</b> 拉普拉斯近似极大似然算法</a></li>
+<li class="chapter" data-level="4.4.2" data-path="algorithms.html"><a href="algorithms.html#subsec:MCML"><i class="fa fa-check"></i><b>4.4.2</b> 蒙特卡罗极大似然算法</a></li>
+<li class="chapter" data-level="4.4.3" data-path="algorithms.html"><a href="algorithms.html#sec:MCMC"><i class="fa fa-check"></i><b>4.4.3</b> 贝叶斯 Langevin-Hastings 算法</a></li>
+<li class="chapter" data-level="4.4.4" data-path="algorithms.html"><a href="algorithms.html#LowRank"><i class="fa fa-check"></i><b>4.4.4</b> 低秩近似算法</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="algorithms.html"><a href="algorithms.html#sec:stan-hmc"><i class="fa fa-check"></i><b>4.5</b> 贝叶斯 Stan-HMC 算法</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="algorithms.html"><a href="algorithms.html#subsec:Curse-of-Dimensionality"><i class="fa fa-check"></i><b>4.5.1</b> 蒙特卡罗积分</a></li>
+<li class="chapter" data-level="4.5.2" data-path="algorithms.html"><a href="algorithms.html#subsec:motivations"><i class="fa fa-check"></i><b>4.5.2</b> 背景和意义</a></li>
+<li class="chapter" data-level="4.5.3" data-path="algorithms.html"><a href="algorithms.html#subsec:stan-samplers"><i class="fa fa-check"></i><b>4.5.3</b> Stan 简介</a></li>
+<li class="chapter" data-level="4.5.4" data-path="algorithms.html"><a href="algorithms.html#subsec:stan-hmc"><i class="fa fa-check"></i><b>4.5.4</b> 实现过程</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="algorithms.html"><a href="algorithms.html#subsec:sglmm-with-r"><i class="fa fa-check"></i><b>4.6</b> 实现参数估计的 R 包</a></li>
+<li class="chapter" data-level="4.7" data-path="algorithms.html"><a href="algorithms.html#sec:estimations"><i class="fa fa-check"></i><b>4.7</b> 本章小结</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="simulations.html"><a href="simulations.html"><i class="fa fa-check"></i><b>5</b> 数值模拟</a><ul>
+<li class="chapter" data-level="5.1" data-path="simulations.html"><a href="simulations.html#spatial-gaussian-processes"><i class="fa fa-check"></i><b>5.1</b> 平稳空间高斯过程</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="simulations.html"><a href="simulations.html#sim-one-gp"><i class="fa fa-check"></i><b>5.1.1</b> 一维平稳空间高斯过程</a></li>
+<li class="chapter" data-level="5.1.2" data-path="simulations.html"><a href="simulations.html#sim-two-gp"><i class="fa fa-check"></i><b>5.1.2</b> 二维平稳空间高斯过程</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="simulations.html"><a href="simulations.html#sim-sglmm"><i class="fa fa-check"></i><b>5.2</b> 空间广义线性混合效应模型</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="simulations.html"><a href="simulations.html#sim-binomal-sglmm"><i class="fa fa-check"></i><b>5.2.1</b> 响应变量服从二项分布</a></li>
+<li class="chapter" data-level="5.2.2" data-path="simulations.html"><a href="simulations.html#possion-sglmm"><i class="fa fa-check"></i><b>5.2.2</b> 响应变量服从泊松分布</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="simulations.html"><a href="simulations.html#sec:simulations"><i class="fa fa-check"></i><b>5.3</b> 本章小结</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="applications.html"><a href="applications.html"><i class="fa fa-check"></i><b>6</b> 数据分析</a><ul>
+<li class="chapter" data-level="6.1" data-path="applications.html"><a href="applications.html#sec:spatial-random-effects"><i class="fa fa-check"></i><b>6.1</b> 小麦产量的空间分布</a></li>
+<li class="chapter" data-level="6.2" data-path="applications.html"><a href="applications.html#case-rongelap"><i class="fa fa-check"></i><b>6.2</b> 核污染浓度的空间分布</a></li>
+<li class="chapter" data-level="6.3" data-path="applications.html"><a href="applications.html#sec:cases"><i class="fa fa-check"></i><b>6.3</b> 本章小结</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="summary.html"><a href="summary.html"><i class="fa fa-check"></i><b>7</b> 总结与展望</a></li>
+<li class="chapter" data-level="" data-path="ack.html"><a href="ack.html"><i class="fa fa-check"></i>致谢</a></li>
+<li class="chapter" data-level="" data-path="author.html"><a href="author.html"><i class="fa fa-check"></i>作者简介</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>附录 A</a><ul>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#tables-simulations"><i class="fa fa-check"></i>表格</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#simulate-code"><i class="fa fa-check"></i>代码</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>参考文献</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">本论文由 bookdown 强力驱动</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Master Thesis Template</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="appendix" class="section level1 unnumbered">
+<h1>附录 A</h1>
+
+<div id="tables-simulations" class="section level2 unnumbered">
+<h2>表格</h2>
+<table>
+<caption><span id="tab:LH-binom-SGLMM">表 7.1: </span> Langevin-Hastings 算法：模型 <a href="simulations.html#eq:binom-SGLMM">(5.4)</a> 中 64 个采样点处概率 <span class="math inline">\(p(x_i) = \exp[S(x_i)]/\{1 + \exp[S(x_i)]\}\)</span> 的后验分布的均值(mean)，方差(variance)，标准差(standard deviation)和 5 个分位点，样本量为 1000</caption>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">mean</th>
+<th align="right">var</th>
+<th align="right">sd</th>
+<th align="right">2.5%</th>
+<th align="right">25%</th>
+<th align="right">50%</th>
+<th align="right">75%</th>
+<th align="right">97.5%</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{1})\)</span></td>
+<td align="right">0.476</td>
+<td align="right">0.019</td>
+<td align="right">0.138</td>
+<td align="right">0.231</td>
+<td align="right">0.368</td>
+<td align="right">0.467</td>
+<td align="right">0.573</td>
+<td align="right">0.759</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{2})\)</span></td>
+<td align="right">0.423</td>
+<td align="right">0.017</td>
+<td align="right">0.129</td>
+<td align="right">0.190</td>
+<td align="right">0.331</td>
+<td align="right">0.417</td>
+<td align="right">0.510</td>
+<td align="right">0.695</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{3})\)</span></td>
+<td align="right">0.313</td>
+<td align="right">0.015</td>
+<td align="right">0.122</td>
+<td align="right">0.106</td>
+<td align="right">0.221</td>
+<td align="right">0.309</td>
+<td align="right">0.389</td>
+<td align="right">0.582</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{4})\)</span></td>
+<td align="right">0.470</td>
+<td align="right">0.020</td>
+<td align="right">0.141</td>
+<td align="right">0.204</td>
+<td align="right">0.372</td>
+<td align="right">0.466</td>
+<td align="right">0.564</td>
+<td align="right">0.755</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{5})\)</span></td>
+<td align="right">0.431</td>
+<td align="right">0.018</td>
+<td align="right">0.133</td>
+<td align="right">0.181</td>
+<td align="right">0.338</td>
+<td align="right">0.425</td>
+<td align="right">0.527</td>
+<td align="right">0.686</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{6})\)</span></td>
+<td align="right">0.516</td>
+<td align="right">0.017</td>
+<td align="right">0.131</td>
+<td align="right">0.256</td>
+<td align="right">0.429</td>
+<td align="right">0.517</td>
+<td align="right">0.612</td>
+<td align="right">0.766</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{7})\)</span></td>
+<td align="right">0.580</td>
+<td align="right">0.017</td>
+<td align="right">0.132</td>
+<td align="right">0.326</td>
+<td align="right">0.485</td>
+<td align="right">0.583</td>
+<td align="right">0.669</td>
+<td align="right">0.831</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{8})\)</span></td>
+<td align="right">0.483</td>
+<td align="right">0.019</td>
+<td align="right">0.138</td>
+<td align="right">0.220</td>
+<td align="right">0.386</td>
+<td align="right">0.484</td>
+<td align="right">0.578</td>
+<td align="right">0.736</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{9})\)</span></td>
+<td align="right">0.487</td>
+<td align="right">0.020</td>
+<td align="right">0.141</td>
+<td align="right">0.235</td>
+<td align="right">0.383</td>
+<td align="right">0.482</td>
+<td align="right">0.584</td>
+<td align="right">0.772</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{10})\)</span></td>
+<td align="right">0.333</td>
+<td align="right">0.014</td>
+<td align="right">0.117</td>
+<td align="right">0.121</td>
+<td align="right">0.251</td>
+<td align="right">0.326</td>
+<td align="right">0.411</td>
+<td align="right">0.583</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{11})\)</span></td>
+<td align="right">0.262</td>
+<td align="right">0.013</td>
+<td align="right">0.112</td>
+<td align="right">0.083</td>
+<td align="right">0.175</td>
+<td align="right">0.248</td>
+<td align="right">0.334</td>
+<td align="right">0.499</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{12})\)</span></td>
+<td align="right">0.367</td>
+<td align="right">0.016</td>
+<td align="right">0.126</td>
+<td align="right">0.150</td>
+<td align="right">0.279</td>
+<td align="right">0.358</td>
+<td align="right">0.446</td>
+<td align="right">0.627</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{13})\)</span></td>
+<td align="right">0.491</td>
+<td align="right">0.017</td>
+<td align="right">0.129</td>
+<td align="right">0.248</td>
+<td align="right">0.403</td>
+<td align="right">0.487</td>
+<td align="right">0.579</td>
+<td align="right">0.742</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{14})\)</span></td>
+<td align="right">0.585</td>
+<td align="right">0.016</td>
+<td align="right">0.127</td>
+<td align="right">0.343</td>
+<td align="right">0.493</td>
+<td align="right">0.589</td>
+<td align="right">0.673</td>
+<td align="right">0.826</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{15})\)</span></td>
+<td align="right">0.573</td>
+<td align="right">0.016</td>
+<td align="right">0.125</td>
+<td align="right">0.320</td>
+<td align="right">0.491</td>
+<td align="right">0.576</td>
+<td align="right">0.660</td>
+<td align="right">0.811</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{16})\)</span></td>
+<td align="right">0.610</td>
+<td align="right">0.016</td>
+<td align="right">0.127</td>
+<td align="right">0.347</td>
+<td align="right">0.526</td>
+<td align="right">0.612</td>
+<td align="right">0.701</td>
+<td align="right">0.843</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{17})\)</span></td>
+<td align="right">0.336</td>
+<td align="right">0.016</td>
+<td align="right">0.127</td>
+<td align="right">0.130</td>
+<td align="right">0.241</td>
+<td align="right">0.323</td>
+<td align="right">0.415</td>
+<td align="right">0.605</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{18})\)</span></td>
+<td align="right">0.299</td>
+<td align="right">0.013</td>
+<td align="right">0.114</td>
+<td align="right">0.108</td>
+<td align="right">0.217</td>
+<td align="right">0.292</td>
+<td align="right">0.368</td>
+<td align="right">0.566</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{19})\)</span></td>
+<td align="right">0.269</td>
+<td align="right">0.012</td>
+<td align="right">0.109</td>
+<td align="right">0.088</td>
+<td align="right">0.190</td>
+<td align="right">0.258</td>
+<td align="right">0.337</td>
+<td align="right">0.502</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{20})\)</span></td>
+<td align="right">0.429</td>
+<td align="right">0.016</td>
+<td align="right">0.128</td>
+<td align="right">0.192</td>
+<td align="right">0.336</td>
+<td align="right">0.428</td>
+<td align="right">0.520</td>
+<td align="right">0.687</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{21})\)</span></td>
+<td align="right">0.504</td>
+<td align="right">0.015</td>
+<td align="right">0.124</td>
+<td align="right">0.270</td>
+<td align="right">0.417</td>
+<td align="right">0.499</td>
+<td align="right">0.583</td>
+<td align="right">0.761</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{22})\)</span></td>
+<td align="right">0.550</td>
+<td align="right">0.015</td>
+<td align="right">0.121</td>
+<td align="right">0.308</td>
+<td align="right">0.469</td>
+<td align="right">0.556</td>
+<td align="right">0.633</td>
+<td align="right">0.785</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{23})\)</span></td>
+<td align="right">0.617</td>
+<td align="right">0.015</td>
+<td align="right">0.123</td>
+<td align="right">0.360</td>
+<td align="right">0.538</td>
+<td align="right">0.622</td>
+<td align="right">0.705</td>
+<td align="right">0.842</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{24})\)</span></td>
+<td align="right">0.646</td>
+<td align="right">0.015</td>
+<td align="right">0.124</td>
+<td align="right">0.380</td>
+<td align="right">0.563</td>
+<td align="right">0.660</td>
+<td align="right">0.732</td>
+<td align="right">0.868</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{25})\)</span></td>
+<td align="right">0.246</td>
+<td align="right">0.012</td>
+<td align="right">0.111</td>
+<td align="right">0.066</td>
+<td align="right">0.166</td>
+<td align="right">0.237</td>
+<td align="right">0.312</td>
+<td align="right">0.483</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{26})\)</span></td>
+<td align="right">0.287</td>
+<td align="right">0.013</td>
+<td align="right">0.113</td>
+<td align="right">0.097</td>
+<td align="right">0.206</td>
+<td align="right">0.275</td>
+<td align="right">0.356</td>
+<td align="right">0.541</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{27})\)</span></td>
+<td align="right">0.341</td>
+<td align="right">0.014</td>
+<td align="right">0.118</td>
+<td align="right">0.121</td>
+<td align="right">0.261</td>
+<td align="right">0.332</td>
+<td align="right">0.416</td>
+<td align="right">0.586</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{28})\)</span></td>
+<td align="right">0.525</td>
+<td align="right">0.016</td>
+<td align="right">0.128</td>
+<td align="right">0.298</td>
+<td align="right">0.427</td>
+<td align="right">0.524</td>
+<td align="right">0.609</td>
+<td align="right">0.772</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{29})\)</span></td>
+<td align="right">0.540</td>
+<td align="right">0.016</td>
+<td align="right">0.128</td>
+<td align="right">0.295</td>
+<td align="right">0.446</td>
+<td align="right">0.542</td>
+<td align="right">0.631</td>
+<td align="right">0.783</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{30})\)</span></td>
+<td align="right">0.583</td>
+<td align="right">0.015</td>
+<td align="right">0.123</td>
+<td align="right">0.348</td>
+<td align="right">0.496</td>
+<td align="right">0.583</td>
+<td align="right">0.671</td>
+<td align="right">0.813</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{31})\)</span></td>
+<td align="right">0.517</td>
+<td align="right">0.017</td>
+<td align="right">0.130</td>
+<td align="right">0.251</td>
+<td align="right">0.432</td>
+<td align="right">0.525</td>
+<td align="right">0.606</td>
+<td align="right">0.756</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{32})\)</span></td>
+<td align="right">0.689</td>
+<td align="right">0.014</td>
+<td align="right">0.117</td>
+<td align="right">0.437</td>
+<td align="right">0.612</td>
+<td align="right">0.693</td>
+<td align="right">0.775</td>
+<td align="right">0.898</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{33})\)</span></td>
+<td align="right">0.260</td>
+<td align="right">0.012</td>
+<td align="right">0.111</td>
+<td align="right">0.075</td>
+<td align="right">0.178</td>
+<td align="right">0.251</td>
+<td align="right">0.328</td>
+<td align="right">0.494</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{34})\)</span></td>
+<td align="right">0.304</td>
+<td align="right">0.014</td>
+<td align="right">0.119</td>
+<td align="right">0.101</td>
+<td align="right">0.218</td>
+<td align="right">0.292</td>
+<td align="right">0.371</td>
+<td align="right">0.577</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{35})\)</span></td>
+<td align="right">0.394</td>
+<td align="right">0.016</td>
+<td align="right">0.125</td>
+<td align="right">0.171</td>
+<td align="right">0.308</td>
+<td align="right">0.389</td>
+<td align="right">0.472</td>
+<td align="right">0.669</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{36})\)</span></td>
+<td align="right">0.497</td>
+<td align="right">0.017</td>
+<td align="right">0.130</td>
+<td align="right">0.249</td>
+<td align="right">0.412</td>
+<td align="right">0.495</td>
+<td align="right">0.587</td>
+<td align="right">0.746</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{37})\)</span></td>
+<td align="right">0.604</td>
+<td align="right">0.017</td>
+<td align="right">0.131</td>
+<td align="right">0.346</td>
+<td align="right">0.518</td>
+<td align="right">0.606</td>
+<td align="right">0.700</td>
+<td align="right">0.844</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{38})\)</span></td>
+<td align="right">0.546</td>
+<td align="right">0.016</td>
+<td align="right">0.126</td>
+<td align="right">0.298</td>
+<td align="right">0.459</td>
+<td align="right">0.548</td>
+<td align="right">0.636</td>
+<td align="right">0.774</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{39})\)</span></td>
+<td align="right">0.494</td>
+<td align="right">0.017</td>
+<td align="right">0.129</td>
+<td align="right">0.242</td>
+<td align="right">0.404</td>
+<td align="right">0.498</td>
+<td align="right">0.582</td>
+<td align="right">0.735</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{40})\)</span></td>
+<td align="right">0.639</td>
+<td align="right">0.015</td>
+<td align="right">0.123</td>
+<td align="right">0.394</td>
+<td align="right">0.559</td>
+<td align="right">0.647</td>
+<td align="right">0.724</td>
+<td align="right">0.864</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{41})\)</span></td>
+<td align="right">0.380</td>
+<td align="right">0.017</td>
+<td align="right">0.132</td>
+<td align="right">0.154</td>
+<td align="right">0.284</td>
+<td align="right">0.369</td>
+<td align="right">0.466</td>
+<td align="right">0.669</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{42})\)</span></td>
+<td align="right">0.339</td>
+<td align="right">0.015</td>
+<td align="right">0.122</td>
+<td align="right">0.128</td>
+<td align="right">0.257</td>
+<td align="right">0.331</td>
+<td align="right">0.416</td>
+<td align="right">0.595</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{43})\)</span></td>
+<td align="right">0.318</td>
+<td align="right">0.014</td>
+<td align="right">0.118</td>
+<td align="right">0.111</td>
+<td align="right">0.234</td>
+<td align="right">0.311</td>
+<td align="right">0.398</td>
+<td align="right">0.552</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{44})\)</span></td>
+<td align="right">0.479</td>
+<td align="right">0.016</td>
+<td align="right">0.127</td>
+<td align="right">0.247</td>
+<td align="right">0.387</td>
+<td align="right">0.473</td>
+<td align="right">0.566</td>
+<td align="right">0.745</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{45})\)</span></td>
+<td align="right">0.655</td>
+<td align="right">0.015</td>
+<td align="right">0.123</td>
+<td align="right">0.415</td>
+<td align="right">0.568</td>
+<td align="right">0.659</td>
+<td align="right">0.746</td>
+<td align="right">0.880</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{46})\)</span></td>
+<td align="right">0.601</td>
+<td align="right">0.015</td>
+<td align="right">0.123</td>
+<td align="right">0.354</td>
+<td align="right">0.519</td>
+<td align="right">0.607</td>
+<td align="right">0.689</td>
+<td align="right">0.839</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{47})\)</span></td>
+<td align="right">0.524</td>
+<td align="right">0.017</td>
+<td align="right">0.129</td>
+<td align="right">0.275</td>
+<td align="right">0.437</td>
+<td align="right">0.525</td>
+<td align="right">0.612</td>
+<td align="right">0.768</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{48})\)</span></td>
+<td align="right">0.696</td>
+<td align="right">0.014</td>
+<td align="right">0.118</td>
+<td align="right">0.440</td>
+<td align="right">0.620</td>
+<td align="right">0.704</td>
+<td align="right">0.783</td>
+<td align="right">0.901</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{49})\)</span></td>
+<td align="right">0.353</td>
+<td align="right">0.015</td>
+<td align="right">0.124</td>
+<td align="right">0.122</td>
+<td align="right">0.266</td>
+<td align="right">0.348</td>
+<td align="right">0.433</td>
+<td align="right">0.615</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{50})\)</span></td>
+<td align="right">0.493</td>
+<td align="right">0.017</td>
+<td align="right">0.132</td>
+<td align="right">0.254</td>
+<td align="right">0.402</td>
+<td align="right">0.492</td>
+<td align="right">0.584</td>
+<td align="right">0.760</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{51})\)</span></td>
+<td align="right">0.379</td>
+<td align="right">0.014</td>
+<td align="right">0.120</td>
+<td align="right">0.160</td>
+<td align="right">0.293</td>
+<td align="right">0.374</td>
+<td align="right">0.460</td>
+<td align="right">0.619</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{52})\)</span></td>
+<td align="right">0.378</td>
+<td align="right">0.016</td>
+<td align="right">0.128</td>
+<td align="right">0.135</td>
+<td align="right">0.282</td>
+<td align="right">0.376</td>
+<td align="right">0.470</td>
+<td align="right">0.620</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{53})\)</span></td>
+<td align="right">0.591</td>
+<td align="right">0.015</td>
+<td align="right">0.124</td>
+<td align="right">0.345</td>
+<td align="right">0.512</td>
+<td align="right">0.591</td>
+<td align="right">0.678</td>
+<td align="right">0.834</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{54})\)</span></td>
+<td align="right">0.521</td>
+<td align="right">0.017</td>
+<td align="right">0.132</td>
+<td align="right">0.244</td>
+<td align="right">0.432</td>
+<td align="right">0.531</td>
+<td align="right">0.613</td>
+<td align="right">0.773</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{55})\)</span></td>
+<td align="right">0.566</td>
+<td align="right">0.016</td>
+<td align="right">0.125</td>
+<td align="right">0.305</td>
+<td align="right">0.480</td>
+<td align="right">0.573</td>
+<td align="right">0.654</td>
+<td align="right">0.789</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{56})\)</span></td>
+<td align="right">0.703</td>
+<td align="right">0.014</td>
+<td align="right">0.120</td>
+<td align="right">0.449</td>
+<td align="right">0.622</td>
+<td align="right">0.711</td>
+<td align="right">0.794</td>
+<td align="right">0.900</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{57})\)</span></td>
+<td align="right">0.494</td>
+<td align="right">0.019</td>
+<td align="right">0.137</td>
+<td align="right">0.235</td>
+<td align="right">0.400</td>
+<td align="right">0.495</td>
+<td align="right">0.587</td>
+<td align="right">0.762</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{58})\)</span></td>
+<td align="right">0.606</td>
+<td align="right">0.019</td>
+<td align="right">0.139</td>
+<td align="right">0.328</td>
+<td align="right">0.515</td>
+<td align="right">0.608</td>
+<td align="right">0.702</td>
+<td align="right">0.857</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{59})\)</span></td>
+<td align="right">0.482</td>
+<td align="right">0.018</td>
+<td align="right">0.133</td>
+<td align="right">0.236</td>
+<td align="right">0.387</td>
+<td align="right">0.478</td>
+<td align="right">0.575</td>
+<td align="right">0.725</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{60})\)</span></td>
+<td align="right">0.443</td>
+<td align="right">0.017</td>
+<td align="right">0.130</td>
+<td align="right">0.195</td>
+<td align="right">0.349</td>
+<td align="right">0.447</td>
+<td align="right">0.536</td>
+<td align="right">0.695</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{61})\)</span></td>
+<td align="right">0.636</td>
+<td align="right">0.015</td>
+<td align="right">0.124</td>
+<td align="right">0.390</td>
+<td align="right">0.547</td>
+<td align="right">0.638</td>
+<td align="right">0.723</td>
+<td align="right">0.867</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{62})\)</span></td>
+<td align="right">0.620</td>
+<td align="right">0.015</td>
+<td align="right">0.122</td>
+<td align="right">0.371</td>
+<td align="right">0.537</td>
+<td align="right">0.623</td>
+<td align="right">0.708</td>
+<td align="right">0.843</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(p(x_{63})\)</span></td>
+<td align="right">0.568</td>
+<td align="right">0.016</td>
+<td align="right">0.128</td>
+<td align="right">0.321</td>
+<td align="right">0.470</td>
+<td align="right">0.571</td>
+<td align="right">0.660</td>
+<td align="right">0.802</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(p(x_{64})\)</span></td>
+<td align="right">0.633</td>
+<td align="right">0.017</td>
+<td align="right">0.131</td>
+<td align="right">0.354</td>
+<td align="right">0.545</td>
+<td align="right">0.644</td>
+<td align="right">0.729</td>
+<td align="right">0.861</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption><span id="tab:HMC-Pois-SGLMM">表 7.2: </span> 汉密尔顿蒙特卡罗算法，采样点 64 个，泊松空间模型参数 <span class="math inline">\(\alpha,\phi,\sigma^2\)</span> 的估计值，后验均值(mean)、蒙特卡罗误差 (se_mean)、后验标准差 (sd)、5个后验分位点等</caption>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">mean</th>
+<th align="right">se_mean</th>
+<th align="right">sd</th>
+<th align="right">2.5%</th>
+<th align="right">25%</th>
+<th align="right">50%</th>
+<th align="right">75%</th>
+<th align="right">97.5%</th>
+<th align="right">n_eff</th>
+<th align="right">Rhat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><span class="math inline">\(\alpha\)</span></td>
+<td align="right">0.50</td>
+<td align="right">0.02</td>
+<td align="right">0.63</td>
+<td align="right">-0.77</td>
+<td align="right">0.08</td>
+<td align="right">0.53</td>
+<td align="right">0.92</td>
+<td align="right">1.80</td>
+<td align="right">1000.00</td>
+<td align="right">1.00</td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(\phi\)</span></td>
+<td align="right">0.39</td>
+<td align="right">0.00</td>
+<td align="right">0.06</td>
+<td align="right">0.28</td>
+<td align="right">0.34</td>
+<td align="right">0.38</td>
+<td align="right">0.42</td>
+<td align="right">0.51</td>
+<td align="right">777.31</td>
+<td align="right">1.00</td>
+</tr>
+<tr class="odd">
+<td align="left"><span class="math inline">\(\sigma^2\)</span></td>
+<td align="right">2.47</td>
+<td align="right">0.02</td>
+<td align="right">0.54</td>
+<td align="right">1.59</td>
+<td align="right">2.10</td>
+<td align="right">2.42</td>
+<td align="right">2.80</td>
+<td align="right">3.73</td>
+<td align="right">1000.00</td>
+<td align="right">1.00</td>
+</tr>
+<tr class="even">
+<td align="left">lp__</td>
+<td align="right">722.28</td>
+<td align="right">0.39</td>
+<td align="right">6.83</td>
+<td align="right">708.00</td>
+<td align="right">718.14</td>
+<td align="right">722.49</td>
+<td align="right">726.91</td>
+<td align="right">734.71</td>
+<td align="right">312.69</td>
+<td align="right">1.03</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="simulate-code" class="section level2 unnumbered">
+<h2>代码</h2>
+<p>模拟平稳空间高斯过程</p>
+<pre><code>// Sample from a Gaussian process using exponentiated covariance function.
+// Fixed kernel hyperparameters: phi=0.15, sigma=sqrt(1)
+
+data {
+  int&lt;lower=1&gt; N;
+  real&lt;lower=0&gt; phi;
+  real&lt;lower=0&gt; sigma;
+}
+transformed data {
+  vector[N] zeros;
+  zeros = rep_vector(0, N);
+}
+model {}
+generated quantities {
+  real x[N];
+  vector[N] f;
+  for (n in 1:N)
+    x[n] = uniform_rng(-2,2);
+  {
+    matrix[N, N] cov;
+    matrix[N, N] L_cov;
+    
+   // cov = cov_exp_quad(x, sigma, phi);
+
+    for (i in 1:(N - 1)) {
+      cov[i, i] = square(sigma);
+      for (j in (i + 1):N) {
+        cov[i, j] = square(sigma) * exp(- fabs(x[i] - x[j]) * inv(phi));
+        cov[j, i] = cov[i, j];
+      }
+    }
+    cov[N, N] = square(sigma); 
+    
+    for (n in 1:N)
+      cov[n, n] = cov[n, n] + 1e-12;
+
+    L_cov = cholesky_decompose(cov);
+    f = multi_normal_cholesky_rng(zeros, L_cov);
+  }
+}</code></pre>
+<p>模拟空间广义线性模型</p>
+<pre class="sourceCode r"><code class="sourceCode r">generate_sim_data &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">N =</span> <span class="dv">49</span>, <span class="dt">intercept =</span> <span class="fl">-1.0</span>, 
+                              <span class="dt">slope1 =</span> <span class="fl">1.0</span>, <span class="dt">slope2 =</span> <span class="fl">0.5</span>,
+                              <span class="dt">lscale =</span> <span class="dv">1</span>, <span class="dt">sdgp =</span> <span class="dv">1</span>, 
+                              <span class="dt">cov.model =</span> <span class="st">&quot;exp_quad&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;binomal&quot;</span>) {
+  <span class="co"># set.seed(2018) </span>
+  <span class="co">## 单位区域上采样</span>
+  d &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(
+    <span class="dt">d1 =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">l =</span> <span class="kw">sqrt</span>(N)),
+    <span class="dt">d2 =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">l =</span> <span class="kw">sqrt</span>(N))
+  )
+  D &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(<span class="kw">dist</span>(d)) <span class="co"># 计算采样点之间的欧氏距离</span>
+  <span class="cf">switch</span> (cov.model,
+          <span class="dt">matern =</span> {
+            phi =<span class="st"> </span>lscale
+            corr_m =<span class="st"> </span>geoR<span class="op">::</span><span class="kw">matern</span>(D, <span class="dt">phi =</span> phi, <span class="dt">kappa =</span> <span class="dv">2</span>) <span class="co"># 固定的 kappa = 2 </span>
+            m  =<span class="st"> </span>sdgp<span class="op">^</span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>corr_m 
+          },
+          <span class="dt">exp_quad =</span> {
+            phi &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>lscale<span class="op">^</span><span class="dv">2</span>
+            m &lt;-<span class="st"> </span>sdgp<span class="op">^</span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>D<span class="op">^</span><span class="dv">2</span> <span class="op">/</span><span class="st"> </span>phi) <span class="co"># 多元高斯分布的协方差矩阵</span>
+          }
+  )
+  <span class="co"># powered.exponential (or stable)</span>
+  <span class="co"># rho(h) = exp[-(h/phi)^kappa] if 0 &lt; kappa &lt;= 2 此处 kappa 固定为 2</span>
+  S &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">mvrnorm</span>(<span class="dv">1</span>, <span class="kw">rep</span>(<span class="dv">0</span>, N), m) <span class="co"># 产生服从多元高斯分布的随机数</span>
+  <span class="co"># 模拟两个固定效应</span>
+  x1 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(N, <span class="dv">0</span>, <span class="dv">1</span>)
+  x2 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(N, <span class="dv">0</span>, <span class="dv">4</span>)
+  <span class="cf">switch</span>(type,
+         <span class="dt">binomal =</span> {
+           units.m &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">100</span>, N) <span class="co"># N 个 100</span>
+           pred &lt;-<span class="st"> </span>intercept <span class="op">+</span><span class="st"> </span>slope1 <span class="op">*</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>slope2 <span class="op">*</span><span class="st"> </span>x2 <span class="op">+</span><span class="st"> </span>S
+           mu &lt;-<span class="st"> </span><span class="kw">exp</span>(pred) <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">exp</span>(pred))
+           y &lt;-<span class="st"> </span><span class="kw">rbinom</span>(N, <span class="dt">size =</span> <span class="dv">100</span>, <span class="dt">prob =</span> mu) <span class="co"># 每个采样点抽取100个样本</span>
+           <span class="kw">data.frame</span>(d, y, units.m, x1, x2)
+         },
+         <span class="dt">poisson =</span> {
+           pred &lt;-<span class="st"> </span>intercept <span class="op">+</span><span class="st"> </span>slope1 <span class="op">*</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>slope2 <span class="op">*</span><span class="st"> </span>x2 <span class="op">+</span><span class="st"> </span>S
+           y &lt;-<span class="st"> </span><span class="kw">rpois</span>(<span class="dv">100</span>, <span class="dt">lambda =</span> <span class="kw">exp</span>(pred)) <span class="co"># lambda 是泊松分布的期望  </span>
+           <span class="co"># Y ~ Possion(lambda) g(u) = ln(u) u = lambda = exp(g(u))</span>
+           <span class="kw">data.frame</span>(d, y, x1, x2)
+         }
+  )
+}</code></pre>
+<p>HMC 算法</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 加载程序包</span>
+<span class="kw">library</span>(rstan)
+<span class="kw">library</span>(brms)
+<span class="co"># 以并行方式运行 STAN-MCMC 算法，指定 CPU 的核心数</span>
+<span class="kw">options</span>(<span class="dt">mc.cores =</span> parallel<span class="op">::</span><span class="kw">detectCores</span>())
+<span class="co"># 将编译后的模型写入磁盘，可防止重新编译</span>
+<span class="kw">rstan_options</span>(<span class="dt">auto_write =</span> <span class="ot">TRUE</span>)
+<span class="kw">theme_set</span>(<span class="kw">theme_default</span>())
+prior &lt;-<span class="st"> </span><span class="kw">c</span>(
+  <span class="kw">set_prior</span>(<span class="st">&quot;normal(0,10)&quot;</span>, <span class="dt">class =</span> <span class="st">&quot;b&quot;</span>), <span class="co"># 均值0 标准差 10 的先验</span>
+  <span class="kw">set_prior</span>(<span class="st">&quot;lognormal(0,1)&quot;</span>, <span class="dt">class =</span> <span class="st">&quot;lscale&quot;</span>),
+  <span class="kw">set_prior</span>(<span class="st">&quot;lognormal(0,1)&quot;</span>, <span class="dt">class =</span> <span class="st">&quot;sdgp&quot;</span>)
+)
+sim_binom_data &lt;-<span class="st"> </span><span class="kw">generate_sim_data</span>(<span class="dt">type =</span> <span class="st">&quot;binomal&quot;</span>)
+benchmark.binomal &lt;-<span class="st"> </span>microbenchmark<span class="op">::</span><span class="kw">microbenchmark</span>({
+  fit.binomal &lt;-<span class="st"> </span><span class="kw">brm</span>(y <span class="op">|</span><span class="st"> </span><span class="kw">trials</span>(units.m) <span class="op">~</span><span class="st"> </span><span class="dv">0</span> <span class="op">+</span><span class="st"> </span>intercept <span class="op">+</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>x2 <span class="op">+</span><span class="st"> </span><span class="kw">gp</span>(d1, d2),
+    sim_binom_data,
+    <span class="dt">prior =</span> prior,
+    <span class="dt">chains =</span> <span class="dv">4</span>, <span class="dt">thin =</span> <span class="dv">5</span>, <span class="dt">iter =</span> <span class="dv">15000</span>, <span class="dt">warmup =</span> <span class="dv">5000</span>,
+    <span class="dt">algorithm =</span> <span class="st">&quot;sampling&quot;</span>, <span class="dt">family =</span> <span class="kw">binomial</span>()
+  )
+}, <span class="dt">times =</span> 10L)
+<span class="kw">summary</span>(fit.binomal)
+
+sim_poisson_data &lt;-<span class="st"> </span><span class="kw">generate_sim_data</span>(<span class="dt">type =</span> <span class="st">&quot;poisson&quot;</span>)
+benchmark.poisson &lt;-<span class="st"> </span>microbenchmark<span class="op">::</span><span class="kw">microbenchmark</span>({
+  fit.poisson &lt;-<span class="st"> </span><span class="kw">brm</span>(y <span class="op">~</span><span class="st"> </span><span class="dv">0</span> <span class="op">+</span><span class="st"> </span>intercept <span class="op">+</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>x2 <span class="op">+</span><span class="st"> </span><span class="kw">gp</span>(d1, d2),
+    sim_poisson_data,
+    <span class="dt">prior =</span> prior,
+    <span class="dt">chains =</span> <span class="dv">4</span>, <span class="dt">thin =</span> <span class="dv">5</span>, <span class="dt">iter =</span> <span class="dv">15000</span>, <span class="dt">warmup =</span> <span class="dv">5000</span>, 
+    <span class="dt">algorithm =</span> <span class="st">&quot;sampling&quot;</span>, <span class="dt">family =</span> <span class="kw">poisson</span>()
+  )
+}, <span class="dt">times =</span> 10L)
+<span class="kw">summary</span>(fit.poisson)
+<span class="kw">plot</span>(fit.poisson)</code></pre>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="author.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/XiangyunHuang/Thesis-Template-Bookdown/edit/master/09-appendix.Rmd",
+"text": "缂栬緫"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["Thesis-Template-Bookdown.pdf"],
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

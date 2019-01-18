@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>第 3 章 统计模型 | Master Thesis Template</title>
+  <meta name="description" content="Spatial generalized linear mixed models, Stationary Spatial Gaussian Process, Stan platform, Markov chain Monte Carlo.">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="第 3 章 统计模型 | Master Thesis Template" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:image" content="images/logo.png" />
+  <meta property="og:description" content="Spatial generalized linear mixed models, Stationary Spatial Gaussian Process, Stan platform, Markov chain Monte Carlo." />
+  <meta name="github-repo" content="XiangyunHuang/Thesis-Template-Bookdown" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="第 3 章 统计模型 | Master Thesis Template" />
+  
+  <meta name="twitter:description" content="Spatial generalized linear mixed models, Stationary Spatial Gaussian Process, Stan platform, Markov chain Monte Carlo." />
+  <meta name="twitter:image" content="images/logo.png" />
+
+<meta name="author" content="Xiang-Yun Huang">
+
+
+<meta name="date" content="2019-01-18">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+<link rel="prev" href="prepare.html">
+<link rel="next" href="algorithms.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">空间广义线性混合效应模型及其应用</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> 绪论</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#reviews"><i class="fa fa-check"></i><b>1.1</b> 文献综述</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#stracture"><i class="fa fa-check"></i><b>1.2</b> 论文结构</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="prepare.html"><a href="prepare.html"><i class="fa fa-check"></i><b>2</b> 基础知识</a><ul>
+<li class="chapter" data-level="2.1" data-path="prepare.html"><a href="prepare.html#sec:exp"><i class="fa fa-check"></i><b>2.1</b> 指数族</a></li>
+<li class="chapter" data-level="2.2" data-path="prepare.html"><a href="prepare.html#sec:lse"><i class="fa fa-check"></i><b>2.2</b> 最小二乘估计</a></li>
+<li class="chapter" data-level="2.3" data-path="prepare.html"><a href="prepare.html#sec:def-mle"><i class="fa fa-check"></i><b>2.3</b> 极大似然估计</a></li>
+<li class="chapter" data-level="2.4" data-path="prepare.html"><a href="prepare.html#sec:stationary-gaussian-process"><i class="fa fa-check"></i><b>2.4</b> 平稳高斯过程</a></li>
+<li class="chapter" data-level="2.5" data-path="prepare.html"><a href="prepare.html#sec:bayes-prior"><i class="fa fa-check"></i><b>2.5</b> 先验和后验分布</a></li>
+<li class="chapter" data-level="2.6" data-path="prepare.html"><a href="prepare.html#sec:bayes-estimates"><i class="fa fa-check"></i><b>2.6</b> 常用贝叶斯估计</a></li>
+<li class="chapter" data-level="2.7" data-path="prepare.html"><a href="prepare.html#sec:foundations"><i class="fa fa-check"></i><b>2.7</b> 本章小结</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="models.html"><a href="models.html"><i class="fa fa-check"></i><b>3</b> 统计模型</a><ul>
+<li class="chapter" data-level="3.1" data-path="models.html"><a href="models.html#sec:Linear-Models"><i class="fa fa-check"></i><b>3.1</b> 简单线性模型</a></li>
+<li class="chapter" data-level="3.2" data-path="models.html"><a href="models.html#sec:Generalized-Linear-Models"><i class="fa fa-check"></i><b>3.2</b> 广义线性模型</a></li>
+<li class="chapter" data-level="3.3" data-path="models.html"><a href="models.html#sec:Generalized-Linear-Mixed-Effects-Models"><i class="fa fa-check"></i><b>3.3</b> 广义线性混合效应模型</a></li>
+<li class="chapter" data-level="3.4" data-path="models.html"><a href="models.html#sec:Spatial-Generalized-linear-mixed-effects-models"><i class="fa fa-check"></i><b>3.4</b> 空间广义线性混合效应模型</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="models.html"><a href="models.html#subsec:structure-sglmm"><i class="fa fa-check"></i><b>3.4.1</b> 模型结构</a></li>
+<li class="chapter" data-level="3.4.2" data-path="models.html"><a href="models.html#subsec:covariance-function"><i class="fa fa-check"></i><b>3.4.2</b> 自协方差函数</a></li>
+<li class="chapter" data-level="3.4.3" data-path="models.html"><a href="models.html#subsec:identify"><i class="fa fa-check"></i><b>3.4.3</b> 模型识别</a></li>
+<li class="chapter" data-level="3.4.4" data-path="models.html"><a href="models.html#subsec:prior-sglmm"><i class="fa fa-check"></i><b>3.4.4</b> 先验分布</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="models.html"><a href="models.html#sec:models"><i class="fa fa-check"></i><b>3.5</b> 本章小结</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="algorithms.html"><a href="algorithms.html"><i class="fa fa-check"></i><b>4</b> 参数估计</a><ul>
+<li class="chapter" data-level="4.1" data-path="algorithms.html"><a href="algorithms.html#sec:mle"><i class="fa fa-check"></i><b>4.1</b> 极大似然估计</a></li>
+<li class="chapter" data-level="4.2" data-path="algorithms.html"><a href="algorithms.html#sec:profile-likelihood"><i class="fa fa-check"></i><b>4.2</b> 剖面似然估计</a></li>
+<li class="chapter" data-level="4.3" data-path="algorithms.html"><a href="algorithms.html#sec:Laplace-approximation"><i class="fa fa-check"></i><b>4.3</b> 拉普拉斯近似</a></li>
+<li class="chapter" data-level="4.4" data-path="algorithms.html"><a href="algorithms.html#sec:algrithms"><i class="fa fa-check"></i><b>4.4</b> 参数估计的算法</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="algorithms.html"><a href="algorithms.html#subsec:LA"><i class="fa fa-check"></i><b>4.4.1</b> 拉普拉斯近似极大似然算法</a></li>
+<li class="chapter" data-level="4.4.2" data-path="algorithms.html"><a href="algorithms.html#subsec:MCML"><i class="fa fa-check"></i><b>4.4.2</b> 蒙特卡罗极大似然算法</a></li>
+<li class="chapter" data-level="4.4.3" data-path="algorithms.html"><a href="algorithms.html#sec:MCMC"><i class="fa fa-check"></i><b>4.4.3</b> 贝叶斯 Langevin-Hastings 算法</a></li>
+<li class="chapter" data-level="4.4.4" data-path="algorithms.html"><a href="algorithms.html#LowRank"><i class="fa fa-check"></i><b>4.4.4</b> 低秩近似算法</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="algorithms.html"><a href="algorithms.html#sec:stan-hmc"><i class="fa fa-check"></i><b>4.5</b> 贝叶斯 Stan-HMC 算法</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="algorithms.html"><a href="algorithms.html#subsec:Curse-of-Dimensionality"><i class="fa fa-check"></i><b>4.5.1</b> 蒙特卡罗积分</a></li>
+<li class="chapter" data-level="4.5.2" data-path="algorithms.html"><a href="algorithms.html#subsec:motivations"><i class="fa fa-check"></i><b>4.5.2</b> 背景和意义</a></li>
+<li class="chapter" data-level="4.5.3" data-path="algorithms.html"><a href="algorithms.html#subsec:stan-samplers"><i class="fa fa-check"></i><b>4.5.3</b> Stan 简介</a></li>
+<li class="chapter" data-level="4.5.4" data-path="algorithms.html"><a href="algorithms.html#subsec:stan-hmc"><i class="fa fa-check"></i><b>4.5.4</b> 实现过程</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="algorithms.html"><a href="algorithms.html#subsec:sglmm-with-r"><i class="fa fa-check"></i><b>4.6</b> 实现参数估计的 R 包</a></li>
+<li class="chapter" data-level="4.7" data-path="algorithms.html"><a href="algorithms.html#sec:estimations"><i class="fa fa-check"></i><b>4.7</b> 本章小结</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="simulations.html"><a href="simulations.html"><i class="fa fa-check"></i><b>5</b> 数值模拟</a><ul>
+<li class="chapter" data-level="5.1" data-path="simulations.html"><a href="simulations.html#spatial-gaussian-processes"><i class="fa fa-check"></i><b>5.1</b> 平稳空间高斯过程</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="simulations.html"><a href="simulations.html#sim-one-gp"><i class="fa fa-check"></i><b>5.1.1</b> 一维平稳空间高斯过程</a></li>
+<li class="chapter" data-level="5.1.2" data-path="simulations.html"><a href="simulations.html#sim-two-gp"><i class="fa fa-check"></i><b>5.1.2</b> 二维平稳空间高斯过程</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="simulations.html"><a href="simulations.html#sim-sglmm"><i class="fa fa-check"></i><b>5.2</b> 空间广义线性混合效应模型</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="simulations.html"><a href="simulations.html#sim-binomal-sglmm"><i class="fa fa-check"></i><b>5.2.1</b> 响应变量服从二项分布</a></li>
+<li class="chapter" data-level="5.2.2" data-path="simulations.html"><a href="simulations.html#possion-sglmm"><i class="fa fa-check"></i><b>5.2.2</b> 响应变量服从泊松分布</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="simulations.html"><a href="simulations.html#sec:simulations"><i class="fa fa-check"></i><b>5.3</b> 本章小结</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="applications.html"><a href="applications.html"><i class="fa fa-check"></i><b>6</b> 数据分析</a><ul>
+<li class="chapter" data-level="6.1" data-path="applications.html"><a href="applications.html#sec:spatial-random-effects"><i class="fa fa-check"></i><b>6.1</b> 小麦产量的空间分布</a></li>
+<li class="chapter" data-level="6.2" data-path="applications.html"><a href="applications.html#case-rongelap"><i class="fa fa-check"></i><b>6.2</b> 核污染浓度的空间分布</a></li>
+<li class="chapter" data-level="6.3" data-path="applications.html"><a href="applications.html#sec:cases"><i class="fa fa-check"></i><b>6.3</b> 本章小结</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="summary.html"><a href="summary.html"><i class="fa fa-check"></i><b>7</b> 总结与展望</a></li>
+<li class="chapter" data-level="" data-path="ack.html"><a href="ack.html"><i class="fa fa-check"></i>致谢</a></li>
+<li class="chapter" data-level="" data-path="author.html"><a href="author.html"><i class="fa fa-check"></i>作者简介</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html"><i class="fa fa-check"></i>附录 A</a><ul>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#tables-simulations"><i class="fa fa-check"></i>表格</a></li>
+<li class="chapter" data-level="" data-path="appendix.html"><a href="appendix.html#simulate-code"><i class="fa fa-check"></i>代码</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>参考文献</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">本论文由 bookdown 强力驱动</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Master Thesis Template</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="models" class="section level1">
+<h1><span class="header-section-number">第 3 章</span> 统计模型</h1>
+<p>在实际数据分析和建模过程中，模型应该是从简单到复杂以逐步提取数据信息的，并不是直接套用复杂的空间广义线性混合效应模型。就模型的应用来说，如果能用简单模型描述主要的数据特征，那么模型不必往复杂的方向上拓展。但是，在提高少量精度却能带来巨大收益的情况下，模型可以适当增加复杂度。从空间数据建模的角度，我们首先应考虑带空间效应的线性模型和广义线性模型，有时候也叫线性混合效应模型和广义线性混合效应模型，为了突出空间效应，我们把它统一地称作空间线性混合效应模型和空间广义线性混合效应模型。因此，在第 <a href="models.html#sec:Linear-Models">3.1</a> 节，第 <a href="models.html#sec:Generalized-Linear-Models">3.2</a> 节和第 <a href="models.html#sec:Generalized-Linear-Mixed-Effects-Models">3.3</a> 节分别回顾了简单线性模型， 广义线性模型和广义线性混合效应模型的结构及其数学表示，并随同模型给出了模型求解的 R 包或函数。第 <a href="models.html#sec:Spatial-Generalized-linear-mixed-effects-models">3.4</a> 节作为重点介绍了空间广义线性混合效应模型（简称 SGLMM），分四个小节介绍模型中的重要成分， 第 <a href="models.html#subsec:structure-sglmm">3.4.1</a> 小节介绍 SGLMM 模型的各个成分，协变量相关的固定效应和空间位置相关的随机效应，从而引出平稳空间高斯过程，第 <a href="models.html#subsec:covariance-function">3.4.2</a> 小节介绍决定平稳空间高斯过程的关键部分 — 自协方差函数或自相关函数， 第 <a href="models.html#subsec:identify">3.4.3</a> 小节介绍非空间的随机效应，以及它带来的 SGLMM 模型可识别问题与相应处理方式，第<a href="models.html#subsec:prior-sglmm">3.4.4</a>节介绍文献中使用的先验分布。</p>
+<div id="sec:Linear-Models" class="section level2">
+<h2><span class="header-section-number">3.1</span> 简单线性模型</h2>
+<p>简单线性模型的一般形式为
+<span class="math display" id="eq:LM">\[\begin{equation}
+\mathbf{Y} = \mathbf{X}^{\top}\boldsymbol{\beta} + \boldsymbol{\epsilon}, \mathsf{E}(\boldsymbol{\epsilon}) = 0, \mathsf{Cov}(\boldsymbol{\epsilon}) = \sigma^2\mathbf{I}  \tag{3.1}
+\end{equation}\]</span>
+其中，<span class="math inline">\(\mathbf{Y} = (y_1,y_2,\ldots,y_n)^{\top}\)</span> 是 <span class="math inline">\(n\)</span> 维列向量，代表对响应变量 <span class="math inline">\(\mathbf{Y}\)</span> 的 <span class="math inline">\(n\)</span> 次观测； <span class="math inline">\(\boldsymbol{\beta} = (\beta_0,\beta_1,\ldots,\beta_{p-1})^{\top}\)</span> 是 <span class="math inline">\(p\)</span> 维列向量， 代表模型 <a href="models.html#eq:LM">(3.1)</a> 的协变量 <span class="math inline">\(\mathbf{X}\)</span> 的系数，<span class="math inline">\(\beta_0\)</span> 是截距项； <span class="math inline">\(\mathbf{X}^{\top} = (1_{(1\times n)}^{\top},\mathbf{X}_{(1)}^{\top},\mathbf{X}_{(2)}^{\top},\ldots,\mathbf{X}_{(p-1)}^{\top})\)</span>， <span class="math inline">\(1_{(1\times n)}^{\top}\)</span> 是全 1 的 <span class="math inline">\(n\)</span> 维列向量，而 <span class="math inline">\(\mathbf{X}_{(i)}^{\top} = (x_{1i},x_{2i},\ldots,x_{ni})^{\top}\)</span> 代表对第 <span class="math inline">\(i\)</span> 个自变量的 <span class="math inline">\(n\)</span> 次观测； <span class="math inline">\(\boldsymbol{\epsilon} = (\epsilon_1,\epsilon_2,\ldots,\epsilon_n)^{\top}\)</span> 是 <span class="math inline">\(n\)</span> 维列向量，代表模型的随机误差，并且假定 <span class="math inline">\(\mathsf{E}(\epsilon_i \epsilon_j) = 0, i \ne j\)</span>， 即模型误差项之间线性无关，且方差齐性，都是 <span class="math inline">\(\sigma^2(&gt;0)\)</span>。 估计模型 <a href="models.html#eq:LM">(3.1)</a> 的参数常用最小二乘和最大似然方法， 求解线性模型 <a href="models.html#eq:LM">(3.1)</a> 的参数可以用 R 函数 <code>lm</code>。</p>
+</div>
+<div id="sec:Generalized-Linear-Models" class="section level2">
+<h2><span class="header-section-number">3.2</span> 广义线性模型</h2>
+<p>广义线性模型的一般形式
+<span class="math display" id="eq:GLM">\[\begin{equation}
+g(\mu) = \mathbf{X}^{\top}\boldsymbol{\beta}  \tag{3.2}
+\end{equation}\]</span>
+其中，<span class="math inline">\(\mu \equiv \mathsf{E}(\mathbf{Y})\)</span>， <span class="math inline">\(g\)</span> 代表联系函数，特别地，当 <span class="math inline">\(\mathbf{Y} \sim \mathcal{N}(\mu,\sigma^2)\)</span> 时，联系函数 <span class="math inline">\(g(x) = x\)</span>，模型 <a href="models.html#eq:GLM">(3.2)</a> 变为一般线性模型 <a href="models.html#eq:LM">(3.1)</a>。当 <span class="math inline">\(\mathbf{Y} \sim \mathrm{Binomial}(n,p)\)</span> 时，响应变量 <span class="math inline">\(\mathbf{Y}\)</span> 的期望 <span class="math inline">\(\mu =\mathsf{E}(\mathbf{Y}) = np\)</span>， 联系函数 <span class="math inline">\(g(x)=\ln(\frac{x}{1-x})\)</span>，模型 <a href="models.html#eq:GLM">(3.2)</a> 变为<span class="math inline">\(\log(\frac{p}{1-p})=\mathbf{X}^{\top}\boldsymbol{\beta}\)</span>。 当 <span class="math inline">\(\mathbf{Y} \sim \mathrm{Poisson}(\lambda)\)</span> 时，响应变量 <span class="math inline">\(\mathbf{Y}\)</span> 的期望 <span class="math inline">\(\mu =\mathsf{E}(\mathbf{Y}) = \lambda\)</span>， 联系函数<span class="math inline">\(g(x) = \ln(x)\)</span>， 模型 <a href="models.html#eq:GLM">(3.2)</a> 变为 <span class="math inline">\(\log(\lambda) = \mathbf{X}^{\top}\boldsymbol{\beta}\)</span>。 指数族下其余分布对应的联系函数此处不一一列举， 完整列表可以参看 McCullagh 和 Nelder （1989 年 ）<span class="citation">(McCullagh and Nelder <a href="#ref-McCullagh1989">1989</a>)</span> 所著的《广义线性模型》 。 模型 <a href="models.html#eq:GLM">(3.2)</a> 最早由 Nelder 和 Wedderburn （1972 年）<span class="citation">(Nelder and Wedderburn <a href="#ref-Nelder1972">1972</a>)</span> 提出，它弥补了模型 <a href="models.html#eq:LM">(3.1)</a> 的两个重要缺点： 一是因变量只能取连续值的情况， 二是期望与自变量只能用线性关系联系 <span class="citation">(陈希孺 <a href="#ref-Chen2011">2011</a>)</span>。 求解广义线性模型 <a href="models.html#eq:GLM">(3.2)</a> 的 R 函数是 <code>glm</code>， 常用拟似然法去估计模型 <a href="models.html#eq:GLM">(3.2)</a> 的参数。</p>
+</div>
+<div id="sec:Generalized-Linear-Mixed-Effects-Models" class="section level2">
+<h2><span class="header-section-number">3.3</span> 广义线性混合效应模型</h2>
+<p>广义线性混合模型的一般形式
+<span class="math display" id="eq:GLMM">\[\begin{equation}
+g(\mu) = \mathbf{X}^{\top}\boldsymbol{\beta} + \mathbf{Z}^{\top}\mathbf{b}  \tag{3.3}
+\end{equation}\]</span>
+其中， <span class="math inline">\(\mathbf{Z}^{\top}\)</span> 是 <span class="math inline">\(q\)</span> 维随机效应 <span class="math inline">\(\mathbf{b}\)</span> 的 <span class="math inline">\(n \times q\)</span> 的数据矩阵，其它符号含义如前所述。广义线性混合效应模型中既包含固定效应 <span class="math inline">\(\boldsymbol{\beta}\)</span> 又包含随机效应 <span class="math inline">\(\mathbf{b}\)</span> 。 线性模型 <a href="models.html#eq:LM">(3.1)</a> 和广义线性模型 <a href="models.html#eq:GLM">(3.2)</a> 中的协变量都是固定效应， 而随机效应是那些不能直接观察到的潜效应， 但是对响应变量却产生显著影响。 特别是在基因变异位点与表现型的关系研究中， 除了用最新科技做全基因组扫描获取显著的基因位点， 还应该把那些看似不显著， 联合在一起却显著的位点作为随机效应去考虑 <span class="citation">(Yang et al. <a href="#ref-Yang2010Common">2010</a>)</span>。求解模型 <a href="models.html#eq:GLMM">(3.3)</a>的 R 包有 nlme ，mgcv 和 lme4， 参数估计的方法有限制极大似然法。 除了求解模型 <a href="models.html#eq:GLMM">(3.3)</a> 外， nlme 还可以拟合一些非线性混合效应模型， mgcv 可以拟合广义可加混合效应模型， lme4 使用了高性能的 Eigen 数值代数库，可以加快模型的求解进程。</p>
+</div>
+<div id="sec:Spatial-Generalized-linear-mixed-effects-models" class="section level2">
+<h2><span class="header-section-number">3.4</span> 空间广义线性混合效应模型</h2>
+<div id="subsec:structure-sglmm" class="section level3">
+<h3><span class="header-section-number">3.4.1</span> 模型结构</h3>
+<p>空间广义线性混合效应模型是对模型 <a href="models.html#eq:GLMM">(3.3)</a> 的进一步延伸，其一般形式为
+<span class="math display" id="eq:SGLMM">\[\begin{equation}
+g(\mu_i) = d(x_i)^{\top}\boldsymbol{\beta} + S(x_i) + Z_i \tag{3.4}
+\end{equation}\]</span>
+其中，<span class="math inline">\(d^{\top}(x_i)\)</span> 表示协变量对应的观测数据向量，即 <span class="math inline">\(p\)</span> 个协变量在第 <span class="math inline">\(i\)</span> 个位置 <span class="math inline">\(x_i\)</span> 的观察值。 这里， 假定 <span class="math inline">\(\mathcal{S} = \{S(x): x \in \mathbb{R}^2\}\)</span> 是均值为<span class="math inline">\(\mathbf{0}\)</span>， 方差为 <span class="math inline">\(\sigma^2\)</span>，平稳且各向同性的空间高斯过程， <span class="math inline">\(\rho(x,x&#39;) = \mathsf{Corr}\{S(x),S(x&#39;)\} \equiv \rho(\|x,x&#39;\|)\)</span>， <span class="math inline">\(\|\cdot\|\)</span> 表示距离。 样本之间的位置间隔不大就用欧氏距离， 间隔很大可以考虑用球面距离； <span class="math inline">\(S(x_i)\)</span> 代表了与空间位置 <span class="math inline">\(x_i\)</span> 相关的随机效应， 简称空间效应。 <span class="math inline">\(Z_i \stackrel{i.i.d}{\sim} \mathcal{N}(0,\tau^2)\)</span> 的非空间随机效应， 也称块金效应， 一般解释为测量误差 （measurement error） 或微观变化 （micro-scale variation） <span class="citation">(Christensen <a href="#ref-Christensen2004">2004</a>)</span>， 即 <span class="math inline">\(\tau^2=\mathsf{Var}(Y_{i}|S(x_{i})),\forall i = 1,2, \ldots, N\)</span>， <span class="math inline">\(N\)</span> 是采样点的数目， 其它符号含义不变。</p>
+</div>
+<div id="subsec:covariance-function" class="section level3">
+<h3><span class="header-section-number">3.4.2</span> 自协方差函数</h3>
+<p>模型 <a href="models.html#eq:SGLMM">(3.4)</a> 的空间效应结构设定为随机过程 <span class="math inline">\(\mathcal{S} = \{S(x): x \in \mathbb{R}^2\}\)</span>，它由自协方差函数决定。在给出随机过程 <span class="math inline">\(\mathcal{S}\)</span> 的自协方差函数之前， 先计算一下它的理论变差 <span class="math inline">\(V(x,x&#39;)\)</span> 和模型 <a href="models.html#eq:SGLMM">(3.4)</a> 中 <span class="math inline">\(T_{i}\)</span> 的变差 <span class="math inline">\(V_{T}(u_{ij})\)</span><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>。为方便起见，记 <span class="math inline">\(T_{i} = d(x_i)^{\top}\boldsymbol{\beta} + S(x_i) + Z_i\)</span>
+<span class="math display" id="eq:variograms">\[\begin{equation}
+\begin{aligned}
+V(x,x&#39;) 
+      &amp;= \frac{1}{2}\mathsf{Var}\{S(x)-S(x&#39;)\}\\
+      &amp;= \frac{1}{2}\mathsf{Cov}(S(x)-S(x&#39;),S(x)-S(x&#39;))\\
+      &amp;= \frac{1}{2}\{\mathsf{E}[S(x)-S(x&#39;)][S(x)-S(x&#39;)]-[\mathsf{E}(S(x)-S(x&#39;))]^2\}\\
+      &amp;= \sigma^2-\mathsf{Cov}(S(x),S(x&#39;))=\sigma^2\{1-\rho(u)\}\\
+V_{T}(u_{ij})
+      &amp;= \frac{1}{2}\mathsf{Var}\{T_{i}(x)-T_{j}(x)\} \\
+      &amp;= \frac{1}{2}\mathsf{E}[(T_{i}-T_{j})^2]=\tau^2+\sigma^2(1-\rho(u_{ij})) 
+\end{aligned} \tag{3.5}
+\end{equation}\]</span>
+从方程 <a href="models.html#eq:variograms">(3.5)</a> 不难看出系数 <span class="math inline">\(\frac{1}{2}\)</span> 的化简作用，类似地，根据协方差定义可推知随机向量 <span class="math inline">\(T = (T_1,T_2,\ldots,T_n)\)</span> 的协方差矩阵结构如下：
+<span class="math display">\[\begin{equation}
+\begin{aligned}
+\mathsf{Cov}(T_{i}(x),T_{i}(x)) &amp;= \mathsf{E}[S(x_i)]^2 + \mathsf{E}Z_{i}^{2}= \sigma^2+\tau^2 \\
+\mathsf{Cov}(T_{i}(x),T_{j}(x)) &amp;= \mathsf{E}[S(x_i)S(x_j)]  = \sigma^2\rho(u_{ij})
+\end{aligned}
+\end{equation}\]</span>
+自相关函数 <span class="math inline">\(\rho(u)\)</span> 的作用和地位就显而易见了，它是既决定理论变差又决定协方差矩阵的结构。图 <a href="models.html#fig:semi-variance">3.1</a> 给出一般变差函数的示意图，作为粗略估计，纵截距可以看作是块金效应参数 <span class="math inline">\(\tau^2\)</span>，而图中的变差函数基台值，即变差函数 <span class="math inline">\(V_{T}(u_{ij})\)</span> 趋于稳定的函数值，它是块金效应和空间效应的和，作为空间效应参数 <span class="math inline">\(\sigma^2\)</span> 的粗略估计，我们用基台值减去块金效应即得。基于样本变差函数图 <a href="models.html#fig:semi-variance">3.1</a> 我们可以获得随机效应方差分量的初始估计，其使用案列见第 <a href="applications.html#applications">6</a> 章第 <a href="applications.html#sec:spatial-random-effects">6.1</a> 节。</p>
+<div class="figure" style="text-align: center"><span id="fig:semi-variance"></span>
+<img src="figures/semi-variance.png" alt="变差函数 $V_{T}(u)$ 示意图" width="70%" />
+<p class="caption">
+图 3.1: 变差函数 <span class="math inline">\(V_{T}(u)\)</span> 示意图
+</p>
+</div>
+<p>常见的自相关函数有三类，分别是高斯型自相关函数、球面型自相关函数和 Matérn 型自相关函数，由于 Matérn 型自相关函数的广泛应用性 <span class="citation">(Diggle, Tawn, and Moyeed <a href="#ref-Diggle1998">1998</a>; Diggle et al. <a href="#ref-Diggle2002Childhood">2002</a>; Christensen <a href="#ref-Christensen2004">2004</a>)</span>，这里主要介绍它的有关性质特点。
+<span class="math display" id="eq:matern1">\[\begin{equation}
+\rho(u)=\{2^{\kappa -1}\Gamma(\kappa)\}^{-1}(u/\phi)^{\kappa}\mathcal{K}_{\kappa}(u/\phi),u &gt; 0 \tag{3.6}
+\end{equation}\]</span>
+一般地，假定 <span class="math inline">\(\rho(u)\)</span> 单调不增，即任何两样本之间的相关性应该随距离变大而减弱，尺度参数 <span class="math inline">\(\phi\)</span> 控制函数 <span class="math inline">\(\rho(u)\)</span> 递减到0的速率。方便起见，记 <span class="math inline">\(\rho(u) = \rho_{0}(u/\phi)\)</span>，则方程 <a href="models.html#eq:matern1">(3.6)</a> 可简记为
+<span class="math display" id="eq:matern2">\[\begin{equation}
+\rho_{0}(u)=\{2^{\kappa -1}\Gamma(\kappa)\}^{-1}(u)^{\kappa}\mathcal{K}_{\kappa}(u),u &gt; 0 \tag{3.7}
+\end{equation}\]</span>
+其中，<span class="math inline">\(\mathcal{K}_{\kappa}(\cdot)\)</span> 是阶数为 <span class="math inline">\(\kappa\)</span> 的第二类修正的贝塞尔函数，函数图像见图 <a href="models.html#fig:bessel-function">3.2</a>， <span class="math inline">\(\kappa(&gt;0)\)</span> 是平滑参数，满足这些条件的空间过程 <span class="math inline">\(\mathcal{S}\)</span> 是 <span class="math inline">\(\lceil\kappa\rceil-1\)</span> 次均方可微的。值得注意的是 Matérn 型包含幂指数型
+当 <span class="math inline">\(\kappa = 0.5\)</span>时，<span class="math inline">\(\rho_{0}(u) = \exp(-u)\)</span>， <span class="math inline">\(S(x)\)</span> 均方连续但是不可微，当 <span class="math inline">\(\kappa \to \infty\)</span> 时， <span class="math inline">\(\rho_{0}(u) = \exp(-u^2)\)</span>， <span class="math inline">\(S(x)\)</span> 无限次均方可微<span class="citation">(Peter J. Diggle and Ribeiro Jr., <a href="#ref-Diggle2007">n.d.</a>)</span>。</p>
+<p>下面详细给出修正的第二类贝塞尔函数 <span class="math inline">\(\mathcal{K}_{\kappa}(u)\)</span>，它是修正的贝塞尔方程的解 <span class="citation">(Abramowitz and Stegun <a href="#ref-Abramowitz1972">1972</a>)</span>，函数形式如下</p>
+<p><span class="math display" id="eq:besselK-function">\[\begin{equation}
+\begin{aligned}
+I_{-\kappa}(u) &amp; =  \sum_{m=0}^{\infty} \frac{1}{m!\Gamma(m + \kappa + 1)} \big(\frac{u}{2}\big)^{2m + \kappa} \\
+\mathcal{K}_{\kappa}(u) &amp; = \frac{\pi}{2} \frac{I_{-\kappa}(u) - I_{\kappa}(u)}{\sin (\kappa \pi)}
+\end{aligned} \tag{3.8}
+\end{equation}\]</span></p>
+<p>其中 <span class="math inline">\(u \geq 0\)</span>，<span class="math inline">\(\kappa \in \mathbb{R}\)</span>，如果 <span class="math inline">\(\kappa \in \mathbb{Z}\)</span>，则取该点的极限值，<span class="math inline">\(\mathcal{K}_{\kappa}(u)\)</span> 的值可由 R 内置的函数 <code>besselK</code> 计算。</p>
+<div class="figure" style="text-align: center"><span id="fig:bessel-function"></span>
+<img src="figures/bessel.png" alt="修正的第二类贝塞尔函数图像" width="70%" />
+<p class="caption">
+图 3.2: 修正的第二类贝塞尔函数图像
+</p>
+</div>
+
+<p>在实际数据分析中，估计 <span class="math inline">\(\kappa\)</span> 时，为了节省计算，又不失一般性，经验做法是取离散的 <span class="math inline">\(\kappa\)</span> 值，如 <span class="math inline">\(\kappa = 0.5, 1.5, 2.5\)</span>， 这样，平稳空间高斯过程就分别具有均方连续不可微、一次可微和二次可微三种不同程度的光滑性。根据第 <a href="prepare.html#prepare">2</a> 章第 <a href="prepare.html#sec:stationary-gaussian-process">2.4</a> 节定理 <a href="prepare.html#thm:stationary-mean-square-properties">2.4</a>，自相关函数 <span class="math inline">\(\rho(u)\)</span> 的可微性表示了空间过程 <span class="math inline">\(\mathcal{S}\)</span> 的曲面平滑程度。为更加直观地观察 <span class="math inline">\(\rho(u)\)</span>，作图 <a href="models.html#fig:matern-2d">3.3</a> 和图 <a href="models.html#fig:matern-3d">3.4</a>。</p>
+<div class="figure" style="text-align: center"><span id="fig:matern-2d"></span>
+<img src="figures/matern.png" alt="自相关函数 $\rho(u)$ 随尺度参数 $\phi$（左图）和平滑参数 $\kappa$ （右图）的变化" width="80%" />
+<p class="caption">
+图 3.3: 自相关函数 <span class="math inline">\(\rho(u)\)</span> 随尺度参数 <span class="math inline">\(\phi\)</span>（左图）和平滑参数 <span class="math inline">\(\kappa\)</span> （右图）的变化
+</p>
+</div>
+<div class="figure" style="text-align: center"><span id="fig:matern-3d"></span>
+<img src="figures/matern-3d.png" alt="$\rho(\mathsf{u})$ 在不同空间距离 $\mathsf{u}$处随 $\kappa$ 和 $\phi$ 的变化，从蓝到红的颜色变化表示 $\rho(\mathsf{u})$ 的值由小到大" width="80%" />
+<p class="caption">
+图 3.4: <span class="math inline">\(\rho(\mathsf{u})\)</span> 在不同空间距离 <span class="math inline">\(\mathsf{u}\)</span>处随 <span class="math inline">\(\kappa\)</span> 和 <span class="math inline">\(\phi\)</span> 的变化，从蓝到红的颜色变化表示 <span class="math inline">\(\rho(\mathsf{u})\)</span> 的值由小到大
+</p>
+</div>
+<p>从图<a href="models.html#fig:matern-2d">3.3</a>可以看出，相比于贝塞尔函数的阶 <span class="math inline">\(\kappa\)</span>， 尺度参数 <span class="math inline">\(\phi\)</span> 对相关函数的影响大些，由图<a href="models.html#fig:matern-2d">3.3</a>看出随着空间距离的增加，相关性减弱地特别快。在实际应用中，先固定下 <span class="math inline">\(\kappa\)</span> 是可以接受的，为简化编程和表述，Diggle 等 （1998年） <span class="citation">(Diggle, Tawn, and Moyeed <a href="#ref-Diggle1998">1998</a>)</span> 在真实数据分析中使用幂指数型自相关函数 <span class="math inline">\(\rho_{0}(u) = \exp(-(\alpha u)^{\delta}), \alpha &gt; 0, 0 &lt; \delta \leq 2\)</span>。 虽然其形式大大简化， 但函数图像和性质却与Matérn 型有相似之处， 即当 <span class="math inline">\(0 &lt; \delta &lt; 2\)</span> 时， <span class="math inline">\(S(x)\)</span> 均方连续但不可微，当 <span class="math inline">\(\delta = 2\)</span> 时， <span class="math inline">\(S(x)\)</span> 无限次可微。</p>
+</div>
+<div id="subsec:identify" class="section level3">
+<h3><span class="header-section-number">3.4.3</span> 模型识别</h3>
+<p>在 SGLMM 模型的实际应用当中，一般先不添加非空间的随机效应，而是基于模型 <a href="models.html#eq:no-nugget-SGLMM">(3.9)</a> 估计参数，估计完参数，代入模型，观察线性预测 <span class="math inline">\(\hat{T_{i}}\)</span> 和真实的 <span class="math inline">\(T_i\)</span> 之间的残差，如残差表现不平稳，说明还有非空间的随机效应没有提取，因此添加块金效应是合理的，此时在模型 <a href="models.html#eq:SGLMM">(3.4)</a> 中有两个来源不同的随机效应 <span class="math inline">\(Z_{i}\)</span> 与 <span class="math inline">\(S(x_i)\)</span>。
+<span class="math display" id="eq:no-nugget-SGLMM">\[\begin{equation}
+g(\mu_i) = d(x_i)^{\top}\boldsymbol{\beta} + S(x_i) \tag{3.9}
+\end{equation}\]</span>
+如何区分开 <span class="math inline">\(Z_{i}\)</span> 与 <span class="math inline">\(S(x_i)\)</span>，或者更直接地说，如何估计这两个随机效应的参数 <span class="math inline">\(\tau^2, \sigma^2, \phi\)</span>， 即为可识别问题。 向量 <span class="math inline">\(T = (T_1,T_2,\ldots,T_n)^{\top}\)</span> 是协方差矩阵为 <span class="math inline">\(\tau^2I + \sigma^2R\)</span> 的多元高斯分布， 其中， 自相关函数 <span class="math inline">\(R_{ij} = \rho(u_{ij}; \phi)\)</span>， <span class="math inline">\(u_{ij}\)</span> 是 <span class="math inline">\(x_i\)</span> 与 <span class="math inline">\(x_j\)</span> 之间的距离。由线性预测 <span class="math inline">\(T_{i}\)</span> 的变差公式 <a href="models.html#eq:variograms">(3.5)</a> 知，随机过程 <span class="math inline">\(T(x)\)</span> 的变差 <span class="math inline">\(\tau^2 + \sigma^2(1-\rho(u_{ij}))\)</span> 和自相关函数 <a href="models.html#eq:corr-nugget-function">(3.10)</a>
+<span class="math display" id="eq:corr-nugget-function">\[\begin{equation}
+\rho^{\star}(u) =
+\begin{cases}
+                                     1 &amp; : x_{i} = x_{j}  \\
+\sigma^2\rho(u_{ij})/(\sigma^2+\tau^2) &amp; : x_{i} \neq x_{j}
+\end{cases} \tag{3.10}
+\end{equation}\]</span>
+在原点不连续，只有当 <span class="math inline">\(\tau^2 = \mathsf{Var}[Y_i|S(x_i)]\)</span> 已知或者在同一位置可以用重复测量的方法直接获得时，参数 <span class="math inline">\(\tau^2, \sigma^2, \phi\)</span> 是可识别的 <span class="citation">(Diggle et al. <a href="#ref-Diggle2002Childhood">2002</a>; Peter J. Diggle and Ribeiro Jr., <a href="#ref-Diggle2007">n.d.</a>)</span>。如果通过探索性数据分析观察到不可忽略的非空间效应 <span class="math inline">\(\tau^2\)</span> 时，Christensen （2004年） <span class="citation">(Christensen <a href="#ref-Christensen2004">2004</a>)</span> 建议使用样本变差函数对 <span class="math inline">\(\tau^2\)</span> 作初步估计，然后计算关于 <span class="math inline">\(\tau^2\)</span> 的剖面似然函数曲线，或者协方差参数 <span class="math inline">\(\phi,\tau^2\)</span>一起确定最佳的值，第 <a href="applications.html#applications">6</a> 章第 <a href="applications.html#case-rongelap">6.2</a> 节将用剖面似然函数曲面的方法获取真实数据场景中的参数估计值。</p>
+</div>
+<div id="subsec:prior-sglmm" class="section level3">
+<h3><span class="header-section-number">3.4.4</span> 先验分布</h3>
+<p>基于贝叶斯方法实现模型 <a href="models.html#eq:SGLMM">(3.4)</a> 的参数估计，必然使用 MCMC 算法，自然地，需要指定模型参数 <span class="math inline">\(\boldsymbol{\theta} = (\boldsymbol{\beta},\tau^2,\sigma^2,\phi)\)</span> 的先验分布。对于 <span class="math inline">\(\boldsymbol{\beta}\)</span>，Diggle 等 （2002 年） <span class="citation">(Diggle et al. <a href="#ref-Diggle2002Childhood">2002</a>)</span> 选择相互独立的均匀先验，而对于参数 <span class="math inline">\(\tau^2,\sigma^2,\phi\)</span>，选取如下模糊先验：
+<span class="math display">\[f(\tau^2) \propto \frac{1}{\tau^2};f(\sigma^2) \propto \frac{1}{\sigma^2};f(\phi) \propto \frac{1}{\phi^2}\]</span>
+其中，<span class="math inline">\(\tau^2\)</span> 和 <span class="math inline">\(\sigma^2\)</span> 为 Jeffreys 先验，Diggle 等 （2002 年） <span class="citation">(Diggle et al. <a href="#ref-Diggle2002Childhood">2002</a>)</span> 使用如下先验分布
+<span class="math display">\[\begin{equation*}
+\log(\nu^2),\log(\sigma^2),\log(\phi)  \sim \mathcal{N}(\cdot,\cdot)
+\end{equation*}\]</span>
+这些无信息先验分布的选择主要是出于实用和经验的考虑，也可以取别的，只要保持马尔科夫链收敛即可。实际操作中，我们还选取不同初始值，产生多条链，同时去掉迭代初始阶段产生的相对发散的参数迭代值，后续迭代值在链条收敛的情况下，可以把它当作后验分布产生的样本，然后依据该样本估计后验分布的参数。</p>
+</div>
+</div>
+<div id="sec:models" class="section level2">
+<h2><span class="header-section-number">3.5</span> 本章小结</h2>
+<p>本章第<a href="models.html#sec:Linear-Models">3.1</a>节至第<a href="models.html#sec:Generalized-Linear-Mixed-Effects-Models">3.3</a>节依次介绍了简单线性模型、广义线性模型和广义线性混合模型的结构，为引出本章第<a href="models.html#sec:Spatial-Generalized-linear-mixed-effects-models">3.4</a>节做准备，而且从统计建模和应用的角度，数据分析总是先从简单模型开始探索分析，一步步提取数据中的有用信息，本章正是循着这一思路介绍各个模型，这个想法也体现在第<a href="applications.html#applications">6</a>章的真实数据分析过程中。</p>
+
+</div>
+</div>
+<h3>参考文献</h3>
+<div id="refs" class="references">
+<div id="ref-McCullagh1989">
+<p>McCullagh, Peter, and John Nelder. 1989. <em>Generalized Linear Models</em>. Second. London: Chapman; Hall/CRC.</p>
+</div>
+<div id="ref-Nelder1972">
+<p>Nelder, John A., and R. W. M. Wedderburn. 1972. “Generalized Linear Models.” <em>Journal of the Royal Statistical Society, Series A</em> 135 (3): 370–84.</p>
+</div>
+<div id="ref-Chen2011">
+<p>陈希孺. 2011. <em>广义线性模型的拟似然法</em>. 合肥: 中国科学技术大学出版社.</p>
+</div>
+<div id="ref-Yang2010Common">
+<p>Yang, Jian, Beben Benyamin, Brian P Mcevoy, Scott Gordon, Anjali K Henders, Dale R Nyholt, Pamela A Madden, Andrew C Heath, Nicholas G Martin, and Grant W Montgomery. 2010. “Common Snps Explain a Large Proportion of Heritability for Human Height.” <em>Nature Genetics</em> 42 (7): 565–69.</p>
+</div>
+<div id="ref-Christensen2004">
+<p>Christensen, Ole F. 2004. “Monte Carlo Maximum Likelihood in Model-Based Geostatistics.” <em>Journal of Computational and Graphical Statistics</em> 13 (3): 702–18.</p>
+</div>
+<div id="ref-Diggle1998">
+<p>Diggle, Peter J., J. A. Tawn, and R. A. Moyeed. 1998. “Model-Based Geostatistics.” <em>Journal of the Royal Statistical Society, Series C</em> 47 (3): 299–350.</p>
+</div>
+<div id="ref-Diggle2002Childhood">
+<p>Diggle, Peter J., Rana Moyeed, Barry Rowlingson, and Madeleine Thomson. 2002. “Childhood Malaria in the Gambia: A Case-Study in Model-Based Geostatistics.” <em>Journal of the Royal Statistical Society, Series C</em> 51 (4): 493–506.</p>
+</div>
+<div id="ref-Diggle2007">
+<p>Diggle, Peter J., and Paulo J. Ribeiro Jr. n.d. <em>Model-Based Geostatistics</em>. New York, NY: Springer-Verlag.</p>
+</div>
+<div id="ref-Abramowitz1972">
+<p>Abramowitz, Milton, and Irene A. Stegun. 1972. <em>Handbook of Mathematical Functions</em>. Tenth. New York: National Bureau of Standards.</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="1">
+<li id="fn1"><p>变差来源于采矿术语<span class="citation">(Krige <a href="#ref-Krige1951">1951</a>)</span><a href="models.html#fnref1" class="footnote-back">↩</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="prepare.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="algorithms.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/XiangyunHuang/Thesis-Template-Bookdown/edit/master/02-models.Rmd",
+"text": "缂栬緫"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["Thesis-Template-Bookdown.pdf"],
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
