@@ -2,16 +2,10 @@ library(methods)
 set.seed(2018)
 # 加载依赖
 library(ggplot2)
-library(StanHeaders)
-library(rstan)
+
 # 设置环境
 is_on_travis = identical(Sys.getenv("TRAVIS"), "true")
-is_online = curl::has_internet()
 
-options(mc.cores = if(is_on_travis) 4 else 2)
-rstan_options(auto_write = TRUE)
-
-library(tibble)
 knitr::opts_chunk$set(
   comment = "#>",
   collapse = TRUE,
@@ -33,7 +27,6 @@ knitr::knit_hooks$set(
     if (before) par(mar = c(4.1, 4.1, 0.5, 0.5))  # smaller margin on top and right
   }
 )
-# https://github.com/yihui/knitr-examples/blob/master/085-pdfcrop.Rnw
 
 options(
   digits = 3,
@@ -41,15 +34,6 @@ options(
   bitmapType = "cairo",
   stringsAsFactors = FALSE,
   repos = "https://mirrors.tuna.tsinghua.edu.cn/CRAN/",
-  knitr.graphics.auto_pdf = FALSE,
-  tikzDefaultEngine = "xetex",
-  tikzXelatexPackages = c(
-    getOption("tikzXelatexPackages"),
-    "\\usepackage[colorlinks, breaklinks]{hyperref}",
-    "\\usepackage{color,tikz}",
-    "\\usepackage[active,tightpage,xetex]{preview}",
-    "\\PreviewEnvironment{pgfpicture}",
-    "\\usepackage{amsmath,amsfonts,mathrsfs}"
-  )
+  knitr.graphics.auto_pdf = FALSE
 )
 

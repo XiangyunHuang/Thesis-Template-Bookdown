@@ -135,6 +135,3 @@ $$f(\tau^2) \propto \frac{1}{\tau^2};f(\sigma^2) \propto \frac{1}{\sigma^2};f(\p
 ## 本章小结 {#sec:models}
 
 本章第\@ref(sec:Linear-Models)节至第\@ref(sec:Generalized-Linear-Mixed-Effects-Models)节依次介绍了简单线性模型、广义线性模型和广义线性混合模型的结构，为引出本章第\@ref(sec:Spatial-Generalized-linear-mixed-effects-models)节做准备，而且从统计建模和应用的角度，数据分析总是先从简单模型开始探索分析，一步步提取数据中的有用信息，本章正是循着这一思路介绍各个模型，这个想法也体现在第\@ref(applications)章的真实数据分析过程中。
-
-
-

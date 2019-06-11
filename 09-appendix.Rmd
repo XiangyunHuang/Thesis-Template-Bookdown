@@ -190,12 +190,12 @@ summary(fit.poisson)
 plot(fit.poisson)
 ```
 
-`r if (knitr::is_latex_output()) '<!--'`
+`r if (knitr::is_latex_output() & !is_on_travis) '<!--'`
 
 ## 交互图  {#Interactive-Web-Maps .unnumbered}
 
 
-```{r rongelap-leaflet,fig.cap="朗格拉普岛上核污染分布图",eval=!is_on_travis,echo=FALSE,message=FALSE,out.width='100%'}
+```{r rongelap-leaflet,fig.cap="朗格拉普岛上核污染分布图",out.width='100%'}
 invisible(
   lapply(c("geoRglm", "sp", "rgdal", "leaflet"), function(pkg) {
     if (system.file(package = pkg) == "") install.packages(pkg)
@@ -242,7 +242,7 @@ knitr::include_graphics(path = c(
 ## 硬件环境  {#hardwareinfo .unnumbered}
 
 
-```{r,eval=!is_on_travis,echo=!is_on_travis}
+```{r}
 cat(system("cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c", intern = TRUE), sep = "\n")
 parallel::detectCores()
 ```
@@ -251,7 +251,7 @@ parallel::detectCores()
 ## 系统环境  {#sysinfo .unnumbered}
 
 
-```{r, echo = FALSE, eval=!is_on_travis, results="asis"}
+```{r, results="asis"}
 plat <- sessioninfo::platform_info()
 df <- data.frame(setting = names(plat), value = as.character(unclass(plat)))
 knitr::kable(df, format = "markdown")
@@ -261,7 +261,7 @@ knitr::kable(df, format = "markdown")
 ## 软件环境  {#softwareinfo .unnumbered}
 
 
-```{r, echo = FALSE, eval=!is_on_travis, results="asis"}
+```{r, results="asis"}
 deps <- desc::desc_get_deps()$package[-1]
 
 pkgs <- sessioninfo::package_info(deps)
