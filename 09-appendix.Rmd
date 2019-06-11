@@ -273,4 +273,4 @@ df <- tibble::tibble(
 knitr::kable(df, format = "markdown")
 ```
 
-`r if (knitr::is_latex_output()) '-->'`
+`r if (knitr::is_latex_output() & !is_on_travis) '-->'`
