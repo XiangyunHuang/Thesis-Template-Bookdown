@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.com/XiangyunHuang/Thesis-Template-Bookdown.svg?branch=master)](https://travis-ci.com/XiangyunHuang/Thesis-Template-Bookdown)
+[![Build Status](https://travis-ci.com/XiangyunHuang/Thesis-Template-Bookdown.svg?branch=master)](https://travis-ci.com/XiangyunHuang/Thesis-Template-Bookdown) [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://www.tidyverse.org/lifecycle/#stable) ![Repo Size](https://img.shields.io/github/repo-size/XiangyunHuang/Thesis-Template-Bookdown.svg) ![GitHub](https://img.shields.io/github/license/XiangyunHuang/Thesis-Template-Bookdown.svg)
+
 ---
 
 ## 中国矿业大学（北京）论文模板
@@ -6,6 +7,8 @@
 这个模版（非官方）是为中国矿业大学（北京）的研究生排版硕士学位论文服务的。
 
 The template is used for Master Thesis of China University of Mining and Technology, Beijing.
+
+论文同时部署在 Github Pages 和 bookdown.org 上，在线预览链接分别是 <https://xiangyunhuang.github.io/Thesis-Template-Bookdown> 和 <https://bookdown.org/xiangyun/Thesis-Template-Bookdown/>  
 
 ---
 
@@ -40,7 +43,7 @@ The template is used for Master Thesis of China University of Mining and Technol
 1. 克隆模版到本地
 
 ```bash
-git clone --depth=1 --branch=release https://github.com/XiangyunHuang/Thesis-Template-Bookdown.git
+git clone --depth=1 --branch=master https://github.com/XiangyunHuang/Thesis-Template-Bookdown.git
 ```
 
 2. 用 RStudio 打开 `Thesis-Template-Bookdown.Rproj` 文件
