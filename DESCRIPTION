@@ -3,9 +3,6 @@ Type: Book
 Title: Thesis Template based on bookdown.
 Version: 1.0.0
 Depends: 
-    R (>= 3.5.0)
+    R (>= 3.6.0)
 Imports: 
   bookdown,
-  colorspace,
-  ggplot2,
-  gridExtra

@@ -3,8 +3,7 @@ dist: xenial
 
 cache:
   packages: true
-  directories:
-    - $HOME/.npm
+
 latex: false
 branches:
   only:
@@ -38,22 +37,20 @@ env:
     - MAKEFLAGS="-j 2"
 
 before_install:
-  #- mkdir ~/.R
-  #- cp Makevars ~/.R
-  - npm install netlify-cli -g
+  # install TinyTeX 安装 TinyTeX
   - curl -fLo /tmp/tinytex.tar.gz https://travis-bin.yihui.name/tinytex.tar.gz
   - tar xzf /tmp/tinytex.tar.gz -C $HOME
   - export PATH=$HOME/.TinyTeX/bin/x86_64-linux:$PATH
   - tlmgr install $(cat latex/TeXLive.pkgs | tr '\n' ' ') || true
+  # download fonts 下载字体
   - git clone https://github.com/XiangyunHuang/fonts.git winfonts 
   - mkdir -p /$HOME/.fonts
   - cp -r winfonts/* $HOME/.fonts/
   - fc-cache -fsv
-  - chmod +x ./_deploy.sh
 
 script:
-  - Rscript -e 'bookdown::render_book("index.Rmd")'
+  - make all
 
 after_success:
-  - make pdf
+  - chmod +x ./_deploy.sh
   - ./_deploy.sh

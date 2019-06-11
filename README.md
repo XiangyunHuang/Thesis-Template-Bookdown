@@ -20,16 +20,16 @@ The template is used for Master Thesis of China University of Mining and Technol
 软件要求
 
 - TinyTeX: latest
-- Pandoc: 2.2.3.2 及以上
-- rmarkdown: 1.10.12
-- bookdown: 0.7.18
+- Pandoc: 2.3.1 及以上
+- rmarkdown: 1.11
+- bookdown: 0.11
 
 测试平台
 
 - Ubuntu 14.04.5 (64位)
 - Ubuntu 18.04.1 (64位)
 - Windows 8.1 (64位)
-- CentOS 7 (64位) 与 Pandoc 2.3
+- CentOS 7 (64位) 与 Pandoc 2.3 及以上
 
 ---
 
