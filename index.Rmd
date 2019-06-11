@@ -1,7 +1,7 @@
 ---
-title: "Master Thesis Template"
-subtitle: "China University of Mining and Technology, Beijing"
-author: "Xiang-Yun Huang"
+title: "空间广义线性混合效应模型及其应用"
+subtitle: "Spatial Generalized Linear Mixed Models and Its Applications"
+author: "黄湘云"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 documentclass: book

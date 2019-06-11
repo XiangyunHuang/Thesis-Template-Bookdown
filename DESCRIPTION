@@ -1,22 +1,11 @@
 Package: SGLMMwR
 Type: Book
 Title: Thesis Template based on bookdown.
-Version: 0.0.0.9000
+Version: 1.0.0
 Depends: 
     R (>= 3.5.0)
 Imports: 
   bookdown,
-  colorspace (>= 1.4-0),
-  desc,
-  formatR,
+  colorspace,
   ggplot2,
-  gridExtra,
-  rmarkdown,
-  rstan,
-  sessioninfo,
-  tibble
-Suggests: 
-  svglite
-Remotes: 
-  rstudio/rmarkdown,
-  rstudio/bookdown
+  gridExtra

@@ -1,7 +1,6 @@
 language: r
-r:
-  - 3.5.1
-sudo: true
+dist: xenial
+
 cache:
   packages: true
   directories:
@@ -27,49 +26,34 @@ repos:
 
 addons:
   apt:
-    sources:
-      - sourceline: ppa:opencpu/imagemagick
-      - ubuntu-toolchain-r-test
     packages:
       - ghostscript
       - imagemagick
       - optipng
-      - libudunits2-dev
-      - libproj-dev 
-      - libgeos-dev 
-      - libgdal-dev      
       - fonts-inconsolata
-      - libgit2-dev
-      - gcc-8 
-      - g++-8
+
 env:
-  - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
+  global:
+    - TZ="Asia/Shanghai"
+    - MAKEFLAGS="-j 2"
 
 before_install:
-  - mkdir ~/.R
-  - cp Makevars ~/.R
-  - nvm install 8
-  - nvm use 8  
+  #- mkdir ~/.R
+  #- cp Makevars ~/.R
   - npm install netlify-cli -g
   - curl -fLo /tmp/tinytex.tar.gz https://travis-bin.yihui.name/tinytex.tar.gz
-  - tar xzf /tmp/tinytex.tar.gz -C /$HOME
-  - export PATH=/$HOME/.TinyTeX/bin/x86_64-linux:$PATH
-  - Rscript -e 'if(!require(tinytex)) install.packages("tinytex");tinytex::tlmgr_install(readLines("latex/TeXLive.pkgs"))'
+  - tar xzf /tmp/tinytex.tar.gz -C $HOME
+  - export PATH=$HOME/.TinyTeX/bin/x86_64-linux:$PATH
+  - tlmgr install $(cat latex/TeXLive.pkgs | tr '\n' ' ') || true
   - git clone https://github.com/XiangyunHuang/fonts.git winfonts 
   - mkdir -p /$HOME/.fonts
-  - cp -r winfonts/* /$HOME/.fonts/
+  - cp -r winfonts/* $HOME/.fonts/
   - fc-cache -fsv
-  - fc-list :lang=en-us | sort
-  - fc-list :lang=zh-cn | sort
-  - du -h -d 1
-
-before_script:
-  - Rscript -e 'update.packages(lib.loc = .libPaths()[1], ask = FALSE)'
   - chmod +x ./_deploy.sh
+
 script:
   - Rscript -e 'bookdown::render_book("index.Rmd")'
 
 after_success:
   - make pdf
   - ./_deploy.sh
-  - netlify deploy --prod --dir _book
