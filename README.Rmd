@@ -132,7 +132,7 @@ plot(AirPassengers)
 : 没有编号的可以跨行的表格.
 
 ```{r kable}
-library(dplyr)
+library(magrittr)
 library(kableExtra)
 db <- mtcars[, 1:7]
 db2 <- cbind(rownames(db), db)
