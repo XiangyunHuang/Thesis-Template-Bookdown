@@ -228,4 +228,4 @@ tinytex::reinstall_tinytex()
 ### 版权说明
 
 1. `images/` 目录下矿大(北京)校徽版权归学校所有
-2. `fonts/` 目录下 Windows 系统自带的中文字体仅用于展示和排版论文
+
