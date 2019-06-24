@@ -44,7 +44,7 @@ before_install:
   - tlmgr install $(cat latex/TeXLive.pkgs | tr '\n' ' ') || true
   # download fonts 下载字体
   - git clone https://github.com/XiangyunHuang/fonts.git winfonts 
-  - mkdir -p /$HOME/.fonts
+  - mkdir -p $HOME/.fonts
   - cp -r winfonts/* $HOME/.fonts/
   - fc-cache -fsv
 
