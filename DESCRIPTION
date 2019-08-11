@@ -6,4 +6,5 @@ Depends:
     R (>= 3.6.0)
 Imports: 
   bookdown,
+  ggplot2
 License: MIT
